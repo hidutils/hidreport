@@ -25,7 +25,7 @@ macro_rules! impl_from {
                 $tipo_expr(f)
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_asref {

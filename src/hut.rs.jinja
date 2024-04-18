@@ -49,6 +49,7 @@ use thiserror::Error;
 use std::fmt;
 use std::ops::BitOr;
 
+use crate::Usage as HidUsage;
 use crate::hid;
 use crate::types;
 
@@ -171,6 +172,18 @@ impl fmt::Display for VendorDefinedPage1 {
     }
 }
 
+impl From<&Usage> for UsagePage {
+
+    fn from(usage: &Usage) -> UsagePage {
+        match usage {
+{% for usage_page in usage_pages %}
+            Usage::{{usage_page.name}} { .. } => UsagePage::{{usage_page.name}},
+{% endfor %}
+            Usage::VendorDefinedPage1 { .. }  => UsagePage::VendorDefinedPage1,
+        }
+    }
+}
+
 impl TryFrom<&UsagePage> for u16 {
     type Error = HutError;
 
@@ -253,6 +266,10 @@ pub enum Usage {
 }
 
 impl Usage {
+    pub fn new_from_values(usage_page: u16, usage_id: u16) -> Result<Usage> {
+        Usage::try_from((usage_page as u32) << 16 | usage_id as u32)
+    }
+
     /// Returns the 32 bit Usage value for this usage.
     pub fn usage(&self) -> u32 {
         self.into()
@@ -292,6 +309,16 @@ impl From<&Usage> for u32 {
             Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::VendorUsage { usage_id } } => 0xff00000u32 | *usage_id as u32,
             _ => panic!("Unhandled usage {usage:?}"),
         }
+    }
+}
+
+impl TryFrom<&HidUsage> for Usage {
+    type Error = HutError;
+
+    fn try_from(usage: &HidUsage) -> Result<Usage> {
+        let up = u16::from(usage.usage_page);
+        let u = u16::from(usage.usage_id);
+        Usage::new_from_values(up, u)
     }
 }
 

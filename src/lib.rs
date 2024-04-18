@@ -4,8 +4,8 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
-use std::ops::{Range, RangeInclusive};
 use std::collections::HashMap;
+use std::ops::{Range, RangeInclusive};
 use thiserror::Error;
 
 pub mod hid;
@@ -15,14 +15,24 @@ pub mod types;
 use hid::*;
 pub use types::*;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct ReportDescriptor {
-    pub input_reports: Vec<Report>,
-    pub output_reports: Vec<Report>,
-    pub feature_reports: Vec<Report>,
+    input_reports: Vec<Report>,
+    output_reports: Vec<Report>,
+    feature_reports: Vec<Report>,
 }
 
-impl ReportDescriptor {}
+impl ReportDescriptor {
+    pub fn input_reports(&self) -> &Vec<Report> {
+        &self.input_reports
+    }
+    pub fn output_reports(&self) -> &Vec<Report> {
+        &self.output_reports
+    }
+    pub fn feature_reports(&self) -> &Vec<Report> {
+        &self.feature_reports
+    }
+}
 
 #[derive(Copy, Clone, Debug)]
 pub enum Direction {
@@ -34,18 +44,20 @@ pub enum Direction {
 #[derive(Debug)]
 pub struct Report {
     /// The report ID, if any
-    pub id: Option<u8>,
+    pub id: Option<ReportId>,
     /// The size of this report in bits
     pub size: usize,
     /// The fields present in this report
     pub items: Vec<Field>,
+
+    /// The "direction"  of this report
     pub direction: Direction,
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct Usage {
-    usage_page: UsagePage,
-    usage_id: UsageId,
+    pub usage_page: UsagePage,
+    pub usage_id: UsageId,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -60,7 +72,7 @@ pub struct PhysicalRange {
     maximum: PhysicalMaximum,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Field {
     Variable(VariableField),
     Array(ArrayField),
@@ -68,7 +80,7 @@ pub enum Field {
 }
 
 impl Field {
-    fn bits(&self) -> &RangeInclusive<usize>  {
+    pub fn bits(&self) -> &RangeInclusive<usize> {
         match self {
             Field::Variable(f) => &f.bits,
             Field::Array(f) => &f.bits,
@@ -76,7 +88,7 @@ impl Field {
         }
     }
 
-    fn report_id(&self) -> &Option<ReportId>  {
+    fn report_id(&self) -> &Option<ReportId> {
         match self {
             Field::Variable(f) => &f.report_id,
             Field::Array(f) => &f.report_id,
@@ -85,37 +97,37 @@ impl Field {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct VariableField {
-    usage: Usage,
-    bits: RangeInclusive<usize>,
-    logical_range: LogicalRange,
-    physical_range: Option<PhysicalRange>,
-    unit: Option<Unit>,
-    unit_exponent: Option<UnitExponent>,
-    collections: Vec<Collection>,
-    report_id: Option<ReportId>,
-    direction: Direction,
+    pub usage: Usage,
+    pub bits: RangeInclusive<usize>,
+    pub logical_range: LogicalRange,
+    pub physical_range: Option<PhysicalRange>,
+    pub unit: Option<Unit>,
+    pub unit_exponent: Option<UnitExponent>,
+    pub collections: Vec<Collection>,
+    pub report_id: Option<ReportId>,
+    pub direction: Direction,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ArrayField {
-    usages: Vec<Usage>,
-    bits: RangeInclusive<usize>,
-    logical_range: LogicalRange,
-    physical_range: Option<PhysicalRange>,
-    unit: Option<Unit>,
-    unit_exponent: Option<UnitExponent>,
-    collections: Vec<Collection>,
-    report_id: Option<ReportId>,
-    direction: Direction,
+    pub usages: Vec<Usage>,
+    pub bits: RangeInclusive<usize>,
+    pub logical_range: LogicalRange,
+    pub physical_range: Option<PhysicalRange>,
+    pub unit: Option<Unit>,
+    pub unit_exponent: Option<UnitExponent>,
+    pub collections: Vec<Collection>,
+    pub report_id: Option<ReportId>,
+    pub direction: Direction,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ConstantField {
-    bits: RangeInclusive<usize>,
-    report_id: Option<ReportId>,
-    direction: Direction,
+    pub bits: RangeInclusive<usize>,
+    pub report_id: Option<ReportId>,
+    pub direction: Direction,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -183,9 +195,9 @@ struct Locals {
 
 struct Offsets {
     /// Bit offset for the report-id less report
-    bit_offset: usize,
+    pub bit_offset: usize,
     /// Bit offsets for report with report-id
-    bit_offsets: HashMap<ReportId, usize>,
+    pub bit_offsets: HashMap<ReportId, usize>,
 }
 
 impl Offsets {
@@ -238,7 +250,7 @@ impl Stack {
         self.locals.last_mut().unwrap()
     }
 
-    // Should be globals and globals_mut but i'd have to 
+    // Should be globals and globals_mut but i'd have to
     // update the update_stack macro for that.
     fn globals_const(&self) -> &Globals {
         self.globals.last().unwrap()
@@ -253,18 +265,23 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
     // Prefer UsageMinimum/Maximum over Usage because the latter may be set from an earlier call
     match locals.usage_minimum {
         Some(_) => {
-            let min: u32 = locals.usage_minimum.expect("Missing UsageMinimum in locals").into();
-            let max: u32 = locals.usage_maximum.expect("Missing UsageMaximum in locals").into();
+            let min: u32 = locals
+                .usage_minimum
+                .expect("Missing UsageMinimum in locals")
+                .into();
+            let max: u32 = locals
+                .usage_maximum
+                .expect("Missing UsageMaximum in locals")
+                .into();
             let usage_page = globals.usage_page.expect("Missing UsagePage in globals");
 
             RangeInclusive::new(min, max)
                 .map(|u| Usage {
                     usage_page: UsagePage(usage_page.into()),
                     usage_id: UsageId(u as u16),
-
                 })
                 .collect()
-        },
+        }
         None => {
             match locals.usage.as_ref().expect("Missing Usage in locals") {
                 // local item's Usage had a Usage Page included
@@ -287,20 +304,17 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
                     }]
                 }
             }
-        },
+        }
     }
 }
 
-fn handle_main_item(item: &MainItem, stack: &mut Stack, offsets: &mut Offsets) -> Result<Vec<Field>> {
+fn handle_main_item(
+    item: &MainItem,
+    stack: &mut Stack,
+    rdesc: &mut ReportDescriptor,
+) -> Result<()> {
     let globals = stack.globals_const();
     let locals = stack.locals_const();
-
-    let is_constant = match item {
-        MainItem::Input(i) => i.is_constant,
-        MainItem::Output(i) => i.is_constant,
-        MainItem::Feature(i) => i.is_constant,
-        _ => panic!("Invalid item for handle_main_item()"),
-    };
 
     let direction = match item {
         MainItem::Input(i) => Direction::Input,
@@ -309,32 +323,56 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, offsets: &mut Offsets) -
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
-    let bit_offset: &mut usize = match globals.report_id {
-        None => &mut offsets.bit_offset,
-        Some(id) => {
-            if !offsets.bit_offsets.contains_key(&id) {
-                offsets.bit_offsets.insert(id, 0);
-            }
-            offsets.bit_offsets.get_mut(&id).unwrap()
-        }
+    let reports: &mut Vec<Report> = match direction {
+        Direction::Input => &mut rdesc.input_reports,
+        Direction::Output => &mut rdesc.output_reports,
+        Direction::Feature => &mut rdesc.feature_reports,
     };
 
     let report_id = globals.report_id;
+    let report = match globals.report_id {
+        None => reports.first_mut(),
+        Some(id) => reports.iter_mut().find(|r| r.id.unwrap() == id),
+    };
+    let report = match report {
+        None => {
+            reports.push(Report {
+                id: globals.report_id,
+                size: 0,
+                items: vec![],
+                direction,
+            });
+            reports.last_mut().unwrap()
+        }
+        Some(r) => r,
+    };
+
+    let (is_constant, is_variable) = match item {
+        MainItem::Input(i) => (i.is_constant, i.is_variable),
+        MainItem::Output(i) => (i.is_constant, i.is_variable),
+        MainItem::Feature(i) => (i.is_constant, i.is_variable),
+        _ => panic!("Invalid item for handle_main_item()"),
+    };
+
+    let bit_offset = report.size;
     let report_size = globals.report_size.expect("Missing report size in globals");
-    let report_count = globals.report_count.expect("Missing report count in globals");
+    let report_count = globals
+        .report_count
+        .expect("Missing report count in globals");
 
     if is_constant {
-        let nbits = usize::from(report_size) * usize::from(report_count) - 1;
-        let bits = RangeInclusive::new(*bit_offset, *bit_offset + nbits);
+        let nbits = usize::from(report_size) * usize::from(report_count);
+        let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
 
-        *bit_offset += nbits;
+        report.size += nbits;
 
         let field = ConstantField {
             bits,
             report_id,
             direction,
         };
-        return Ok(vec![Field::Constant(field)]);
+        report.items.push(Field::Constant(field));
+        return Ok(());
     }
 
     let logical_range = LogicalRange {
@@ -353,41 +391,39 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, offsets: &mut Offsets) -
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
 
-    let is_variable = match item {
-        MainItem::Input(i) => i.is_variable,
-        MainItem::Output(i) => i.is_variable,
-        MainItem::Feature(i) => i.is_variable,
-        _ => panic!("Invalid item for handle_main_item()"),
-    };
-
     let usages = compile_usages(globals, locals);
     let collections = stack.collections.clone();
-    let field: Vec<Field> = if is_variable {
-        Range { start: 0, end: usize::from(report_count) }
-            .map(|c| {
-                let nbits = usize::from(report_size);
-                let bits = RangeInclusive::new(*bit_offset, *bit_offset + nbits - 1);
-                *bit_offset += nbits;
+    let mut fields: Vec<Field> = if is_variable {
+        Range {
+            start: 0,
+            end: usize::from(report_count),
+        }
+        .map(|c| {
+            let bit_offset = report.size;
+            let nbits = usize::from(report_size);
+            let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
+            report.size += nbits;
 
-                let usage = usages.get(c).or_else(||  usages.last()).unwrap();
-                let field = VariableField {
-                    usage: *usage,
-                    bits,
-                    logical_range,
-                    physical_range,
-                    unit,
-                    unit_exponent,
-                    collections: collections.clone(),
-                    report_id,
-                    direction,
-                };
-                Field::Variable(field)
-        }).collect()
+            let usage = usages.get(c).or_else(|| usages.last()).unwrap();
+            let field = VariableField {
+                usage: *usage,
+                bits,
+                logical_range,
+                physical_range,
+                unit,
+                unit_exponent,
+                collections: collections.clone(),
+                report_id,
+                direction,
+            };
+            Field::Variable(field)
+        })
+        .collect()
     } else {
         let nbits = usize::from(report_size) * usize::from(report_count);
-        let bits = RangeInclusive::new(*bit_offset, *bit_offset + nbits -1);
+        let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
 
-        *bit_offset += nbits;
+        report.size += nbits;
 
         let field = ArrayField {
             usages,
@@ -404,7 +440,9 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, offsets: &mut Offsets) -
         vec![Field::Array(field)]
     };
 
-    Ok(field)
+    report.items.append(&mut fields);
+
+    Ok(())
 }
 
 macro_rules! update_stack {
@@ -419,9 +457,9 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
     let items = hid::ReportDescriptorItems::try_from(bytes)?;
 
     let mut stack = Stack::new();
-    let mut offsets = Offsets::new();
+    let mut report_descriptor = ReportDescriptor::default();
 
-    let mut fields: Vec<Field> = items.iter().flat_map(|rdesc_item| {
+    for rdesc_item in items.iter() {
         let item = rdesc_item.item();
         match item.item_type() {
             ItemType::Main(MainItem::Collection(i)) => {
@@ -432,9 +470,9 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 stack.collections.pop();
             }
             ItemType::Main(item) => {
-                let fields = handle_main_item(&item, &mut stack, &mut offsets).expect("main item parsing failed");
+                let fields = handle_main_item(&item, &mut stack, &mut report_descriptor)
+                    .expect("main item parsing failed");
                 stack.reset_locals();
-                return Some(fields);
             }
             ItemType::Long => {}
             ItemType::Reserved => {}
@@ -514,32 +552,9 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
             }
             ItemType::Local(LocalItem::Reserved { value: u8 }) => {}
         };
-        None
-    })
-    .flatten()
-    .collect();
-
-    // Sort by report ID (if any)
-    fields.sort_by(|a, b| {
-        let r1 = a.report_id();
-        let r2 = b.report_id();
-
-        match (r1, r2) {
-            (None, None) => std::cmp::Ordering::Equal,
-            (Some(a), Some(b)) => {
-                let aid = u8::from(a);
-                let bid = u8::from(b);
-                aid.cmp(&bid)
-            },
-            _ => panic!("All reports must have a report ID"),
-        }
-    });
-
-    for field in fields {
-        println!("{field:?}");
     }
 
-    panic!("FIXME");
+    Ok(report_descriptor)
 }
 
 #[cfg(test)]
