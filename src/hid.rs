@@ -81,9 +81,9 @@ pub struct InputItem {
     /// If false, the item refers to a data field.
     pub is_constant: bool,
     /// Array or single variable
-    pub is_array: bool,
+    pub is_variable: bool,
     /// Absolute or relative
-    pub is_absolute: bool,
+    pub is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
     pub wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
@@ -107,9 +107,9 @@ pub struct OutputItem {
     /// If false, the item refers to a data field.
     pub is_constant: bool,
     /// Array or single variable
-    pub is_array: bool,
+    pub is_variable: bool,
     /// Absolute or relative
-    pub is_absolute: bool,
+    pub is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
     pub wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
@@ -135,9 +135,9 @@ pub struct FeatureItem {
     /// If false, the item refers to a data field.
     pub is_constant: bool,
     /// Array or single variable
-    pub is_array: bool,
+    pub is_variable: bool,
     /// Absolute or relative
-    pub is_absolute: bool,
+    pub is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
     pub wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
@@ -298,8 +298,8 @@ impl TryFrom<&[u8]> for InputItem {
         let data = data.unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
-            is_array: bit(data, 1),
-            is_absolute: bit(data, 2),
+            is_variable: bit(data, 1),
+            is_relative: bit(data, 2),
             wraps: bit(data, 3),
             is_nonlinear: bit(data, 4),
             has_no_preferred_state: bit(data, 5),
@@ -321,8 +321,8 @@ impl TryFrom<&[u8]> for OutputItem {
         let data = data.unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
-            is_array: bit(data, 1),
-            is_absolute: bit(data, 2),
+            is_variable: bit(data, 1),
+            is_relative: bit(data, 2),
             wraps: bit(data, 3),
             is_nonlinear: bit(data, 4),
             has_no_preferred_state: bit(data, 5),
@@ -344,8 +344,8 @@ impl TryFrom<&[u8]> for FeatureItem {
         let data = data.unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
-            is_array: bit(data, 1),
-            is_absolute: bit(data, 2),
+            is_variable: bit(data, 1),
+            is_relative: bit(data, 2),
             wraps: bit(data, 3),
             is_nonlinear: bit(data, 4),
             has_no_preferred_state: bit(data, 5),
@@ -424,13 +424,13 @@ impl TryFrom<&[u8]> for GlobalItem {
                 unit: Unit(data.unwrap()),
             },
             0b01110100 => GlobalItem::ReportSize {
-                size: ReportSize(data.unwrap()),
+                size: ReportSize(data.unwrap() as usize),
             },
             0b10000100 => GlobalItem::ReportId {
-                id: ReportId(data.unwrap()),
+                id: ReportId(data.unwrap() as u8),
             },
             0b10010100 => GlobalItem::ReportCount {
-                count: ReportCount(data.unwrap()),
+                count: ReportCount(data.unwrap() as usize),
             },
             0b10100100 => GlobalItem::Push,
             0b10110100 => GlobalItem::Pop,
@@ -851,8 +851,8 @@ mod tests {
                 MainItem::Output(o) => match o {
                     _ => {
                         assert!(o.is_constant == false);
-                        assert!(o.is_array == true);
-                        assert!(o.is_absolute == false);
+                        assert!(o.is_variable == true);
+                        assert!(o.is_relative == false);
                         assert!(o.wraps == true);
                         assert!(o.is_nonlinear == false);
                         assert!(o.has_no_preferred_state == true);

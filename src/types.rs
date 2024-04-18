@@ -25,6 +25,11 @@ macro_rules! impl_from {
                 $tipo_expr(f)
             }
         }
+    }
+}
+
+macro_rules! impl_asref {
+    ($tipo:ty) => {
         impl AsRef<$tipo> for $tipo {
             #[inline(always)]
             fn as_ref(&self) -> &$tipo {
@@ -91,22 +96,28 @@ impl_from!(UnitExponent, UnitExponent, u32);
 impl_fmt!(UnitExponent, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct ReportSize(pub u32);
+pub struct ReportSize(pub usize);
 
-impl_from!(ReportSize, ReportSize, u32);
-impl_fmt!(ReportSize, u32);
+impl_from!(ReportSize, ReportSize, usize);
+impl_fmt!(ReportSize, usize);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct ReportId(pub u8);
+
+impl From<&ReportId> for ReportId {
+    fn from(report_id: &ReportId) -> ReportId {
+        ReportId(u8::from(report_id))
+    }
+}
+
+impl_from!(ReportId, ReportId, u8);
+impl_fmt!(ReportId, u8);
 
 #[derive(Debug, Clone, Copy)]
-pub struct ReportId(pub u32);
+pub struct ReportCount(pub usize);
 
-impl_from!(ReportId, ReportId, u32);
-impl_fmt!(ReportId, u32);
-
-#[derive(Debug, Clone, Copy)]
-pub struct ReportCount(pub u32);
-
-impl_from!(ReportCount, ReportCount, u32);
-impl_fmt!(ReportCount, u32);
+impl_from!(ReportCount, ReportCount, usize);
+impl_fmt!(ReportCount, usize);
 
 // ----------------- LOCAL ITEMS --------------------
 
