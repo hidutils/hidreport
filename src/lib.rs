@@ -54,6 +54,21 @@ pub struct Report {
     pub direction: Direction,
 }
 
+impl Report {
+    pub fn report_id(&self) -> &Option<ReportId> {
+        &self.id
+    }
+    pub fn size_in_bits(&self) -> usize {
+        self.size
+    }
+    pub fn size_in_bytes(&self) -> usize {
+        self.size / 8
+    }
+    pub fn items(&self) -> &Vec<Field> {
+        &self.items
+    }
+}
+
 #[derive(Clone, Copy, Debug)]
 pub struct Usage {
     pub usage_page: UsagePage,
@@ -62,14 +77,14 @@ pub struct Usage {
 
 #[derive(Clone, Copy, Debug)]
 pub struct LogicalRange {
-    minimum: LogicalMinimum,
-    maximum: LogicalMaximum,
+    pub minimum: LogicalMinimum,
+    pub maximum: LogicalMaximum,
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct PhysicalRange {
-    minimum: PhysicalMinimum,
-    maximum: PhysicalMaximum,
+    pub minimum: PhysicalMinimum,
+    pub maximum: PhysicalMaximum,
 }
 
 #[derive(Clone, Debug)]
@@ -88,12 +103,27 @@ impl Field {
         }
     }
 
+    // sigh... RangeInclusive doesn't implement ExactSizeIterator for usize...
+    pub fn bit_count(&self) -> usize {
+        return self.bits().end() - self.bits().start() + 1;
+    }
+
     fn report_id(&self) -> &Option<ReportId> {
         match self {
             Field::Variable(f) => &f.report_id,
             Field::Array(f) => &f.report_id,
             Field::Constant(f) => &f.report_id,
         }
+    }
+
+    fn update_bit_offset(&mut self, offset: usize) {
+        let r = self.bits();
+        let r = RangeInclusive::new(offset + r.start(), offset + r.end());
+        match self {
+            Field::Variable(f) => f.bits = r,
+            Field::Array(f) => f.bits = r,
+            Field::Constant(f) => f.bits = r,
+        };
     }
 }
 
@@ -312,7 +342,7 @@ fn handle_main_item(
     item: &MainItem,
     stack: &mut Stack,
     rdesc: &mut ReportDescriptor,
-) -> Result<()> {
+) -> Result<Vec<Field>> {
     let globals = stack.globals_const();
     let locals = stack.locals_const();
 
@@ -323,29 +353,29 @@ fn handle_main_item(
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
-    let reports: &mut Vec<Report> = match direction {
-        Direction::Input => &mut rdesc.input_reports,
-        Direction::Output => &mut rdesc.output_reports,
-        Direction::Feature => &mut rdesc.feature_reports,
-    };
+    //let reports: &mut Vec<Report> = match direction {
+    //    Direction::Input => &mut rdesc.input_reports,
+    //    Direction::Output => &mut rdesc.output_reports,
+    //    Direction::Feature => &mut rdesc.feature_reports,
+    //};
 
     let report_id = globals.report_id;
-    let report = match globals.report_id {
-        None => reports.first_mut(),
-        Some(id) => reports.iter_mut().find(|r| r.id.unwrap() == id),
-    };
-    let report = match report {
-        None => {
-            reports.push(Report {
-                id: globals.report_id,
-                size: 0,
-                items: vec![],
-                direction,
-            });
-            reports.last_mut().unwrap()
-        }
-        Some(r) => r,
-    };
+    //let report = match globals.report_id {
+    //    None => reports.first_mut(),
+    //    Some(id) => reports.iter_mut().find(|r| r.id.unwrap() == id),
+    //};
+    //let report = match report {
+    //    None => {
+    //        reports.push(Report {
+    //            id: globals.report_id,
+    //            size: 0,
+    //            items: vec![],
+    //            direction,
+    //        });
+    //        reports.last_mut().unwrap()
+    //    }
+    //    Some(r) => r,
+    //};
 
     let (is_constant, is_variable) = match item {
         MainItem::Input(i) => (i.is_constant, i.is_variable),
@@ -354,7 +384,7 @@ fn handle_main_item(
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
-    let bit_offset = report.size;
+    let bit_offset = 0;
     let report_size = globals.report_size.expect("Missing report size in globals");
     let report_count = globals
         .report_count
@@ -364,15 +394,12 @@ fn handle_main_item(
         let nbits = usize::from(report_size) * usize::from(report_count);
         let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
 
-        report.size += nbits;
-
         let field = ConstantField {
             bits,
             report_id,
             direction,
         };
-        report.items.push(Field::Constant(field));
-        return Ok(());
+        return Ok(vec![Field::Constant(field)]);
     }
 
     let logical_range = LogicalRange {
@@ -393,16 +420,16 @@ fn handle_main_item(
 
     let usages = compile_usages(globals, locals);
     let collections = stack.collections.clone();
-    let mut fields: Vec<Field> = if is_variable {
+    let fields: Vec<Field> = if is_variable {
+        let mut bit_offset = 0;
         Range {
             start: 0,
             end: usize::from(report_count),
         }
         .map(|c| {
-            let bit_offset = report.size;
             let nbits = usize::from(report_size);
             let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
-            report.size += nbits;
+            bit_offset += nbits;
 
             let usage = usages.get(c).or_else(|| usages.last()).unwrap();
             let field = VariableField {
@@ -420,10 +447,9 @@ fn handle_main_item(
         })
         .collect()
     } else {
+        let bit_offset = 0;
         let nbits = usize::from(report_size) * usize::from(report_count);
         let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
-
-        report.size += nbits;
 
         let field = ArrayField {
             usages,
@@ -440,9 +466,7 @@ fn handle_main_item(
         vec![Field::Array(field)]
     };
 
-    report.items.append(&mut fields);
-
-    Ok(())
+    Ok(fields)
 }
 
 macro_rules! update_stack {
@@ -457,7 +481,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
     let items = hid::ReportDescriptorItems::try_from(bytes)?;
 
     let mut stack = Stack::new();
-    let mut report_descriptor = ReportDescriptor::default();
+    let mut rdesc = ReportDescriptor::default();
 
     for rdesc_item in items.iter() {
         let item = rdesc_item.item();
@@ -470,9 +494,51 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 stack.collections.pop();
             }
             ItemType::Main(item) => {
-                let fields = handle_main_item(&item, &mut stack, &mut report_descriptor)
+                let mut fields = handle_main_item(&item, &mut stack, &mut rdesc)
                     .expect("main item parsing failed");
                 stack.reset_locals();
+
+                // Now update the returned field(s) and push them into the right report
+                let direction = match item {
+                    MainItem::Input(i) => Direction::Input,
+                    MainItem::Output(i) => Direction::Output,
+                    MainItem::Feature(i) => Direction::Feature,
+                    _ => panic!("Invalid item for handle_main_item()"),
+                };
+
+                let reports: &mut Vec<Report> = match direction {
+                    Direction::Input => &mut rdesc.input_reports,
+                    Direction::Output => &mut rdesc.output_reports,
+                    Direction::Feature => &mut rdesc.feature_reports,
+                };
+
+                let report_id = fields.first().unwrap().report_id();
+                let report = match report_id {
+                    None => reports.first_mut(),
+                    Some(id) => reports.iter_mut().find(|r| &r.id.unwrap() == id),
+                };
+
+                let report = match report {
+                    None => {
+                        reports.push(Report {
+                            id: *report_id,
+                            size: 0,
+                            items: vec![],
+                            direction,
+                        });
+                        reports.last_mut().unwrap()
+                    }
+                    Some(r) => r,
+                };
+
+                // We know which report the fields belong to, let's update the offsets
+                let offset = report.size;
+                fields.iter_mut().for_each(|f| {
+                    f.update_bit_offset(offset);
+                    report.size += f.bit_count();
+                });
+
+                report.items.append(&mut fields);
             }
             ItemType::Long => {}
             ItemType::Reserved => {}
@@ -554,7 +620,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
         };
     }
 
-    Ok(report_descriptor)
+    Ok(rdesc)
 }
 
 #[cfg(test)]
