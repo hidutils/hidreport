@@ -12,6 +12,7 @@
 //! See Section 5.5: a HID Usage is a 32 bit value comprising of a 16-bit Usage
 //! Page and a 16-bit Usage ID so that:
 //! ```
+//! use hidreport::hut::GenericDesktop;
 //! let usage_page: u16 = 0x01; // Generic Desktop
 //! let usage_id: u16 = 0x02; // Mouse
 //! let usage: u32 = (usage_page as u32) << 16 | usage_id as u32;
