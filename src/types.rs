@@ -84,10 +84,149 @@ impl_from!(PhysicalMaximum, PhysicalMaximum, i32);
 impl_fmt!(PhysicalMaximum, i32);
 
 #[derive(Debug, Clone, Copy)]
+pub enum UnitSystem {
+    None,
+    SILinear,
+    SIRotation,
+    EnglishLinear,
+    EnglishRotation,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Units {
+    None,
+    Centimeter,
+    Radians,
+    Inch,
+    Degrees,
+    Gram,
+    Slug,
+    Seconds,
+    Kelvin,
+    Fahrenheit,
+    Ampere,
+    Candela,
+}
+
+#[derive(Debug, Clone, Copy)]
 pub struct Unit(pub u32);
 
 impl_from!(Unit, Unit, u32);
 impl_fmt!(Unit, u32);
+
+impl Unit {
+    fn nibbles(&self) -> Vec<u8> {
+        std::ops::Range { start: 0, end: 32 }
+            .step_by(4)
+            .map(|shift| ((self.0 & (0b1111 << shift)) >> shift) as u8)
+            .collect()
+    }
+
+    /// Returns all units set by this field that are not [Units::None].
+    /// If all units are [Units::None], the return value is [None], any
+    /// [Some] contains a vector with at least one element.
+    pub fn units(&self) -> Option<Vec<Units>> {
+        let units: Vec<Units> = vec![
+            self.length(),
+            self.mass(),
+            self.time(),
+            self.temperature(),
+            self.current(),
+            self.luminosity(),
+        ]
+        .into_iter()
+        .filter(|u| !matches!(u, Units::None))
+        .collect();
+
+        if units.is_empty() {
+            None
+        } else {
+            Some(units)
+        }
+    }
+
+    /// The [UnitSystem] used by a field.
+    /// Returns [UnitSystem::None] if unset.
+    pub fn system(&self) -> UnitSystem {
+        match self.nibbles().first() {
+            None | Some(0) => UnitSystem::None,
+            Some(1) => UnitSystem::SILinear,
+            Some(2) => UnitSystem::SIRotation,
+            Some(3) => UnitSystem::EnglishLinear,
+            Some(4) => UnitSystem::EnglishRotation,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The length, one of [Units::Centimeter], [Units::Radians], [Units::Inch]
+    /// or [Units::Degrees].
+    /// Returns [Units::None] if unset.
+    pub fn length(&self) -> Units {
+        match self.nibbles().get(1) {
+            None | Some(0) => Units::None,
+            Some(1) => Units::Centimeter,
+            Some(2) => Units::Radians,
+            Some(3) => Units::Inch,
+            Some(4) => Units::Degrees,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The mass, one of [Units::Gram] or [Units::Slug].
+    /// Returns [Units::None] if unset.
+    pub fn mass(&self) -> Units {
+        match self.nibbles().get(2) {
+            None | Some(0) => Units::None,
+            Some(1) => Units::Gram,
+            Some(2) => Units::Gram,
+            Some(3) => Units::Slug,
+            Some(4) => Units::Slug,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The time, one of [Units::Seconds].
+    /// Returns [Units::None] if unset.
+    pub fn time(&self) -> Units {
+        match self.nibbles().get(2) {
+            None | Some(0) => Units::None,
+            Some(1..=4) => Units::Seconds,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The time, one of [Units::Kelvin] or [Units::Fahrenheit].
+    /// Returns [Units::None] if unset.
+    pub fn temperature(&self) -> Units {
+        match self.nibbles().get(3) {
+            None | Some(0) => Units::None,
+            Some(1) => Units::Kelvin,
+            Some(2) => Units::Kelvin,
+            Some(3) => Units::Fahrenheit,
+            Some(4) => Units::Fahrenheit,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The current, one of [Units::Ampere].
+    pub fn current(&self) -> Units {
+        match self.nibbles().get(3) {
+            None | Some(0) => Units::None,
+            Some(1..=4) => Units::Ampere,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+
+    /// The current, one of [Units::Candela].
+    /// Returns [Units::None] if unset.
+    pub fn luminosity(&self) -> Units {
+        match self.nibbles().get(3) {
+            None | Some(0) => Units::None,
+            Some(1..=4) => Units::Candela,
+            Some(n) => panic!("invalid size {n} for a nibble"),
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct UnitExponent(pub u32);
