@@ -231,6 +231,16 @@ impl Unit {
 #[derive(Debug, Clone, Copy)]
 pub struct UnitExponent(pub u32);
 
+impl UnitExponent {
+    fn exponent(&self) -> i8 {
+        match self.0 & 0xf {
+            n @ 0..=7 => n as i8,
+            n @ 8..=15 => -16 + n as i8,
+            n => panic!("invalid size {n} for a nibble"),
+        }
+    }
+}
+
 impl_from!(UnitExponent, UnitExponent, u32);
 impl_fmt!(UnitExponent, u32);
 
