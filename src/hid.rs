@@ -29,6 +29,17 @@ fn hiddata(bytes: &[u8]) -> Option<u32> {
     }
 }
 
+/// Convenience function to extract the bytes into a i32
+fn hiddata_signed(bytes: &[u8]) -> Option<i32> {
+    match bytes.len() {
+        0 => None,
+        1 => Some((bytes[0] as i8) as i32),
+        2 => Some(i16::from_le_bytes(bytes[0..2].try_into().unwrap()) as i32),
+        4 => Some(i32::from_le_bytes(bytes[0..4].try_into().unwrap())),
+        _ => panic!("Size {} cannot happen", bytes.len()),
+    }
+}
+
 /// The type of a HID item may be one of [MainItem], [GlobalItem], or [LocalItem].
 /// These items comprise the report descriptor and how the report descriptor should
 /// be compiled.
@@ -401,15 +412,16 @@ impl TryFrom<&[u8]> for GlobalItem {
             return Err(ParserError::OutOfBounds);
         }
         let data = hiddata(&bytes[1..]);
+        let data_signed = hiddata_signed(&bytes[1..]);
         let item = match bytes[0] & 0b11111100 {
             0b00000100 => GlobalItem::UsagePage {
                 usage_page: UsagePage(data.unwrap() as u16),
             },
             0b00010100 => GlobalItem::LogicalMinimum {
-                minimum: LogicalMinimum(data.unwrap() as i32),
+                minimum: LogicalMinimum(data_signed.unwrap() as i32),
             },
             0b00100100 => GlobalItem::LogicalMaximum {
-                maximum: LogicalMaximum(data.unwrap() as i32),
+                maximum: LogicalMaximum(data_signed.unwrap() as i32),
             },
             0b00110100 => GlobalItem::PhysicalMinimum {
                 minimum: PhysicalMinimum(data.unwrap() as i32),
