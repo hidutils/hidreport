@@ -194,7 +194,7 @@ impl fmt::Display for VendorDefinedPage1 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             VendorDefinedPage1::Undefined  => format!("Vendor Usage Undefined"),
-            VendorDefinedPage1::VendorUsage { usage_id } => format!("Vendor Usage 0x{usage_id:02}"),
+            VendorDefinedPage1::VendorUsage { usage_id } => format!("Vendor Usage 0x{usage_id:02x}"),
         };
         write!(f, "{name}")
     }
