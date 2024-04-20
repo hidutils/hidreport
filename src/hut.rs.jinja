@@ -1,8 +1,7 @@
 // THIS FILE IS GENERATED, DO NOT EDIT
 
 
-//! A wrapper around the HID Usage Tables (HUT). For reference, see the 
-//! [HID Usage Tables](https://usb.org/document-library/hid-usage-tables-15).
+//! A wrapper around the [HID Usage Tables (HUT)](https://usb.org/document-library/hid-usage-tables-15).
 //! Note that this module is created through code generation.
 //!
 //! In this document and unless stated otherwise, a reference to "section a.b.c" refers to the 
@@ -13,13 +12,28 @@
 //! See Section 5.5: a HID Usage is a 32 bit value comprising of a 16-bit Usage
 //! Page and a 16-bit Usage ID so that: 
 //! ```
-//! use hidreport::hut::GenericDesktop;
-//! let usage_page: u16 = 0x01; // Generic Desktop
-//! let usage_id: u16 = 0x02; // Mouse
-//! let usage: u32 = (usage_page as u32) << 16 | usage_id as u32;
+//! # use hidreport::hut::*;
+//! let hid_usage_page: u16 = 0x01; // Generic Desktop
+//! let hid_usage_id: u16 = 0x02; // Mouse
+//! let hid_usage: u32 = (hid_usage_page as u32) << 16 | hid_usage_id as u32;
 //! 
+//! // Convert to and fro the Usage either via [u32] or the [AsUsage] trait
 //! let u = GenericDesktop::Mouse;
-//! assert!(usage == u.usage());
+//! assert!(matches!(Usage::try_from(hid_usage).unwrap(), Usage::GenericDesktop {usage: u}));
+//! assert_eq!(u32::from(&u), hid_usage);
+//! assert_eq!(u.usage_value(), hid_usage);
+//!
+//! // Convert to and fro the UsageID either via [u16] or the [AsUsage] trait
+//! assert_eq!(hid_usage_id, u16::from(&u));
+//! assert_eq!(hid_usage_id, u.usage_id_value());
+//!
+//! // Extract the Usage Page from  Usage enum value
+//! assert!(matches!(UsagePage::from(&u), UsagePage::GenericDesktop));
+//! let up = UsagePage::from(&u);
+//! 
+//! // Get the Usage Page numeric value is via the [AsUsagePage]
+//! assert_eq!(hid_usage_page, up.usage_page_value());
+//! assert_eq!(hid_usage_page, u16::from(&up));
 //! ```
 //! In this module:
 //! - "Usage Page" refers to the 16-bit value. Where the Usage Page is converted
@@ -69,6 +83,17 @@ pub enum HutError {
 }
 
 type Result<T> = std::result::Result<T, HutError>;
+
+/// A trait to return the Usage and Usage ID as numeric value
+pub trait AsUsage {
+    fn usage_value(&self) -> u32;
+    fn usage_id_value(&self) -> u16;
+}
+
+/// A trait to return the Usage Page as numeric value
+pub trait AsUsagePage {
+    fn usage_page_value(&self) -> u16;
+}
 
 /// A HID UsagePage, see section 5.5. This represents the upper 16 bits in the 
 /// 32-bit
@@ -126,6 +151,12 @@ impl UsagePage {
     }
 }
 
+impl AsUsagePage for UsagePage {
+    fn usage_page_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
 {% for usage_page in usage_pages %}
 {% if usage_page.name != "VendorDefinedPage1" and usage_page.name != "Button" %}
 /// Usage Page `0x{{usage_page.value| int(usage_page.value, 16)}}`: "{{usage_page.printable}}"
@@ -141,6 +172,22 @@ pub enum {{usage_page.name}} {
 {% endfor %}
 }
 
+impl AsUsage for {{usage_page.name}} {
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for {{usage_page.name}} {
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
 impl fmt::Display for {{usage_page.name}} {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -151,6 +198,69 @@ impl fmt::Display for {{usage_page.name}} {
 {% endfor %}
         };
         write!(f, "{name}")
+    }
+}
+
+impl From<&{{usage_page.name}}> for u16 {
+    fn from(up: &{{usage_page.name}}) -> u16 {
+        match *up {
+            {% for usage in usage_page.usages %}
+            {{usage_page.name}}::{{usage.name}} => {{usage.value}},
+            {% endfor %}
+            {% if usage_page.name == "Button" %}
+            Button::Button { button } => button,
+            {% endif %}
+        }
+    }
+}
+
+impl From<{{usage_page.name}}> for u16 {
+    fn from(up: {{usage_page.name}}) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&{{usage_page.name}}> for u32 {
+    fn from(usage: &{{usage_page.name}}) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id: u32 = match usage {
+{% for usage in usage_page.usages %}
+            {{usage_page.name}}::{{usage.name}} => {{usage.value}},
+{% else %}
+            // Anything without defined usages comes back as Undefined (0x00)
+            _ =>  0x00,
+{% endfor %}
+        };
+        up | id
+    }
+}
+
+impl From<&{{usage_page.name}}> for UsagePage {
+    fn from(up: &{{usage_page.name}}) -> UsagePage {
+        UsagePage::{{usage_page.name}}
+    }
+}
+
+impl From<{{usage_page.name}}> for UsagePage {
+    fn from(up: {{usage_page.name}}) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for {{usage_page.name}} {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -212,18 +322,22 @@ impl From<&Usage> for UsagePage {
     }
 }
 
-impl TryFrom<&UsagePage> for u16 {
-    type Error = HutError;
-
+impl From<&UsagePage> for u16 {
     /// Returns the UsagePage as 16-bit value. This is equivalent to the
     /// upper 16 bits of a full 32-bit Usage value shifted down.
-    fn try_from(usage_page: &UsagePage) -> Result<u16> {
+    fn from(usage_page: &UsagePage) -> u16 {
         match usage_page {
 {% for usage_page in usage_pages %}
-            UsagePage::{{usage_page.name}} { .. } => Ok({{usage_page.value}}),
+            UsagePage::{{usage_page.name}} { .. } => {{usage_page.value}},
 {% endfor %}
-            UsagePage::VendorDefinedPage1 { .. }  => Ok(0xff00),
+            UsagePage::VendorDefinedPage1 { .. }  => 0xff00,
         }
+    }
+}
+
+impl From<UsagePage> for u16 {
+    fn from(usage_page: UsagePage) -> u16 {
+        u16::from(&usage_page)
     }
 }
 
@@ -261,38 +375,6 @@ impl fmt::Display for UsagePage {
         write!(f, "{name}")
     }
 }
-
-{% for usage_page in usage_pages %}
-impl From<{{usage_page.name}}> for u16 {
-    fn from(up: {{usage_page.name}}) -> u16 {
-        match up {
-            {% for usage in usage_page.usages %}
-            {{usage_page.name}}::{{usage.name}} => {{usage.value}},
-            {% endfor %}
-            {% if usage_page.name == "Button" %}
-            Button::Button { button } => button,
-            {% endif %}
-        }
-    }
-}
-
-impl BitOr<u16> for {{usage_page.name}} {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
-{% endfor  %}
 
 ///
 ///
@@ -386,5 +468,39 @@ impl TryFrom<u32> for Usage {
             (0xff00, n) => Ok(Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::VendorUsage { usage_id: n as u16 } }),
             (_, _) => Err(HutError::UnknownUsage),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn conversions() {
+        let hid_usage_page: u16 = 0x01; // Generic Desktop
+        let hid_usage_id: u16 = 0x02; // Mouse
+        let hid_usage: u32 = (hid_usage_page as u32) << 16 | hid_usage_id as u32;
+
+        let u = GenericDesktop::Mouse;
+        // 32 bit usage to enum
+        assert!(matches!(Usage::try_from(hid_usage).unwrap(), Usage::GenericDesktop {usage: u}));
+
+        // Usage to u32
+        assert_eq!(u32::from(&u), hid_usage);
+        assert_eq!(u.usage_value(), hid_usage);
+
+        // Usage to u16 usage_id
+        assert_eq!(hid_usage_id, u16::from(&u));
+        assert_eq!(hid_usage_id, u.usage_id_value());
+
+        // Usage to UsagePage
+        assert!(matches!(UsagePage::from(&u), UsagePage::GenericDesktop));
+
+        // UsagePage to u16
+        let up = UsagePage::from(&u);
+        assert_eq!(hid_usage_page, u16::from(&up));
+
+        // UsagePage to u16 via AsUsagePage trait
+        assert_eq!(hid_usage_page, up.usage_page_value());
     }
 }
