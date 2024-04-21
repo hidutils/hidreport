@@ -629,9 +629,9 @@ struct LocalUsage {
     usage_id: UsageId,
 }
 
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 struct Locals {
-    usage: Option<LocalUsage>,
+    usage: Vec<LocalUsage>,
     // FIXME: needs the same LocalUsage treatment
     usage_minimum: Option<UsageMinimum>,
     usage_maximum: Option<UsageMaximum>,
@@ -661,11 +661,13 @@ impl Stack {
     }
 
     fn push(&mut self) {
-        let current = &self.globals.last().unwrap();
-        self.globals.push(**current);
+        let current = self.globals.last().unwrap();
+        self.globals.push(*current);
 
-        let current = &self.locals.last().unwrap();
-        self.locals.push(**current);
+        // FIXME: this clones the Usage vector which is likely to mess us up, I don't
+        // think they transfer across push/pop
+        let current = self.locals.last().unwrap().clone();
+        self.locals.push(current);
     }
 
     fn pop(&mut self) {
@@ -718,27 +720,31 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
                 .collect()
         }
         None => {
-            match locals.usage.as_ref().expect("Missing Usage in locals") {
+            if locals.usage.is_empty() {
+                panic!("Missing Usage in locals");
+            }
+            locals.usage.iter()
+            .map(|usage| match usage {
                 // local item's Usage had a Usage Page included
                 LocalUsage {
                     usage_page: Some(up),
                     usage_id,
-                } => vec![Usage {
+                } => Usage {
                     usage_page: *up,
                     usage_id: *usage_id,
-                }],
+                },
                 // Usage Page comes from the global item
                 LocalUsage {
                     usage_page: None,
                     usage_id,
                 } => {
                     let usage_page = globals.usage_page.expect("Missing UsagePage in globals");
-                    vec![Usage {
+                    Usage {
                         usage_page,
                         usage_id: *usage_id,
-                    }]
+                    }
                 }
-            }
+            }).collect()
         }
     }
 }
@@ -975,7 +981,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     usage_page,
                     usage_id,
                 };
-                update_stack!(stack, locals, usage, usage);
+                stack.locals().usage.push(usage);
             }
             ItemType::Local(LocalItem::UsageMinimum { minimum }) => {
                 update_stack!(stack, locals, usage_minimum, minimum);
