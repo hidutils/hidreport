@@ -393,14 +393,13 @@ impl<'a> Report {
         let values: Vec<ReportValue> = self
             .fields()
             .iter()
-            .filter(|f| !matches!(f, Field::Constant(_)))
             .map(|f| {
                 (
                     f.bits(),
                     match f {
                         Field::Variable(f) => f.logical_range,
                         Field::Array(f) => f.logical_range,
-                        _ => panic!("Constant field should have been filtered"),
+                        Field::Constant(_) => LogicalRange { minimum: LogicalMinimum(0), maximum: LogicalMaximum(0) },
                     },
                 )
             })
