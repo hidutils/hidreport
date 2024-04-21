@@ -210,6 +210,13 @@ impl From<&hut::UsagePage> for UsagePage {
     }
 }
 
+impl From<&hut::Usage> for UsagePage {
+    fn from(hut_usage: &hut::Usage) -> UsagePage {
+        let up = hut::UsagePage::from(hut_usage);
+        UsagePage(u16::from(up))
+    }
+}
+
 /// See Section 6.2.2.7, a global item applies to all subsequently identified items.
 ///
 /// > Global items describe rather than define data from a control. A new Main item
