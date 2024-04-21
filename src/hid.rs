@@ -551,8 +551,6 @@ pub trait Item {
     /// For short items this is the length of the data in bytes plus 1 for the header byte.
     /// For long items this is the lengh of the length of the data plus 4 (header byte, data size
     /// byte and 2 bytes for a long item tag).
-    ///
-    /// See [ItemData::size] for the size of the data.
     fn size(&self) -> usize;
 
     fn item_type(&self) -> ItemType;
@@ -596,14 +594,13 @@ pub trait Item {
 ///  # }
 ///  ```
 ///  and to avoid confusion between [Item::bytes] (all bytes of the HID [Item])
-///  and [ItemData::bytes] (just the data bytes).
-///
+///  and the actual the data bytes).
 #[derive(Debug)]
 pub struct ItemData<'a> {
     bytes: &'a [u8],
 }
 
-impl<'a> std::ops::Deref for ItemData<'a > {
+impl<'a> std::ops::Deref for ItemData<'a> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -629,7 +626,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u32 {
 impl<'a> TryFrom<&ItemData<'a>> for u8 {
     type Error = ParserError;
 
-    /// Converts the data bytes into a u8. This function throws an error if the data length
+    /// Converts the data bytes into a [u8]. This function throws an error if the data length
     /// is larger than 1.
     fn try_from(data: &ItemData) -> Result<u8> {
         match data.len() {
@@ -644,7 +641,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u8 {
 impl<'a> TryFrom<&ItemData<'a>> for Vec<u8> {
     type Error = ParserError;
 
-    /// Converts the data bytes into a Vec<u8>, copying the data.
+    /// Converts the data bytes into a `Vec<u8>`, copying the data.
     fn try_from(data: &ItemData) -> Result<Vec<u8>> {
         match data.len() {
             0 => Err(ParserError::OutOfBounds),

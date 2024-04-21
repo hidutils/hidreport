@@ -15,6 +15,89 @@ pub mod types;
 use hid::*;
 pub use types::*;
 
+/// Calculates the two's complement for a value with
+/// a given number of of bits.
+trait TwosComplement<To> {
+    /// Returns the two's complement for a value
+    /// with a given number of bits.
+    fn twos_comp(self, nbits: usize) -> To;
+}
+
+// RangeInclusive doesn't implement ExactSizeIterator for usize and that
+// trait is outside our crate, so let's add our own trait so we can
+// implement RangeInclusive::len().
+trait Length {
+    fn len(self) -> usize;
+}
+
+/// A trait to signal that the size of this object is in bits
+/// and/or bytes.
+///
+/// This is not [Sized] but represents the size of this object on the wire, e.g.
+/// a HID report's size.
+pub trait BitSize {
+    /// The size in bits for this object. Where [BitSize::size_in_bits] is
+    /// not a multiple of 8, the [BitSize::size_in_bytes] is rounded up to fit all bits.
+    fn size_in_bits(&self) -> usize;
+    /// The size in bytes for this object. Where [BitSize::size_in_bits] is
+    /// not a multiple of 8, the [BitSize::size_in_bytes] is rounded up to fit all bits.
+    fn size_in_bytes(&self) -> usize;
+}
+
+// RangeInclusive doesn't implement ExactSizeIterator for usize and that
+// trait is outside our crate, so...
+impl Length for &RangeInclusive<usize> {
+    fn len(self) -> usize {
+        self.end() - self.start() + 1
+    }
+}
+
+impl TwosComplement<i8> for u8 {
+    fn twos_comp(self, nbits: usize) -> i8 {
+        assert!(nbits > 0);
+        if nbits >= 8 || self & (1 << (nbits - 1)) == 0 {
+            self as i8
+        } else {
+            let s = self as i16;
+            let min = 1 << nbits;
+            (-min + s) as i8
+        }
+    }
+}
+
+impl TwosComplement<i16> for u16 {
+    fn twos_comp(self, nbits: usize) -> i16 {
+        assert!(nbits > 0);
+        if nbits >= 16 || self & (1 << (nbits - 1)) == 0 {
+            self as i16
+        } else {
+            let s = self as i32;
+            let min = 1 << nbits;
+            (-min + s) as i16
+        }
+    }
+}
+
+impl TwosComplement<i32> for u32 {
+    fn twos_comp(self, nbits: usize) -> i32 {
+        assert!(nbits > 0);
+        if nbits >= 32 || self & (1 << (nbits - 1)) == 0 {
+            self as i32
+        } else {
+            let s = self as i64;
+            let min = 1 << nbits;
+            (-min + s) as i32
+        }
+    }
+}
+
+/// A [ReportDescriptor] is the static set of [Items](hid::Item)
+/// that define how data from the device should be interpreted.
+///
+/// A device may have up to three different types of [Reports](Report)
+/// (Input, Output, and Feature), all of which are defined in the
+/// single report descriptor.
+///
 #[derive(Debug, Default)]
 pub struct ReportDescriptor {
     input_reports: Vec<Report>,
@@ -22,15 +105,160 @@ pub struct ReportDescriptor {
     feature_reports: Vec<Report>,
 }
 
-impl ReportDescriptor {
-    pub fn input_reports(&self) -> &Vec<Report> {
+impl<'a> ReportDescriptor {
+    /// Returns the set of input reports or the empty
+    /// slice if none exist.
+    pub fn input_reports(&self) -> &[Report] {
         &self.input_reports
     }
-    pub fn output_reports(&self) -> &Vec<Report> {
+
+    /// Returns the set of output reports or the empty
+    /// slice if none exist.
+    pub fn output_reports(&self) -> &[Report] {
         &self.output_reports
     }
-    pub fn feature_reports(&self) -> &Vec<Report> {
+
+    /// Returns the set of feature reports or the empty
+    /// slice if none exist.
+    pub fn feature_reports(&self) -> &[Report] {
         &self.feature_reports
+    }
+
+    /// Parse the given bytes as input report.
+    ///
+    /// The first byte of the report must be the Report ID
+    /// if this [ReportDescriptor] defined Report IDs.
+    pub fn parse_input_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+        let list = &self.input_reports;
+        self.parse_report(list, bytes)
+    }
+
+    /// Parse the given bytes as output report.
+    ///
+    /// The first byte of the report must be the Report ID
+    /// if this [ReportDescriptor] defined Report IDs.
+    pub fn parse_output_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+        let list = &self.output_reports;
+        self.parse_report(list, bytes)
+    }
+
+    /// Parse the given bytes as feature report.
+    ///
+    /// The first byte of the report must be the Report ID
+    /// if this [ReportDescriptor] defined Report IDs.
+    pub fn parse_feature_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+        let list = &self.feature_reports;
+        self.parse_report(list, bytes)
+    }
+
+    /// Parse a byte sequence and return the values together
+    /// with the report these values belong to.
+    fn parse_report(&'a self, list: &Vec<Report>, bytes: &[u8]) -> Result<ParsedReport> {
+        // Do we have report IDs? If not, the first report is what we want.
+        let report = if self.input_reports.first().unwrap().report_id().is_some() {
+            self.input_reports
+                .iter()
+                .find(|r| r.report_id().unwrap() == ReportId(bytes[0]))
+                .expect("Unknown report ID")
+        } else {
+            self.input_reports.first().unwrap()
+        };
+
+        let values = report.parse(bytes)?;
+        let parsed = ParsedReport { report, values };
+        Ok(parsed)
+    }
+}
+
+impl TryFrom<&[u8]> for ReportDescriptor {
+    type Error = ParserError;
+
+    /// Try to parse the given byte array as a report descriptor.
+    fn try_from(bytes: &[u8]) -> Result<ReportDescriptor> {
+        parse_report_descriptor(bytes)
+    }
+}
+
+/// A single value as defined by a [ReportDescriptor]'s [Field].
+///
+/// This crate extracts the minimum-sized value as required by
+/// the HID report descriptor (i.e. a field defined as 2 bits will
+/// be a [u8] or [i8], a field with 17 bits will be [u16]/[i16], etc.)
+///
+/// If you don't care about the size, use [ReportValue::unsigned] or
+/// [ReportValue::signed] to get a 32-bit value.
+#[derive(Debug)]
+pub enum ReportValue {
+    /// The value of a field with up to 8 bits and a positive [LogicalMinimum].
+    Unsigned8(u8),
+    /// The value of a field with up to 8 bits and a negative [LogicalMinimum].
+    Signed8(i8),
+    /// The value of a field with up to 16 bits and a positive [LogicalMinimum].
+    Unsigned16(u16),
+    /// The value of a field with up to 16 bits and a negative [LogicalMinimum].
+    Signed16(i16),
+    /// The value of a field with up to 32 bits and a positive [LogicalMinimum].
+    Unsigned32(u32),
+    /// The value of a field with up to 32 bits and a negative [LogicalMinimum].
+    Signed32(i32),
+}
+
+impl ReportValue {
+    /// Returns the value as 32 bit unsigned integer or `None` if
+    /// the value is signed.
+    ///
+    /// Note that this returns `None` even if the signed value
+    /// would otherwise fit into an [u32].
+    ///
+    /// Check the [Field]'s [LogicalMinimum] to know whether a
+    /// value is signed or unsigned.
+    pub fn unsigned(&self) -> Option<u32> {
+        match self {
+            Self::Unsigned8(u) => Some(*u as u32),
+            Self::Unsigned16(u) => Some(*u as u32),
+            Self::Unsigned32(u) => Some(*u),
+            _ => None,
+        }
+    }
+
+    /// Returns the value as 32 bit signed integer or `None` if
+    /// the value is unsigned.
+    ///
+    /// Note that this returns `None` even if the unsigned value
+    /// would otherwise fit into an [i32].
+    ///
+    /// Check the [Field]'s [LogicalMinimum] to know whether a
+    /// value is signed or unsigned.
+    pub fn signed(&self) -> Option<i32> {
+        match self {
+            Self::Signed8(u) => Some(*u as i32),
+            Self::Signed16(u) => Some(*u as i32),
+            Self::Signed32(u) => Some(*u),
+            _ => None,
+        }
+    }
+}
+
+/// The result of parsing a [Report] via
+/// [ReportDescriptor::parse_input_report],
+/// [ReportDescriptor::parse_output_report],
+/// [ReportDescriptor::parse_feature_report], or [Report::parse].
+#[derive(Debug)]
+pub struct ParsedReport<'a> {
+    report: &'a Report,
+    values: Vec<ReportValue>,
+}
+
+impl<'a> ParsedReport<'a> {
+    /// Returns the list of values in this report, corresponding
+    /// to each [Field] in the [Report].
+    pub fn values(&self) -> &[ReportValue] {
+        &self.values
+    }
+
+    /// The [Report] these values represent.
+    pub fn report(&self) -> &'a Report {
+        self.report
     }
 }
 
@@ -41,52 +269,224 @@ pub enum Direction {
     Feature,
 }
 
+/// A HID Input, Output or Feature Report.
+///
+/// Where a report contains the [Report::report_id] the first
+/// byte of the report is always that Report ID, followed
+/// by the data in the sequence announced in the HID [ReportDescriptor].
+///
+/// Note that each of Input, Output and Feature Reports
+/// have their own enumeration of Report IDs, i.e. an Input Report
+/// with a Report ID of e.g. 1 may have a different size and/or [Field]s
+/// to an Output Report with a Report ID of 1.
+///
+/// The Report ID has no meaning other than to distinguish
+/// different reports. See Section 6.2.2.7 for details.
 #[derive(Debug)]
 pub struct Report {
     /// The report ID, if any
-    pub id: Option<ReportId>,
+    id: Option<ReportId>,
     /// The size of this report in bits
-    pub size: usize,
+    size: usize,
     /// The fields present in this report
-    pub items: Vec<Field>,
+    fields: Vec<Field>,
 
     /// The "direction"  of this report
-    pub direction: Direction,
+    direction: Direction,
 }
 
-impl Report {
+impl<'a> Report {
+    /// Returns the HID Report ID for this report, if any.
     pub fn report_id(&self) -> &Option<ReportId> {
         &self.id
     }
-    pub fn size_in_bits(&self) -> usize {
-        self.size
+
+    /// Returns the parsed HID Fields ID for this report. A caller should
+    /// iterate through these fields to find the ones it is interested
+    /// in and use the [Field::bits] to extract the data from future
+    /// reports.
+    pub fn fields(&self) -> &[Field] {
+        &self.fields
     }
-    pub fn size_in_bytes(&self) -> usize {
-        self.size / 8
+
+    /// Extract the bit range from the given byte array, converting the
+    /// result into a [u32].
+    ///
+    /// The number of bits in the range must be less or equal to 32.
+    fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
+        let nbits = bits.len();
+        assert_ne!(nbits, 0);
+        assert!(nbits <= 32);
+        // If we start at a bit 0 we only need 1 byte (for u8)
+        // if we start at anything else, we need the next byte(s) too
+        let bytecount = if bits.start() % 8 == 0 {
+            (nbits + 7) / 8
+        } else {
+            (nbits + 7) / 8 + 1
+        };
+        let base_index = bits.start() / 8;
+        let bytes = &bytes[base_index..base_index + bytecount];
+        //println!("---------------------------------");
+        //println!("In bytes are: {bytes:x?}");
+        let value: u64 = Range {
+            start: 0u64,
+            end: bytes.len() as u64,
+        }
+        //.inspect(|idx| println!("Accessing index {idx}: {:x?}", bytes[*idx as usize]))
+        .fold(0u64, |acc: u64, idx| {
+            //println!("acc is {acc}, idx is {idx}");
+            //println!("bytes[idx] is {:x}", bytes[idx as usize] as u64);
+            acc | (bytes[idx as usize] as u64) << (8 * idx)
+        });
+        //println!("Value is thus: {value:x?}");
+
+        let base_shift = bits.start() % 8;
+        let mask_shift = 32 - nbits;
+        let mask = (!0 as u32) >> mask_shift;
+        //println!("Mask is : {mask:x?}");
+        let value = (value >> base_shift) as u32;
+        //println!("{base_shift}-shifted value  is : {value:x?}");
+
+        //println!("---------------------------------");
+        value & mask
     }
-    pub fn items(&self) -> &Vec<Field> {
-        &self.items
+
+    /// Extract the bit range from the given byte array, converting the
+    /// result into a [i32]. The sign of the number matches that
+    /// of the given bit range, e.g. a bit range of length 4 with the MSB set
+    /// to 1 will result in a negative number, up-casted to [i32].
+    ///
+    /// The number of bits in the range must be less or equal to 32.
+    fn extract_i32(bytes: &[u8], bits: &RangeInclusive<usize>) -> i32 {
+        let nbits = bits.len();
+        let v = Report::extract_u32(bytes, bits);
+        v.twos_comp(nbits)
+    }
+
+    fn extract_u16(bytes: &[u8], bits: &RangeInclusive<usize>) -> u16 {
+        assert!(bits.len() <= 16);
+        let v: u32 = Self::extract_u32(bytes, bits);
+        v as u16
+    }
+
+    fn extract_i16(bytes: &[u8], bits: &RangeInclusive<usize>) -> i16 {
+        let nbits = bits.len();
+        let v = Report::extract_u16(bytes, bits);
+        v.twos_comp(nbits)
+    }
+
+    fn extract_u8(bytes: &[u8], bits: &RangeInclusive<usize>) -> u8 {
+        assert!(bits.len() <= 8);
+        let v: u32 = Self::extract_u32(bytes, bits);
+        v as u8
+    }
+
+    fn extract_i8(bytes: &[u8], bits: &RangeInclusive<usize>) -> i8 {
+        let nbits = bits.len();
+        let v = Report::extract_u8(bytes, bits);
+        v.twos_comp(nbits)
+    }
+
+    /// Parse the given bytes into a set of [ReportValue]s. Each of these
+    /// values matches the corresponding [Field] in [Report::fields].
+    pub fn parse(&'a self, bytes: &[u8]) -> Result<Vec<ReportValue>> {
+        let values: Vec<ReportValue> = self
+            .fields()
+            .iter()
+            .filter(|f| !matches!(f, Field::Constant(_)))
+            .map(|f| {
+                (
+                    f.bits(),
+                    match f {
+                        Field::Variable(f) => f.logical_range,
+                        Field::Array(f) => f.logical_range,
+                        _ => panic!("Constant field should have been filtered"),
+                    },
+                )
+            })
+            .map(|(bits, range)| {
+                if range.minimum < LogicalMinimum(0) {
+                    match bits.len() {
+                        1..=7 => ReportValue::Signed8(Self::extract_i8(bytes, bits)),
+                        8..=15 => ReportValue::Signed16(Self::extract_i16(bytes, bits)),
+                        16..=31 => ReportValue::Signed32(Self::extract_i32(bytes, bits)),
+                        n => panic!("invalid data length {n}"),
+                    }
+                } else {
+                    match bits.len() {
+                        1..=7 => ReportValue::Unsigned8(Self::extract_u8(bytes, bits)),
+                        8..=15 => ReportValue::Unsigned16(Self::extract_u16(bytes, bits)),
+                        16..=31 => ReportValue::Unsigned32(Self::extract_u32(bytes, bits)),
+                        n => panic!("invalid data length {n}"),
+                    }
+                }
+            })
+            // .inspect(|v| println!("{v:?}"))
+            .collect();
+
+        Ok(values)
     }
 }
 
+impl BitSize for Report {
+    /// The size of this HID report on the wire, in bits
+    fn size_in_bits(&self) -> usize {
+        self.size
+    }
+
+    /// The size of this HID report on the wire, in bytes.
+    fn size_in_bytes(&self) -> usize {
+        self.size / 8
+    }
+}
+
+/// The usage of a [Field] defines the interpretation of a
+/// data value. See the [hut] module for a list of known Usages.
+///
+/// A Usage comprises of a 16 bit [UsagePage] and a 16 bit [UsageId].
 #[derive(Clone, Copy, Debug)]
 pub struct Usage {
     pub usage_page: UsagePage,
     pub usage_id: UsageId,
 }
 
+/// The logical range of a [Field]s' value, see Section 5.8.
+///
+/// Values sent to/fro a device fit within this minimum and
+/// (inclusive) maximum range.
+///
+/// Interpretation of the data is as signed value if one of
+/// minimum or maximum is less than zero, otherwise the
+/// value is unsigned.
+///
+/// See [ReportValue::unsigned] and [ReportValue::signed].
 #[derive(Clone, Copy, Debug)]
 pub struct LogicalRange {
     pub minimum: LogicalMinimum,
     pub maximum: LogicalMaximum,
 }
 
+/// The physical range of a [Field]s' value, see Section 6.2.2.7.
+///
+/// The physical range (if it exists) maps the logical range
+/// into a physical dimension so that the logical minimum represents
+/// the physical minimum and the logical maximum represents the
+/// physical maximum value.
 #[derive(Clone, Copy, Debug)]
 pub struct PhysicalRange {
     pub minimum: PhysicalMinimum,
     pub maximum: PhysicalMaximum,
 }
 
+/// A single field inside a [Report].
+///
+/// Fields may be [Field::Variable] and represent a
+/// single element of data or they may be
+/// a [Field::Array] that represent
+/// multiple elements.
+///
+/// Fields of type [Field::Constant] should be ignored by
+/// the caller.
 #[derive(Clone, Debug)]
 pub enum Field {
     Variable(VariableField),
@@ -95,6 +495,7 @@ pub enum Field {
 }
 
 impl Field {
+    /// Returns the bit range that make up this field.
     pub fn bits(&self) -> &RangeInclusive<usize> {
         match self {
             Field::Variable(f) => &f.bits,
@@ -103,11 +504,7 @@ impl Field {
         }
     }
 
-    // sigh... RangeInclusive doesn't implement ExactSizeIterator for usize...
-    pub fn bit_count(&self) -> usize {
-        return self.bits().end() - self.bits().start() + 1;
-    }
-
+    /// Returns the Report ID this field belongs to, if any.
     fn report_id(&self) -> &Option<ReportId> {
         match self {
             Field::Variable(f) => &f.report_id,
@@ -127,37 +524,70 @@ impl Field {
     }
 }
 
+impl Length for &Field {
+    fn len(self) -> usize {
+        return self.bits().len();
+    }
+}
+
+/// A [VariableField] represents a single physical control.
 #[derive(Clone, Debug)]
 pub struct VariableField {
-    pub usage: Usage,
+    pub report_id: Option<ReportId>,
+    pub direction: Direction,
     pub bits: RangeInclusive<usize>,
+    pub usage: Usage,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
-    pub report_id: Option<ReportId>,
-    pub direction: Direction,
 }
 
+/// An [ArrayField] represents a group of physical controls,
+/// see section 6.2.2.5.
+///
+/// > An array provides an alternate means for
+/// > describing the data returned from a group of
+/// > buttons. Arrays are more efficient, if less flexible
+/// > than variable items. Rather than returning a single
+/// > bit for each button in the group, an array returns an
+/// > index in each field that corresponds to the pressed
+/// > button
 #[derive(Clone, Debug)]
 pub struct ArrayField {
-    pub usages: Vec<Usage>,
+    pub report_id: Option<ReportId>,
+    pub direction: Direction,
     pub bits: RangeInclusive<usize>,
+    pub usages: Vec<Usage>,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
-    pub report_id: Option<ReportId>,
-    pub direction: Direction,
 }
 
+impl ArrayField {
+    pub fn usages(&self) -> &[Usage] {
+        &self.usages
+    }
+}
+
+/// A [ConstantField] is one that represents a [hid::MainItem]
+/// with Constant data, see Section 6.2.2.4.
+///
+/// > Constant indicates the item is a static read-only field in a
+/// > report and cannot be modified (written) by the
+/// > host.
+///
+/// Data in a [ConstantField] should be ignored by the caller, it
+/// is merely used as padding, usually to align the subsequent
+/// value on a byte boundary.
 #[derive(Clone, Debug)]
 pub struct ConstantField {
-    pub bits: RangeInclusive<usize>,
     pub report_id: Option<ReportId>,
     pub direction: Direction,
+    pub bits: RangeInclusive<usize>,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -176,14 +606,6 @@ pub enum ParserError {
 }
 
 type Result<T> = std::result::Result<T, ParserError>;
-
-impl TryFrom<&[u8]> for ReportDescriptor {
-    type Error = ParserError;
-
-    fn try_from(bytes: &[u8]) -> Result<ReportDescriptor> {
-        parse_report_descriptor(bytes)
-    }
-}
 
 #[derive(Clone, Copy, Debug, Default)]
 struct Globals {
@@ -221,22 +643,6 @@ struct Locals {
     string_minimum: Option<StringMinimum>,
     string_maximum: Option<StringMaximum>,
     delimiter: Option<Delimiter>,
-}
-
-struct Offsets {
-    /// Bit offset for the report-id less report
-    pub bit_offset: usize,
-    /// Bit offsets for report with report-id
-    pub bit_offsets: HashMap<ReportId, usize>,
-}
-
-impl Offsets {
-    fn new() -> Self {
-        Self {
-            bit_offset: 0,
-            bit_offsets: HashMap::default(),
-        }
-    }
 }
 
 #[derive(Debug)]
@@ -353,29 +759,7 @@ fn handle_main_item(
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
-    //let reports: &mut Vec<Report> = match direction {
-    //    Direction::Input => &mut rdesc.input_reports,
-    //    Direction::Output => &mut rdesc.output_reports,
-    //    Direction::Feature => &mut rdesc.feature_reports,
-    //};
-
     let report_id = globals.report_id;
-    //let report = match globals.report_id {
-    //    None => reports.first_mut(),
-    //    Some(id) => reports.iter_mut().find(|r| r.id.unwrap() == id),
-    //};
-    //let report = match report {
-    //    None => {
-    //        reports.push(Report {
-    //            id: globals.report_id,
-    //            size: 0,
-    //            items: vec![],
-    //            direction,
-    //        });
-    //        reports.last_mut().unwrap()
-    //    }
-    //    Some(r) => r,
-    //};
 
     let (is_constant, is_variable) = match item {
         MainItem::Input(i) => (i.is_constant, i.is_variable),
@@ -520,10 +904,15 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
 
                 let report = match report {
                     None => {
+                        let initial_size = if report_id.is_some() {
+                            8
+                        } else {
+                            0
+                        };
                         reports.push(Report {
                             id: *report_id,
-                            size: 0,
-                            items: vec![],
+                            size: initial_size,
+                            fields: vec![],
                             direction,
                         });
                         reports.last_mut().unwrap()
@@ -535,10 +924,10 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let offset = report.size;
                 fields.iter_mut().for_each(|f| {
                     f.update_bit_offset(offset);
-                    report.size += f.bit_count();
+                    report.size += f.len();
                 });
 
-                report.items.append(&mut fields);
+                report.fields.append(&mut fields);
             }
             ItemType::Long => {}
             ItemType::Reserved => {}
@@ -628,5 +1017,85 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {}
+    fn test_twos_comp() {
+        assert_eq!(5u8.twos_comp(3), -3);
+        assert_eq!(5u8.twos_comp(4), 5);
+        assert_eq!(0xffu8.twos_comp(8), -1);
+
+        assert_eq!(5u16.twos_comp(3), -3);
+        assert_eq!(5u16.twos_comp(4), 5);
+        assert_eq!(0xffffu16.twos_comp(16), -1);
+
+        assert_eq!(5u32.twos_comp(3), -3);
+        assert_eq!(5u32.twos_comp(4), 5);
+        assert_eq!(0xffffffffu32.twos_comp(32), -1);
+    }
+
+    #[test]
+    fn test_range_length() {
+        assert_eq!(1, RangeInclusive::new(0usize, 0usize).len());
+        assert_eq!(2, RangeInclusive::new(0usize, 1usize).len());
+        assert_eq!(10, RangeInclusive::new(0usize, 9usize).len());
+    }
+
+    #[test]
+    fn extract() {
+        let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
+
+        assert_eq!(0, Report::extract_u8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, Report::extract_u8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, Report::extract_u8(&bytes, &RangeInclusive::new(0, 3)));
+
+        assert_eq!(0, Report::extract_i8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, Report::extract_i8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, Report::extract_i8(&bytes, &RangeInclusive::new(0, 3)));
+
+        assert_eq!(
+            0b1001_1100,
+            Report::extract_u8(&bytes, &RangeInclusive::new(4, 11))
+        );
+        assert_eq!(
+            0b1001_1100u8 as i8,
+            Report::extract_i8(&bytes, &RangeInclusive::new(4, 11))
+        );
+
+        assert_eq!(0, Report::extract_u16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, Report::extract_u16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, Report::extract_u16(&bytes, &RangeInclusive::new(0, 3)));
+
+        assert_eq!(0, Report::extract_i16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, Report::extract_i16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, Report::extract_i16(&bytes, &RangeInclusive::new(0, 3)));
+
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            Report::extract_u16(&bytes, &RangeInclusive::new(4, 19))
+        );
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            Report::extract_i16(&bytes, &RangeInclusive::new(4, 19))
+        );
+        assert_eq!(
+            0b1_0110_1011_1001_110u16 as i16,
+            Report::extract_i16(&bytes, &RangeInclusive::new(5, 20))
+        );
+
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            Report::extract_u32(&bytes, &RangeInclusive::new(4, 19))
+        );
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            Report::extract_i32(&bytes, &RangeInclusive::new(4, 19))
+        );
+        assert_eq!(
+            ((0b1_0110_1011_1001_110u16 as i16) as i32),
+            Report::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+        );
+
+        assert_eq!(
+            ((0b1_0110_1011_1001_110u16 as i16) as i32),
+            Report::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+        );
+    }
 }

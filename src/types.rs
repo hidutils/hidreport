@@ -59,25 +59,25 @@ pub struct UsagePage(pub u16);
 impl_from!(UsagePage, UsagePage, u16);
 impl_fmt!(UsagePage, u16);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct LogicalMinimum(pub i32);
 
 impl_from!(LogicalMinimum, LogicalMinimum, i32);
 impl_fmt!(LogicalMinimum, i32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct LogicalMaximum(pub i32);
 
 impl_from!(LogicalMaximum, LogicalMaximum, i32);
 impl_fmt!(LogicalMaximum, i32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct PhysicalMinimum(pub i32);
 
 impl_from!(PhysicalMinimum, PhysicalMinimum, i32);
 impl_fmt!(PhysicalMinimum, i32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct PhysicalMaximum(pub i32);
 
 impl_from!(PhysicalMaximum, PhysicalMaximum, i32);
