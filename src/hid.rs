@@ -571,20 +571,10 @@ pub struct ItemData<'a> {
     bytes: &'a [u8],
 }
 
-impl<'a> ItemData<'a> {
-    /// The length of the data in bytes.
-    /// For short items, the length is 1, 2, or 4.
-    pub fn size(&self) -> usize {
-        self.bytes.len()
-    }
+impl<'a> std::ops::Deref for ItemData<'a > {
+    type Target = [u8];
 
-    pub fn is_empty(&self) -> bool {
-        self.bytes.is_empty()
-    }
-
-    /// The length of the data in bytes.
-    /// For short items, the length is 1, 2, or 4.
-    pub fn bytes(&'a self) -> &[u8] {
+    fn deref(&self) -> &Self::Target {
         self.bytes
     }
 }
@@ -594,7 +584,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u32 {
 
     /// Converts the (little endian) data bytes into a u32.
     fn try_from(data: &ItemData) -> Result<u32> {
-        match data.size() {
+        match data.len() {
             0 => panic!("Item data with zero bytes must not happen"),
             1 => Ok(data.bytes[0] as u32),
             2 => Ok(u16::from_le_bytes(data.bytes[0..2].try_into().unwrap()) as u32),
@@ -610,7 +600,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u8 {
     /// Converts the data bytes into a u8. This function throws an error if the data length
     /// is larger than 1.
     fn try_from(data: &ItemData) -> Result<u8> {
-        match data.size() {
+        match data.len() {
             0 => panic!("Item data with zero bytes must not happen"),
             1 => Ok(data.bytes[0]),
             2 | 4 => Err(ParserError::OutOfBounds),
@@ -624,7 +614,7 @@ impl<'a> TryFrom<&ItemData<'a>> for Vec<u8> {
 
     /// Converts the data bytes into a Vec<u8>, copying the data.
     fn try_from(data: &ItemData) -> Result<Vec<u8>> {
-        match data.size() {
+        match data.len() {
             0 => Err(ParserError::OutOfBounds),
             3 => panic!("Size of {} cannot happen", data.bytes.len()),
             1..=4 => Ok(data.bytes.to_owned()),
