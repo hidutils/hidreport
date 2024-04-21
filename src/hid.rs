@@ -669,7 +669,7 @@ impl ReportDescriptorItem {
         self.offset
     }
     /// The item that is this report descriptor item.
-    pub fn item(&self) -> &dyn Item {
+    pub fn item(&self) -> &impl Item {
         &self.item
     }
 }
