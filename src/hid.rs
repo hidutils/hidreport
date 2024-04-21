@@ -5,6 +5,26 @@
 //! Interpretation and/or analysis of the resulting [Item]s is left to
 //! the caller.
 //!
+//! Entry point is usually [`ReportDescriptorItems::try_from(bytes)`](ReportDescriptorItems::try_from):
+//!
+//! ```
+//! # use crate::hidreport::hid::*;
+//! # fn parse(bytes: &[u8]) {
+//! let rdesc_items = ReportDescriptorItems::try_from(bytes).unwrap();
+//! for rdesc_item in rdesc_items.iter() {
+//!     println!("Item at offset {:02x}", rdesc_item.offset());
+//!     let item = rdesc_item.item();
+//!     match item.item_type() {
+//!         ItemType::Main(mi) => match mi {
+//!             MainItem::Output(o) => println!("This is an output item"),
+//!             _ => {},
+//!         }
+//!         _ => {}
+//!     }
+//! }
+//! # }
+//! ```
+//!
 //! In this document and unless stated otherwise, a reference to "Section a.b.c" refers to the
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
 
@@ -561,7 +581,12 @@ pub trait Item {
 /// This struct mostly exists for convenience conversations, e.g.
 ///
 ///  ```
-///  let value: u32 = item().data().unwrap() as u32;
+///  # use crate::hidreport::hid::*;
+///  # fn func(item: impl Item) {
+///  if let Some(data) = item.data() {
+///     let value: u32 = u32::try_from(&data).unwrap();
+///  }
+///  # }
 ///  ```
 ///  and to avoid confusion between [Item::bytes] (all bytes of the HID [Item])
 ///  and [ItemData::bytes] (just the data bytes).
@@ -661,6 +686,8 @@ impl std::ops::Deref for ReportDescriptorItems {
 impl TryFrom<&[u8]> for ReportDescriptorItems {
     type Error = ParserError;
 
+    /// Attempts to itemize the given HID report descriptor into its
+    /// set of [ReportDescriptorItem]s.
     fn try_from(bytes: &[u8]) -> Result<Self> {
         itemize(bytes)
     }
