@@ -660,9 +660,11 @@ pub struct ReportDescriptorItems {
     items: Vec<ReportDescriptorItem>,
 }
 
-impl ReportDescriptorItems {
-    pub fn iter(&self) -> impl Iterator<Item = &ReportDescriptorItem> {
-        self.items.iter()
+impl std::ops::Deref for ReportDescriptorItems {
+    type Target = [ReportDescriptorItem];
+
+    fn deref(&self) -> &Self::Target {
+        &self.items
     }
 }
 
