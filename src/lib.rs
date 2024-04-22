@@ -398,19 +398,6 @@ struct ParsedReport<'a> {
     values: Vec<ReportValue>,
 }
 
-impl<'a> ParsedReport<'a> {
-    /// Returns the list of values in this report, corresponding
-    /// to each [Field] in the [Report].
-    pub fn values(&self) -> &[ReportValue] {
-        &self.values
-    }
-
-    /// The [Report] these values represent.
-    pub fn report(&self) -> &'a impl Report {
-        self.report
-    }
-}
-
 #[derive(Copy, Clone, Debug)]
 pub enum Direction {
     Input,
