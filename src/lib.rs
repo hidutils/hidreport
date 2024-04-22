@@ -190,15 +190,14 @@ impl<'a> ReportDescriptor {
 
     /// Parse a byte sequence and return the values together
     /// with the report these values belong to.
-    fn parse_report(&'a self, list: &[RDescReport], bytes: &[u8]) -> Result<ParsedReport> {
+    fn parse_report(&'a self, list: &'a [RDescReport], bytes: &[u8]) -> Result<ParsedReport> {
         // Do we have report IDs? If not, the first report is what we want.
-        let report = if self.input_reports.first().unwrap().report_id().is_some() {
-            self.input_reports
-                .iter()
+        let report = if list.first().unwrap().report_id().is_some() {
+            list.iter()
                 .find(|r| r.report_id().unwrap() == ReportId(bytes[0]))
                 .expect("Unknown report ID")
         } else {
-            self.input_reports.first().unwrap()
+            list.first().unwrap()
         };
 
         let values = report.parse(bytes)?;
