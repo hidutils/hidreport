@@ -72,7 +72,6 @@ use std::fmt;
 use std::ops::BitOr;
 use thiserror::Error;
 
-use crate::hid;
 use crate::types;
 use crate::Usage as HidUsage;
 
@@ -377,7 +376,7 @@ impl From<&Undefined> for u32 {
 }
 
 impl From<&Undefined> for UsagePage {
-    fn from(up: &Undefined) -> UsagePage {
+    fn from(_up: &Undefined) -> UsagePage {
         UsagePage::Undefined
     }
 }
@@ -982,7 +981,7 @@ impl From<&GenericDesktop> for u32 {
 }
 
 impl From<&GenericDesktop> for UsagePage {
-    fn from(up: &GenericDesktop) -> UsagePage {
+    fn from(_up: &GenericDesktop) -> UsagePage {
         UsagePage::GenericDesktop
     }
 }
@@ -1347,7 +1346,7 @@ impl From<&SimulationControls> for u32 {
 }
 
 impl From<&SimulationControls> for UsagePage {
-    fn from(up: &SimulationControls) -> UsagePage {
+    fn from(_up: &SimulationControls) -> UsagePage {
         UsagePage::SimulationControls
     }
 }
@@ -1512,7 +1511,7 @@ impl From<&VRControls> for u32 {
 }
 
 impl From<&VRControls> for UsagePage {
-    fn from(up: &VRControls) -> UsagePage {
+    fn from(_up: &VRControls) -> UsagePage {
         UsagePage::VRControls
     }
 }
@@ -1787,7 +1786,7 @@ impl From<&SportsControls> for u32 {
 }
 
 impl From<&SportsControls> for UsagePage {
-    fn from(up: &SportsControls) -> UsagePage {
+    fn from(_up: &SportsControls) -> UsagePage {
         UsagePage::SportsControls
     }
 }
@@ -2037,7 +2036,7 @@ impl From<&GamingControls> for u32 {
 }
 
 impl From<&GamingControls> for UsagePage {
-    fn from(up: &GamingControls) -> UsagePage {
+    fn from(_up: &GamingControls) -> UsagePage {
         UsagePage::GamingControls
     }
 }
@@ -2264,7 +2263,7 @@ impl From<&GenericDeviceControls> for u32 {
 }
 
 impl From<&GenericDeviceControls> for UsagePage {
-    fn from(up: &GenericDeviceControls) -> UsagePage {
+    fn from(_up: &GenericDeviceControls) -> UsagePage {
         UsagePage::GenericDeviceControls
     }
 }
@@ -3224,7 +3223,7 @@ impl From<&Keyboard> for u32 {
 }
 
 impl From<&Keyboard> for UsagePage {
-    fn from(up: &Keyboard) -> UsagePage {
+    fn from(_up: &Keyboard) -> UsagePage {
         UsagePage::Keyboard
     }
 }
@@ -3804,7 +3803,7 @@ impl From<&LEDs> for u32 {
 }
 
 impl From<&LEDs> for UsagePage {
-    fn from(up: &LEDs) -> UsagePage {
+    fn from(_up: &LEDs) -> UsagePage {
         UsagePage::LEDs
     }
 }
@@ -3909,7 +3908,7 @@ impl From<&Ordinals> for u32 {
 }
 
 impl From<&Ordinals> for UsagePage {
-    fn from(up: &Ordinals) -> UsagePage {
+    fn from(_up: &Ordinals) -> UsagePage {
         UsagePage::Ordinals
     }
 }
@@ -4509,7 +4508,7 @@ impl From<&TelephonyDevices> for u32 {
 }
 
 impl From<&TelephonyDevices> for UsagePage {
-    fn from(up: &TelephonyDevices) -> UsagePage {
+    fn from(_up: &TelephonyDevices) -> UsagePage {
         UsagePage::TelephonyDevices
     }
 }
@@ -6817,7 +6816,7 @@ impl From<&ConsumerDevices> for u32 {
 }
 
 impl From<&ConsumerDevices> for UsagePage {
-    fn from(up: &ConsumerDevices) -> UsagePage {
+    fn from(_up: &ConsumerDevices) -> UsagePage {
         UsagePage::ConsumerDevices
     }
 }
@@ -7440,7 +7439,7 @@ impl From<&Digitizers> for u32 {
 }
 
 impl From<&Digitizers> for UsagePage {
-    fn from(up: &Digitizers) -> UsagePage {
+    fn from(_up: &Digitizers) -> UsagePage {
         UsagePage::Digitizers
     }
 }
@@ -7635,7 +7634,7 @@ impl From<&Haptic> for u32 {
 }
 
 impl From<&Haptic> for UsagePage {
-    fn from(up: &Haptic) -> UsagePage {
+    fn from(_up: &Haptic) -> UsagePage {
         UsagePage::Haptic
     }
 }
@@ -7736,7 +7735,7 @@ impl From<&Unicode> for u32 {
 }
 
 impl From<&Unicode> for UsagePage {
-    fn from(up: &Unicode) -> UsagePage {
+    fn from(_up: &Unicode) -> UsagePage {
         UsagePage::Unicode
     }
 }
@@ -8006,7 +8005,7 @@ impl From<&EyeandHeadTrackers> for u32 {
 }
 
 impl From<&EyeandHeadTrackers> for UsagePage {
-    fn from(up: &EyeandHeadTrackers) -> UsagePage {
+    fn from(_up: &EyeandHeadTrackers) -> UsagePage {
         UsagePage::EyeandHeadTrackers
     }
 }
@@ -8486,7 +8485,7 @@ impl From<&AuxiliaryDisplay> for u32 {
 }
 
 impl From<&AuxiliaryDisplay> for UsagePage {
-    fn from(up: &AuxiliaryDisplay) -> UsagePage {
+    fn from(_up: &AuxiliaryDisplay) -> UsagePage {
         UsagePage::AuxiliaryDisplay
     }
 }
@@ -11653,7 +11652,7 @@ impl From<&Sensor> for u32 {
 }
 
 impl From<&Sensor> for UsagePage {
-    fn from(up: &Sensor) -> UsagePage {
+    fn from(_up: &Sensor) -> UsagePage {
         UsagePage::Sensor
     }
 }
@@ -11903,7 +11902,7 @@ impl From<&MedicalInstruments> for u32 {
 }
 
 impl From<&MedicalInstruments> for UsagePage {
-    fn from(up: &MedicalInstruments) -> UsagePage {
+    fn from(_up: &MedicalInstruments) -> UsagePage {
         UsagePage::MedicalInstruments
     }
 }
@@ -12218,7 +12217,7 @@ impl From<&BrailleDisplay> for u32 {
 }
 
 impl From<&BrailleDisplay> for UsagePage {
-    fn from(up: &BrailleDisplay) -> UsagePage {
+    fn from(_up: &BrailleDisplay) -> UsagePage {
         UsagePage::BrailleDisplay
     }
 }
@@ -12502,7 +12501,7 @@ impl From<&LightingandIllumination> for u32 {
 }
 
 impl From<&LightingandIllumination> for UsagePage {
-    fn from(up: &LightingandIllumination) -> UsagePage {
+    fn from(_up: &LightingandIllumination) -> UsagePage {
         UsagePage::LightingandIllumination
     }
 }
@@ -12667,7 +12666,7 @@ impl From<&Monitor> for u32 {
 }
 
 impl From<&Monitor> for UsagePage {
-    fn from(up: &Monitor) -> UsagePage {
+    fn from(_up: &Monitor) -> UsagePage {
         UsagePage::Monitor
     }
 }
@@ -12772,7 +12771,7 @@ impl From<&MonitorEnumeratedValues> for u32 {
 }
 
 impl From<&MonitorEnumeratedValues> for UsagePage {
-    fn from(up: &MonitorEnumeratedValues) -> UsagePage {
+    fn from(_up: &MonitorEnumeratedValues) -> UsagePage {
         UsagePage::MonitorEnumeratedValues
     }
 }
@@ -13051,7 +13050,7 @@ impl From<&VESAVirtualControls> for u32 {
 }
 
 impl From<&VESAVirtualControls> for UsagePage {
-    fn from(up: &VESAVirtualControls) -> UsagePage {
+    fn from(_up: &VESAVirtualControls) -> UsagePage {
         UsagePage::VESAVirtualControls
     }
 }
@@ -13166,7 +13165,7 @@ impl From<&VESACommand> for u32 {
 }
 
 impl From<&VESACommand> for UsagePage {
-    fn from(up: &VESACommand) -> UsagePage {
+    fn from(_up: &VESACommand) -> UsagePage {
         UsagePage::VESACommand
     }
 }
@@ -13271,7 +13270,7 @@ impl From<&PowerDevice> for u32 {
 }
 
 impl From<&PowerDevice> for UsagePage {
-    fn from(up: &PowerDevice) -> UsagePage {
+    fn from(_up: &PowerDevice) -> UsagePage {
         UsagePage::PowerDevice
     }
 }
@@ -13372,7 +13371,7 @@ impl From<&BatterySystem> for u32 {
 }
 
 impl From<&BatterySystem> for UsagePage {
-    fn from(up: &BatterySystem) -> UsagePage {
+    fn from(_up: &BatterySystem) -> UsagePage {
         UsagePage::BatterySystem
     }
 }
@@ -13477,7 +13476,7 @@ impl From<&BarCodeScanner> for u32 {
 }
 
 impl From<&BarCodeScanner> for UsagePage {
-    fn from(up: &BarCodeScanner) -> UsagePage {
+    fn from(_up: &BarCodeScanner) -> UsagePage {
         UsagePage::BarCodeScanner
     }
 }
@@ -13582,7 +13581,7 @@ impl From<&Scale> for u32 {
 }
 
 impl From<&Scale> for UsagePage {
-    fn from(up: &Scale) -> UsagePage {
+    fn from(_up: &Scale) -> UsagePage {
         UsagePage::Scale
     }
 }
@@ -13687,7 +13686,7 @@ impl From<&MagneticStripeReading> for u32 {
 }
 
 impl From<&MagneticStripeReading> for UsagePage {
-    fn from(up: &MagneticStripeReading) -> UsagePage {
+    fn from(_up: &MagneticStripeReading) -> UsagePage {
         UsagePage::MagneticStripeReading
     }
 }
@@ -13802,7 +13801,7 @@ impl From<&CameraControl> for u32 {
 }
 
 impl From<&CameraControl> for UsagePage {
-    fn from(up: &CameraControl) -> UsagePage {
+    fn from(_up: &CameraControl) -> UsagePage {
         UsagePage::CameraControl
     }
 }
@@ -13907,7 +13906,7 @@ impl From<&ArcadePageOAAF> for u32 {
 }
 
 impl From<&ArcadePageOAAF> for UsagePage {
-    fn from(up: &ArcadePageOAAF) -> UsagePage {
+    fn from(_up: &ArcadePageOAAF) -> UsagePage {
         UsagePage::ArcadePageOAAF
     }
 }
@@ -14008,7 +14007,7 @@ impl From<&GamingDevice> for u32 {
 }
 
 impl From<&GamingDevice> for UsagePage {
-    fn from(up: &GamingDevice) -> UsagePage {
+    fn from(_up: &GamingDevice) -> UsagePage {
         UsagePage::GamingDevice
     }
 }
@@ -14128,7 +14127,7 @@ impl From<&FIDOAlliance> for u32 {
 }
 
 impl From<&FIDOAlliance> for UsagePage {
-    fn from(up: &FIDOAlliance) -> UsagePage {
+    fn from(_up: &FIDOAlliance) -> UsagePage {
         UsagePage::FIDOAlliance
     }
 }
@@ -14758,7 +14757,7 @@ impl From<&Wacom> for u32 {
 }
 
 impl From<&Wacom> for UsagePage {
-    fn from(up: &Wacom) -> UsagePage {
+    fn from(_up: &Wacom) -> UsagePage {
         UsagePage::Wacom
     }
 }
@@ -28212,7 +28211,7 @@ mod tests {
         // 32 bit usage to enum
         assert!(matches!(
             Usage::try_from(hid_usage).unwrap(),
-            Usage::GenericDesktop { usage: u }
+            Usage::GenericDesktop { usage: _ }
         ));
 
         // Usage to u32

@@ -4,11 +4,11 @@
 //! A wrapper around the [HID Usage Tables (HUT)](https://usb.org/document-library/hid-usage-tables-15).
 //! Note that this module is created through code generation.
 //!
-//! In this document and unless stated otherwise, a reference to "section a.b.c" refers to the 
+//! In this document and unless stated otherwise, a reference to "section a.b.c" refers to the
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
 //!
 //! # Terminology
-//! 
+//!
 //! See Section 5.5: a HID Usage is a 32 bit value comprising of a 16-bit Usage
 //! Page and a 16-bit Usage ID.
 //!
@@ -21,13 +21,13 @@
 //! - "Usage" refers to the 32-bit value comprising a Usage Page and a Usage.
 //!
 //! All defined [Usage]s and [UsagePage] implement [AsUsagePage] and (if applicable) [AsUsage] as
-//! well as the [`From<u16>`](From), [`From<u32>`](From) and [`TryFrom<u16>`](TryFrom) conversions so that: 
+//! well as the [`From<u16>`](From), [`From<u32>`](From) and [`TryFrom<u16>`](TryFrom) conversions so that:
 //! ```
 //! # use hidreport::hut::*;
 //! let hid_usage_page: u16 = 0x01; // Generic Desktop
 //! let hid_usage_id: u16 = 0x02; // Mouse
 //! let hid_usage: u32 = (hid_usage_page as u32) << 16 | hid_usage_id as u32;
-//! 
+//!
 //! // Convert to and fro the Usage either via [u32] or the [AsUsage] trait
 //! let u = GenericDesktop::Mouse;
 //! assert!(matches!(Usage::try_from(hid_usage).unwrap(), Usage::GenericDesktop {usage: u}));
@@ -41,7 +41,7 @@
 //! // Extract the Usage Page from  Usage enum value
 //! assert!(matches!(UsagePage::from(&u), UsagePage::GenericDesktop));
 //! let up = UsagePage::from(&u);
-//! 
+//!
 //! // Get the Usage Page numeric value is via the [AsUsagePage]
 //! assert_eq!(hid_usage_page, u16::from(&up));
 //! assert_eq!(hid_usage_page, up.usage_page_value());
@@ -75,7 +75,6 @@ use std::fmt;
 use std::ops::BitOr;
 
 use crate::Usage as HidUsage;
-use crate::hid;
 use crate::types;
 
 #[derive(Error, Debug)]
@@ -100,7 +99,7 @@ pub trait AsUsagePage {
     fn usage_page_value(&self) -> u16;
 }
 
-/// A HID UsagePage, see section 5.5. This represents the upper 16 bits in the 
+/// A HID UsagePage, see section 5.5. This represents the upper 16 bits in the
 /// 32-bit
 ///
 /// Note: this enum is generated from the HUT documents.
@@ -122,7 +121,7 @@ impl UsagePage {
     /// Returns the Usage Page for the given Usage Page value. This is the
     /// 16-bit Usage Page value only, not the full 32-bit Usage.
     ///
-    /// The returned value is always the "Undefined" usage of the matching 
+    /// The returned value is always the "Undefined" usage of the matching
     /// Usage Page.
     pub fn from_usage_page_value(usage_page: u16) -> Result<UsagePage> {
         UsagePage::try_from(usage_page)
@@ -259,7 +258,7 @@ impl From<&{{usage_page.name}}> for u32 {
 }
 
 impl From<&{{usage_page.name}}> for UsagePage {
-    fn from(up: &{{usage_page.name}}) -> UsagePage {
+    fn from(_up: &{{usage_page.name}}) -> UsagePage {
         UsagePage::{{usage_page.name}}
     }
 }
@@ -534,7 +533,7 @@ mod tests {
 
         let u = GenericDesktop::Mouse;
         // 32 bit usage to enum
-        assert!(matches!(Usage::try_from(hid_usage).unwrap(), Usage::GenericDesktop {usage: u}));
+        assert!(matches!(Usage::try_from(hid_usage).unwrap(), Usage::GenericDesktop {usage: _}));
 
         // Usage to u32
         assert_eq!(u32::from(&u), hid_usage);
