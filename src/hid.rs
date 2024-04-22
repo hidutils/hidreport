@@ -562,10 +562,10 @@ impl TryFrom<&[u8]> for LocalItem {
 // > reserved for future use. Tags xF0–xFF are vendor defined.
 //
 // Support for Long Items in this crate is probably incomplete.
-pub trait Item {
+pub trait Item : std::ops::Deref {
     /// The length of this item in bytes, inclusive of the header byte.
     /// For short items this is the length of the data in bytes plus 1 for the header byte.
-    /// For long items this is the lengh of the length of the data plus 4 (header byte, data size
+    /// For long items this is the length of the length of the data plus 4 (header byte, data size
     /// byte and 2 bytes for a long item tag).
     fn size(&self) -> usize;
 
@@ -585,14 +585,6 @@ pub trait Item {
     /// have a data payload longer than 4 bytes, Short Items (Section 6.2.2.2)
     /// have a data payload of 0, 1, 2 or 4 bytes.
     fn is_long_item(&self) -> bool;
-
-    /// The bytes representing this item as extracted from the report descriptor.
-    /// The first byte is the header byte and is guaranteed to exist.
-    ///
-    /// Note that for convenience this library may expand some values from their u8
-    /// representation in the protocol to u32. The bytes here have the original
-    /// representation as found in the report descriptor.
-    fn bytes(&self) -> &[u8];
 
     /// Return the item's data bytes, if any.
     fn data(&self) -> Option<ItemData>;
@@ -742,10 +734,6 @@ impl Item for ShortItem {
         self.header
     }
 
-    fn bytes(&self) -> &[u8] {
-        &self.bytes
-    }
-
     fn data(&self) -> Option<ItemData> {
         match self.item_size {
             1 => None,
@@ -754,6 +742,14 @@ impl Item for ShortItem {
             }),
             _ => panic!("Invalid item size {}", self.size()),
         }
+    }
+}
+
+impl std::ops::Deref for ShortItem {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
+        &self.bytes
     }
 }
 
@@ -818,8 +814,12 @@ impl Item for LongItem {
             bytes: &self.bytes[3..],
         })
     }
+}
 
-    fn bytes(&self) -> &[u8] {
+impl std::ops::Deref for LongItem {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
         &self.bytes
     }
 }
