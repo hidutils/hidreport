@@ -869,8 +869,7 @@ fn itemize(bytes: &[u8]) -> Result<ReportDescriptorItems> {
 mod tests {
     use super::*;
 
-    // FIXME
-    //#[test]
+    #[test]
     fn item_size() {
         for size in 1..4 {
             let itype = 0b100; // Global
@@ -880,10 +879,10 @@ mod tests {
 
             let item = ShortItem::try_from(bytes).unwrap();
             match size {
-                0 => assert_eq!(item.size(), 0),
-                1 => assert_eq!(item.size(), 1),
-                2 => assert_eq!(item.size(), 2),
-                3 => assert_eq!(item.size(), 4),
+                0 => assert_eq!(item.size(), 1),
+                1 => assert_eq!(item.size(), 2),
+                2 => assert_eq!(item.size(), 3),
+                3 => assert_eq!(item.size(), 5),
                 _ => panic!("Size {size} cannot happen"),
             }
         }
