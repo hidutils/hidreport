@@ -99,27 +99,27 @@ impl TwosComplement<i32> for u32 {
 ///
 #[derive(Debug, Default)]
 pub struct ReportDescriptor {
-    input_reports: Vec<Report>,
-    output_reports: Vec<Report>,
-    feature_reports: Vec<Report>,
+    input_reports: Vec<RDescReport>,
+    output_reports: Vec<RDescReport>,
+    feature_reports: Vec<RDescReport>,
 }
 
 impl<'a> ReportDescriptor {
     /// Returns the set of input reports or the empty
     /// slice if none exist.
-    pub fn input_reports(&self) -> &[Report] {
+    pub fn input_reports(&self) -> &[impl Report] {
         &self.input_reports
     }
 
     /// Returns the set of output reports or the empty
     /// slice if none exist.
-    pub fn output_reports(&self) -> &[Report] {
+    pub fn output_reports(&self) -> &[impl Report] {
         &self.output_reports
     }
 
     /// Returns the set of feature reports or the empty
     /// slice if none exist.
-    pub fn feature_reports(&self) -> &[Report] {
+    pub fn feature_reports(&self) -> &[impl Report] {
         &self.feature_reports
     }
 
@@ -127,32 +127,44 @@ impl<'a> ReportDescriptor {
     ///
     /// The first byte of the report must be the Report ID
     /// if this [ReportDescriptor] defined Report IDs.
-    pub fn parse_input_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+    pub fn parse_input_report(&'a self, bytes: &[u8]) -> Result<InputReport> {
         let list = &self.input_reports;
-        self.parse_report(list, bytes)
+        let parsed = self.parse_report(list, bytes)?;
+        Ok(InputReport {
+            report: parsed.report,
+            values: parsed.values
+        })
     }
 
     /// Parse the given bytes as output report.
     ///
     /// The first byte of the report must be the Report ID
     /// if this [ReportDescriptor] defined Report IDs.
-    pub fn parse_output_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+    pub fn parse_output_report(&'a self, bytes: &[u8]) -> Result<OutputReport> {
         let list = &self.output_reports;
-        self.parse_report(list, bytes)
+        let parsed = self.parse_report(list, bytes)?;
+        Ok(OutputReport {
+            report: parsed.report,
+            values: parsed.values
+        })
     }
 
     /// Parse the given bytes as feature report.
     ///
     /// The first byte of the report must be the Report ID
     /// if this [ReportDescriptor] defined Report IDs.
-    pub fn parse_feature_report(&'a self, bytes: &[u8]) -> Result<ParsedReport> {
+    pub fn parse_feature_report(&'a self, bytes: &[u8]) -> Result<FeatureReport> {
         let list = &self.feature_reports;
-        self.parse_report(list, bytes)
+        let parsed = self.parse_report(list, bytes)?;
+        Ok(FeatureReport {
+            report: parsed.report,
+            values: parsed.values
+        })
     }
 
     /// Parse a byte sequence and return the values together
     /// with the report these values belong to.
-    fn parse_report(&'a self, list: &Vec<Report>, bytes: &[u8]) -> Result<ParsedReport> {
+    fn parse_report(&'a self, list: &[RDescReport], bytes: &[u8]) -> Result<ParsedReport> {
         // Do we have report IDs? If not, the first report is what we want.
         let report = if self.input_reports.first().unwrap().report_id().is_some() {
             self.input_reports
@@ -239,12 +251,80 @@ impl ReportValue {
 }
 
 /// The result of parsing a [Report] via
+/// [ReportDescriptor::parse_input_report].
+///
+/// This struct wraps the [Report] as well as
+/// the contained [ReportValues](ReportValue).
+#[derive(Debug)]
+pub struct InputReport<'a> {
+    report: &'a RDescReport,
+    values: Vec<ReportValue>,
+}
+
+impl<'a> Report for InputReport<'a> {
+    fn report_id(&self) -> &Option<ReportId> {
+        self.report.report_id()
+    }
+
+    fn fields(&self) -> &[Field] {
+        self.report.fields()
+    }
+}
+
+impl<'a> BitSize for InputReport<'a> {
+    fn size_in_bits(&self) -> usize {
+        self.report.size_in_bits()
+    }
+    fn size_in_bytes(&self) -> usize {
+        self.report.size_in_bytes()
+    }
+}
+
+impl<'a> std::ops::Deref for InputReport<'a> {
+    type Target = [ReportValue];
+
+    fn deref(&self) -> &Self::Target {
+        &self.values
+    }
+}
+
+/// The result of parsing a [Report] via
+/// [ReportDescriptor::parse_output_report]
+pub struct OutputReport<'a> {
+    report: &'a RDescReport,
+    values: Vec<ReportValue>,
+}
+
+impl<'a> std::ops::Deref for OutputReport<'a> {
+    type Target = [ReportValue];
+
+    fn deref(&self) -> &Self::Target {
+        &self.values
+    }
+}
+
+/// The result of parsing a [Report] via
+/// [ReportDescriptor::parse_feature_report]
+pub struct FeatureReport<'a> {
+    report: &'a RDescReport,
+    values: Vec<ReportValue>,
+}
+
+impl<'a> std::ops::Deref for FeatureReport<'a> {
+    type Target = [ReportValue];
+
+    fn deref(&self) -> &Self::Target {
+        &self.values
+    }
+}
+
+/// The result of parsing a [Report] via
 /// [ReportDescriptor::parse_input_report],
 /// [ReportDescriptor::parse_output_report],
 /// [ReportDescriptor::parse_feature_report], or [Report::parse].
 #[derive(Debug)]
-pub struct ParsedReport<'a> {
-    report: &'a Report,
+struct ParsedReport<'a> {
+    report: &'a RDescReport,
     values: Vec<ReportValue>,
 }
 
@@ -256,7 +336,7 @@ impl<'a> ParsedReport<'a> {
     }
 
     /// The [Report] these values represent.
-    pub fn report(&self) -> &'a Report {
+    pub fn report(&self) -> &'a impl Report {
         self.report
     }
 }
@@ -281,8 +361,32 @@ pub enum Direction {
 ///
 /// The Report ID has no meaning other than to distinguish
 /// different reports. See Section 6.2.2.7 for details.
+pub trait Report : BitSize {
+    /// Returns the HID Report ID for this report, if any.
+    fn report_id(&self) -> &Option<ReportId>;
+
+    /// Returns the parsed HID Fields ID for this report. A caller should
+    /// iterate through these fields to find the ones it is interested
+    /// in and use the [Field::bits] to extract the data from future
+    /// reports.
+    fn fields(&self) -> &[Field];
+}
+
+/// A HID Input, Output or Feature Report.
+///
+/// Where a report contains the [Report::report_id] the first
+/// byte of the report is always that Report ID, followed
+/// by the data in the sequence announced in the HID [ReportDescriptor].
+///
+/// Note that each of Input, Output and Feature Reports
+/// have their own enumeration of Report IDs, i.e. an Input Report
+/// with a Report ID of e.g. 1 may have a different size and/or [Field]s
+/// to an Output Report with a Report ID of 1.
+///
+/// The Report ID has no meaning other than to distinguish
+/// different reports. See Section 6.2.2.7 for details.
 #[derive(Debug)]
-pub struct Report {
+struct RDescReport {
     /// The report ID, if any
     id: Option<ReportId>,
     /// The size of this report in bits
@@ -294,19 +398,18 @@ pub struct Report {
     direction: Direction,
 }
 
-impl<'a> Report {
-    /// Returns the HID Report ID for this report, if any.
-    pub fn report_id(&self) -> &Option<ReportId> {
+impl Report for RDescReport {
+    fn report_id(&self) -> &Option<ReportId> {
         &self.id
     }
 
-    /// Returns the parsed HID Fields ID for this report. A caller should
-    /// iterate through these fields to find the ones it is interested
-    /// in and use the [Field::bits] to extract the data from future
-    /// reports.
-    pub fn fields(&self) -> &[Field] {
+    fn fields(&self) -> &[Field] {
         &self.fields
     }
+}
+
+impl<'a> RDescReport {
+
 
     /// Extract the bit range from the given byte array, converting the
     /// result into a [u32].
@@ -358,7 +461,7 @@ impl<'a> Report {
     /// The number of bits in the range must be less or equal to 32.
     fn extract_i32(bytes: &[u8], bits: &RangeInclusive<usize>) -> i32 {
         let nbits = bits.len();
-        let v = Report::extract_u32(bytes, bits);
+        let v = Self::extract_u32(bytes, bits);
         v.twos_comp(nbits)
     }
 
@@ -370,7 +473,7 @@ impl<'a> Report {
 
     fn extract_i16(bytes: &[u8], bits: &RangeInclusive<usize>) -> i16 {
         let nbits = bits.len();
-        let v = Report::extract_u16(bytes, bits);
+        let v = Self::extract_u16(bytes, bits);
         v.twos_comp(nbits)
     }
 
@@ -382,7 +485,7 @@ impl<'a> Report {
 
     fn extract_i8(bytes: &[u8], bits: &RangeInclusive<usize>) -> i8 {
         let nbits = bits.len();
-        let v = Report::extract_u8(bytes, bits);
+        let v = Self::extract_u8(bytes, bits);
         v.twos_comp(nbits)
     }
 
@@ -426,7 +529,7 @@ impl<'a> Report {
     }
 }
 
-impl BitSize for Report {
+impl BitSize for RDescReport {
     /// The size of this HID report on the wire, in bits
     fn size_in_bits(&self) -> usize {
         self.size
@@ -894,7 +997,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     _ => panic!("Invalid item for handle_main_item()"),
                 };
 
-                let reports: &mut Vec<Report> = match direction {
+                let reports: &mut Vec<RDescReport> = match direction {
                     Direction::Input => &mut rdesc.input_reports,
                     Direction::Output => &mut rdesc.output_reports,
                     Direction::Feature => &mut rdesc.feature_reports,
@@ -913,7 +1016,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                         } else {
                             0
                         };
-                        reports.push(Report {
+                        reports.push(RDescReport {
                             id: *report_id,
                             size: initial_size,
                             fields: vec![],
@@ -1046,60 +1149,60 @@ mod tests {
     fn extract() {
         let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
 
-        assert_eq!(0, Report::extract_u8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, Report::extract_u8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, Report::extract_u8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 3)));
 
-        assert_eq!(0, Report::extract_i8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, Report::extract_i8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, Report::extract_i8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 3)));
 
         assert_eq!(
             0b1001_1100,
-            Report::extract_u8(&bytes, &RangeInclusive::new(4, 11))
+            RDescReport::extract_u8(&bytes, &RangeInclusive::new(4, 11))
         );
         assert_eq!(
             0b1001_1100u8 as i8,
-            Report::extract_i8(&bytes, &RangeInclusive::new(4, 11))
+            RDescReport::extract_i8(&bytes, &RangeInclusive::new(4, 11))
         );
 
-        assert_eq!(0, Report::extract_u16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, Report::extract_u16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, Report::extract_u16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 3)));
 
-        assert_eq!(0, Report::extract_i16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, Report::extract_i16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, Report::extract_i16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 3)));
 
         assert_eq!(
             0b0110_1011_1001_1100,
-            Report::extract_u16(&bytes, &RangeInclusive::new(4, 19))
+            RDescReport::extract_u16(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b0110_1011_1001_1100,
-            Report::extract_i16(&bytes, &RangeInclusive::new(4, 19))
+            RDescReport::extract_i16(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b1_0110_1011_1001_110u16 as i16,
-            Report::extract_i16(&bytes, &RangeInclusive::new(5, 20))
+            RDescReport::extract_i16(&bytes, &RangeInclusive::new(5, 20))
         );
 
         assert_eq!(
             0b0110_1011_1001_1100,
-            Report::extract_u32(&bytes, &RangeInclusive::new(4, 19))
+            RDescReport::extract_u32(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b0110_1011_1001_1100,
-            Report::extract_i32(&bytes, &RangeInclusive::new(4, 19))
+            RDescReport::extract_i32(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            Report::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            RDescReport::extract_i32(&bytes, &RangeInclusive::new(5, 20))
         );
 
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            Report::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            RDescReport::extract_i32(&bytes, &RangeInclusive::new(5, 20))
         );
     }
 }
