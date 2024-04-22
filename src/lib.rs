@@ -529,7 +529,7 @@ impl<'a> RDescReport {
 
         let base_shift = bits.start() % 8;
         let mask_shift = 32 - nbits;
-        let mask = (!0 as u32) >> mask_shift;
+        let mask = (!0) >> mask_shift;
         //println!("Mask is : {mask:x?}");
         let value = (value >> base_shift) as u32;
         //println!("{base_shift}-shifted value  is : {value:x?}");
