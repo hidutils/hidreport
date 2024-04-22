@@ -679,6 +679,14 @@ impl Field {
             Field::Constant(f) => f.bits = r,
         };
     }
+
+    pub fn usages(&self) -> &[Usage] {
+        match self {
+            Field::Variable(f) => f.usages(),
+            Field::Array(f) => f.usages(),
+            Field::Constant(f) => f.usages(),
+        }
+    }
 }
 
 impl Length for &Field {
@@ -693,12 +701,22 @@ pub struct VariableField {
     pub report_id: Option<ReportId>,
     pub direction: Direction,
     pub bits: RangeInclusive<usize>,
-    pub usage: Usage,
+    usages: Vec<Usage>,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
+}
+
+impl VariableField {
+    pub fn usage(&self) -> &Usage {
+        self.usages.first().unwrap()
+    }
+
+    pub fn usages(&self) -> &[Usage] {
+        &self.usages
+    }
 }
 
 /// An [ArrayField] represents a group of physical controls,
@@ -716,7 +734,7 @@ pub struct ArrayField {
     pub report_id: Option<ReportId>,
     pub direction: Direction,
     pub bits: RangeInclusive<usize>,
-    pub usages: Vec<Usage>,
+    usages: Vec<Usage>,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
@@ -745,6 +763,13 @@ pub struct ConstantField {
     pub report_id: Option<ReportId>,
     pub direction: Direction,
     pub bits: RangeInclusive<usize>,
+    usages: Vec<Usage>,
+}
+
+impl ConstantField {
+    pub fn usages(&self) -> &[Usage] {
+        &self.usages
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -948,6 +973,7 @@ fn handle_main_item(
             bits,
             report_id,
             direction,
+            usages: vec![],
         };
         return Ok(vec![Field::Constant(field)]);
     }
@@ -983,7 +1009,7 @@ fn handle_main_item(
 
             let usage = usages.get(c).or_else(|| usages.last()).unwrap();
             let field = VariableField {
-                usage: *usage,
+                usages: vec![*usage],
                 bits,
                 logical_range,
                 physical_range,
