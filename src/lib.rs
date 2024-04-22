@@ -971,18 +971,14 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
     }
 }
 
-fn handle_main_item(
-    item: &MainItem,
-    stack: &mut Stack,
-    rdesc: &mut ReportDescriptor,
-) -> Result<Vec<Field>> {
+fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
     let globals = stack.globals_const();
     let locals = stack.locals_const();
 
     let direction = match item {
-        MainItem::Input(i) => Direction::Input,
-        MainItem::Output(i) => Direction::Output,
-        MainItem::Feature(i) => Direction::Feature,
+        MainItem::Input(_) => Direction::Input,
+        MainItem::Output(_) => Direction::Output,
+        MainItem::Feature(_) => Direction::Feature,
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
@@ -1021,8 +1017,8 @@ fn handle_main_item(
 
     let physical_range = match (globals.physical_minimum, globals.physical_maximum) {
         (Some(min), Some(max)) => Some(PhysicalRange {
-            minimum: globals.physical_minimum.unwrap(),
-            maximum: globals.physical_maximum.unwrap(),
+            minimum: min,
+            maximum: max,
         }),
         _ => None,
     };
@@ -1106,15 +1102,15 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 stack.collections.pop();
             }
             ItemType::Main(item) => {
-                let mut fields = handle_main_item(&item, &mut stack, &mut rdesc)
-                    .expect("main item parsing failed");
+                let mut fields =
+                    handle_main_item(&item, &mut stack).expect("main item parsing failed");
                 stack.reset_locals();
 
                 // Now update the returned field(s) and push them into the right report
                 let direction = match item {
-                    MainItem::Input(i) => Direction::Input,
-                    MainItem::Output(i) => Direction::Output,
-                    MainItem::Feature(i) => Direction::Feature,
+                    MainItem::Input(_) => Direction::Input,
+                    MainItem::Output(_) => Direction::Output,
+                    MainItem::Feature(_) => Direction::Feature,
                     _ => panic!("Invalid item for handle_main_item()"),
                 };
 
@@ -1228,7 +1224,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
             ItemType::Local(LocalItem::Delimiter { delimiter }) => {
                 update_stack!(stack, locals, delimiter, delimiter);
             }
-            ItemType::Local(LocalItem::Reserved { value: u8 }) => {}
+            ItemType::Local(LocalItem::Reserved { value: _ }) => {}
         };
     }
 
