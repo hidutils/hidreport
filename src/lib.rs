@@ -1,8 +1,4 @@
 // SPDX-License-Identifier: MIT
-//
-// FIXME: remove this once we have something that doesn't scream hundreds of warnings
-#![allow(unused_variables)]
-#![allow(dead_code)]
 
 use std::ops::{Range, RangeInclusive};
 use thiserror::Error;
