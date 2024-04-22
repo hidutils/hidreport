@@ -221,7 +221,7 @@ impl Unit {
 pub struct UnitExponent(pub u32);
 
 impl UnitExponent {
-    fn exponent(&self) -> i8 {
+    pub fn exponent(&self) -> i8 {
         match self.0 & 0xf {
             n @ 0..=7 => n as i8,
             n @ 8..=15 => -16 + n as i8,
