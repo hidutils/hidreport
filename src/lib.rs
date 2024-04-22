@@ -365,6 +365,25 @@ pub struct OutputReport<'a> {
     values: Vec<ReportValue>,
 }
 
+impl<'a> Report for OutputReport<'a> {
+    fn report_id(&self) -> &Option<ReportId> {
+        self.report.report_id()
+    }
+
+    fn fields(&self) -> &[Field] {
+        self.report.fields()
+    }
+}
+
+impl<'a> BitSize for OutputReport<'a> {
+    fn size_in_bits(&self) -> usize {
+        self.report.size_in_bits()
+    }
+    fn size_in_bytes(&self) -> usize {
+        self.report.size_in_bytes()
+    }
+}
+
 impl<'a> std::ops::Deref for OutputReport<'a> {
     type Target = [ReportValue];
 
@@ -378,6 +397,25 @@ impl<'a> std::ops::Deref for OutputReport<'a> {
 pub struct FeatureReport<'a> {
     report: &'a RDescReport,
     values: Vec<ReportValue>,
+}
+
+impl<'a> Report for FeatureReport<'a> {
+    fn report_id(&self) -> &Option<ReportId> {
+        self.report.report_id()
+    }
+
+    fn fields(&self) -> &[Field] {
+        self.report.fields()
+    }
+}
+
+impl<'a> BitSize for FeatureReport<'a> {
+    fn size_in_bits(&self) -> usize {
+        self.report.size_in_bits()
+    }
+    fn size_in_bytes(&self) -> usize {
+        self.report.size_in_bytes()
+    }
 }
 
 impl<'a> std::ops::Deref for FeatureReport<'a> {
