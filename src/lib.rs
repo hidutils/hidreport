@@ -811,6 +811,12 @@ impl ConstantField {
 #[derive(Copy, Clone, Debug)]
 pub struct Collection(u8);
 
+impl From<&Collection> for hid::CollectionItem {
+    fn from(c: &Collection) -> hid::CollectionItem {
+        hid::CollectionItem::from(c.0)
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum ParserError {
     #[error("Invalid data {data} at offset {offset}: {message}")]

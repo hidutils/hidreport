@@ -410,6 +410,22 @@ impl From<&CollectionItem> for u8 {
     }
 }
 
+impl From<u8> for CollectionItem {
+    fn from(v: u8) -> CollectionItem {
+        match v {
+            0x00 => CollectionItem::Physical,
+            0x01 => CollectionItem::Application,
+            0x02 => CollectionItem::Logical,
+            0x03 => CollectionItem::Report,
+            0x04 => CollectionItem::NamedArray,
+            0x05 => CollectionItem::UsageSwitch,
+            0x06 => CollectionItem::UsageModifier,
+            value @ 0x07..=0x7f => CollectionItem::Reserved { value },
+            value @ 0x80..=0xff => CollectionItem::VendorDefined { value },
+        }
+    }
+}
+
 impl TryFrom<&[u8]> for CollectionItem {
     type Error = ParserError;
 
