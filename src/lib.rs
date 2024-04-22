@@ -14,6 +14,17 @@ pub mod types;
 use hid::*;
 pub use types::*;
 
+/// Implements `From<Foo> for Bar` to call `From<&Foo> for Bar`
+macro_rules! impl_from_without_ref {
+    ($tipo:ty, $to_expr:ident, $to:ty) => {
+        impl From<$tipo> for $to {
+            fn from(f: $tipo) -> $to {
+                $to_expr::from(&f)
+            }
+        }
+    };
+}
+
 /// Calculates the two's complement for a value with
 /// a given number of of bits.
 trait TwosComplement<To> {
@@ -132,7 +143,7 @@ impl<'a> ReportDescriptor {
         let parsed = self.parse_report(list, bytes)?;
         Ok(InputReport {
             report: parsed.report,
-            values: parsed.values
+            values: parsed.values,
         })
     }
 
@@ -145,7 +156,7 @@ impl<'a> ReportDescriptor {
         let parsed = self.parse_report(list, bytes)?;
         Ok(OutputReport {
             report: parsed.report,
-            values: parsed.values
+            values: parsed.values,
         })
     }
 
@@ -158,7 +169,7 @@ impl<'a> ReportDescriptor {
         let parsed = self.parse_report(list, bytes)?;
         Ok(FeatureReport {
             report: parsed.report,
-            values: parsed.values
+            values: parsed.values,
         })
     }
 
@@ -192,63 +203,75 @@ impl TryFrom<&[u8]> for ReportDescriptor {
 
 /// A single value as defined by a [ReportDescriptor]'s [Field].
 ///
-/// This crate extracts the minimum-sized value as required by
-/// the HID report descriptor (i.e. a field defined as 2 bits will
-/// be a [u8] or [i8], a field with 17 bits will be [u16]/[i16], etc.)
+/// Use the various [From] implementations to cast this into the
+/// expected target field. These are provided for convenience only
+/// they are all the respective equivalent of `value as i16`, etc.:
 ///
-/// If you don't care about the size, use [ReportValue::unsigned] or
-/// [ReportValue::signed] to get a 32-bit value.
+/// ```
+/// # use hidreport::ReportValue;
+/// fn func(val: &ReportValue) {
+///     assert_eq!(u32::from(val) as i32, i32::from(val));
+///     assert_eq!(u32::from(val) as i16, i16::from(val));
+///     assert_eq!(u32::from(val) as i8, i8::from(val));
+///     assert_eq!(u32::from(val) as u16, u16::from(val));
+///     assert_eq!(u32::from(val) as u8, u8::from(val));
+/// }
+/// ```
+///
+/// It is up to the caller to verify the value fits into the
+/// data size.
 #[derive(Debug)]
-pub enum ReportValue {
-    /// The value of a field with up to 8 bits and a positive [LogicalMinimum].
-    Unsigned8(u8),
-    /// The value of a field with up to 8 bits and a negative [LogicalMinimum].
-    Signed8(i8),
-    /// The value of a field with up to 16 bits and a positive [LogicalMinimum].
-    Unsigned16(u16),
-    /// The value of a field with up to 16 bits and a negative [LogicalMinimum].
-    Signed16(i16),
-    /// The value of a field with up to 32 bits and a positive [LogicalMinimum].
-    Unsigned32(u32),
-    /// The value of a field with up to 32 bits and a negative [LogicalMinimum].
-    Signed32(i32),
+pub struct ReportValue {
+    value: u32,
 }
 
-impl ReportValue {
-    /// Returns the value as 32 bit unsigned integer or `None` if
-    /// the value is signed.
-    ///
-    /// Note that this returns `None` even if the signed value
-    /// would otherwise fit into an [u32].
-    ///
-    /// Check the [Field]'s [LogicalMinimum] to know whether a
-    /// value is signed or unsigned.
-    pub fn unsigned(&self) -> Option<u32> {
-        match self {
-            Self::Unsigned8(u) => Some(*u as u32),
-            Self::Unsigned16(u) => Some(*u as u32),
-            Self::Unsigned32(u) => Some(*u),
-            _ => None,
-        }
-    }
-
-    /// Returns the value as 32 bit signed integer or `None` if
-    /// the value is unsigned.
-    ///
-    /// Note that this returns `None` even if the unsigned value
-    /// would otherwise fit into an [i32].
-    ///
-    /// Check the [Field]'s [LogicalMinimum] to know whether a
-    /// value is signed or unsigned.
-    pub fn signed(&self) -> Option<i32> {
-        match self {
-            Self::Signed8(u) => Some(*u as i32),
-            Self::Signed16(u) => Some(*u as i32),
-            Self::Signed32(u) => Some(*u),
-            _ => None,
-        }
+impl From<&ReportValue> for u32 {
+    fn from(r: &ReportValue) -> u32 {
+        r.value
     }
 }
+
+impl_from_without_ref!(ReportValue, u32, u32);
+
+impl From<&ReportValue> for i32 {
+    fn from(r: &ReportValue) -> i32 {
+        r.value as i32
+    }
+}
+
+impl_from_without_ref!(ReportValue, i32, i32);
+
+impl From<&ReportValue> for u16 {
+    fn from(r: &ReportValue) -> u16 {
+        r.value as u16
+    }
+}
+
+impl_from_without_ref!(ReportValue, u16, u16);
+
+impl From<&ReportValue> for i16 {
+    fn from(r: &ReportValue) -> i16 {
+        r.value as i16
+    }
+}
+
+impl_from_without_ref!(ReportValue, i16, i16);
+
+impl From<&ReportValue> for u8 {
+    fn from(r: &ReportValue) -> u8 {
+        r.value as u8
+   }
+}
+
+impl_from_without_ref!(ReportValue, u8, u8);
+
+impl From<&ReportValue> for i8 {
+    fn from(r: &ReportValue) -> i8 {
+        r.value as i8
+    }
+}
+
+impl_from_without_ref!(ReportValue, i8, i8);
 
 /// The result of parsing a [Report] via
 /// [ReportDescriptor::parse_input_report].
@@ -361,7 +384,7 @@ pub enum Direction {
 ///
 /// The Report ID has no meaning other than to distinguish
 /// different reports. See Section 6.2.2.7 for details.
-pub trait Report : BitSize {
+pub trait Report: BitSize {
     /// Returns the HID Report ID for this report, if any.
     fn report_id(&self) -> &Option<ReportId>;
 
@@ -409,8 +432,6 @@ impl Report for RDescReport {
 }
 
 impl<'a> RDescReport {
-
-
     /// Extract the bit range from the given byte array, converting the
     /// result into a [u32].
     ///
@@ -501,26 +522,29 @@ impl<'a> RDescReport {
                     match f {
                         Field::Variable(f) => f.logical_range,
                         Field::Array(f) => f.logical_range,
-                        Field::Constant(_) => LogicalRange { minimum: LogicalMinimum(0), maximum: LogicalMaximum(0) },
+                        Field::Constant(_) => LogicalRange {
+                            minimum: LogicalMinimum(0),
+                            maximum: LogicalMaximum(0),
+                        },
                     },
                 )
             })
-            .map(|(bits, range)| {
-                if range.minimum < LogicalMinimum(0) {
+            .map(|(bits, range)| ReportValue {
+                value: if range.minimum < LogicalMinimum(0) {
                     match bits.len() {
-                        1..=7 => ReportValue::Signed8(Self::extract_i8(bytes, bits)),
-                        8..=15 => ReportValue::Signed16(Self::extract_i16(bytes, bits)),
-                        16..=31 => ReportValue::Signed32(Self::extract_i32(bytes, bits)),
+                        1..=7 => Self::extract_i8(bytes, bits) as u32,
+                        8..=15 => Self::extract_i16(bytes, bits) as u32,
+                        16..=31 => Self::extract_i32(bytes, bits) as u32,
                         n => panic!("invalid data length {n}"),
                     }
                 } else {
                     match bits.len() {
-                        1..=7 => ReportValue::Unsigned8(Self::extract_u8(bytes, bits)),
-                        8..=15 => ReportValue::Unsigned16(Self::extract_u16(bytes, bits)),
-                        16..=31 => ReportValue::Unsigned32(Self::extract_u32(bytes, bits)),
+                        1..=7 => Self::extract_u8(bytes, bits) as u32,
+                        8..=15 => Self::extract_u16(bytes, bits) as u32,
+                        16..=31 => Self::extract_u32(bytes, bits),
                         n => panic!("invalid data length {n}"),
                     }
-                }
+                },
             })
             // .inspect(|v| println!("{v:?}"))
             .collect();
@@ -825,28 +849,31 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
             if locals.usage.is_empty() {
                 panic!("Missing Usage in locals");
             }
-            locals.usage.iter()
-            .map(|usage| match usage {
-                // local item's Usage had a Usage Page included
-                LocalUsage {
-                    usage_page: Some(up),
-                    usage_id,
-                } => Usage {
-                    usage_page: *up,
-                    usage_id: *usage_id,
-                },
-                // Usage Page comes from the global item
-                LocalUsage {
-                    usage_page: None,
-                    usage_id,
-                } => {
-                    let usage_page = globals.usage_page.expect("Missing UsagePage in globals");
-                    Usage {
-                        usage_page,
+            locals
+                .usage
+                .iter()
+                .map(|usage| match usage {
+                    // local item's Usage had a Usage Page included
+                    LocalUsage {
+                        usage_page: Some(up),
+                        usage_id,
+                    } => Usage {
+                        usage_page: *up,
                         usage_id: *usage_id,
+                    },
+                    // Usage Page comes from the global item
+                    LocalUsage {
+                        usage_page: None,
+                        usage_id,
+                    } => {
+                        let usage_page = globals.usage_page.expect("Missing UsagePage in globals");
+                        Usage {
+                            usage_page,
+                            usage_id: *usage_id,
+                        }
                     }
-                }
-            }).collect()
+                })
+                .collect()
         }
     }
 }
@@ -1011,11 +1038,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
 
                 let report = match report {
                     None => {
-                        let initial_size = if report_id.is_some() {
-                            8
-                        } else {
-                            0
-                        };
+                        let initial_size = if report_id.is_some() { 8 } else { 0 };
                         reports.push(RDescReport {
                             id: *report_id,
                             size: initial_size,
@@ -1149,13 +1172,31 @@ mod tests {
     fn extract() {
         let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
 
-        assert_eq!(0, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(
+            0,
+            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 0))
+        );
+        assert_eq!(
+            2,
+            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 1))
+        );
+        assert_eq!(
+            10,
+            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 3))
+        );
 
-        assert_eq!(0, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(
+            0,
+            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 0))
+        );
+        assert_eq!(
+            -2,
+            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 1))
+        );
+        assert_eq!(
+            -6,
+            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 3))
+        );
 
         assert_eq!(
             0b1001_1100,
@@ -1166,13 +1207,31 @@ mod tests {
             RDescReport::extract_i8(&bytes, &RangeInclusive::new(4, 11))
         );
 
-        assert_eq!(0, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(
+            0,
+            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 0))
+        );
+        assert_eq!(
+            2,
+            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 1))
+        );
+        assert_eq!(
+            10,
+            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 3))
+        );
 
-        assert_eq!(0, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(
+            0,
+            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 0))
+        );
+        assert_eq!(
+            -2,
+            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 1))
+        );
+        assert_eq!(
+            -6,
+            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 3))
+        );
 
         assert_eq!(
             0b0110_1011_1001_1100,
@@ -1204,5 +1263,48 @@ mod tests {
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
             RDescReport::extract_i32(&bytes, &RangeInclusive::new(5, 20))
         );
+    }
+
+    #[test]
+    fn report_values() {
+        let rv = ReportValue { value: 0 };
+        assert_eq!(u32::from(&rv), 0);
+        assert_eq!(i32::from(&rv), 0);
+        assert_eq!(u16::from(&rv), 0);
+        assert_eq!(i16::from(&rv), 0);
+        assert_eq!(u8::from(&rv), 0);
+        assert_eq!(i8::from(&rv), 0);
+
+        let rv = ReportValue { value: 10 };
+        assert_eq!(u32::from(&rv), 10);
+        assert_eq!(i32::from(&rv), 10);
+        assert_eq!(u16::from(&rv), 10);
+        assert_eq!(i16::from(&rv), 10);
+        assert_eq!(u8::from(&rv), 10);
+        assert_eq!(i8::from(&rv), 10);
+
+        let rv = ReportValue { value: -10i8 as u32 };
+        assert_eq!(u32::from(&rv), 0xfffffff6);
+        assert_eq!(i32::from(&rv), -10);
+        assert_eq!(u16::from(&rv), 0xfff6);
+        assert_eq!(i16::from(&rv), -10);
+        assert_eq!(u8::from(&rv), 0xf6);
+        assert_eq!(i8::from(&rv), -10);
+
+        let rv = ReportValue { value: 257 as u32 };
+        assert_eq!(u32::from(&rv), 257);
+        assert_eq!(i32::from(&rv), 257);
+        assert_eq!(u16::from(&rv), 257);
+        assert_eq!(i16::from(&rv), 257);
+        assert_eq!(u8::from(&rv), 1);
+        assert_eq!(i8::from(&rv), 1);
+
+        let rv = ReportValue { value: -257i32 as u32 };
+        assert_eq!(u32::from(&rv), 0xfffffeff);
+        assert_eq!(i32::from(&rv), -257);
+        assert_eq!(u16::from(&rv), 0xfeff);
+        assert_eq!(i16::from(&rv), -257);
+        assert_eq!(u8::from(&rv), 0xff);
+        assert_eq!(i8::from(&rv), -1);
     }
 }
