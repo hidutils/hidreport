@@ -221,13 +221,45 @@ impl TryFrom<&[u8]> for ReportDescriptor {
 /// It is up to the caller to verify the value fits into the
 /// data size.
 #[derive(Debug)]
-pub struct ReportValue {
-    value: u32,
+pub enum ReportValue {
+    Signed(i32),
+    Unsigned(u32),
+}
+
+impl ReportValue {
+    fn as_u32(&self) -> u32 {
+        match self {
+            ReportValue::Signed(i) => *i as u32,
+            ReportValue::Unsigned(u) => *u,
+        }
+    }
+
+    fn as_i32(&self) -> i32 {
+        match self {
+            ReportValue::Signed(i) => *i,
+            ReportValue::Unsigned(u) => *u as i32,
+        }
+    }
+}
+
+impl std::fmt::LowerHex for ReportValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:x}", self.as_u32())
+    }
+}
+
+impl std::fmt::Display for ReportValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ReportValue::Signed(i) => write!(f, "{i}"),
+            ReportValue::Unsigned(u) => write!(f, "{u}"),
+        }
+    }
 }
 
 impl From<&ReportValue> for u32 {
     fn from(r: &ReportValue) -> u32 {
-        r.value
+        r.as_u32()
     }
 }
 
@@ -235,7 +267,7 @@ impl_from_without_ref!(ReportValue, u32, u32);
 
 impl From<&ReportValue> for i32 {
     fn from(r: &ReportValue) -> i32 {
-        r.value as i32
+        r.as_i32()
     }
 }
 
@@ -243,7 +275,7 @@ impl_from_without_ref!(ReportValue, i32, i32);
 
 impl From<&ReportValue> for u16 {
     fn from(r: &ReportValue) -> u16 {
-        r.value as u16
+        r.as_u32() as u16
     }
 }
 
@@ -251,7 +283,7 @@ impl_from_without_ref!(ReportValue, u16, u16);
 
 impl From<&ReportValue> for i16 {
     fn from(r: &ReportValue) -> i16 {
-        r.value as i16
+        r.as_i32() as i16
     }
 }
 
@@ -259,15 +291,15 @@ impl_from_without_ref!(ReportValue, i16, i16);
 
 impl From<&ReportValue> for u8 {
     fn from(r: &ReportValue) -> u8 {
-        r.value as u8
-   }
+        r.as_u32() as u8
+    }
 }
 
 impl_from_without_ref!(ReportValue, u8, u8);
 
 impl From<&ReportValue> for i8 {
     fn from(r: &ReportValue) -> i8 {
-        r.value as i8
+        r.as_i32() as i8
     }
 }
 
@@ -529,22 +561,22 @@ impl<'a> RDescReport {
                     },
                 )
             })
-            .map(|(bits, range)| ReportValue {
-                value: if range.minimum < LogicalMinimum(0) {
-                    match bits.len() {
-                        1..=7 => Self::extract_i8(bytes, bits) as u32,
-                        8..=15 => Self::extract_i16(bytes, bits) as u32,
-                        16..=31 => Self::extract_i32(bytes, bits) as u32,
+            .map(|(bits, range)| {
+                if range.minimum < LogicalMinimum(0) {
+                    ReportValue::Signed(match bits.len() {
+                        1..=7 => Self::extract_i8(bytes, bits) as i32,
+                        8..=15 => Self::extract_i16(bytes, bits) as i32,
+                        16..=31 => Self::extract_i32(bytes, bits),
                         n => panic!("invalid data length {n}"),
-                    }
+                    })
                 } else {
-                    match bits.len() {
+                    ReportValue::Unsigned(match bits.len() {
                         1..=7 => Self::extract_u8(bytes, bits) as u32,
                         8..=15 => Self::extract_u16(bytes, bits) as u32,
                         16..=31 => Self::extract_u32(bytes, bits),
                         n => panic!("invalid data length {n}"),
-                    }
-                },
+                    })
+                }
             })
             // .inspect(|v| println!("{v:?}"))
             .collect();
@@ -1267,7 +1299,7 @@ mod tests {
 
     #[test]
     fn report_values() {
-        let rv = ReportValue { value: 0 };
+        let rv = ReportValue::Unsigned(0);
         assert_eq!(u32::from(&rv), 0);
         assert_eq!(i32::from(&rv), 0);
         assert_eq!(u16::from(&rv), 0);
@@ -1275,7 +1307,9 @@ mod tests {
         assert_eq!(u8::from(&rv), 0);
         assert_eq!(i8::from(&rv), 0);
 
-        let rv = ReportValue { value: 10 };
+        assert_eq!(format!("{rv}"), "0");
+
+        let rv = ReportValue::Unsigned(10);
         assert_eq!(u32::from(&rv), 10);
         assert_eq!(i32::from(&rv), 10);
         assert_eq!(u16::from(&rv), 10);
@@ -1283,7 +1317,10 @@ mod tests {
         assert_eq!(u8::from(&rv), 10);
         assert_eq!(i8::from(&rv), 10);
 
-        let rv = ReportValue { value: -10i8 as u32 };
+        assert_eq!(format!("{rv}"), "10");
+        assert_eq!(format!("{rv:x}"), "a");
+
+        let rv = ReportValue::Signed(-10);
         assert_eq!(u32::from(&rv), 0xfffffff6);
         assert_eq!(i32::from(&rv), -10);
         assert_eq!(u16::from(&rv), 0xfff6);
@@ -1291,7 +1328,10 @@ mod tests {
         assert_eq!(u8::from(&rv), 0xf6);
         assert_eq!(i8::from(&rv), -10);
 
-        let rv = ReportValue { value: 257 as u32 };
+        assert_eq!(format!("{rv}"), "-10");
+        assert_eq!(format!("{rv:x}"), "fffffff6");
+
+        let rv = ReportValue::Unsigned(257);
         assert_eq!(u32::from(&rv), 257);
         assert_eq!(i32::from(&rv), 257);
         assert_eq!(u16::from(&rv), 257);
@@ -1299,12 +1339,18 @@ mod tests {
         assert_eq!(u8::from(&rv), 1);
         assert_eq!(i8::from(&rv), 1);
 
-        let rv = ReportValue { value: -257i32 as u32 };
+        assert_eq!(format!("{rv}"), "257");
+        assert_eq!(format!("{rv:x}"), "101");
+
+        let rv = ReportValue::Signed(-257i32);
         assert_eq!(u32::from(&rv), 0xfffffeff);
         assert_eq!(i32::from(&rv), -257);
         assert_eq!(u16::from(&rv), 0xfeff);
         assert_eq!(i16::from(&rv), -257);
         assert_eq!(u8::from(&rv), 0xff);
         assert_eq!(i8::from(&rv), -1);
+
+        assert_eq!(format!("{rv}"), "-257");
+        assert_eq!(format!("{rv:x}"), "fffffeff");
     }
 }
