@@ -463,9 +463,6 @@ struct RDescReport {
     size: usize,
     /// The fields present in this report
     fields: Vec<Field>,
-
-    /// The "direction"  of this report
-    direction: Direction,
 }
 
 impl Report for RDescReport {
@@ -1116,7 +1113,6 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                             id: *report_id,
                             size: initial_size,
                             fields: vec![],
-                            direction,
                         });
                         reports.last_mut().unwrap()
                     }
