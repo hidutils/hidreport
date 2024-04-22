@@ -28,17 +28,6 @@ macro_rules! impl_from {
     };
 }
 
-macro_rules! impl_asref {
-    ($tipo:ty) => {
-        impl AsRef<$tipo> for $tipo {
-            #[inline(always)]
-            fn as_ref(&self) -> &$tipo {
-                self
-            }
-        }
-    };
-}
-
 /// Creates a `impl Display for Foo` that just converts into the underlying number.
 /// Use like this: `impl_fmt(Foo, u32)`.
 macro_rules! impl_fmt {
