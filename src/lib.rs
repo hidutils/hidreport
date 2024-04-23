@@ -731,7 +731,6 @@ impl Length for &Field {
 #[derive(Clone, Debug)]
 pub struct VariableField {
     pub report_id: Option<ReportId>,
-    pub direction: Direction,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
     pub logical_range: LogicalRange,
@@ -764,7 +763,6 @@ impl VariableField {
 #[derive(Clone, Debug)]
 pub struct ArrayField {
     pub report_id: Option<ReportId>,
-    pub direction: Direction,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
     pub logical_range: LogicalRange,
@@ -793,7 +791,6 @@ impl ArrayField {
 #[derive(Clone, Debug)]
 pub struct ConstantField {
     pub report_id: Option<ReportId>,
-    pub direction: Direction,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
 }
@@ -977,13 +974,6 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
     let globals = stack.globals_const();
     let locals = stack.locals_const();
 
-    let direction = match item {
-        MainItem::Input(_) => Direction::Input,
-        MainItem::Output(_) => Direction::Output,
-        MainItem::Feature(_) => Direction::Feature,
-        _ => panic!("Invalid item for handle_main_item()"),
-    };
-
     let report_id = globals.report_id;
 
     let (is_constant, is_variable) = match item {
@@ -1006,7 +996,6 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         let field = ConstantField {
             bits,
             report_id,
-            direction,
             usages: vec![],
         };
         return Ok(vec![Field::Constant(field)]);
@@ -1051,7 +1040,6 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
                 unit_exponent,
                 collections: collections.clone(),
                 report_id,
-                direction,
             };
             Field::Variable(field)
         })
@@ -1070,7 +1058,6 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
             unit_exponent,
             collections,
             report_id,
-            direction,
         };
 
         vec![Field::Array(field)]
