@@ -237,14 +237,14 @@ pub enum ReportValue {
 }
 
 impl ReportValue {
-    fn as_u32(&self) -> u32 {
+    pub fn as_u32(&self) -> u32 {
         match self {
             ReportValue::Signed(i) => *i as u32,
             ReportValue::Unsigned(u) => *u,
         }
     }
 
-    fn as_i32(&self) -> i32 {
+    pub fn as_i32(&self) -> i32 {
         match self {
             ReportValue::Signed(i) => *i,
             ReportValue::Unsigned(u) => *u as i32,
