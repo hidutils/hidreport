@@ -1072,6 +1072,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     usages,
                 };
                 stack.collections.push(c);
+                stack.reset_locals();
             }
             ItemType::Main(MainItem::EndCollection) => {
                 if stack.collections.pop().is_none() {
@@ -1080,6 +1081,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                         message: "Too many EndCollection".into(),
                     });
                 };
+                stack.reset_locals();
             }
             ItemType::Main(item) => {
                 let mut fields = match handle_main_item(&item, &mut stack) {
