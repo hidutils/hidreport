@@ -106,20 +106,6 @@ trait Length {
     fn len(self) -> usize;
 }
 
-/// A trait to signal that the size of this object is in bits
-/// and/or bytes.
-///
-/// This is not [Sized] but represents the size of this object on the wire, e.g.
-/// a HID report's size.
-pub trait BitSize {
-    /// The size in bits for this object. Where [BitSize::size_in_bits] is
-    /// not a multiple of 8, the [BitSize::size_in_bytes] is rounded up to fit all bits.
-    fn size_in_bits(&self) -> usize;
-    /// The size in bytes for this object. Where [BitSize::size_in_bits] is
-    /// not a multiple of 8, the [BitSize::size_in_bytes] is rounded up to fit all bits.
-    fn size_in_bytes(&self) -> usize;
-}
-
 // RangeInclusive doesn't implement ExactSizeIterator for usize and that
 // trait is outside our crate, so...
 impl Length for &RangeInclusive<usize> {
@@ -343,6 +329,10 @@ enum Direction {
 /// byte of the report is always that Report ID, followed
 /// by the data in the sequence announced in the HID [ReportDescriptor].
 ///
+/// Use [`size_in_bits()`][Report::size_in_bits] or
+/// [`size_in_bytes()`](Report::size_in_bytes) to
+/// get the length of this report.
+///
 /// Note that each of Input, Output and Feature Reports
 /// have their own enumeration of Report IDs, i.e. an Input Report
 /// with a Report ID of e.g. 1 may have a different size and/or [Field]s
@@ -350,7 +340,7 @@ enum Direction {
 ///
 /// The Report ID has no meaning other than to distinguish
 /// different reports. See Section 6.2.2.7 for details.
-pub trait Report: BitSize {
+pub trait Report {
     /// Returns the HID Report ID for this report, if any.
     fn report_id(&self) -> &Option<ReportId>;
 
@@ -359,6 +349,16 @@ pub trait Report: BitSize {
     /// in and use the [Field::bits] to extract the data from future
     /// reports.
     fn fields(&self) -> &[Field];
+
+    /// The size in bits for this report.
+    fn size_in_bits(&self) -> usize;
+
+    /// The size in bytes for this object.
+    ///
+    /// Where [`size_in_bits()`](Report::size_in_bits) is
+    /// not a multiple of 8, the [`size_in_bytes()`](Report::size_in_bytes) rounds up
+    /// fit all bits.
+    fn size_in_bytes(&self) -> usize { (self.size_in_bits() + 7) * 8 }
 }
 
 /// A HID Input, Output or Feature Report.
@@ -392,17 +392,10 @@ impl Report for RDescReport {
     fn fields(&self) -> &[Field] {
         &self.fields
     }
-}
 
-impl BitSize for RDescReport {
     /// The size of this HID report on the wire, in bits
     fn size_in_bits(&self) -> usize {
         self.size
-    }
-
-    /// The size of this HID report on the wire, in bytes.
-    fn size_in_bytes(&self) -> usize {
-        self.size / 8
     }
 }
 
