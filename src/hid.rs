@@ -91,6 +91,120 @@ pub enum MainItem {
     EndCollection,
 }
 
+/// Main Data Item, see Section 6.2.5.
+///
+/// A data item is a [MainItem] that "create a field within a report and include Input,
+/// Output, and Feature.". These have shared properties provided by this trait.
+///
+/// These properties come in paris (bit set or unset in the HID report descriptor item),
+/// for readability in the caller, a function is provided for each state.
+pub trait MainDataItem {
+    /// True if the data is constant and never changes. This typically means the data
+    /// can be ignored.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_data].
+    fn is_constant(&self) -> bool;
+
+    /// True if the field carries data.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_constant].
+    fn is_data(&self) -> bool {
+        !self.is_constant()
+    }
+
+    /// True if the data is a variable field.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_array].
+    fn is_variable(&self) -> bool;
+
+    /// True if the data is an array field.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_variable].
+    fn is_array(&self) -> bool {
+        !self.is_variable()
+    }
+
+    /// True if the data is relative compared to a previous report
+    ///
+    /// Mutually exclusive with [MainDataItem::is_absolute].
+    fn is_relative(&self) -> bool;
+
+    /// True if the data is absolute
+    ///
+    /// Mutually exclusive with [MainDataItem::is_relative].
+    fn is_absolute(&self) -> bool {
+        !self.is_relative()
+    }
+
+    /// True if the data wraps around at the logical
+    /// minimum/maximum (e.g. a dial that can spin at 360 degrees).
+    ///
+    /// Mutually exclusive with [MainDataItem::does_not_wrap].
+    fn wraps(&self) -> bool;
+
+    /// True if the data does not wrap at the logical
+    /// minimum/maximum.
+    ///
+    /// Mutually exclusive with [MainDataItem::wraps].
+    fn does_not_wrap(&self) -> bool {
+        !self.wraps()
+    }
+
+    /// True if the data was pre-processed on the device
+    /// and the logical range is not linear.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_linear].
+    fn is_nonlinear(&self) -> bool;
+
+    /// True if the data was not pre-processed on the device
+    /// and the logical range is linear.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_nonlinear].
+    fn is_linear(&self) -> bool {
+        !self.is_nonlinear()
+    }
+
+    /// True if the control does not have a preferred state it
+    /// returns to when the user stops interacting (e.g. a joystick
+    /// may return to a neutral position)
+    ///
+    /// Mutually exclusive with [MainDataItem::has_preferred_state].
+    fn has_no_preferred_state(&self) -> bool;
+
+    /// True if the control does not ave a preferred state.
+    ///
+    /// Mutually exclusive with [MainDataItem::has_no_preferred_state].
+    fn has_preferred_state(&self) -> bool {
+        !self.has_no_preferred_state()
+    }
+
+    /// True if the control has a null state where it does not send
+    /// data (e.g. a joystick in neutral state)
+    ///
+    /// Mutually exclusive with [MainDataItem::has_no_null_state].
+    fn has_null_state(&self) -> bool;
+
+    /// True if the control does not have a null state where it does not send
+    /// data.
+    ///
+    /// Mutually exclusive with [MainDataItem::has_null_state].
+    fn has_no_null_state(&self) -> bool {
+        !self.has_null_state()
+    }
+
+    /// True if the control emits a fixed size stream of bytes.
+    ///
+    /// Mutually exclusive with [MainDataItem::is_bitfield].
+    fn is_buffered_bytes(&self) -> bool;
+
+    /// True if the control is a single bit field (value).
+    ///
+    /// Mutually exclusive with [MainDataItem::is_buffered_bytes].
+    fn is_bitfield(&self) -> bool {
+        !self.is_buffered_bytes()
+    }
+}
+
 /// From Section 6.2.2.4.
 /// > [Input](InputItem), [Output](OutputItem), and [Feature](FeatureItem)
 /// > items are used to create data fields within a report.
@@ -110,21 +224,55 @@ pub enum MainItem {
 pub struct InputItem {
     /// This item is constant if `true` (and thus can usually be ignored).
     /// If false, the item refers to a data field.
-    pub is_constant: bool,
+    is_constant: bool,
     /// Array or single variable
-    pub is_variable: bool,
+    is_variable: bool,
     /// Absolute or relative
-    pub is_relative: bool,
+    is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
-    pub wraps: bool,
+    wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
-    pub is_nonlinear: bool,
+    is_nonlinear: bool,
     /// Control has a preferred state or not
-    pub has_no_preferred_state: bool,
+    has_no_preferred_state: bool,
     /// Control has a neutral state where it does not send meaningful data
-    pub has_null_state: bool,
+    has_null_state: bool,
     /// Indicates whether the field emits a fixed size stream of bytes
-    pub is_buffered_bytes: bool,
+    is_buffered_bytes: bool,
+}
+
+impl MainDataItem for InputItem {
+    fn is_constant(&self) -> bool {
+        self.is_constant
+    }
+
+    fn is_variable(&self) -> bool {
+        self.is_variable
+    }
+
+    fn is_relative(&self) -> bool {
+        self.is_relative
+    }
+
+    fn wraps(&self) -> bool {
+        self.wraps
+    }
+
+    fn is_nonlinear(&self) -> bool {
+        self.is_nonlinear
+    }
+
+    fn has_no_preferred_state(&self) -> bool {
+        self.has_no_preferred_state
+    }
+
+    fn has_null_state(&self) -> bool {
+        self.has_null_state
+    }
+
+    fn is_buffered_bytes(&self) -> bool {
+        self.is_buffered_bytes
+    }
 }
 
 /// See Section 6.2.2.5. Equivalent to the [InputItem], please
@@ -136,23 +284,67 @@ pub struct InputItem {
 pub struct OutputItem {
     /// This item is constant if `true` (and thus can usually be ignored).
     /// If false, the item refers to a data field.
-    pub is_constant: bool,
+    is_constant: bool,
     /// Array or single variable
-    pub is_variable: bool,
+    is_variable: bool,
     /// Absolute or relative
-    pub is_relative: bool,
+    is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
-    pub wraps: bool,
+    wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
-    pub is_nonlinear: bool,
+    is_nonlinear: bool,
     /// Control has a preferred state or not
-    pub has_no_preferred_state: bool,
+    has_no_preferred_state: bool,
     /// Control has a neutral state where it does not send meaningful data
-    pub has_null_state: bool,
+    has_null_state: bool,
     /// Indiciates whether control should be changed by the host.
-    pub is_volatile: bool,
+    is_volatile: bool,
     /// Indicates whether the field emits a fixed size stream of bytes
-    pub is_buffered_bytes: bool,
+    is_buffered_bytes: bool,
+}
+
+impl OutputItem {
+    pub fn is_volatile(&self) -> bool {
+        self.is_volatile
+    }
+
+    pub fn is_non_volatile(&self) -> bool {
+        !self.is_volatile()
+    }
+}
+
+impl MainDataItem for OutputItem {
+    fn is_constant(&self) -> bool {
+        self.is_constant
+    }
+
+    fn is_variable(&self) -> bool {
+        self.is_variable
+    }
+
+    fn is_relative(&self) -> bool {
+        self.is_relative
+    }
+
+    fn wraps(&self) -> bool {
+        self.wraps
+    }
+
+    fn is_nonlinear(&self) -> bool {
+        self.is_nonlinear
+    }
+
+    fn has_no_preferred_state(&self) -> bool {
+        self.has_no_preferred_state
+    }
+
+    fn has_null_state(&self) -> bool {
+        self.has_null_state
+    }
+
+    fn is_buffered_bytes(&self) -> bool {
+        self.is_buffered_bytes
+    }
 }
 
 /// See Section 6.2.2.5. Equivalent to the [InputItem], please
@@ -164,23 +356,69 @@ pub struct OutputItem {
 pub struct FeatureItem {
     /// This item is constant if `true` (and thus can usually be ignored).
     /// If false, the item refers to a data field.
-    pub is_constant: bool,
+    is_constant: bool,
     /// Array or single variable
-    pub is_variable: bool,
+    is_variable: bool,
     /// Absolute or relative
-    pub is_relative: bool,
+    is_relative: bool,
     /// Data wraps around after exceeding minimum or maximum
-    pub wraps: bool,
+    wraps: bool,
     /// Raw data from the devise has been processed on the device and is no longer linear
-    pub is_nonlinear: bool,
+    is_nonlinear: bool,
     /// Control has a preferred state or not
-    pub has_no_preferred_state: bool,
+    has_no_preferred_state: bool,
     /// Control has a neutral state where it does not send meaningful data
-    pub has_null_state: bool,
+    has_null_state: bool,
     /// Indiciates whether control should be changed by the host.
-    pub is_volatile: bool,
+    is_volatile: bool,
     /// Indicates whether the field emits a fixed size stream of bytes
-    pub is_buffered_bytes: bool,
+    is_buffered_bytes: bool,
+}
+
+impl FeatureItem {
+    /// True if the control value should be changed by the host
+    pub fn is_volatile(&self) -> bool {
+        self.is_volatile
+    }
+
+    /// False if the control value should not be changed by the host
+    pub fn is_non_volatile(&self) -> bool {
+        !self.is_volatile()
+    }
+}
+
+impl MainDataItem for FeatureItem {
+    fn is_constant(&self) -> bool {
+        self.is_constant
+    }
+
+    fn is_variable(&self) -> bool {
+        self.is_variable
+    }
+
+    fn is_relative(&self) -> bool {
+        self.is_relative
+    }
+
+    fn wraps(&self) -> bool {
+        self.wraps
+    }
+
+    fn is_nonlinear(&self) -> bool {
+        self.is_nonlinear
+    }
+
+    fn has_no_preferred_state(&self) -> bool {
+        self.has_no_preferred_state
+    }
+
+    fn has_null_state(&self) -> bool {
+        self.has_null_state
+    }
+
+    fn is_buffered_bytes(&self) -> bool {
+        self.is_buffered_bytes
+    }
 }
 
 /// See Section 6.2.2.6. A collection groups several items together.
