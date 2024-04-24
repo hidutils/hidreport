@@ -34,7 +34,9 @@ def sanitize(s):
         "9": "Nine",
         "0": "Zero",
     }
-    s = functools.reduce(lambda s, kv: re.sub(rf"^({kv[0]})", kv[1], s), numbers.items(), s)
+    s = functools.reduce(
+        lambda s, kv: re.sub(rf"^({kv[0]})", kv[1], s), numbers.items(), s
+    )
     return s
 
 
@@ -87,7 +89,9 @@ def sanitize_keyboard(s):
         "9": "Nine",
         "0": "Zero",
     }
-    s = functools.reduce(lambda s, kv: re.sub(rf"^({kv[0]})", kv[1], s), numbers.items(), s)
+    s = functools.reduce(
+        lambda s, kv: re.sub(rf"^({kv[0]})", kv[1], s), numbers.items(), s
+    )
     return s
 
 
