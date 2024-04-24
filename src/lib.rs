@@ -373,7 +373,7 @@ pub trait Report {
     /// not a multiple of 8, the [`size_in_bytes()`](Report::size_in_bytes) rounds up
     /// fit all bits.
     fn size_in_bytes(&self) -> usize {
-        (self.size_in_bits() + 7) * 8
+        (self.size_in_bits() + 7) / 8
     }
 }
 
