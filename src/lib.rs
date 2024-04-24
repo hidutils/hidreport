@@ -416,40 +416,6 @@ pub struct Usage {
     pub usage_id: UsageId,
 }
 
-/// The logical range of a [Field]s' value, see Section 5.8.
-///
-/// Values sent to/fro a device fit within this minimum and
-/// (inclusive) maximum range.
-///
-/// Interpretation of the data is as signed value if one of
-/// minimum or maximum is less than zero, otherwise the
-/// value is unsigned.
-///
-/// See [ReportValue::Unsigned] and [ReportValue::Signed].
-#[derive(Clone, Copy, Debug)]
-pub struct LogicalRange {
-    pub minimum: LogicalMinimum,
-    pub maximum: LogicalMaximum,
-}
-
-impl std::fmt::Display for LogicalRange {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}..={}", self.minimum, self.maximum)
-    }
-}
-
-/// The physical range of a [Field]s' value, see Section 6.2.2.7.
-///
-/// The physical range (if it exists) maps the logical range
-/// into a physical dimension so that the logical minimum represents
-/// the physical minimum and the logical maximum represents the
-/// physical maximum value.
-#[derive(Clone, Copy, Debug)]
-pub struct PhysicalRange {
-    pub minimum: PhysicalMinimum,
-    pub maximum: PhysicalMaximum,
-}
-
 /// A single field inside a [Report].
 ///
 /// Fields may be [Field::Variable] and represent a
@@ -508,8 +474,10 @@ pub struct VariableField {
     report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     pub usage: Usage,
-    pub logical_range: LogicalRange,
-    pub physical_range: Option<PhysicalRange>,
+    pub logical_minimum: LogicalMinimum,
+    pub logical_maximum: LogicalMaximum,
+    pub physical_minimum: Option<PhysicalMinimum>,
+    pub physical_maximum: Option<PhysicalMaximum>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
@@ -519,7 +487,7 @@ impl VariableField {
     /// Returns true if this field contains signed values,.
     /// i.e. the LogicalMinimum is less than zero.
     pub fn is_signed(&self) -> bool {
-        self.logical_range.minimum < LogicalMinimum(0)
+        self.logical_minimum < LogicalMinimum(0)
     }
 
     /// Extract this field's value as [u32] from a report's bytes.
@@ -587,8 +555,10 @@ pub struct ArrayField {
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
     pub report_count: ReportCount,
-    pub logical_range: LogicalRange,
-    pub physical_range: Option<PhysicalRange>,
+    pub logical_minimum: LogicalMinimum,
+    pub logical_maximum: LogicalMaximum,
+    pub physical_minimum: Option<PhysicalMinimum>,
+    pub physical_maximum: Option<PhysicalMaximum>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
@@ -602,7 +572,7 @@ impl ArrayField {
     /// Returns true if this field contains signed values,.
     /// i.e. the LogicalMinimum is less than zero.
     pub fn is_signed(&self) -> bool {
-        self.logical_range.minimum < LogicalMinimum(0)
+        self.logical_minimum < LogicalMinimum(0)
     }
 
     /// Extract this field's values as [u32]s from a report's bytes.
@@ -920,18 +890,13 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         return Ok(vec![Field::Constant(field)]);
     }
 
-    let logical_range = LogicalRange {
-        minimum: globals.logical_minimum.expect("Missing LogicalMinimum"),
-        maximum: globals.logical_maximum.expect("Missing LogicalMaximum"),
-    };
+    let logical_minimum = globals.logical_minimum.expect("Missing LogicalMinimum");
+    let logical_maximum = globals.logical_maximum.expect("Missing LogicalMaximum");
+    // FIXME: parser error instead of panci
 
-    let physical_range = match (globals.physical_minimum, globals.physical_maximum) {
-        (Some(min), Some(max)) => Some(PhysicalRange {
-            minimum: min,
-            maximum: max,
-        }),
-        _ => None,
-    };
+    let physical_minimum = globals.physical_minimum;
+    let physical_maximum = globals.physical_maximum;
+    // FIXME: parser error if only one is None
 
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
@@ -953,8 +918,10 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
             let field = VariableField {
                 usage: *usage,
                 bits,
-                logical_range,
-                physical_range,
+                logical_minimum,
+                logical_maximum,
+                physical_minimum,
+                physical_maximum,
                 unit,
                 unit_exponent,
                 collections: collections.clone(),
@@ -971,8 +938,10 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         let field = ArrayField {
             usages,
             bits,
-            logical_range,
-            physical_range,
+            logical_minimum,
+            logical_maximum,
+            physical_minimum,
+            physical_maximum,
             unit,
             unit_exponent,
             collections,
