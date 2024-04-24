@@ -559,9 +559,9 @@ impl VariableField {
         }
 
         let v = match self.bits.len() {
-            1..=7 => extract_u8(bytes, &self.bits) as u32,
-            8..=15 => extract_u16(bytes, &self.bits) as u32,
-            16..=31 => extract_u32(bytes, &self.bits),
+            1..=8 => extract_u8(bytes, &self.bits) as u32,
+            9..=16 => extract_u16(bytes, &self.bits) as u32,
+            17..=32 => extract_u32(bytes, &self.bits),
             n => panic!("invalid data length {n}"),
         };
 
@@ -583,9 +583,9 @@ impl VariableField {
         }
 
         let v = match self.bits.len() {
-            1..=7 => extract_i8(bytes, &self.bits) as i32,
-            8..=15 => extract_i16(bytes, &self.bits) as i32,
-            16..=31 => extract_i32(bytes, &self.bits),
+            1..=8 => extract_i8(bytes, &self.bits) as i32,
+            9..=16 => extract_i16(bytes, &self.bits) as i32,
+            17..=32 => extract_i32(bytes, &self.bits),
             n => panic!("invalid data length {n}"),
         };
 
@@ -747,9 +747,9 @@ impl ArrayField {
         let offset = self.bits.start() + bits_per_report * idx;
         let bits = offset..=offset + bits_per_report + 1;
         let v = match bits.len() {
-            1..=7 => extract_u8(bytes, &bits) as u32,
-            8..=15 => extract_u16(bytes, &bits) as u32,
-            16..=31 => extract_u32(bytes, &bits),
+            1..=8 => extract_u8(bytes, &bits) as u32,
+            9..=16 => extract_u16(bytes, &bits) as u32,
+            17..=32 => extract_u32(bytes, &bits),
             n => panic!("invalid data length {n}"),
         };
 
@@ -770,9 +770,9 @@ impl ArrayField {
         let offset = self.bits.start() + bits_per_report * idx;
         let bits = offset..=offset + bits_per_report + 1;
         let v = match bits.len() {
-            1..=7 => extract_i8(bytes, &bits) as i32,
-            8..=15 => extract_i16(bytes, &bits) as i32,
-            16..=31 => extract_i32(bytes, &bits),
+            1..=8 => extract_i8(bytes, &bits) as i32,
+            9..=16 => extract_i16(bytes, &bits) as i32,
+            17..=32 => extract_i32(bytes, &bits),
             n => panic!("invalid data length {n}"),
         };
 
