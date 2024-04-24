@@ -426,7 +426,7 @@ impl MainDataItem for FeatureItem {
 /// > A Collection item identifies a relationship between two or more data (Input,
 /// > Output, or Feature.) For example, a mouse could be described as a collection of
 /// > two to four data (x, y, button 1, button 2). While the Collection item opens a
-/// > collection of data, the [MainItem::End Collection] item closes a collection.
+/// > collection of data, the [MainItem::EndCollection] item closes a collection.
 ///
 #[derive(Debug, Clone, Copy)]
 pub enum CollectionItem {

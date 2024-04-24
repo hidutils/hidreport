@@ -648,7 +648,7 @@ pub struct Usage {
 /// minimum or maximum is less than zero, otherwise the
 /// value is unsigned.
 ///
-/// See [ReportValue::unsigned] and [ReportValue::signed].
+/// See [ReportValue::Unsigned] and [ReportValue::Signed].
 #[derive(Clone, Copy, Debug)]
 pub struct LogicalRange {
     pub minimum: LogicalMinimum,
