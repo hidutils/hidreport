@@ -53,31 +53,31 @@ macro_rules! impl_fmt {
 /// ```
 /// For known named usages see [hut::Usage](crate::hut::Usage).
 #[derive(Debug, Clone, Copy)]
-pub struct UsagePage(pub u16);
+pub struct UsagePage(pub(crate) u16);
 
 impl_from!(UsagePage, UsagePage, u16);
 impl_fmt!(UsagePage, u16);
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub struct LogicalMinimum(pub i32);
+pub struct LogicalMinimum(pub(crate) i32);
 
 impl_from!(LogicalMinimum, LogicalMinimum, i32);
 impl_fmt!(LogicalMinimum, i32);
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub struct LogicalMaximum(pub i32);
+pub struct LogicalMaximum(pub(crate) i32);
 
 impl_from!(LogicalMaximum, LogicalMaximum, i32);
 impl_fmt!(LogicalMaximum, i32);
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub struct PhysicalMinimum(pub i32);
+pub struct PhysicalMinimum(pub(crate) i32);
 
 impl_from!(PhysicalMinimum, PhysicalMinimum, i32);
 impl_fmt!(PhysicalMinimum, i32);
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub struct PhysicalMaximum(pub i32);
+pub struct PhysicalMaximum(pub(crate) i32);
 
 impl_from!(PhysicalMaximum, PhysicalMaximum, i32);
 impl_fmt!(PhysicalMaximum, i32);
@@ -108,7 +108,7 @@ pub enum Units {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct Unit(pub u32);
+pub struct Unit(pub(crate) u32);
 
 impl_from!(Unit, Unit, u32);
 impl_fmt!(Unit, u32);
@@ -228,7 +228,7 @@ impl Unit {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct UnitExponent(pub u32);
+pub struct UnitExponent(pub(crate) u32);
 
 impl UnitExponent {
     pub fn exponent(&self) -> i8 {
@@ -244,13 +244,13 @@ impl_from!(UnitExponent, UnitExponent, u32);
 impl_fmt!(UnitExponent, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct ReportSize(pub usize);
+pub struct ReportSize(pub(crate) usize);
 
 impl_from!(ReportSize, ReportSize, usize);
 impl_fmt!(ReportSize, usize);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct ReportId(pub u8);
+pub struct ReportId(pub(crate) u8);
 
 impl From<&ReportId> for ReportId {
     fn from(report_id: &ReportId) -> ReportId {
@@ -262,69 +262,79 @@ impl_from!(ReportId, ReportId, u8);
 impl_fmt!(ReportId, u8);
 
 #[derive(Debug, Clone, Copy)]
-pub struct ReportCount(pub usize);
+pub struct ReportCount(pub(crate) usize);
 
 impl_from!(ReportCount, ReportCount, usize);
 impl_fmt!(ReportCount, usize);
 
 // ----------------- LOCAL ITEMS --------------------
 
+/// The 16-bit Usage Id identifier, see Section 5.5 "Usages".
+///
+/// The UsageId forms the lower 16 bits of a 32-bit [Usage](crate::Usage).
+/// ```
+/// # use hidreport::*;
+/// let up = UsagePage::from(0x01); // Generic Desktop
+/// let uid = UsageId::from(0x02); // Mouse
+/// let usage = Usage::from_page_and_id(up, uid);
+/// ```
+/// For known named usages see [hut::Usage](crate::hut::Usage).
 #[derive(Debug, Clone, Copy)]
-pub struct UsageId(pub u16);
+pub struct UsageId(pub(crate) u16);
 
 impl_from!(UsageId, UsageId, u16);
 impl_fmt!(UsageId, u16);
 
 #[derive(Debug, Clone, Copy)]
-pub struct UsageMinimum(pub u32);
+pub struct UsageMinimum(pub(crate) u32);
 
 impl_from!(UsageMinimum, UsageMinimum, u32);
 impl_fmt!(UsageMinimum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct UsageMaximum(pub u32);
+pub struct UsageMaximum(pub(crate) u32);
 
 impl_from!(UsageMaximum, UsageMaximum, u32);
 impl_fmt!(UsageMaximum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct StringIndex(pub u32);
+pub struct StringIndex(pub(crate) u32);
 
 impl_from!(StringIndex, StringIndex, u32);
 impl_fmt!(StringIndex, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct StringMinimum(pub u32);
+pub struct StringMinimum(pub(crate) u32);
 
 impl_from!(StringMinimum, StringMinimum, u32);
 impl_fmt!(StringMinimum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct StringMaximum(pub u32);
+pub struct StringMaximum(pub(crate) u32);
 
 impl_from!(StringMaximum, StringMaximum, u32);
 impl_fmt!(StringMaximum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct DesignatorIndex(pub u32);
+pub struct DesignatorIndex(pub(crate) u32);
 
 impl_from!(DesignatorIndex, DesignatorIndex, u32);
 impl_fmt!(DesignatorIndex, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct DesignatorMinimum(pub u32);
+pub struct DesignatorMinimum(pub(crate) u32);
 
 impl_from!(DesignatorMinimum, DesignatorMinimum, u32);
 impl_fmt!(DesignatorMinimum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct DesignatorMaximum(pub u32);
+pub struct DesignatorMaximum(pub(crate) u32);
 
 impl_from!(DesignatorMaximum, DesignatorMaximum, u32);
 impl_fmt!(DesignatorMaximum, u32);
 
 #[derive(Debug, Clone, Copy)]
-pub struct Delimiter(pub u32);
+pub struct Delimiter(pub(crate) u32);
 
 impl_from!(Delimiter, Delimiter, u32);
 impl_fmt!(Delimiter, u32);
