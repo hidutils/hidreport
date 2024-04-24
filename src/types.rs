@@ -52,7 +52,7 @@ macro_rules! impl_fmt {
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
 /// For known named usages see [hut::Usage](crate::hut::Usage).
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsagePage(pub(crate) u16);
 
 impl_from!(UsagePage, UsagePage, u16);
@@ -279,20 +279,40 @@ impl_fmt!(ReportCount, usize);
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
 /// For known named usages see [hut::Usage](crate::hut::Usage).
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsageId(pub(crate) u16);
 
 impl_from!(UsageId, UsageId, u16);
 impl_fmt!(UsageId, u16);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsageMinimum(pub(crate) u32);
+
+impl UsageMinimum {
+    pub fn usage_id(&self) -> UsageId {
+        UsageId::from((self.0 & 0xffff) as u16)
+    }
+
+    pub fn usage_page(&self) -> UsagePage {
+        UsagePage((self.0 >> 16) as u16)
+    }
+}
 
 impl_from!(UsageMinimum, UsageMinimum, u32);
 impl_fmt!(UsageMinimum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsageMaximum(pub(crate) u32);
+
+impl UsageMaximum {
+    pub fn usage_id(&self) -> UsageId {
+        UsageId::from((self.0 & 0xffff) as u16)
+    }
+
+    pub fn usage_page(&self) -> UsagePage {
+        UsagePage((self.0 >> 16) as u16)
+    }
+}
 
 impl_from!(UsageMaximum, UsageMaximum, u32);
 impl_fmt!(UsageMaximum, u32);

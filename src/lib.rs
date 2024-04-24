@@ -443,6 +443,33 @@ impl Usage {
     }
 }
 
+impl From<u32> for Usage {
+    fn from(u: u32) -> Usage {
+        Usage {
+            usage_page: UsagePage::from((u >> 16) as u16),
+            usage_id: UsageId::from((u & 0xffff) as u16),
+        }
+    }
+}
+
+impl From<&Usage> for u32 {
+    fn from(u: &Usage) -> u32 {
+        (u16::from(u.usage_page) as u32) << 16 | u16::from(u.usage_id) as u32
+    }
+}
+
+impl From<&Usage> for UsageMinimum {
+    fn from(u: &Usage) -> UsageMinimum {
+        UsageMinimum(u32::from(u))
+    }
+}
+
+impl From<&Usage> for UsageMaximum {
+    fn from(u: &Usage) -> UsageMaximum {
+        UsageMaximum(u32::from(u))
+    }
+}
+
 /// A single field inside a [Report].
 ///
 /// Fields may be [Field::Variable] and represent a
@@ -566,6 +593,53 @@ impl VariableField {
     }
 }
 
+/// Wrapper around the commonly used [UsageMinimum] and [UsageMaximum].
+#[derive(Debug)]
+pub struct UsageRange {
+    usage_page: UsagePage,
+    minimum: UsageMinimum,
+    maximum: UsageMaximum,
+}
+
+impl UsageRange {
+    /// The [UsageMinimum]. Note that in reports and report descriptors
+    /// the Usage Minimum may or may not include the Usage Page. The
+    /// minimum returned here always includes the [UsagePage].
+    pub fn minimum(&self) -> UsageMinimum {
+        self.minimum
+    }
+
+    /// The [UsageMaximum]. Note that in reports and report descriptors
+    /// the Usage Maximum may or may not include the Usage Page. The
+    /// maximum returned here always includes the [UsagePage].
+    pub fn maximum(&self) -> UsageMaximum {
+        self.maximum
+    }
+
+    pub fn lookup_usage(&self, usage: Usage) -> Option<Usage> {
+        if usage.usage_page == self.usage_page
+            && usage.usage_id >= self.minimum.usage_id()
+            && usage.usage_id <= self.maximum.usage_id()
+        {
+            Some(usage)
+        } else {
+            None
+        }
+    }
+
+    /// Look up the given [UsageId] and return the corresponding
+    /// [Usage], if any. The [UsageId] is assumed to be in the same
+    /// [UsagePage] as this range, use [lookup_usage] if you need
+    /// a check for the [UsagePage] as well.
+    pub fn lookup_id(&self, id: UsageId) -> Option<Usage> {
+        if id >= self.minimum.usage_id() && id <= self.maximum.usage_id() {
+            Some(Usage::from_page_and_id(self.usage_page, id))
+        } else {
+            None
+        }
+    }
+}
+
 /// An [ArrayField] represents a group of physical controls,
 /// see section 6.2.2.5.
 ///
@@ -592,8 +666,22 @@ pub struct ArrayField {
 }
 
 impl ArrayField {
+    /// Returns the set of usages for this field. This is the
+    /// inclusive range of [UsageMinimum]`..=`[UsageMaximum]
+    /// as defined for this field.
     pub fn usages(&self) -> &[Usage] {
         &self.usages
+    }
+
+    pub fn usage_range(&self) -> UsageRange {
+        let min = self.usages.first().unwrap();
+        let max = self.usages.last().unwrap();
+
+        UsageRange {
+            usage_page: min.usage_page,
+            minimum: UsageMinimum::from(min),
+            maximum: UsageMaximum::from(max),
+        }
     }
 
     /// Returns true if this field contains signed values,.
