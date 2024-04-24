@@ -21,6 +21,76 @@ macro_rules! impl_from_without_ref {
     };
 }
 
+/// Extract the bit range from the given byte array, converting the
+/// result into a [u32].
+///
+/// The number of bits in the range must be less or equal to 32.
+fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
+    let nbits = bits.len();
+    assert_ne!(nbits, 0);
+    assert!(nbits <= 32);
+    // If we start at a bit 0 we only need 1 byte (for u8)
+    // if we start at anything else, we need the next byte(s) too
+    let bytecount = if bits.start() % 8 == 0 {
+        (nbits + 7) / 8
+    } else {
+        (nbits + 7) / 8 + 1
+    };
+    let base_index = bits.start() / 8;
+    let bytes = &bytes[base_index..base_index + bytecount];
+    let value: u64 = Range {
+        start: 0u64,
+        end: bytes.len() as u64,
+    }
+    //.inspect(|idx| println!("Accessing index {idx}: {:x?}", bytes[*idx as usize]))
+    .fold(0u64, |acc: u64, idx| {
+        acc | (bytes[idx as usize] as u64) << (8 * idx)
+    });
+
+    let base_shift = bits.start() % 8;
+    let mask_shift = 32 - nbits;
+    let mask = (!0) >> mask_shift;
+    let value = (value >> base_shift) as u32;
+
+    value & mask
+}
+
+/// Extract the bit range from the given byte array, converting the
+/// result into a [i32]. The sign of the number matches that
+/// of the given bit range, e.g. a bit range of length 4 with the MSB set
+/// to 1 will result in a negative number, up-casted to [i32].
+///
+/// The number of bits in the range must be less or equal to 32.
+fn extract_i32(bytes: &[u8], bits: &RangeInclusive<usize>) -> i32 {
+    let nbits = bits.len();
+    let v = extract_u32(bytes, bits);
+    v.twos_comp(nbits)
+}
+
+fn extract_u16(bytes: &[u8], bits: &RangeInclusive<usize>) -> u16 {
+    assert!(bits.len() <= 16);
+    let v: u32 = extract_u32(bytes, bits);
+    v as u16
+}
+
+fn extract_i16(bytes: &[u8], bits: &RangeInclusive<usize>) -> i16 {
+    let nbits = bits.len();
+    let v = extract_u16(bytes, bits);
+    v.twos_comp(nbits)
+}
+
+fn extract_u8(bytes: &[u8], bits: &RangeInclusive<usize>) -> u8 {
+    assert!(bits.len() <= 8);
+    let v: u32 = extract_u32(bytes, bits);
+    v as u8
+}
+
+fn extract_i8(bytes: &[u8], bits: &RangeInclusive<usize>) -> i8 {
+    let nbits = bits.len();
+    let v = extract_u8(bytes, bits);
+    v.twos_comp(nbits)
+}
+
 /// Calculates the two's complement for a value with
 /// a given number of of bits.
 trait TwosComplement<To> {
@@ -107,16 +177,23 @@ impl TwosComplement<i32> for u32 {
 /// ```
 /// # use hidreport::*;
 /// # let bytes: &[u8] = &[0x05, 0x01, 0x09, 0x02, 0xa1, 0x01, 0x05, 0x01, 0x09, 0x02, 0xa1, 0x02, 0x85, 0x1a, 0x09, 0x01, 0xa1, 0x00, 0x05, 0x09, 0x19, 0x01, 0x29, 0x05, 0x95, 0x05, 0x75, 0x01, 0x15, 0x00, 0x25, 0x01, 0x81, 0x02, 0x75, 0x03, 0x95, 0x01, 0x81, 0x01, 0x05, 0x01, 0x09, 0x30, 0x09, 0x31, 0x95, 0x02, 0x75, 0x10, 0x16, 0x01, 0x80, 0x26, 0xff, 0x7f, 0x81, 0x06, 0xa1, 0x02, 0x85, 0x12, 0x09, 0x48, 0x95, 0x01, 0x75, 0x02, 0x15, 0x00, 0x25, 0x01, 0x35, 0x01, 0x45, 0x0c, 0xb1, 0x02, 0x85, 0x1a, 0x09, 0x38, 0x35, 0x00, 0x45, 0x00, 0x95, 0x01, 0x75, 0x10, 0x16, 0x01, 0x80, 0x26, 0xff, 0x7f, 0x81, 0x06, 0xc0, 0xa1, 0x02, 0x85, 0x12, 0x09, 0x48, 0x75, 0x02, 0x15, 0x00, 0x25, 0x01, 0x35, 0x01, 0x45, 0x0c, 0xb1, 0x02, 0x35, 0x00, 0x45, 0x00, 0x75, 0x04, 0xb1, 0x01, 0x85, 0x1a, 0x05, 0x0c, 0x95, 0x01, 0x75, 0x10, 0x16, 0x01, 0x80, 0x26, 0xff, 0x7f, 0x0a, 0x38, 0x02, 0x81, 0x06, 0xc0, 0xc0, 0xc0, 0xc0, 0x05, 0x0c, 0x09, 0x01, 0xa1, 0x01, 0x05, 0x01, 0x09, 0x02, 0xa1, 0x02, 0x85, 0x1f, 0x05, 0x0c, 0x0a, 0x38, 0x02, 0x95, 0x01, 0x75, 0x10, 0x16, 0x01, 0x80, 0x26, 0xff, 0x7f, 0x81, 0x06, 0x85, 0x17, 0x06, 0x00, 0xff, 0x0a, 0x06, 0xff, 0x0a, 0x0f, 0xff, 0x15, 0x00, 0x25, 0x01, 0x35, 0x01, 0x45, 0x0c, 0x95, 0x02, 0x75, 0x02, 0xb1, 0x02, 0x0a, 0x04, 0xff, 0x35, 0x00, 0x45, 0x00, 0x95, 0x01, 0x75, 0x01, 0xb1, 0x02, 0x75, 0x03, 0xb1, 0x01, 0xc0, 0xc0];
-/// # let input: &[u8] = &[0x1a, 0x00, 0xff, 0xff, 0xfe, 0xff, 00, 00, 00, 0x00];
+/// # fn read_from_device() -> Vec<u8> {
+/// #     vec![0x1a, 0x00, 0xff, 0xff, 0xfe, 0xff, 00, 00, 00, 0x00]
+/// # }
+/// #
 /// let rdesc: ReportDescriptor = ReportDescriptor::try_from(bytes).unwrap();
 /// for r in rdesc.input_reports() {
 ///     println!("Input Report with report ID: {:?}", r.report_id());
 /// }
-/// let report: InputReport = rdesc.parse_input_report(input).unwrap();
+/// let input_report_bytes = read_from_device();
+/// let report = rdesc.find_input_report(&input_report_bytes).unwrap();
 /// println!("This is an input report for report ID: {:?}", report.report_id());
-/// println!("Fields {:?} is of value {}",
-///          report.fields().get(0).unwrap(),
-///          report[0]);
+/// let field = report.fields().first().unwrap();
+/// match field {
+///     Field::Variable(var) => println!("Field {:?} is of value {}", field, var.extract_u32(&input_report_bytes).unwrap()),
+///     Field::Array(arr) => println!("Field {:?} has values {:?}", field, arr.extract_u32(&input_report_bytes).unwrap()),
+///     Field::Constant(_) => println!("Field {:?} is <padding data>", field),
+/// }
 /// ```
 ///
 #[derive(Debug, Default)]
@@ -129,20 +206,118 @@ pub struct ReportDescriptor {
 impl<'a> ReportDescriptor {
     /// Returns the set of input reports or the empty
     /// slice if none exist.
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(rdesc: &ReportDescriptor) {
+    /// let reports = rdesc.input_reports();
+    /// for report in reports {
+    ///     println!("Report ID: {:?}", report.report_id());
+    /// }
+    /// # }
+    /// ```
     pub fn input_reports(&self) -> &[impl Report] {
         &self.input_reports
     }
 
     /// Returns the set of output reports or the empty
     /// slice if none exist.
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(rdesc: &ReportDescriptor) {
+    /// let reports = rdesc.output_reports();
+    /// for report in reports {
+    ///     println!("Report ID: {:?}", report.report_id());
+    /// }
+    /// # }
+    /// ```
     pub fn output_reports(&self) -> &[impl Report] {
         &self.output_reports
     }
 
     /// Returns the set of feature reports or the empty
     /// slice if none exist.
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(rdesc: &ReportDescriptor) {
+    /// let reports = rdesc.feature_reports();
+    /// for report in reports {
+    ///     println!("Report ID: {:?}", report.report_id());
+    /// }
+    /// # }
+    /// ```
     pub fn feature_reports(&self) -> &[impl Report] {
         &self.feature_reports
+    }
+
+    fn find_report(&'a self, list: &'a [RDescReport], prefix: u8) -> Option<&impl Report> {
+        if list.is_empty() {
+            None
+        } else {
+            let first = list.first().unwrap();
+            let rid = Some(ReportId(prefix));
+            // Do we have report IDs? If not, the first report is what we want.
+            match first.report_id() {
+                None => Some(first),
+                Some(_) => list.iter().find(|r| r.report_id() == &rid),
+            }
+        }
+    }
+
+    /// Find the input report that matches this byte sequence.
+    ///
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(bytes: &[u8], rdesc: &ReportDescriptor) {
+    /// // bytes was read from the device (or some other source)
+    /// let report = rdesc.find_input_report(bytes).unwrap();
+    /// for field in report.fields() {
+    ///     // ...
+    /// }
+    /// # }
+    /// ```
+    ///
+    /// ReportDescriptors with multiple reports require a report
+    /// to have a single byte prefix specifying the [ReportId].
+    pub fn find_input_report(&self, bytes: &[u8]) -> Option<&impl Report> {
+        self.find_report(&self.input_reports, bytes[0])
+    }
+
+    /// Find the output report that matches this byte sequence.
+    ///
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(bytes: &[u8], rdesc: &ReportDescriptor) {
+    /// // bytes was read from the device (or some other source)
+    /// let report = rdesc.find_output_report(bytes).unwrap();
+    /// for field in report.fields() {
+    ///     // ...
+    /// }
+    /// # }
+    /// ```
+    ///
+    /// ReportDescriptors with multiple reports require a report
+    /// to have a single byte prefix specifying the [ReportId].
+    pub fn find_output_report(&self, bytes: &[u8]) -> Option<&impl Report> {
+        self.find_report(&self.input_reports, bytes[0])
+    }
+
+    /// Find the feature report that matches this byte sequence.
+    ///
+    /// ```
+    /// # use hidreport::*;
+    /// # fn func(bytes: &[u8], rdesc: &ReportDescriptor) {
+    /// // bytes was read from the device (or some other source)
+    /// let report = rdesc.find_feature_report(bytes).unwrap();
+    /// for field in report.fields() {
+    ///     // ...
+    /// }
+    /// # }
+    /// ```
+    ///
+    /// ReportDescriptors with multiple reports require a report
+    /// to have a single byte prefix specifying the [ReportId].
+    pub fn find_feature_report(&self, bytes: &[u8]) -> Option<&impl Report> {
+        self.find_report(&self.input_reports, bytes[0])
     }
 
     /// Parse the given bytes as input report.
@@ -528,97 +703,19 @@ impl Report for RDescReport {
 }
 
 impl<'a> RDescReport {
-    /// Extract the bit range from the given byte array, converting the
-    /// result into a [u32].
-    ///
-    /// The number of bits in the range must be less or equal to 32.
-    fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
-        let nbits = bits.len();
-        assert_ne!(nbits, 0);
-        assert!(nbits <= 32);
-        // If we start at a bit 0 we only need 1 byte (for u8)
-        // if we start at anything else, we need the next byte(s) too
-        let bytecount = if bits.start() % 8 == 0 {
-            (nbits + 7) / 8
-        } else {
-            (nbits + 7) / 8 + 1
-        };
-        let base_index = bits.start() / 8;
-        let bytes = &bytes[base_index..base_index + bytecount];
-        //println!("---------------------------------");
-        //println!("In bytes are: {bytes:x?}");
-        let value: u64 = Range {
-            start: 0u64,
-            end: bytes.len() as u64,
-        }
-        //.inspect(|idx| println!("Accessing index {idx}: {:x?}", bytes[*idx as usize]))
-        .fold(0u64, |acc: u64, idx| {
-            //println!("acc is {acc}, idx is {idx}");
-            //println!("bytes[idx] is {:x}", bytes[idx as usize] as u64);
-            acc | (bytes[idx as usize] as u64) << (8 * idx)
-        });
-        //println!("Value is thus: {value:x?}");
-
-        let base_shift = bits.start() % 8;
-        let mask_shift = 32 - nbits;
-        let mask = (!0) >> mask_shift;
-        //println!("Mask is : {mask:x?}");
-        let value = (value >> base_shift) as u32;
-        //println!("{base_shift}-shifted value  is : {value:x?}");
-
-        //println!("---------------------------------");
-        value & mask
-    }
-
-    /// Extract the bit range from the given byte array, converting the
-    /// result into a [i32]. The sign of the number matches that
-    /// of the given bit range, e.g. a bit range of length 4 with the MSB set
-    /// to 1 will result in a negative number, up-casted to [i32].
-    ///
-    /// The number of bits in the range must be less or equal to 32.
-    fn extract_i32(bytes: &[u8], bits: &RangeInclusive<usize>) -> i32 {
-        let nbits = bits.len();
-        let v = Self::extract_u32(bytes, bits);
-        v.twos_comp(nbits)
-    }
-
-    fn extract_u16(bytes: &[u8], bits: &RangeInclusive<usize>) -> u16 {
-        assert!(bits.len() <= 16);
-        let v: u32 = Self::extract_u32(bytes, bits);
-        v as u16
-    }
-
-    fn extract_i16(bytes: &[u8], bits: &RangeInclusive<usize>) -> i16 {
-        let nbits = bits.len();
-        let v = Self::extract_u16(bytes, bits);
-        v.twos_comp(nbits)
-    }
-
-    fn extract_u8(bytes: &[u8], bits: &RangeInclusive<usize>) -> u8 {
-        assert!(bits.len() <= 8);
-        let v: u32 = Self::extract_u32(bytes, bits);
-        v as u8
-    }
-
-    fn extract_i8(bytes: &[u8], bits: &RangeInclusive<usize>) -> i8 {
-        let nbits = bits.len();
-        let v = Self::extract_u8(bytes, bits);
-        v.twos_comp(nbits)
-    }
-
     fn extract_value(bytes: &[u8], bits: &RangeInclusive<usize>, is_signed: bool) -> ReportValue {
         if is_signed {
             ReportValue::Signed(match bits.len() {
-                1..=7 => Self::extract_i8(bytes, bits) as i32,
-                8..=15 => Self::extract_i16(bytes, bits) as i32,
-                16..=31 => Self::extract_i32(bytes, bits),
+                1..=7 => extract_i8(bytes, bits) as i32,
+                8..=15 => extract_i16(bytes, bits) as i32,
+                16..=31 => extract_i32(bytes, bits),
                 n => panic!("invalid data length {n}"),
             })
         } else {
             ReportValue::Unsigned(match bits.len() {
-                1..=7 => Self::extract_u8(bytes, bits) as u32,
-                8..=15 => Self::extract_u16(bytes, bits) as u32,
-                16..=31 => Self::extract_u32(bytes, bits),
+                1..=7 => extract_u8(bytes, bits) as u32,
+                8..=15 => extract_u16(bytes, bits) as u32,
+                16..=31 => extract_u32(bytes, bits),
                 n => panic!("invalid data length {n}"),
             })
         }
@@ -789,6 +886,62 @@ pub struct VariableField {
     pub collections: Vec<Collection>,
 }
 
+impl VariableField {
+    /// Returns true if this field contains signed values,.
+    /// i.e. the LogicalMinimum is less than zero.
+    pub fn is_signed(&self) -> bool {
+        self.logical_range.minimum < LogicalMinimum(0)
+    }
+
+    /// Extract this field's value as [u32] from a report's bytes.
+    /// The value is extracted as its correct bit size but upcasted
+    /// if need be into a [u32]. IOW it is safe to call this function
+    /// on e.g. an 8 bit unsigned field in the report.
+    ///
+    /// Check [VariableField::is_signed] first to see if you should be
+    /// using [VariableField::extract_i32] instead.
+    pub fn extract_u32(&self, bytes: &[u8]) -> Result<u32> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+
+        let v = match self.bits.len() {
+            1..=7 => extract_u8(bytes, &self.bits) as u32,
+            8..=15 => extract_u16(bytes, &self.bits) as u32,
+            16..=31 => extract_u32(bytes, &self.bits),
+            n => panic!("invalid data length {n}"),
+        };
+
+        Ok(v)
+    }
+
+    /// Extract this field's value as [i32] from a report's bytes.
+    /// The value is extracted as its correct bit size but upcasted
+    /// if need be into a [i32]. IOW it is safe to call this function
+    /// on e.g. an 8 bit signed field in the report.
+    ///
+    /// Check [VariableField::is_signed] first to see if you should be
+    /// using [VariableField::extract_u32] instead.
+    pub fn extract_i32(&self, bytes: &[u8]) -> Result<i32> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+
+        let v = match self.bits.len() {
+            1..=7 => extract_i8(bytes, &self.bits) as i32,
+            8..=15 => extract_i16(bytes, &self.bits) as i32,
+            16..=31 => extract_i32(bytes, &self.bits),
+            n => panic!("invalid data length {n}"),
+        };
+
+        Ok(v)
+    }
+}
+
 /// An [ArrayField] represents a group of physical controls,
 /// see section 6.2.2.5.
 ///
@@ -815,6 +968,101 @@ pub struct ArrayField {
 impl ArrayField {
     pub fn usages(&self) -> &[Usage] {
         &self.usages
+    }
+
+    /// Returns true if this field contains signed values,.
+    /// i.e. the LogicalMinimum is less than zero.
+    pub fn is_signed(&self) -> bool {
+        self.logical_range.minimum < LogicalMinimum(0)
+    }
+
+    /// Extract this field's values as [u32]s from a report's bytes.
+    /// The values are extracted at their correct bit size but upcasted
+    /// if need be into a [u32]. IOW it is safe to call this function
+    /// on e.g. an 8 bit unsigned field in the report.
+    ///
+    /// Check [ArrayField::is_signed] first to see if you should be
+    /// using [ArrayField::extract_i32] instead.
+    pub fn extract_u32(&self, bytes: &[u8]) -> Result<Vec<u32>> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+        let count = usize::from(self.report_count);
+        let values: Vec<u32> = (0..count)
+            .map(|idx| self.extract_one_u32(bytes, idx).unwrap())
+            .collect();
+
+        Ok(values)
+    }
+
+    /// Extract this field's values as [i32]s from a report's bytes.
+    /// The values are extracted at their correct bit size but upcasted
+    /// if need be into a [i32]. IOW it is safe to call this function
+    /// on e.g. an 8 bit signed field in the report.
+    ///
+    /// Check [ArrayField::is_signed] first to see if you should be
+    /// using [ArrayField::extract_u32] instead.
+    pub fn extract_i32(&self, bytes: &[u8]) -> Result<Vec<i32>> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+
+        let count = usize::from(self.report_count);
+        let values: Vec<i32> = (0..count)
+            .map(|idx| self.extract_one_i32(bytes, idx).unwrap())
+            .collect();
+
+        Ok(values)
+    }
+
+    /// Extract a single value from this array. See [ArrayField::extract_u32].
+    pub fn extract_one_u32(&self, bytes: &[u8], idx: usize) -> Result<u32> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+
+        let count = usize::from(self.report_count);
+        let bits_per_report = self.bits.len() / count;
+
+        let offset = self.bits.start() + bits_per_report * idx;
+        let bits = offset..=offset + bits_per_report + 1;
+        let v = match bits.len() {
+            1..=7 => extract_u8(bytes, &bits) as u32,
+            8..=15 => extract_u16(bytes, &bits) as u32,
+            16..=31 => extract_u32(bytes, &bits),
+            n => panic!("invalid data length {n}"),
+        };
+
+        Ok(v)
+    }
+
+    /// Extract a single value from this array. See [ArrayField::extract_i32].
+    pub fn extract_one_i32(&self, bytes: &[u8], idx: usize) -> Result<i32> {
+        if let Some(report_id) = self.report_id {
+            if ReportId(bytes[0]) != report_id {
+                return Err(ParserError::MismatchingReportId);
+            }
+        }
+
+        let count = usize::from(self.report_count);
+        let bits_per_report = self.bits.len() / count;
+
+        let offset = self.bits.start() + bits_per_report * idx;
+        let bits = offset..=offset + bits_per_report + 1;
+        let v = match bits.len() {
+            1..=7 => extract_i8(bytes, &bits) as i32,
+            8..=15 => extract_i16(bytes, &bits) as i32,
+            16..=31 => extract_i32(bytes, &bits),
+            n => panic!("invalid data length {n}"),
+        };
+
+        Ok(v)
     }
 }
 
@@ -860,6 +1108,8 @@ pub enum ParserError {
     },
     #[error("Parsing would lead to out-of-bounds")]
     OutOfBounds,
+    #[error("Mismatching Report ID")]
+    MismatchingReportId,
 }
 
 type Result<T> = std::result::Result<T, ParserError>;
@@ -1291,96 +1541,57 @@ mod tests {
     fn extract() {
         let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
 
-        assert_eq!(
-            0,
-            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 0))
-        );
-        assert_eq!(
-            2,
-            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 1))
-        );
-        assert_eq!(
-            10,
-            RDescReport::extract_u8(&bytes, &RangeInclusive::new(0, 3))
-        );
+        assert_eq!(0, extract_u8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, extract_u8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, extract_u8(&bytes, &RangeInclusive::new(0, 3)));
 
-        assert_eq!(
-            0,
-            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 0))
-        );
-        assert_eq!(
-            -2,
-            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 1))
-        );
-        assert_eq!(
-            -6,
-            RDescReport::extract_i8(&bytes, &RangeInclusive::new(0, 3))
-        );
+        assert_eq!(0, extract_i8(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, extract_i8(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, extract_i8(&bytes, &RangeInclusive::new(0, 3)));
 
-        assert_eq!(
-            0b1001_1100,
-            RDescReport::extract_u8(&bytes, &RangeInclusive::new(4, 11))
-        );
+        assert_eq!(0b1001_1100, extract_u8(&bytes, &RangeInclusive::new(4, 11)));
         assert_eq!(
             0b1001_1100u8 as i8,
-            RDescReport::extract_i8(&bytes, &RangeInclusive::new(4, 11))
+            extract_i8(&bytes, &RangeInclusive::new(4, 11))
         );
 
-        assert_eq!(
-            0,
-            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 0))
-        );
-        assert_eq!(
-            2,
-            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 1))
-        );
-        assert_eq!(
-            10,
-            RDescReport::extract_u16(&bytes, &RangeInclusive::new(0, 3))
-        );
+        assert_eq!(0, extract_u16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(2, extract_u16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(10, extract_u16(&bytes, &RangeInclusive::new(0, 3)));
 
-        assert_eq!(
-            0,
-            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 0))
-        );
-        assert_eq!(
-            -2,
-            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 1))
-        );
-        assert_eq!(
-            -6,
-            RDescReport::extract_i16(&bytes, &RangeInclusive::new(0, 3))
-        );
+        assert_eq!(0, extract_i16(&bytes, &RangeInclusive::new(0, 0)));
+        assert_eq!(-2, extract_i16(&bytes, &RangeInclusive::new(0, 1)));
+        assert_eq!(-6, extract_i16(&bytes, &RangeInclusive::new(0, 3)));
 
         assert_eq!(
             0b0110_1011_1001_1100,
-            RDescReport::extract_u16(&bytes, &RangeInclusive::new(4, 19))
+            extract_u16(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b0110_1011_1001_1100,
-            RDescReport::extract_i16(&bytes, &RangeInclusive::new(4, 19))
+            extract_i16(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b1_0110_1011_1001_110u16 as i16,
-            RDescReport::extract_i16(&bytes, &RangeInclusive::new(5, 20))
+            extract_i16(&bytes, &RangeInclusive::new(5, 20))
         );
 
         assert_eq!(
             0b0110_1011_1001_1100,
-            RDescReport::extract_u32(&bytes, &RangeInclusive::new(4, 19))
+            extract_u32(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             0b0110_1011_1001_1100,
-            RDescReport::extract_i32(&bytes, &RangeInclusive::new(4, 19))
+            extract_i32(&bytes, &RangeInclusive::new(4, 19))
         );
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            RDescReport::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            extract_i32(&bytes, &RangeInclusive::new(5, 20))
         );
 
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            RDescReport::extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            extract_i32(&bytes, &RangeInclusive::new(5, 20))
         );
     }
 
