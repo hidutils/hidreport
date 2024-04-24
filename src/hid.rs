@@ -690,41 +690,72 @@ impl TryFrom<&[u8]> for GlobalItem {
     type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<GlobalItem> {
-        ensure!(bytes.len() >= 2, HidError::InsufficientData);
-
-        let data = hiddata(&bytes[1..]);
-        let data_signed = hiddata_signed(&bytes[1..]);
+        let (data, data_signed) = if bytes.len() >= 2 {
+            (hiddata(&bytes[1..]), hiddata_signed(&bytes[1..]))
+        } else {
+            (None, None)
+        };
         let item = match bytes[0] & 0b11111100 {
-            0b00000100 => GlobalItem::UsagePage {
-                usage_page: UsagePage(data.unwrap() as u16),
-            },
-            0b00010100 => GlobalItem::LogicalMinimum {
-                minimum: LogicalMinimum(data_signed.unwrap() as i32),
-            },
-            0b00100100 => GlobalItem::LogicalMaximum {
-                maximum: LogicalMaximum(data_signed.unwrap() as i32),
-            },
-            0b00110100 => GlobalItem::PhysicalMinimum {
-                minimum: PhysicalMinimum(data.unwrap() as i32),
-            },
-            0b01000100 => GlobalItem::PhysicalMaximum {
-                maximum: PhysicalMaximum(data.unwrap() as i32),
-            },
-            0b01010100 => GlobalItem::UnitExponent {
-                exponent: UnitExponent(data.unwrap()),
-            },
-            0b01100100 => GlobalItem::Unit {
-                unit: Unit(data.unwrap()),
-            },
-            0b01110100 => GlobalItem::ReportSize {
-                size: ReportSize(data.unwrap() as usize),
-            },
-            0b10000100 => GlobalItem::ReportId {
-                id: ReportId(data.unwrap() as u8),
-            },
-            0b10010100 => GlobalItem::ReportCount {
-                count: ReportCount(data.unwrap() as usize),
-            },
+            0b00000100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::UsagePage {
+                    usage_page: UsagePage(data.unwrap() as u16),
+                }
+            }
+            0b00010100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::LogicalMinimum {
+                    minimum: LogicalMinimum(data_signed.unwrap()),
+                }
+            }
+            0b00100100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::LogicalMaximum {
+                    maximum: LogicalMaximum(data_signed.unwrap()),
+                }
+            }
+            0b00110100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::PhysicalMinimum {
+                    minimum: PhysicalMinimum(data.unwrap() as i32),
+                }
+            }
+            0b01000100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::PhysicalMaximum {
+                    maximum: PhysicalMaximum(data.unwrap() as i32),
+                }
+            }
+            0b01010100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::UnitExponent {
+                    exponent: UnitExponent(data.unwrap()),
+                }
+            }
+            0b01100100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::Unit {
+                    unit: Unit(data.unwrap()),
+                }
+            }
+            0b01110100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::ReportSize {
+                    size: ReportSize(data.unwrap() as usize),
+                }
+            }
+            0b10000100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::ReportId {
+                    id: ReportId(data.unwrap() as u8),
+                }
+            }
+            0b10010100 => {
+                ensure!(bytes.len() >= 2, HidError::InsufficientData);
+                GlobalItem::ReportCount {
+                    count: ReportCount(data.unwrap() as usize),
+                }
+            }
             0b10100100 => GlobalItem::Push,
             0b10110100 => GlobalItem::Pop,
             _ => GlobalItem::Reserved,
