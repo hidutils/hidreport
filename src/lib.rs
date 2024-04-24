@@ -115,7 +115,7 @@ impl TwosComplement<i32> for u32 {
 /// let report: InputReport = rdesc.parse_input_report(input).unwrap();
 /// println!("This is an input report for report ID: {:?}", report.report_id());
 /// println!("Fields {:?} is of value {}",
-///          report.fields()[0].usages(),
+///          report.fields().get(0).unwrap(),
 ///          report[0]);
 /// ```
 ///
@@ -211,7 +211,21 @@ impl TryFrom<&[u8]> for ReportDescriptor {
     }
 }
 
+/// The set of values for an [ArrayField] in a [InputReport].
+#[derive(Debug)]
+pub struct Array {
+    values: Vec<ReportValue>,
+}
+
+impl Array {
+    pub fn values(&self) -> &[ReportValue] {
+        &self.values
+    }
+}
+
 /// A single value as defined by a [ReportDescriptor]'s [Field].
+///
+/// For [ArrayField] the contained value is an array of [ReportValue], see [Array].
 ///
 /// Use the various [From] implementations to cast this into the
 /// expected target field. These are provided for convenience only
@@ -234,6 +248,7 @@ impl TryFrom<&[u8]> for ReportDescriptor {
 pub enum ReportValue {
     Signed(i32),
     Unsigned(u32),
+    Array(Array),
 }
 
 impl ReportValue {
@@ -241,6 +256,7 @@ impl ReportValue {
         match self {
             ReportValue::Signed(i) => *i as u32,
             ReportValue::Unsigned(u) => *u,
+            ReportValue::Array(arr) => arr.values.first().unwrap().as_u32(),
         }
     }
 
@@ -248,6 +264,7 @@ impl ReportValue {
         match self {
             ReportValue::Signed(i) => *i,
             ReportValue::Unsigned(u) => *u as i32,
+            ReportValue::Array(arr) => arr.values.first().unwrap().as_i32(),
         }
     }
 }
@@ -263,6 +280,10 @@ impl std::fmt::Display for ReportValue {
         match self {
             ReportValue::Signed(i) => write!(f, "{i}"),
             ReportValue::Unsigned(u) => write!(f, "{u}"),
+            ReportValue::Array(arr) => {
+                let vals: Vec<String> = arr.values.iter().map(|v| format!("{v}")).collect();
+                write!(f, "[{}]", vals.join(", "))
+            }
         }
     }
 }
@@ -320,6 +341,17 @@ impl_from_without_ref!(ReportValue, i8, i8);
 ///
 /// This struct wraps the [Report] as well as
 /// the contained [ReportValues](ReportValue).
+///
+/// ```
+/// # use hidreport::*;
+/// # fn parse(rdesc_bytes: &[u8], bytes: &[u8]) {
+///     let rdesc = ReportDescriptor::try_from(rdesc_bytes).unwrap();
+///     let input_report = rdesc.parse_input_report(bytes);
+///     for value in input_report {
+///         println!("{:?}", value);
+///     }
+/// # }
+/// ```
 #[derive(Debug)]
 pub struct InputReport<'a> {
     report: &'a RDescReport,
@@ -432,7 +464,7 @@ struct ParsedReport<'a> {
 }
 
 #[derive(Copy, Clone, Debug)]
-pub enum Direction {
+enum Direction {
     Input,
     Output,
     Feature,
@@ -574,6 +606,24 @@ impl<'a> RDescReport {
         v.twos_comp(nbits)
     }
 
+    fn extract_value(bytes: &[u8], bits: &RangeInclusive<usize>, is_signed: bool) -> ReportValue {
+        if is_signed {
+            ReportValue::Signed(match bits.len() {
+                1..=7 => Self::extract_i8(bytes, bits) as i32,
+                8..=15 => Self::extract_i16(bytes, bits) as i32,
+                16..=31 => Self::extract_i32(bytes, bits),
+                n => panic!("invalid data length {n}"),
+            })
+        } else {
+            ReportValue::Unsigned(match bits.len() {
+                1..=7 => Self::extract_u8(bytes, bits) as u32,
+                8..=15 => Self::extract_u16(bytes, bits) as u32,
+                16..=31 => Self::extract_u32(bytes, bits),
+                n => panic!("invalid data length {n}"),
+            })
+        }
+    }
+
     /// Parse the given bytes into a set of [ReportValue]s. Each of these
     /// values matches the corresponding [Field] in [Report::fields].
     pub fn parse(&'a self, bytes: &[u8]) -> Result<Vec<ReportValue>> {
@@ -582,7 +632,7 @@ impl<'a> RDescReport {
             .iter()
             .map(|f| {
                 (
-                    f.bits(),
+                    f,
                     match f {
                         Field::Variable(f) => f.logical_range,
                         Field::Array(f) => f.logical_range,
@@ -593,21 +643,22 @@ impl<'a> RDescReport {
                     },
                 )
             })
-            .map(|(bits, range)| {
-                if range.minimum < LogicalMinimum(0) {
-                    ReportValue::Signed(match bits.len() {
-                        1..=7 => Self::extract_i8(bytes, bits) as i32,
-                        8..=15 => Self::extract_i16(bytes, bits) as i32,
-                        16..=31 => Self::extract_i32(bytes, bits),
-                        n => panic!("invalid data length {n}"),
-                    })
-                } else {
-                    ReportValue::Unsigned(match bits.len() {
-                        1..=7 => Self::extract_u8(bytes, bits) as u32,
-                        8..=15 => Self::extract_u16(bytes, bits) as u32,
-                        16..=31 => Self::extract_u32(bytes, bits),
-                        n => panic!("invalid data length {n}"),
-                    })
+            .map(|(f, range)| {
+                let is_signed = range.minimum < LogicalMinimum(0);
+                match f {
+                    Field::Variable(_) => Self::extract_value(bytes, f.bits(), is_signed),
+                    Field::Constant(_) => ReportValue::Unsigned(0),
+                    Field::Array(arr) => {
+                        let bits_per_report = f.bits().len() / usize::from(arr.report_count);
+                        let values: Vec<ReportValue> = (0..usize::from(arr.report_count))
+                            .map(|idx| {
+                                let offset = f.bits().start() + bits_per_report * idx;
+                                RangeInclusive::new(offset, offset + bits_per_report + 1)
+                            })
+                            .map(|r| Self::extract_value(bytes, &r, is_signed))
+                            .collect();
+                        ReportValue::Array(Array { values })
+                    }
                 }
             })
             // .inspect(|v| println!("{v:?}"))
@@ -653,6 +704,12 @@ pub struct Usage {
 pub struct LogicalRange {
     pub minimum: LogicalMinimum,
     pub maximum: LogicalMaximum,
+}
+
+impl std::fmt::Display for LogicalRange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}..={}", self.minimum, self.maximum)
+    }
 }
 
 /// The physical range of a [Field]s' value, see Section 6.2.2.7.
@@ -711,14 +768,6 @@ impl Field {
             Field::Constant(f) => f.bits = r,
         };
     }
-
-    pub fn usages(&self) -> &[Usage] {
-        match self {
-            Field::Variable(f) => f.usages(),
-            Field::Array(f) => f.usages(),
-            Field::Constant(f) => f.usages(),
-        }
-    }
 }
 
 impl Length for &Field {
@@ -730,24 +779,14 @@ impl Length for &Field {
 /// A [VariableField] represents a single physical control.
 #[derive(Clone, Debug)]
 pub struct VariableField {
-    pub report_id: Option<ReportId>,
+    report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
-    usages: Vec<Usage>,
+    pub usage: Usage,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
-}
-
-impl VariableField {
-    pub fn usage(&self) -> &Usage {
-        self.usages.first().unwrap()
-    }
-
-    pub fn usages(&self) -> &[Usage] {
-        &self.usages
-    }
 }
 
 /// An [ArrayField] represents a group of physical controls,
@@ -762,9 +801,10 @@ impl VariableField {
 /// > button
 #[derive(Clone, Debug)]
 pub struct ArrayField {
-    pub report_id: Option<ReportId>,
+    report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
+    pub report_count: ReportCount,
     pub logical_range: LogicalRange,
     pub physical_range: Option<PhysicalRange>,
     pub unit: Option<Unit>,
@@ -790,7 +830,7 @@ impl ArrayField {
 /// value on a byte boundary.
 #[derive(Clone, Debug)]
 pub struct ConstantField {
-    pub report_id: Option<ReportId>,
+    report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
 }
@@ -977,9 +1017,9 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
     let report_id = globals.report_id;
 
     let (is_constant, is_variable) = match item {
-        MainItem::Input(i) => (i.is_constant, i.is_variable),
-        MainItem::Output(i) => (i.is_constant, i.is_variable),
-        MainItem::Feature(i) => (i.is_constant, i.is_variable),
+        MainItem::Input(i) => (i.is_constant(), i.is_variable()),
+        MainItem::Output(i) => (i.is_constant(), i.is_variable()),
+        MainItem::Feature(i) => (i.is_constant(), i.is_variable()),
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
@@ -1032,7 +1072,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
 
             let usage = usages.get(c).or_else(|| usages.last()).unwrap();
             let field = VariableField {
-                usages: vec![*usage],
+                usage: *usage,
                 bits,
                 logical_range,
                 physical_range,
@@ -1058,6 +1098,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
             unit_exponent,
             collections,
             report_id,
+            report_count,
         };
 
         vec![Field::Array(field)]
