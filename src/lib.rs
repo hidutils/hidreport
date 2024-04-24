@@ -9,6 +9,7 @@ pub mod types;
 
 use hid::*;
 pub use types::*;
+pub use hid::CollectionItem as CollectionType;
 
 /// Implements `From<Foo> for Bar` to call `From<&Foo> for Bar`
 macro_rules! impl_from_without_ref {
@@ -330,7 +331,7 @@ enum Direction {
 /// by the data in the sequence announced in the HID [ReportDescriptor].
 ///
 /// Use [`size_in_bits()`][Report::size_in_bits] or
-/// [`size_in_bytes()`](Report::size_in_bytes) to
+/// [`size_in_bytes()`](Report::size_in_bytes) to 
 /// get the length of this report.
 ///
 /// Note that each of Input, Output and Feature Reports
@@ -410,7 +411,7 @@ impl Report for RDescReport {
 /// let uid = UsageId::from(0x02); // Mouse
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
-/// For known named usages see [hut::Usage](crate::hut::Usage).
+/// For known named usages see [hut::Usage].
 #[derive(Clone, Copy, Debug)]
 pub struct Usage {
     pub usage_page: UsagePage,
@@ -697,12 +698,38 @@ impl ConstantField {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
-pub struct Collection(u8);
+/// Collections group [Fields](Field) together into logical or physical 
+/// groups. For example, a set of buttons and x/y axes may be grouped 
+/// together to represent a Mouse device.
+///
+/// Each [Field] may belong to a number of collections.
+///
+/// ```
+/// # use hidreport::*;
+/// # fn func(field: &VariableField) {
+/// let collection = field.collections.first().unwrap();
+/// match collection.collection_type() {
+///     CollectionType::Physical => println!("This field is part of a physical collection"),
+///     _ => {},
+/// }
+/// # }
+/// ```
+///
+#[derive(Clone, Debug)]
+pub struct Collection {
+    collection_type: CollectionType,
+    usages: Vec<Usage>,
+}
 
-impl From<&Collection> for hid::CollectionItem {
-    fn from(c: &Collection) -> hid::CollectionItem {
-        hid::CollectionItem::from(c.0)
+impl Collection {
+    /// Return the type of this collection (e.g. physical, logical, ...)
+    pub fn collection_type(&self) -> CollectionType {
+        self.collection_type
+    }
+
+    /// Returns the usages assigned to this collection
+    pub fn usages(&self) -> &[Usage] {
+        &self.usages
     }
 }
 
@@ -814,32 +841,30 @@ impl Stack {
     }
 }
 
-fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
+fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
     // Prefer UsageMinimum/Maximum over Usage because the latter may be set from an earlier call
     match locals.usage_minimum {
         Some(_) => {
-            let min: u32 = locals
-                .usage_minimum
-                .expect("Missing UsageMinimum in locals")
-                .into();
-            let max: u32 = locals
-                .usage_maximum
-                .expect("Missing UsageMaximum in locals")
-                .into();
-            let usage_page = globals.usage_page.expect("Missing UsagePage in globals");
+            let Some(min) = locals.usage_minimum else {
+                return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsageMinimum in locals".into() })
+            };
+            let Some(max) = locals.usage_maximum else {
+                return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsageMaximum in locals".into() })
+            };
+            let Some(usage_page) = globals.usage_page else { return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsagePage in globals".into() }) };
+            let min: u32 = min.into();
+            let max: u32 = max.into();
 
-            RangeInclusive::new(min, max)
+            let usages= RangeInclusive::new(min, max)
                 .map(|u| Usage {
                     usage_page: UsagePage(usage_page.into()),
                     usage_id: UsageId(u as u16),
                 })
-                .collect()
+                .collect();
+            Ok(usages)
         }
         None => {
-            if locals.usage.is_empty() {
-                panic!("Missing Usage in locals");
-            }
-            locals
+            let usages = locals
                 .usage
                 .iter()
                 .map(|usage| match usage {
@@ -863,7 +888,8 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Vec<Usage> {
                         }
                     }
                 })
-                .collect()
+                .collect();
+            Ok(usages)
         }
     }
 }
@@ -910,7 +936,11 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
 
-    let usages = compile_usages(globals, locals);
+    let usages = compile_usages(globals, locals)?;
+    if usages.is_empty() {
+        return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing Usages for main item".into() })
+    }
+                // This may be an empty vec
     let collections = stack.collections.clone();
     let fields: Vec<Field> = if is_variable {
         let mut bit_offset = 0;
@@ -979,10 +1009,18 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
     let mut rdesc = ReportDescriptor::default();
 
     for rdesc_item in items.iter() {
+        //println!("Handling offset {}", rdesc_item.offset());
         let item = rdesc_item.item();
         match item.item_type() {
             ItemType::Main(MainItem::Collection(i)) => {
-                let c = Collection(u8::from(&i));
+                let globals = stack.globals_const();
+                let locals = stack.locals_const();
+                // This may be an empty vec
+                let usages = compile_usages(globals, locals)?;
+                let c = Collection {
+                    collection_type: i,
+                    usages,
+                };
                 stack.collections.push(c);
             }
             ItemType::Main(MainItem::EndCollection) => {
