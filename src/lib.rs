@@ -410,10 +410,26 @@ impl BitSize for RDescReport {
 /// data value. See the [hut] module for a list of known Usages.
 ///
 /// A Usage comprises of a 16 bit [UsagePage] and a 16 bit [UsageId].
+///
+/// ```
+/// # use hidreport::*;
+/// let up = UsagePage::from(0x01); // Generic Desktop
+/// let uid = UsageId::from(0x02); // Mouse
+/// let usage = Usage::from_page_and_id(up, uid);
+/// ```
+/// For known named usages see [hut::Usage](crate::hut::Usage).
 #[derive(Clone, Copy, Debug)]
 pub struct Usage {
     pub usage_page: UsagePage,
     pub usage_id: UsageId,
+}
+
+
+impl Usage {
+    /// Create a [Usage] from a [UsagePage] and a [UsageId].
+    pub fn from_page_and_id(usage_page: UsagePage, usage_id: UsageId) -> Usage {
+        Usage { usage_page, usage_id }
+    }
 }
 
 /// A single field inside a [Report].

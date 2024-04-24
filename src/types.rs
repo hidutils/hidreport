@@ -42,6 +42,16 @@ macro_rules! impl_fmt {
 }
 
 // ---------- GLOBAL ITEMS ---------------------
+/// The 16-bit Usage Page identifier, see Section 5.5 "Usages".
+///
+/// The UsagePage forms the upper 16 bits of a 32-bit [Usage](crate::Usage).
+/// ```
+/// # use hidreport::*;
+/// let up = UsagePage::from(0x01); // Generic Desktop
+/// let uid = UsageId::from(0x02); // Mouse
+/// let usage = Usage::from_page_and_id(up, uid);
+/// ```
+/// For known named usages see [hut::Usage](crate::hut::Usage).
 #[derive(Debug, Clone, Copy)]
 pub struct UsagePage(pub u16);
 
