@@ -7,9 +7,26 @@ pub mod hid;
 pub mod hut;
 pub mod types;
 
+pub use hid::CollectionItem as CollectionType;
 use hid::*;
 pub use types::*;
-pub use hid::CollectionItem as CollectionType;
+
+macro_rules! ensure {
+    ($cond:expr, $msg:literal) => {
+        if (!$cond) {
+            return Err(ParserError::InvalidData {
+                offset: 0,
+                message: $msg.into(),
+            });
+        }
+    };
+    ($cond:expr, $err:expr) => {
+        if (!$cond) {
+            return Err($err);
+        }
+    };
+}
+pub(crate) use ensure;
 
 /// Implements `From<Foo> for Bar` to call `From<&Foo> for Bar`
 macro_rules! impl_from_without_ref {
@@ -237,16 +254,12 @@ impl<'a> ReportDescriptor {
     }
 
     fn find_report(&'a self, list: &'a [RDescReport], prefix: u8) -> Option<&impl Report> {
-        if list.is_empty() {
-            None
-        } else {
-            let first = list.first().unwrap();
-            let rid = Some(ReportId(prefix));
-            // Do we have report IDs? If not, the first report is what we want.
-            match first.report_id() {
-                None => Some(first),
-                Some(_) => list.iter().find(|r| r.report_id() == &rid),
-            }
+        let first = list.first()?;
+        let rid = Some(ReportId(prefix));
+        // Do we have report IDs? If not, the first report is what we want.
+        match first.report_id() {
+            None => Some(first),
+            Some(_) => list.iter().find(|r| r.report_id() == &rid),
         }
     }
 
@@ -331,7 +344,7 @@ enum Direction {
 /// by the data in the sequence announced in the HID [ReportDescriptor].
 ///
 /// Use [`size_in_bits()`][Report::size_in_bits] or
-/// [`size_in_bytes()`](Report::size_in_bytes) to 
+/// [`size_in_bytes()`](Report::size_in_bytes) to
 /// get the length of this report.
 ///
 /// Note that each of Input, Output and Feature Reports
@@ -359,7 +372,9 @@ pub trait Report {
     /// Where [`size_in_bits()`](Report::size_in_bits) is
     /// not a multiple of 8, the [`size_in_bytes()`](Report::size_in_bytes) rounds up
     /// fit all bits.
-    fn size_in_bytes(&self) -> usize { (self.size_in_bits() + 7) * 8 }
+    fn size_in_bytes(&self) -> usize {
+        (self.size_in_bits() + 7) * 8
+    }
 }
 
 /// A HID Input, Output or Feature Report.
@@ -418,11 +433,13 @@ pub struct Usage {
     pub usage_id: UsageId,
 }
 
-
 impl Usage {
     /// Create a [Usage] from a [UsagePage] and a [UsageId].
     pub fn from_page_and_id(usage_page: UsagePage, usage_id: UsageId) -> Usage {
-        Usage { usage_page, usage_id }
+        Usage {
+            usage_page,
+            usage_id,
+        }
     }
 }
 
@@ -599,11 +616,11 @@ impl ArrayField {
             }
         }
         let count = usize::from(self.report_count);
-        let values: Vec<u32> = (0..count)
-            .map(|idx| self.extract_one_u32(bytes, idx).unwrap())
+        let values: Result<Vec<u32>> = (0..count)
+            .map(|idx| self.extract_one_u32(bytes, idx))
             .collect();
 
-        Ok(values)
+        values
     }
 
     /// Extract this field's values as [i32]s from a report's bytes.
@@ -621,11 +638,11 @@ impl ArrayField {
         }
 
         let count = usize::from(self.report_count);
-        let values: Vec<i32> = (0..count)
-            .map(|idx| self.extract_one_i32(bytes, idx).unwrap())
+        let values: Result<Vec<i32>> = (0..count)
+            .map(|idx| self.extract_one_i32(bytes, idx))
             .collect();
 
-        Ok(values)
+        values
     }
 
     /// Extract a single value from this array. See [ArrayField::extract_u32].
@@ -698,8 +715,8 @@ impl ConstantField {
     }
 }
 
-/// Collections group [Fields](Field) together into logical or physical 
-/// groups. For example, a set of buttons and x/y axes may be grouped 
+/// Collections group [Fields](Field) together into logical or physical
+/// groups. For example, a set of buttons and x/y axes may be grouped
 /// together to represent a Mouse device.
 ///
 /// Each [Field] may belong to a number of collections.
@@ -735,12 +752,8 @@ impl Collection {
 
 #[derive(Error, Debug)]
 pub enum ParserError {
-    #[error("Invalid data {data} at offset {offset}: {message}")]
-    InvalidData {
-        offset: u32,
-        data: u32,
-        message: String,
-    },
+    #[error("Invalid data at offset {offset}: {message}")]
+    InvalidData { offset: usize, message: String },
     #[error("Parsing would lead to out-of-bounds")]
     OutOfBounds,
     #[error("Mismatching Report ID")]
@@ -813,9 +826,17 @@ impl Stack {
         self.locals.push(current);
     }
 
-    fn pop(&mut self) {
+    fn pop(&mut self) -> Result<()> {
+        ensure!(
+            !self.globals.is_empty() && !self.locals.is_empty(),
+            ParserError::InvalidData {
+                offset: 0,
+                message: "Too many Pops".into(),
+            }
+        );
         self.globals.pop();
         self.locals.pop();
+        Ok(())
     }
 
     fn reset_locals(&mut self) {
@@ -846,16 +867,27 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
     match locals.usage_minimum {
         Some(_) => {
             let Some(min) = locals.usage_minimum else {
-                return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsageMinimum in locals".into() })
+                return Err(ParserError::InvalidData {
+                    offset: 0,
+                    message: "Missing UsageMinimum in locals".into(),
+                });
             };
             let Some(max) = locals.usage_maximum else {
-                return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsageMaximum in locals".into() })
+                return Err(ParserError::InvalidData {
+                    offset: 0,
+                    message: "Missing UsageMaximum in locals".into(),
+                });
             };
-            let Some(usage_page) = globals.usage_page else { return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing UsagePage in globals".into() }) };
+            let Some(usage_page) = globals.usage_page else {
+                return Err(ParserError::InvalidData {
+                    offset: 0,
+                    message: "Missing UsagePage in globals".into(),
+                });
+            };
             let min: u32 = min.into();
             let max: u32 = max.into();
 
-            let usages= RangeInclusive::new(min, max)
+            let usages = RangeInclusive::new(min, max)
                 .map(|u| Usage {
                     usage_page: UsagePage(usage_page.into()),
                     usage_id: UsageId(u as u16),
@@ -908,10 +940,16 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
     };
 
     let bit_offset = 0;
-    let report_size = globals.report_size.expect("Missing report size in globals");
-    let report_count = globals
-        .report_count
-        .expect("Missing report count in globals");
+    ensure!(
+        globals.report_size.is_some(),
+        "Missing report size in globals"
+    );
+    ensure!(
+        globals.report_count.is_some(),
+        "Missing report count in globals"
+    );
+    let report_size = globals.report_size.unwrap();
+    let report_count = globals.report_count.unwrap();
 
     if is_constant {
         let nbits = usize::from(report_size) * usize::from(report_count);
@@ -925,22 +963,25 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         return Ok(vec![Field::Constant(field)]);
     }
 
-    let logical_minimum = globals.logical_minimum.expect("Missing LogicalMinimum");
-    let logical_maximum = globals.logical_maximum.expect("Missing LogicalMaximum");
-    // FIXME: parser error instead of panci
+    ensure!(globals.logical_minimum.is_some(), "Missing LogicalMinimum");
+    ensure!(globals.logical_maximum.is_some(), "Missing LogicalMaximum");
+    let logical_minimum = globals.logical_minimum.unwrap();
+    let logical_maximum = globals.logical_maximum.unwrap();
 
+    ensure!(
+        globals.physical_minimum.is_some() == globals.physical_maximum.is_some(),
+        "Missing PhysicalMinimum or PhysicalMaximum"
+    );
     let physical_minimum = globals.physical_minimum;
     let physical_maximum = globals.physical_maximum;
-    // FIXME: parser error if only one is None
 
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
 
     let usages = compile_usages(globals, locals)?;
-    if usages.is_empty() {
-        return Err(ParserError::InvalidData { offset: 0, data: 0, message: "Missing Usages for main item".into() })
-    }
-                // This may be an empty vec
+    ensure!(!usages.is_empty(), "Missing Usages for main item");
+
+    // This may be an empty vec
     let collections = stack.collections.clone();
     let fields: Vec<Field> = if is_variable {
         let mut bit_offset = 0;
@@ -1016,7 +1057,16 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let globals = stack.globals_const();
                 let locals = stack.locals_const();
                 // This may be an empty vec
-                let usages = compile_usages(globals, locals)?;
+                let usages = match compile_usages(globals, locals) {
+                    Ok(usages) => usages,
+                    Err(ParserError::InvalidData { message, .. }) => {
+                        return Err(ParserError::InvalidData {
+                            offset: rdesc_item.offset(),
+                            message,
+                        })
+                    }
+                    Err(e) => return Err(e),
+                };
                 let c = Collection {
                     collection_type: i,
                     usages,
@@ -1024,11 +1074,31 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 stack.collections.push(c);
             }
             ItemType::Main(MainItem::EndCollection) => {
-                stack.collections.pop();
+                if stack.collections.pop().is_none() {
+                    return Err(ParserError::InvalidData {
+                        offset: rdesc_item.offset(),
+                        message: "Too many EndCollection".into(),
+                    });
+                };
             }
             ItemType::Main(item) => {
-                let mut fields =
-                    handle_main_item(&item, &mut stack).expect("main item parsing failed");
+                let mut fields = match handle_main_item(&item, &mut stack) {
+                    Ok(fields) => fields,
+                    Err(ParserError::InvalidData { message, .. }) => {
+                        return Err(ParserError::InvalidData {
+                            offset: rdesc_item.offset(),
+                            message,
+                        })
+                    }
+                    Err(e) => return Err(e),
+                };
+                ensure!(
+                    !fields.is_empty(),
+                    ParserError::InvalidData {
+                        offset: rdesc_item.offset(),
+                        message: "Empty fields on MainItem".into(),
+                    }
+                );
                 stack.reset_locals();
 
                 // Now update the returned field(s) and push them into the right report
@@ -1048,7 +1118,9 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let report_id = fields.first().unwrap().report_id();
                 let report = match report_id {
                     None => reports.first_mut(),
-                    Some(id) => reports.iter_mut().find(|r| &r.id.unwrap() == id),
+                    Some(id) => reports
+                        .iter_mut()
+                        .find(|r| r.id.is_some() && &r.id.unwrap() == id),
                 };
 
                 let report = match report {
@@ -1108,9 +1180,16 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
             ItemType::Global(GlobalItem::Push) => {
                 stack.push();
             }
-            ItemType::Global(GlobalItem::Pop) => {
-                stack.pop();
-            }
+            ItemType::Global(GlobalItem::Pop) => match stack.pop() {
+                Ok(_) => {}
+                Err(ParserError::InvalidData { message, .. }) => {
+                    return Err(ParserError::InvalidData {
+                        offset: rdesc_item.offset(),
+                        message,
+                    })
+                }
+                Err(e) => return Err(e),
+            },
             ItemType::Global(GlobalItem::Reserved) => {}
             ItemType::Local(LocalItem::Usage {
                 usage_page,

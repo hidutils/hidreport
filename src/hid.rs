@@ -30,7 +30,9 @@
 
 use crate::hut;
 use crate::types::*;
-use crate::{ParserError, Result};
+use crate::{ensure, ParserError};
+
+use thiserror::Error;
 
 /// Convenience function to be extract a single bit as bool from a value
 fn bit(bits: u32, bit: u8) -> bool {
@@ -59,6 +61,16 @@ fn hiddata_signed(bytes: &[u8]) -> Option<i32> {
         _ => panic!("Size {} cannot happen", bytes.len()),
     }
 }
+
+#[derive(Error, Debug)]
+pub enum HidError {
+    #[error("Invalid data: {message}")]
+    InvalidData { message: String },
+    #[error("Insufficient data")]
+    InsufficientData,
+}
+
+type Result<T> = std::result::Result<T, HidError>;
 
 /// The type of a HID item may be one of [MainItem], [GlobalItem], or [LocalItem].
 /// These items comprise the report descriptor and how the report descriptor should
@@ -529,9 +541,10 @@ pub enum LocalItem {
 }
 
 impl TryFrom<&[u8]> for ItemType {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<ItemType> {
+        ensure!(!bytes.is_empty(), HidError::InsufficientData);
         let itype = (bytes[0] & 0b1100) >> 2;
         match itype {
             0 => Ok(ItemType::Main(MainItem::try_from(bytes)?)),
@@ -544,9 +557,10 @@ impl TryFrom<&[u8]> for ItemType {
 }
 
 impl TryFrom<&[u8]> for MainItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<MainItem> {
+        ensure!(!bytes.is_empty(), HidError::InsufficientData);
         let tag = bytes[0] & 0b11111100;
         match tag {
             0b10000000 => Ok(MainItem::Input(InputItem::try_from(bytes)?)),
@@ -554,9 +568,7 @@ impl TryFrom<&[u8]> for MainItem {
             0b10110000 => Ok(MainItem::Feature(FeatureItem::try_from(bytes)?)),
             0b10100000 => Ok(MainItem::Collection(CollectionItem::try_from(bytes)?)),
             0b11000000 => Ok(MainItem::EndCollection),
-            _ => Err(ParserError::InvalidData {
-                offset: 0,
-                data: bytes[0] as u32,
+            _ => Err(HidError::InvalidData {
                 message: format!("Invalid item tag {tag}"),
             }),
         }
@@ -564,14 +576,11 @@ impl TryFrom<&[u8]> for MainItem {
 }
 
 impl TryFrom<&[u8]> for InputItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
-        let data = hiddata(&bytes[1..]);
-        if data.is_none() {
-            return Err(ParserError::OutOfBounds);
-        }
-        let data = data.unwrap();
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
+        let data = hiddata(&bytes[1..]).unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -587,14 +596,11 @@ impl TryFrom<&[u8]> for InputItem {
 }
 
 impl TryFrom<&[u8]> for OutputItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
-        let data = hiddata(&bytes[1..]);
-        if data.is_none() {
-            return Err(ParserError::OutOfBounds);
-        }
-        let data = data.unwrap();
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
+        let data = hiddata(&bytes[1..]).unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -610,14 +616,11 @@ impl TryFrom<&[u8]> for OutputItem {
 }
 
 impl TryFrom<&[u8]> for FeatureItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
-        let data = hiddata(&bytes[1..]);
-        if data.is_none() {
-            return Err(ParserError::OutOfBounds);
-        }
-        let data = data.unwrap();
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
+        let data = hiddata(&bytes[1..]).unwrap();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -665,12 +668,10 @@ impl From<u8> for CollectionItem {
 }
 
 impl TryFrom<&[u8]> for CollectionItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<CollectionItem> {
-        if bytes.len() < 2 {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
         match bytes[1] {
             0x00 => Ok(CollectionItem::Physical),
             0x01 => Ok(CollectionItem::Application),
@@ -686,12 +687,11 @@ impl TryFrom<&[u8]> for CollectionItem {
 }
 
 impl TryFrom<&[u8]> for GlobalItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<GlobalItem> {
-        if bytes.is_empty() {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
+
         let data = hiddata(&bytes[1..]);
         let data_signed = hiddata_signed(&bytes[1..]);
         let item = match bytes[0] & 0b11111100 {
@@ -735,12 +735,10 @@ impl TryFrom<&[u8]> for GlobalItem {
 }
 
 impl TryFrom<&[u8]> for LocalItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<LocalItem> {
-        if bytes.is_empty() {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(bytes.len() >= 2, HidError::InsufficientData);
         let data = hiddata(&bytes[1..]);
         let item = match bytes[0] & 0b11111100 {
             0b00001000 => {
@@ -863,10 +861,11 @@ impl<'a> std::ops::Deref for ItemData<'a> {
 }
 
 impl<'a> TryFrom<&ItemData<'a>> for u32 {
-    type Error = ParserError;
+    type Error = HidError;
 
     /// Converts the (little endian) data bytes into a u32.
     fn try_from(data: &ItemData) -> Result<u32> {
+        ensure!(data.len() >= 2, HidError::InsufficientData);
         match data.len() {
             0 => panic!("Item data with zero bytes must not happen"),
             1 => Ok(data.bytes[0] as u32),
@@ -878,27 +877,31 @@ impl<'a> TryFrom<&ItemData<'a>> for u32 {
 }
 
 impl<'a> TryFrom<&ItemData<'a>> for u8 {
-    type Error = ParserError;
+    type Error = HidError;
 
     /// Converts the data bytes into a [u8]. This function throws an error if the data length
     /// is larger than 1.
     fn try_from(data: &ItemData) -> Result<u8> {
+        ensure!(!data.is_empty(), HidError::InsufficientData);
         match data.len() {
             0 => panic!("Item data with zero bytes must not happen"),
             1 => Ok(data.bytes[0]),
-            2 | 4 => Err(ParserError::OutOfBounds),
+            n @ (2 | 4) => Err(HidError::InvalidData {
+                message: format!("Cannot convert {n} bytes to u8"),
+            }),
             _ => panic!("Size of {} cannot happen", data.bytes.len()),
         }
     }
 }
 
 impl<'a> TryFrom<&ItemData<'a>> for Vec<u8> {
-    type Error = ParserError;
+    type Error = HidError;
 
     /// Converts the data bytes into a `Vec<u8>`, copying the data.
     fn try_from(data: &ItemData) -> Result<Vec<u8>> {
+        ensure!(!data.is_empty(), HidError::InsufficientData);
         match data.len() {
-            0 => Err(ParserError::OutOfBounds),
+            0 => panic!("Item data with zero bytes must not happen"),
             3 => panic!("Size of {} cannot happen", data.bytes.len()),
             1..=4 => Ok(data.bytes.to_owned()),
             _ => panic!("Size of {} cannot happen", data.bytes.len()),
@@ -946,7 +949,7 @@ impl TryFrom<&[u8]> for ReportDescriptorItems {
 
     /// Attempts to itemize the given HID report descriptor into its
     /// set of [ReportDescriptorItem]s.
-    fn try_from(bytes: &[u8]) -> Result<Self> {
+    fn try_from(bytes: &[u8]) -> crate::Result<Self> {
         itemize(bytes)
     }
 }
@@ -996,12 +999,10 @@ impl Item for ShortItem {
 }
 
 impl TryFrom<&[u8]> for ShortItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<ShortItem> {
-        if bytes.is_empty() {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(!bytes.is_empty(), HidError::InsufficientData);
         let size = bytes[0] & 0b0011;
         let size = match size {
             0 => 0,
@@ -1010,9 +1011,7 @@ impl TryFrom<&[u8]> for ShortItem {
             3 => 4,
             _ => panic!("Size {size} cannot happen"),
         };
-        if bytes.len() < size + 1 {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(bytes.len() > size, HidError::InsufficientData);
         let itype = ItemType::try_from(&bytes[0..size + 1])?;
 
         Ok(ShortItem {
@@ -1063,16 +1062,12 @@ impl Item for LongItem {
 }
 
 impl TryFrom<&[u8]> for LongItem {
-    type Error = ParserError;
+    type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<LongItem> {
-        if bytes.len() < 3 {
-            return Err(ParserError::OutOfBounds);
-        }
+        ensure!(bytes.len() >= 3, HidError::InsufficientData);
         if bytes[1] != 0b11111110 {
-            return Err(ParserError::InvalidData {
-                offset: 0,
-                data: bytes[1] as u32,
+            return Err(HidError::InvalidData {
                 message: "Item is not a long item".into(),
             });
         }
@@ -1087,12 +1082,20 @@ impl TryFrom<&[u8]> for LongItem {
 
 /// Split the HID Report Descriptor represented by bytes into its set of
 /// items.
-fn itemize(bytes: &[u8]) -> Result<ReportDescriptorItems> {
+fn itemize(bytes: &[u8]) -> crate::Result<ReportDescriptorItems> {
     let mut offset = 0;
     let mut items: Vec<ReportDescriptorItem> = Vec::new();
     loop {
         // FIXME: this will break if we ever get long items
-        let item = ShortItem::try_from(&bytes[offset..])?;
+        let item = match ShortItem::try_from(&bytes[offset..]) {
+            Ok(item) => item,
+            Err(e) => {
+                return Err(ParserError::InvalidData {
+                    offset,
+                    message: format!("{e}"),
+                });
+            }
+        };
         let off = offset;
         offset += item.size();
         items.push(ReportDescriptorItem { offset: off, item });
