@@ -803,6 +803,9 @@ impl ConstantField {
     }
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct CollectionId(u32);
+
 /// Collections group [Fields](Field) together into logical or physical
 /// groups. For example, a set of buttons and x/y axes may be grouped
 /// together to represent a Mouse device.
@@ -822,11 +825,15 @@ impl ConstantField {
 ///
 #[derive(Clone, Debug, PartialEq)]
 pub struct Collection {
+    id: CollectionId,
     collection_type: CollectionType,
     usages: Vec<Usage>,
 }
 
 impl Collection {
+    pub fn id(&self) -> &CollectionId {
+        &self.id
+    }
     /// Return the type of this collection (e.g. physical, logical, ...)
     pub fn collection_type(&self) -> CollectionType {
         self.collection_type
@@ -1156,6 +1163,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     Err(e) => return Err(e),
                 };
                 let c = Collection {
+                    id: CollectionId(rdesc_item.offset() as u32),
                     collection_type: i,
                     usages,
                 };
