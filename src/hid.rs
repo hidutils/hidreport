@@ -440,7 +440,7 @@ impl MainDataItem for FeatureItem {
 /// > two to four data (x, y, button 1, button 2). While the Collection item opens a
 /// > collection of data, the [MainItem::EndCollection] item closes a collection.
 ///
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum CollectionItem {
     Physical,
     Application,

@@ -427,7 +427,7 @@ impl Report for RDescReport {
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
 /// For known named usages see [hut::Usage].
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Usage {
     pub usage_page: UsagePage,
     pub usage_id: UsageId,
@@ -820,7 +820,7 @@ impl ConstantField {
 /// # }
 /// ```
 ///
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Collection {
     collection_type: CollectionType,
     usages: Vec<Usage>,
