@@ -76,13 +76,12 @@
 
 #![allow(clippy::identity_op, clippy::eq_op, clippy::match_single_binding)]
 
-
-use thiserror::Error;
 use std::fmt;
 use std::ops::BitOr;
+use thiserror::Error;
 
-use crate::Usage as HidUsage;
 use crate::types;
+use crate::Usage as HidUsage;
 
 #[derive(Error, Debug)]
 pub enum HutError {
@@ -260,7 +259,7 @@ impl From<&{{usage_page.name}}> for u32 {
             {{usage_page.name}}::{{usage.name}} => {{usage.value}},
 {% else %}
             // Anything without defined usages comes back as Undefined (0x00)
-            _ =>  0x00,
+            _ => 0x00,
 {% endfor %}
         };
         up | id
@@ -307,13 +306,15 @@ impl BitOr<u16> for {{usage_page.name}} {
 pub enum Button {
     /// Usage ID `0x0`: "No Buttons Pressed"
     NoButtonsPressed,
-    Button { button: u16 },
+    Button {
+        button: u16,
+    },
 }
 
 impl fmt::Display for Button {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            Button::NoButtonsPressed  => "No Buttons Pressed".to_string(),
+            Button::NoButtonsPressed => "No Buttons Pressed".to_string(),
             Button::Button { button } => format!("Button {button}"),
         };
         write!(f, "{name}")
@@ -335,7 +336,7 @@ pub enum Ordinals {
 impl fmt::Display for Ordinals {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            Ordinals::Unused  => "Unused".to_string(),
+            Ordinals::Unused => "Unused".to_string(),
             Ordinals::Ordinal { ordinal } => format!("Ordinal {ordinal}"),
         };
         write!(f, "{name}")
@@ -357,8 +358,10 @@ pub enum VendorDefinedPage1 {
 impl fmt::Display for VendorDefinedPage1 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            VendorDefinedPage1::Undefined  => "Vendor Usage Undefined".to_string(),
-            VendorDefinedPage1::VendorUsage { usage_id } => format!("Vendor Usage 0x{usage_id:02x}"),
+            VendorDefinedPage1::Undefined => "Vendor Usage Undefined".to_string(),
+            VendorDefinedPage1::VendorUsage { usage_id } => {
+                format!("Vendor Usage 0x{usage_id:02x}")
+            }
         };
         write!(f, "{name}")
     }
@@ -370,7 +373,7 @@ impl From<&Usage> for UsagePage {
 {% for usage_page in usage_pages %}
             Usage::{{usage_page.name}} { .. } => UsagePage::{{usage_page.name}},
 {% endfor %}
-            Usage::VendorDefinedPage1 { .. }  => UsagePage::VendorDefinedPage1,
+            Usage::VendorDefinedPage1 { .. } => UsagePage::VendorDefinedPage1,
         }
     }
 }
@@ -383,7 +386,7 @@ impl From<&UsagePage> for u16 {
 {% for usage_page in usage_pages %}
             UsagePage::{{usage_page.name}} { .. } => {{usage_page.value}},
 {% endfor %}
-            UsagePage::VendorDefinedPage1 { .. }  => 0xff00,
+            UsagePage::VendorDefinedPage1 { .. } => 0xff00,
         }
     }
 }
@@ -447,16 +450,19 @@ impl fmt::Display for UsagePage {
 pub enum Usage {
     {% for usage_page in usage_pages %}
     /// "{{usage_page.printable}}"
-    {{usage_page.name}} { usage: {{usage_page.name}} },
+    {{usage_page.name}} {
+        usage: {{usage_page.name}},
+    },
     {% endfor %}
-    VendorDefinedPage1 { usage: VendorDefinedPage1 },
+    VendorDefinedPage1 {
+        usage: VendorDefinedPage1,
+    },
 }
 
 impl Usage {
     pub fn new_from_values(usage_page: u16, usage_id: u16) -> Result<Usage> {
         Usage::try_from((usage_page as u32) << 16 | usage_id as u32)
     }
-
 }
 
 impl AsUsage for Usage {
@@ -518,8 +524,8 @@ impl From<&Usage> for u32 {
             Usage::{{usage_page.name}} { usage: {{usage_page.name}}::{{usage.name}} } => {{usage_page.value}} << 16 | {{usage.value}},
 {% endfor  %}
 {% endfor  %}
-            Usage::Button { usage: Button::Button { button } }  => 0x09 | *button as u32,
-            Usage::Ordinals { usage: Ordinals::Ordinal { ordinal } }  => 0x0A | *ordinal as u32,
+            Usage::Button { usage: Button::Button { button } } => 0x09 | *button as u32,
+            Usage::Ordinals { usage: Ordinals::Ordinal { ordinal } } => 0x0A | *ordinal as u32,
             Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::Undefined } => 0xff000000,
             Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::VendorUsage { usage_id } } => 0xff00000u32 | *usage_id as u32,
             _ => panic!("Unhandled usage {usage:?}"),
