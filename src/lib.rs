@@ -543,7 +543,7 @@ pub struct VariableField {
 }
 
 impl VariableField {
-    /// Returns true if this field contains signed values,.
+    /// Returns true if this field contains signed values,
     /// i.e. the LogicalMinimum is less than zero.
     pub fn is_signed(&self) -> bool {
         self.logical_minimum < LogicalMinimum(0)
@@ -621,7 +621,10 @@ impl UsageRange {
         self.maximum
     }
 
-    pub fn lookup_usage(&self, usage: Usage) -> Option<Usage> {
+    /// If the given usage falls within this usage range (i.e. it is of the
+    /// same [UsagePage] and it within the inclusive [UsageMinimum]/[UsageMaximum])
+    /// return the provided usage as [Option].
+    pub fn lookup_usage<'a>(&self, usage: &'a Usage) -> Option<&'a Usage> {
         if usage.usage_page == self.usage_page
             && usage.usage_id >= self.minimum.usage_id()
             && usage.usage_id <= self.maximum.usage_id()
@@ -634,7 +637,7 @@ impl UsageRange {
 
     /// Look up the given [UsageId] and return the corresponding
     /// [Usage], if any. The [UsageId] is assumed to be in the same
-    /// [UsagePage] as this range, use [lookup_usage] if you need
+    /// [UsagePage] as this range, use [lookup_usage()][Self::lookup_usage] if you need
     /// a check for the [UsagePage] as well.
     pub fn lookup_id(&self, id: UsageId) -> Option<Usage> {
         if id >= self.minimum.usage_id() && id <= self.maximum.usage_id() {
@@ -674,10 +677,14 @@ impl ArrayField {
     /// Returns the set of usages for this field. This is the
     /// inclusive range of [UsageMinimum]`..=`[UsageMaximum]
     /// as defined for this field.
+    ///
+    /// In most cases it's better to use [usage_range()](Self::usage_range)
+    /// instead.
     pub fn usages(&self) -> &[Usage] {
         &self.usages
     }
 
+    /// Returns the [UsageRange] for this field.
     pub fn usage_range(&self) -> UsageRange {
         let min = self.usages.first().unwrap();
         let max = self.usages.last().unwrap();
@@ -691,6 +698,16 @@ impl ArrayField {
 
     /// Returns true if this field contains signed values,.
     /// i.e. the LogicalMinimum is less than zero.
+    /// ```
+    /// # fn func(field: &ArrayField) {
+    /// if field.is_signed() {
+    ///     println!("A signed value: {}", field.extract_i32());
+    /// } else {
+    ///     println!("An unsigned value: {}", field.extract_u32());
+    /// }
+    ///
+    /// # }
+    /// ```
     pub fn is_signed(&self) -> bool {
         self.logical_minimum < LogicalMinimum(0)
     }
@@ -739,6 +756,8 @@ impl ArrayField {
     }
 
     /// Extract a single value from this array. See [ArrayField::extract_u32].
+    ///
+    /// The index must be less than [Self::report_count].
     pub fn extract_one_u32(&self, bytes: &[u8], idx: usize) -> Result<u32> {
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
@@ -762,6 +781,8 @@ impl ArrayField {
     }
 
     /// Extract a single value from this array. See [ArrayField::extract_i32].
+    ///
+    /// The index must be less than [Self::report_count].
     pub fn extract_one_i32(&self, bytes: &[u8], idx: usize) -> Result<i32> {
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
@@ -808,13 +829,19 @@ impl ConstantField {
     }
 }
 
+/// A unique (within this report descriptor) identifier for a collection.
+///
+/// A device may have multiple collections that are otherwise identical
+/// (in particular logical collections), the collection ID serves
+/// to identify whether two fields are part of the same collection.
 #[derive(Clone, Debug, PartialEq)]
 pub struct CollectionId(u32);
 
 /// Collections group [Fields](Field) together into logical or physical
-/// groups. For example, a set of buttons and x/y axes may be grouped
-/// together to represent a Mouse device.
+/// groups.
 ///
+/// For example, a set of buttons and x/y axes may be grouped
+/// together to represent a Mouse device.
 /// Each [Field] may belong to a number of collections.
 ///
 /// ```
@@ -836,6 +863,7 @@ pub struct Collection {
 }
 
 impl Collection {
+    /// Returns the unique ID for this collection
     pub fn id(&self) -> &CollectionId {
         &self.id
     }
