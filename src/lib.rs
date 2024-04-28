@@ -520,10 +520,9 @@ impl Field {
             Field::Constant(f) => f.bits = r,
         };
     }
-}
 
-impl Length for &Field {
-    fn len(self) -> usize {
+    /// The length of the field in bits
+    fn len(&self) -> usize {
         return self.bits().len();
     }
 }
