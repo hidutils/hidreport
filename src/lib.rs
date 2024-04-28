@@ -759,6 +759,9 @@ impl ArrayField {
     ///
     /// The index must be less than [Self::report_count].
     pub fn extract_one_u32(&self, bytes: &[u8], idx: usize) -> Result<u32> {
+        if idx >= usize::from(self.report_count) {
+            return Err(ParserError::OutOfBounds);
+        }
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
                 return Err(ParserError::MismatchingReportId);
@@ -784,6 +787,9 @@ impl ArrayField {
     ///
     /// The index must be less than [Self::report_count].
     pub fn extract_one_i32(&self, bytes: &[u8], idx: usize) -> Result<i32> {
+        if idx >= usize::from(self.report_count) {
+            return Err(ParserError::OutOfBounds);
+        }
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
                 return Err(ParserError::MismatchingReportId);

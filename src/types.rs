@@ -261,7 +261,7 @@ impl From<&ReportId> for ReportId {
 impl_from!(ReportId, ReportId, u8);
 impl_fmt!(ReportId, u8);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ReportCount(pub(crate) usize);
 
 impl_from!(ReportCount, ReportCount, usize);
