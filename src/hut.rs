@@ -74,6 +74,8 @@
 //! English word, for example [GamingControls::ThreeDGameController]. Numbers
 //! inside a word are left as-is.
 
+#![allow(clippy::identity_op, clippy::eq_op, clippy::match_single_binding)]
+
 use std::fmt;
 use std::ops::BitOr;
 use thiserror::Error;
@@ -279,7 +281,7 @@ impl UsagePage {
 
     /// Returns the 16-bit value for this Usage Page.
     pub fn usage_page(&self) -> u16 {
-        u16::try_from(self).unwrap()
+        u16::from(self)
     }
 
     /// Returns the 32-bit Usage that is this Usage Page combined with
@@ -14702,7 +14704,7 @@ pub enum Button {
 impl fmt::Display for Button {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            Button::NoButtonsPressed => format!("No Buttons Pressed"),
+            Button::NoButtonsPressed => "No Buttons Pressed".to_string(),
             Button::Button { button } => format!("Button {button}"),
         };
         write!(f, "{name}")
@@ -14726,7 +14728,7 @@ pub enum Ordinals {
 impl fmt::Display for Ordinals {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            Ordinals::Unused => format!("Unused"),
+            Ordinals::Unused => "Unused".to_string(),
             Ordinals::Ordinal { ordinal } => format!("Ordinal {ordinal}"),
         };
         write!(f, "{name}")
@@ -14748,7 +14750,7 @@ pub enum VendorDefinedPage1 {
 impl fmt::Display for VendorDefinedPage1 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            VendorDefinedPage1::Undefined => format!("Vendor Usage Undefined"),
+            VendorDefinedPage1::Undefined => "Vendor Usage Undefined".to_string(),
             VendorDefinedPage1::VendorUsage { usage_id } => {
                 format!("Vendor Usage 0x{usage_id:02x}")
             }
