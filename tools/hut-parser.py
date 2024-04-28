@@ -4,7 +4,7 @@
 # Helper script to convert the jinja file into our hut.rs file
 #
 # Use as:
-#     $ python3 ./tools/hut-parser.py src/hut.rs.jinja > src/hut.rs && n
+#     $ python3 ./tools/hut-parser.py src/hut.rs.jinja > src/hut.rs && cargo build
 #
 
 from pathlib import Path
@@ -97,8 +97,8 @@ def sanitize_keyboard(s):
 
 @dataclass
 class Usage:
-    printable: str
-    name: str
+    printable: str  # The string as it was in the data file
+    name: str  # Name of the usage sanitized to be a valid identifier
     value: int
 
 
@@ -123,13 +123,9 @@ def parse_hut_file(file):
         A0<tab>Name
         F0-FF<tab>Reserved for somerange
 
-    All numbers in hex.
+    All numbers in hex, only one Usage Page per file
 
-    Only one Usage Page per file
-
-    Usages are parsed into a dictionary[number] = name.
-
-    The return value is a single HidUsagePage where page[idx] = idx-name.
+    Usages are parsed into a UsagePage containing the Usage
     """
     header = next(file).strip()
     r = re.match(r"^\((?P<value>[A-Fa-f0-9]+)\)\s(?P<name>.*)", header)
@@ -141,6 +137,7 @@ def parse_hut_file(file):
     name = sanitize(printable)
     usage_page = UsagePage(printable=printable, name=name, value=value, usages=[])
 
+    # Vendor-defined page is hand-coded in hut.rs, it's too special
     if name == "VendorDefinedPage1":
         raise SkipFile
 
@@ -214,7 +211,12 @@ def generate_source(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default="-")
-    parser.add_argument("--datadir", type=Path, default=Path("data"))
+    parser.add_argument(
+        "--datadir",
+        type=Path,
+        default=Path("data"),
+        help="Path to the directory containing .hut files",
+    )
     parser.add_argument("template", type=Path, help="The jinja template file")
     args = parser.parse_args()
     assert args.datadir.exists()
