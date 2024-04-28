@@ -699,11 +699,12 @@ impl ArrayField {
     /// Returns true if this field contains signed values,.
     /// i.e. the LogicalMinimum is less than zero.
     /// ```
-    /// # fn func(field: &ArrayField) {
+    /// # use hidreport::ArrayField;
+    /// # fn func(field: &ArrayField, bytes: &[u8]) {
     /// if field.is_signed() {
-    ///     println!("A signed value: {}", field.extract_i32());
+    ///     println!("Signed values: {:?}", field.extract_i32(bytes).unwrap());
     /// } else {
-    ///     println!("An unsigned value: {}", field.extract_u32());
+    ///     println!("Unsigned values: {:?}", field.extract_u32(bytes).unwrap());
     /// }
     ///
     /// # }
