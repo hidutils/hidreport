@@ -458,17 +458,23 @@ impl From<&Usage> for u32 {
     }
 }
 
+impl_from_without_ref!(Usage, u32, u32);
+
 impl From<&Usage> for UsageMinimum {
     fn from(u: &Usage) -> UsageMinimum {
         UsageMinimum(u32::from(u))
     }
 }
 
+impl_from_without_ref!(Usage, UsageMinimum, UsageMinimum);
+
 impl From<&Usage> for UsageMaximum {
     fn from(u: &Usage) -> UsageMaximum {
         UsageMaximum(u32::from(u))
     }
 }
+
+impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
 
 /// A single field inside a [Report].
 ///
