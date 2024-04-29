@@ -14592,7 +14592,7 @@ impl BitOr<u16> for EyeandHeadTrackers {
     }
 }
 
-/// Usage Page `0x9`: "Button"
+/// *Usage Page `0x9`: "Button"*
 ///
 /// This Usage Page has only one named Usage ID, any Usages IDs in this Usage
 /// Page are simply the button number.
@@ -14616,7 +14616,7 @@ impl fmt::Display for Button {
     }
 }
 
-/// Usage Page `0xA`: "Ordinals"
+/// *Usage Page `0xA`: "Ordinals"*
 ///
 /// This Usage Page has only one named Usage ID, any Usages IDs in this Usage
 /// Page are simply the ordinal number.
@@ -14640,7 +14640,7 @@ impl fmt::Display for Ordinals {
     }
 }
 
-/// Usage Page `0x10`: "Unicode"
+/// *Usage Page `0x10`: "Unicode"*
 ///
 /// This Usage Page has only one named Usage ID, any Usages IDs in this Usage
 /// Page are simply the code point.
@@ -14664,7 +14664,7 @@ impl fmt::Display for Unicode {
     }
 }
 
-/// Usage Page `0xff00`: The Vendor Defined Page
+/// *Usage Page `0xff00`: The Vendor Defined Page*
 ///
 /// This Usage Page has no named Usage IDs, any Usages in this Usage Page are
 /// private to a vendor implementation.
