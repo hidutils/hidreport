@@ -159,107 +159,107 @@ pub enum UsagePage {
     ///
     /// See [Button].
     Button,
-    /// Usage Page `0x10`: "Ordinals"
+    /// Usage Page `0xA`: "Ordinals"
     ///
     /// See [Ordinals].
     Ordinals,
-    /// Usage Page `0x11`: "Telephony Devices"
+    /// Usage Page `0xB`: "Telephony Devices"
     ///
     /// See [TelephonyDevices].
     TelephonyDevices,
-    /// Usage Page `0x13`: "Digitizers"
+    /// Usage Page `0xD`: "Digitizers"
     ///
     /// See [Digitizers].
     Digitizers,
-    /// Usage Page `0x14`: "Haptic"
+    /// Usage Page `0xE`: "Haptic"
     ///
     /// See [Haptic].
     Haptic,
-    /// Usage Page `0x16`: "Unicode"
+    /// Usage Page `0x10`: "Unicode"
     ///
     /// See [Unicode].
     Unicode,
-    /// Usage Page `0x20`: "Auxiliary Display"
+    /// Usage Page `0x14`: "Auxiliary Display"
     ///
     /// See [AuxiliaryDisplay].
     AuxiliaryDisplay,
-    /// Usage Page `0x32`: "Sensor"
+    /// Usage Page `0x20`: "Sensor"
     ///
     /// See [Sensor].
     Sensor,
-    /// Usage Page `0x64`: "Medical Instruments"
+    /// Usage Page `0x40`: "Medical Instruments"
     ///
     /// See [MedicalInstruments].
     MedicalInstruments,
-    /// Usage Page `0x65`: "Braille Display"
+    /// Usage Page `0x41`: "Braille Display"
     ///
     /// See [BrailleDisplay].
     BrailleDisplay,
-    /// Usage Page `0x89`: "Lighting and Illumination"
+    /// Usage Page `0x59`: "Lighting and Illumination"
     ///
     /// See [LightingandIllumination].
     LightingandIllumination,
-    /// Usage Page `0x128`: "Monitor"
+    /// Usage Page `0x80`: "Monitor"
     ///
     /// See [Monitor].
     Monitor,
-    /// Usage Page `0x129`: "Monitor Enumerated Values"
+    /// Usage Page `0x81`: "Monitor Enumerated Values"
     ///
     /// See [MonitorEnumeratedValues].
     MonitorEnumeratedValues,
-    /// Usage Page `0x130`: "VESA Virtual Controls"
+    /// Usage Page `0x82`: "VESA Virtual Controls"
     ///
     /// See [VESAVirtualControls].
     VESAVirtualControls,
-    /// Usage Page `0x131`: "VESA Command"
+    /// Usage Page `0x83`: "VESA Command"
     ///
     /// See [VESACommand].
     VESACommand,
-    /// Usage Page `0x132`: "Power Device"
+    /// Usage Page `0x84`: "Power Device"
     ///
     /// See [PowerDevice].
     PowerDevice,
-    /// Usage Page `0x133`: "Battery System"
+    /// Usage Page `0x85`: "Battery System"
     ///
     /// See [BatterySystem].
     BatterySystem,
-    /// Usage Page `0x140`: "Bar Code Scanner"
+    /// Usage Page `0x8C`: "Bar Code Scanner"
     ///
     /// See [BarCodeScanner].
     BarCodeScanner,
-    /// Usage Page `0x141`: "Scale"
+    /// Usage Page `0x8D`: "Scale"
     ///
     /// See [Scale].
     Scale,
-    /// Usage Page `0x142`: "Magnetic Stripe Reading"
+    /// Usage Page `0x8E`: "Magnetic Stripe Reading"
     ///
     /// See [MagneticStripeReading].
     MagneticStripeReading,
-    /// Usage Page `0x144`: "Camera Control"
+    /// Usage Page `0x90`: "Camera Control"
     ///
     /// See [CameraControl].
     CameraControl,
-    /// Usage Page `0x145`: "Arcade Page OAAF"
+    /// Usage Page `0x91`: "Arcade Page OAAF"
     ///
     /// See [ArcadePageOAAF].
     ArcadePageOAAF,
-    /// Usage Page `0x146`: "Gaming Device"
+    /// Usage Page `0x92`: "Gaming Device"
     ///
     /// See [GamingDevice].
     GamingDevice,
-    /// Usage Page `0x61904`: "FIDO Alliance"
+    /// Usage Page `0xF1D0`: "FIDO Alliance"
     ///
     /// See [FIDOAlliance].
     FIDOAlliance,
-    /// Usage Page `0x65293`: "Wacom"
+    /// Usage Page `0xFF0D`: "Wacom"
     ///
     /// See [Wacom].
     Wacom,
-    /// Usage Page `0x12`: "Consumer Devices"
+    /// Usage Page `0xC`: "Consumer Devices"
     ///
     /// See [ConsumerDevices].
     ConsumerDevices,
-    /// Usage Page `0x18`: "Eye and Head Trackers"
+    /// Usage Page `0x12`: "Eye and Head Trackers"
     ///
     /// See [EyeandHeadTrackers].
     EyeandHeadTrackers,
@@ -450,187 +450,187 @@ pub enum GenericDesktop {
     Keypad,
     /// Usage ID `0x8`: "Multi Axis"
     MultiAxis,
-    /// Usage ID `0x10`: "Water Cooling Device"
+    /// Usage ID `0xA`: "Water Cooling Device"
     WaterCoolingDevice,
-    /// Usage ID `0x11`: "Computer Chassis Device"
+    /// Usage ID `0xB`: "Computer Chassis Device"
     ComputerChassisDevice,
-    /// Usage ID `0x12`: "Wireless Radio Controls"
+    /// Usage ID `0xC`: "Wireless Radio Controls"
     WirelessRadioControls,
-    /// Usage ID `0x13`: "Portable Device Control"
+    /// Usage ID `0xD`: "Portable Device Control"
     PortableDeviceControl,
-    /// Usage ID `0x14`: "System Multi-Axis Controller"
+    /// Usage ID `0xE`: "System Multi-Axis Controller"
     SystemMultiAxisController,
-    /// Usage ID `0x15`: "Spatial Controller"
+    /// Usage ID `0xF`: "Spatial Controller"
     SpatialController,
-    /// Usage ID `0x16`: "Assistive Control"
+    /// Usage ID `0x10`: "Assistive Control"
     AssistiveControl,
-    /// Usage ID `0x48`: "X"
+    /// Usage ID `0x30`: "X"
     X,
-    /// Usage ID `0x49`: "Y"
+    /// Usage ID `0x31`: "Y"
     Y,
-    /// Usage ID `0x50`: "Z"
+    /// Usage ID `0x32`: "Z"
     Z,
-    /// Usage ID `0x51`: "Rx"
+    /// Usage ID `0x33`: "Rx"
     Rx,
-    /// Usage ID `0x52`: "Ry"
+    /// Usage ID `0x34`: "Ry"
     Ry,
-    /// Usage ID `0x53`: "Rz"
+    /// Usage ID `0x35`: "Rz"
     Rz,
-    /// Usage ID `0x54`: "Slider"
+    /// Usage ID `0x36`: "Slider"
     Slider,
-    /// Usage ID `0x55`: "Dial"
+    /// Usage ID `0x37`: "Dial"
     Dial,
-    /// Usage ID `0x56`: "Wheel"
+    /// Usage ID `0x38`: "Wheel"
     Wheel,
-    /// Usage ID `0x57`: "Hat switch"
+    /// Usage ID `0x39`: "Hat switch"
     Hatswitch,
-    /// Usage ID `0x58`: "Counted Buffer"
+    /// Usage ID `0x3A`: "Counted Buffer"
     CountedBuffer,
-    /// Usage ID `0x59`: "Byte Count"
+    /// Usage ID `0x3B`: "Byte Count"
     ByteCount,
-    /// Usage ID `0x60`: "Motion"
+    /// Usage ID `0x3C`: "Motion"
     Motion,
-    /// Usage ID `0x61`: "Start"
+    /// Usage ID `0x3D`: "Start"
     Start,
-    /// Usage ID `0x62`: "Select"
+    /// Usage ID `0x3E`: "Select"
     Select,
-    /// Usage ID `0x64`: "Vx"
+    /// Usage ID `0x40`: "Vx"
     Vx,
-    /// Usage ID `0x65`: "Vy"
+    /// Usage ID `0x41`: "Vy"
     Vy,
-    /// Usage ID `0x66`: "Vz"
+    /// Usage ID `0x42`: "Vz"
     Vz,
-    /// Usage ID `0x67`: "Vbrx"
+    /// Usage ID `0x43`: "Vbrx"
     Vbrx,
-    /// Usage ID `0x68`: "Vbry"
+    /// Usage ID `0x44`: "Vbry"
     Vbry,
-    /// Usage ID `0x69`: "Vbrz"
+    /// Usage ID `0x45`: "Vbrz"
     Vbrz,
-    /// Usage ID `0x70`: "Vno"
+    /// Usage ID `0x46`: "Vno"
     Vno,
-    /// Usage ID `0x71`: "Feature"
+    /// Usage ID `0x47`: "Feature"
     Feature,
-    /// Usage ID `0x72`: "Resolution Multiplier"
+    /// Usage ID `0x48`: "Resolution Multiplier"
     ResolutionMultiplier,
-    /// Usage ID `0x73`: "Qx"
+    /// Usage ID `0x49`: "Qx"
     Qx,
-    /// Usage ID `0x74`: "Qy"
+    /// Usage ID `0x4A`: "Qy"
     Qy,
-    /// Usage ID `0x75`: "Qz"
+    /// Usage ID `0x4B`: "Qz"
     Qz,
-    /// Usage ID `0x76`: "Qw"
+    /// Usage ID `0x4C`: "Qw"
     Qw,
-    /// Usage ID `0x128`: "System Control"
+    /// Usage ID `0x80`: "System Control"
     SystemControl,
-    /// Usage ID `0x129`: "System Power Down"
+    /// Usage ID `0x81`: "System Power Down"
     SystemPowerDown,
-    /// Usage ID `0x130`: "System Sleep"
+    /// Usage ID `0x82`: "System Sleep"
     SystemSleep,
-    /// Usage ID `0x131`: "System Wake Up"
+    /// Usage ID `0x83`: "System Wake Up"
     SystemWakeUp,
-    /// Usage ID `0x132`: "System Context Menu"
+    /// Usage ID `0x84`: "System Context Menu"
     SystemContextMenu,
-    /// Usage ID `0x133`: "System Main Menu"
+    /// Usage ID `0x85`: "System Main Menu"
     SystemMainMenu,
-    /// Usage ID `0x134`: "System App Menu"
+    /// Usage ID `0x86`: "System App Menu"
     SystemAppMenu,
-    /// Usage ID `0x135`: "System Help Menu"
+    /// Usage ID `0x87`: "System Help Menu"
     SystemHelpMenu,
-    /// Usage ID `0x136`: "System Menu Exit"
+    /// Usage ID `0x88`: "System Menu Exit"
     SystemMenuExit,
-    /// Usage ID `0x137`: "System Menu Select"
+    /// Usage ID `0x89`: "System Menu Select"
     SystemMenuSelect,
-    /// Usage ID `0x138`: "System Menu Right"
+    /// Usage ID `0x8A`: "System Menu Right"
     SystemMenuRight,
-    /// Usage ID `0x139`: "System Menu Left"
+    /// Usage ID `0x8B`: "System Menu Left"
     SystemMenuLeft,
-    /// Usage ID `0x140`: "System Menu Up"
+    /// Usage ID `0x8C`: "System Menu Up"
     SystemMenuUp,
-    /// Usage ID `0x141`: "System Menu Down"
+    /// Usage ID `0x8D`: "System Menu Down"
     SystemMenuDown,
-    /// Usage ID `0x142`: "System Cold Restart"
+    /// Usage ID `0x8E`: "System Cold Restart"
     SystemColdRestart,
-    /// Usage ID `0x143`: "System Warm Restart"
+    /// Usage ID `0x8F`: "System Warm Restart"
     SystemWarmRestart,
-    /// Usage ID `0x144`: "D-Pad Up"
+    /// Usage ID `0x90`: "D-Pad Up"
     DPadUp,
-    /// Usage ID `0x145`: "D-Pad Down"
+    /// Usage ID `0x91`: "D-Pad Down"
     DPadDown,
-    /// Usage ID `0x146`: "D-Pad Right"
+    /// Usage ID `0x92`: "D-Pad Right"
     DPadRight,
-    /// Usage ID `0x147`: "D-Pad Left"
+    /// Usage ID `0x93`: "D-Pad Left"
     DPadLeft,
-    /// Usage ID `0x148`: "Index Trigger"
+    /// Usage ID `0x94`: "Index Trigger"
     IndexTrigger,
-    /// Usage ID `0x149`: "Palm Trigger"
+    /// Usage ID `0x95`: "Palm Trigger"
     PalmTrigger,
-    /// Usage ID `0x150`: "Thumbstick"
+    /// Usage ID `0x96`: "Thumbstick"
     Thumbstick,
-    /// Usage ID `0x151`: "System Function Shift"
+    /// Usage ID `0x97`: "System Function Shift"
     SystemFunctionShift,
-    /// Usage ID `0x152`: "System Function Shift Lock"
+    /// Usage ID `0x98`: "System Function Shift Lock"
     SystemFunctionShiftLock,
-    /// Usage ID `0x153`: "System Function Shift Lock Indicator"
+    /// Usage ID `0x99`: "System Function Shift Lock Indicator"
     SystemFunctionShiftLockIndicator,
-    /// Usage ID `0x154`: "System Dismiss Notification"
+    /// Usage ID `0x9A`: "System Dismiss Notification"
     SystemDismissNotification,
-    /// Usage ID `0x160`: "System Dock"
+    /// Usage ID `0xA0`: "System Dock"
     SystemDock,
-    /// Usage ID `0x161`: "System UnDock"
+    /// Usage ID `0xA1`: "System UnDock"
     SystemUnDock,
-    /// Usage ID `0x162`: "System Setup"
+    /// Usage ID `0xA2`: "System Setup"
     SystemSetup,
-    /// Usage ID `0x163`: "System Break"
+    /// Usage ID `0xA3`: "System Break"
     SystemBreak,
-    /// Usage ID `0x164`: "System Debugger Break"
+    /// Usage ID `0xA4`: "System Debugger Break"
     SystemDebuggerBreak,
-    /// Usage ID `0x165`: "Application Break"
+    /// Usage ID `0xA5`: "Application Break"
     ApplicationBreak,
-    /// Usage ID `0x166`: "Application Debugger Break"
+    /// Usage ID `0xA6`: "Application Debugger Break"
     ApplicationDebuggerBreak,
-    /// Usage ID `0x167`: "System Speaker Mute"
+    /// Usage ID `0xA7`: "System Speaker Mute"
     SystemSpeakerMute,
-    /// Usage ID `0x168`: "System Hibernate"
+    /// Usage ID `0xA8`: "System Hibernate"
     SystemHibernate,
-    /// Usage ID `0x176`: "System Display Invert"
+    /// Usage ID `0xB0`: "System Display Invert"
     SystemDisplayInvert,
-    /// Usage ID `0x177`: "System Display Internal"
+    /// Usage ID `0xB1`: "System Display Internal"
     SystemDisplayInternal,
-    /// Usage ID `0x178`: "System Display External"
+    /// Usage ID `0xB2`: "System Display External"
     SystemDisplayExternal,
-    /// Usage ID `0x179`: "System Display Both"
+    /// Usage ID `0xB3`: "System Display Both"
     SystemDisplayBoth,
-    /// Usage ID `0x180`: "System Display Dual"
+    /// Usage ID `0xB4`: "System Display Dual"
     SystemDisplayDual,
-    /// Usage ID `0x181`: "System Display Toggle Internal External"
+    /// Usage ID `0xB5`: "System Display Toggle Internal External"
     SystemDisplayToggleInternalExternal,
-    /// Usage ID `0x182`: "System Display Swap Primary Secondary"
+    /// Usage ID `0xB6`: "System Display Swap Primary Secondary"
     SystemDisplaySwapPrimarySecondary,
-    /// Usage ID `0x183`: "System Display LCDAuto Scale"
+    /// Usage ID `0xB7`: "System Display LCDAuto Scale"
     SystemDisplayLCDAutoScale,
-    /// Usage ID `0x192`: "Sensor Zone"
+    /// Usage ID `0xC0`: "Sensor Zone"
     SensorZone,
-    /// Usage ID `0x193`: "RPM"
+    /// Usage ID `0xC1`: "RPM"
     RPM,
-    /// Usage ID `0x194`: "Coolant Level"
+    /// Usage ID `0xC2`: "Coolant Level"
     CoolantLevel,
-    /// Usage ID `0x195`: "Coolant Critical Level"
+    /// Usage ID `0xC3`: "Coolant Critical Level"
     CoolantCriticalLevel,
-    /// Usage ID `0x196`: "Coolant Pump"
+    /// Usage ID `0xC4`: "Coolant Pump"
     CoolantPump,
-    /// Usage ID `0x197`: "Chassis Enclosure"
+    /// Usage ID `0xC5`: "Chassis Enclosure"
     ChassisEnclosure,
-    /// Usage ID `0x198`: "Wireless Radio Button"
+    /// Usage ID `0xC6`: "Wireless Radio Button"
     WirelessRadioButton,
-    /// Usage ID `0x199`: "Wireless Radio LED"
+    /// Usage ID `0xC7`: "Wireless Radio LED"
     WirelessRadioLED,
-    /// Usage ID `0x200`: "Wireless Radio Slider Switch"
+    /// Usage ID `0xC8`: "Wireless Radio Slider Switch"
     WirelessRadioSliderSwitch,
-    /// Usage ID `0x201`: "System Display Rotation Lock Button"
+    /// Usage ID `0xC9`: "System Display Rotation Lock Button"
     SystemDisplayRotationLockButton,
-    /// Usage ID `0x202`: "System Display Rotation Lock Slider Switch"
+    /// Usage ID `0xCA`: "System Display Rotation Lock Slider Switch"
     SystemDisplayRotationLockSliderSwitch,
-    /// Usage ID `0x203`: "Control Enable"
+    /// Usage ID `0xCB`: "Control Enable"
     ControlEnable,
 }
 
@@ -1059,91 +1059,91 @@ pub enum SimulationControls {
     SportsSimulationDevice,
     /// Usage ID `0x9`: "Airplane Simulation Device"
     AirplaneSimulationDevice,
-    /// Usage ID `0x10`: "Helicopter Simulation Device"
+    /// Usage ID `0xA`: "Helicopter Simulation Device"
     HelicopterSimulationDevice,
-    /// Usage ID `0x11`: "Magic Carpet Simulation Device"
+    /// Usage ID `0xB`: "Magic Carpet Simulation Device"
     MagicCarpetSimulationDevice,
-    /// Usage ID `0x12`: "Bicycle"
+    /// Usage ID `0xC`: "Bicycle"
     Bicycle,
-    /// Usage ID `0x32`: "Flight Control Stick"
+    /// Usage ID `0x20`: "Flight Control Stick"
     FlightControlStick,
-    /// Usage ID `0x33`: "Flight Stick"
+    /// Usage ID `0x21`: "Flight Stick"
     FlightStick,
-    /// Usage ID `0x34`: "Cyclic Control"
+    /// Usage ID `0x22`: "Cyclic Control"
     CyclicControl,
-    /// Usage ID `0x35`: "Cyclic Trim"
+    /// Usage ID `0x23`: "Cyclic Trim"
     CyclicTrim,
-    /// Usage ID `0x36`: "Flight Yoke"
+    /// Usage ID `0x24`: "Flight Yoke"
     FlightYoke,
-    /// Usage ID `0x37`: "Track Control"
+    /// Usage ID `0x25`: "Track Control"
     TrackControl,
-    /// Usage ID `0x38`: "Driving Control"
+    /// Usage ID `0x26`: "Driving Control"
     DrivingControl,
-    /// Usage ID `0x176`: "Aileron"
+    /// Usage ID `0xB0`: "Aileron"
     Aileron,
-    /// Usage ID `0x177`: "Aileron Trim"
+    /// Usage ID `0xB1`: "Aileron Trim"
     AileronTrim,
-    /// Usage ID `0x178`: "Anti-Torque Control"
+    /// Usage ID `0xB2`: "Anti-Torque Control"
     AntiTorqueControl,
-    /// Usage ID `0x179`: "Auto-pilot enable"
+    /// Usage ID `0xB3`: "Auto-pilot enable"
     Autopilotenable,
-    /// Usage ID `0x180`: "Chaff Release"
+    /// Usage ID `0xB4`: "Chaff Release"
     ChaffRelease,
-    /// Usage ID `0x181`: "Collective Control"
+    /// Usage ID `0xB5`: "Collective Control"
     CollectiveControl,
-    /// Usage ID `0x182`: "Dive Brake"
+    /// Usage ID `0xB6`: "Dive Brake"
     DiveBrake,
-    /// Usage ID `0x183`: "Electronic Counter Measures"
+    /// Usage ID `0xB7`: "Electronic Counter Measures"
     ElectronicCounterMeasures,
-    /// Usage ID `0x184`: "Elevator"
+    /// Usage ID `0xB8`: "Elevator"
     Elevator,
-    /// Usage ID `0x185`: "Elevator Trim"
+    /// Usage ID `0xB9`: "Elevator Trim"
     ElevatorTrim,
-    /// Usage ID `0x186`: "Rudder"
+    /// Usage ID `0xBA`: "Rudder"
     Rudder,
-    /// Usage ID `0x187`: "Throttle"
+    /// Usage ID `0xBB`: "Throttle"
     Throttle,
-    /// Usage ID `0x188`: "Flight Communication"
+    /// Usage ID `0xBC`: "Flight Communication"
     FlightCommunication,
-    /// Usage ID `0x189`: "Flare Release"
+    /// Usage ID `0xBD`: "Flare Release"
     FlareRelease,
-    /// Usage ID `0x190`: "Landing Gear"
+    /// Usage ID `0xBE`: "Landing Gear"
     LandingGear,
-    /// Usage ID `0x191`: "Toe Brake"
+    /// Usage ID `0xBF`: "Toe Brake"
     ToeBrake,
-    /// Usage ID `0x192`: "Trigger"
+    /// Usage ID `0xC0`: "Trigger"
     Trigger,
-    /// Usage ID `0x193`: "Weapons Arm"
+    /// Usage ID `0xC1`: "Weapons Arm"
     WeaponsArm,
-    /// Usage ID `0x194`: "Weapons Select"
+    /// Usage ID `0xC2`: "Weapons Select"
     WeaponsSelect,
-    /// Usage ID `0x195`: "Wing Flaps"
+    /// Usage ID `0xC3`: "Wing Flaps"
     WingFlaps,
-    /// Usage ID `0x196`: "Accelerator"
+    /// Usage ID `0xC4`: "Accelerator"
     Accelerator,
-    /// Usage ID `0x197`: "Brake"
+    /// Usage ID `0xC5`: "Brake"
     Brake,
-    /// Usage ID `0x198`: "Clutch"
+    /// Usage ID `0xC6`: "Clutch"
     Clutch,
-    /// Usage ID `0x199`: "Shifter"
+    /// Usage ID `0xC7`: "Shifter"
     Shifter,
-    /// Usage ID `0x200`: "Steering"
+    /// Usage ID `0xC8`: "Steering"
     Steering,
-    /// Usage ID `0x201`: "Turret Direction"
+    /// Usage ID `0xC9`: "Turret Direction"
     TurretDirection,
-    /// Usage ID `0x202`: "Barrel Elevation"
+    /// Usage ID `0xCA`: "Barrel Elevation"
     BarrelElevation,
-    /// Usage ID `0x203`: "Dive Plane"
+    /// Usage ID `0xCB`: "Dive Plane"
     DivePlane,
-    /// Usage ID `0x204`: "Ballast"
+    /// Usage ID `0xCC`: "Ballast"
     Ballast,
-    /// Usage ID `0x205`: "Bicycle Crank"
+    /// Usage ID `0xCD`: "Bicycle Crank"
     BicycleCrank,
-    /// Usage ID `0x206`: "Handle Bars"
+    /// Usage ID `0xCE`: "Handle Bars"
     HandleBars,
-    /// Usage ID `0x207`: "Front Brake"
+    /// Usage ID `0xCF`: "Front Brake"
     FrontBrake,
-    /// Usage ID `0x208`: "Rear Brake"
+    /// Usage ID `0xD0`: "Rear Brake"
     RearBrake,
 }
 
@@ -1424,11 +1424,11 @@ pub enum VRControls {
     Oculometer,
     /// Usage ID `0x9`: "Vest"
     Vest,
-    /// Usage ID `0x10`: "Animatronic Device"
+    /// Usage ID `0xA`: "Animatronic Device"
     AnimatronicDevice,
-    /// Usage ID `0x32`: "Stereo Enable"
+    /// Usage ID `0x20`: "Stereo Enable"
     StereoEnable,
-    /// Usage ID `0x33`: "Display Enable"
+    /// Usage ID `0x21`: "Display Enable"
     DisplayEnable,
 }
 
@@ -1579,65 +1579,65 @@ pub enum SportsControls {
     RowingMachine,
     /// Usage ID `0x4`: "Treadmill"
     Treadmill,
-    /// Usage ID `0x48`: "Oar"
+    /// Usage ID `0x30`: "Oar"
     Oar,
-    /// Usage ID `0x49`: "Slope"
+    /// Usage ID `0x31`: "Slope"
     Slope,
-    /// Usage ID `0x50`: "Rate"
+    /// Usage ID `0x32`: "Rate"
     Rate,
-    /// Usage ID `0x51`: "Stick Speed"
+    /// Usage ID `0x33`: "Stick Speed"
     StickSpeed,
-    /// Usage ID `0x52`: "Stick Face Angle"
+    /// Usage ID `0x34`: "Stick Face Angle"
     StickFaceAngle,
-    /// Usage ID `0x53`: "Stick Heel/Toe"
+    /// Usage ID `0x35`: "Stick Heel/Toe"
     StickHeelToe,
-    /// Usage ID `0x54`: "Stick Follow Through"
+    /// Usage ID `0x36`: "Stick Follow Through"
     StickFollowThrough,
-    /// Usage ID `0x55`: "Stick Tempo"
+    /// Usage ID `0x37`: "Stick Tempo"
     StickTempo,
-    /// Usage ID `0x56`: "Stick Type"
+    /// Usage ID `0x38`: "Stick Type"
     StickType,
-    /// Usage ID `0x57`: "Stick Height"
+    /// Usage ID `0x39`: "Stick Height"
     StickHeight,
-    /// Usage ID `0x80`: "Putter"
+    /// Usage ID `0x50`: "Putter"
     Putter,
-    /// Usage ID `0x81`: "1 Iron"
+    /// Usage ID `0x51`: "1 Iron"
     OneIron,
-    /// Usage ID `0x82`: "2 Iron"
+    /// Usage ID `0x52`: "2 Iron"
     TwoIron,
-    /// Usage ID `0x83`: "3 Iron"
+    /// Usage ID `0x53`: "3 Iron"
     ThreeIron,
-    /// Usage ID `0x84`: "4 Iron"
+    /// Usage ID `0x54`: "4 Iron"
     FourIron,
-    /// Usage ID `0x85`: "5 Iron"
+    /// Usage ID `0x55`: "5 Iron"
     FiveIron,
-    /// Usage ID `0x86`: "6 Iron"
+    /// Usage ID `0x56`: "6 Iron"
     SixIron,
-    /// Usage ID `0x87`: "7 Iron"
+    /// Usage ID `0x57`: "7 Iron"
     SevenIron,
-    /// Usage ID `0x88`: "8 Iron"
+    /// Usage ID `0x58`: "8 Iron"
     EightIron,
-    /// Usage ID `0x89`: "9 Iron"
+    /// Usage ID `0x59`: "9 Iron"
     NineIron,
-    /// Usage ID `0x90`: "10 Iron"
+    /// Usage ID `0x5A`: "10 Iron"
     One0Iron,
-    /// Usage ID `0x91`: "11 Iron"
+    /// Usage ID `0x5B`: "11 Iron"
     One1Iron,
-    /// Usage ID `0x92`: "Sand Wedge"
+    /// Usage ID `0x5C`: "Sand Wedge"
     SandWedge,
-    /// Usage ID `0x93`: "Loft Wedge"
+    /// Usage ID `0x5D`: "Loft Wedge"
     LoftWedge,
-    /// Usage ID `0x94`: "Power Wedge"
+    /// Usage ID `0x5E`: "Power Wedge"
     PowerWedge,
-    /// Usage ID `0x95`: "1 Wood"
+    /// Usage ID `0x5F`: "1 Wood"
     OneWood,
-    /// Usage ID `0x96`: "3 Wood"
+    /// Usage ID `0x60`: "3 Wood"
     ThreeWood,
-    /// Usage ID `0x97`: "5 Wood"
+    /// Usage ID `0x61`: "5 Wood"
     FiveWood,
-    /// Usage ID `0x98`: "7 Wood"
+    /// Usage ID `0x62`: "7 Wood"
     SevenWood,
-    /// Usage ID `0x99`: "9 Wood"
+    /// Usage ID `0x63`: "9 Wood"
     NineWood,
 }
 
@@ -1852,57 +1852,57 @@ pub enum GamingControls {
     PinballDevice,
     /// Usage ID `0x3`: "Gun Device"
     GunDevice,
-    /// Usage ID `0x32`: "Point of View"
+    /// Usage ID `0x20`: "Point of View"
     PointofView,
-    /// Usage ID `0x33`: "Turn Right/Left"
+    /// Usage ID `0x21`: "Turn Right/Left"
     TurnRightLeft,
-    /// Usage ID `0x34`: "Pitch Forward/Backward"
+    /// Usage ID `0x22`: "Pitch Forward/Backward"
     PitchForwardBackward,
-    /// Usage ID `0x35`: "Roll Right/Left"
+    /// Usage ID `0x23`: "Roll Right/Left"
     RollRightLeft,
-    /// Usage ID `0x36`: "Move Right/Left"
+    /// Usage ID `0x24`: "Move Right/Left"
     MoveRightLeft,
-    /// Usage ID `0x37`: "Move Forward/Backward"
+    /// Usage ID `0x25`: "Move Forward/Backward"
     MoveForwardBackward,
-    /// Usage ID `0x38`: "Move Up/Down"
+    /// Usage ID `0x26`: "Move Up/Down"
     MoveUpDown,
-    /// Usage ID `0x39`: "Lean Right/Left"
+    /// Usage ID `0x27`: "Lean Right/Left"
     LeanRightLeft,
-    /// Usage ID `0x40`: "Lean Forward/Backward"
+    /// Usage ID `0x28`: "Lean Forward/Backward"
     LeanForwardBackward,
-    /// Usage ID `0x41`: "Height of POV"
+    /// Usage ID `0x29`: "Height of POV"
     HeightofPOV,
-    /// Usage ID `0x42`: "Flipper"
+    /// Usage ID `0x2A`: "Flipper"
     Flipper,
-    /// Usage ID `0x43`: "Secondary Flipper"
+    /// Usage ID `0x2B`: "Secondary Flipper"
     SecondaryFlipper,
-    /// Usage ID `0x44`: "Bump"
+    /// Usage ID `0x2C`: "Bump"
     Bump,
-    /// Usage ID `0x45`: "New Game"
+    /// Usage ID `0x2D`: "New Game"
     NewGame,
-    /// Usage ID `0x46`: "Shoot Ball"
+    /// Usage ID `0x2E`: "Shoot Ball"
     ShootBall,
-    /// Usage ID `0x47`: "Player"
+    /// Usage ID `0x2F`: "Player"
     Player,
-    /// Usage ID `0x48`: "Gun Bolt"
+    /// Usage ID `0x30`: "Gun Bolt"
     GunBolt,
-    /// Usage ID `0x49`: "Gun Clip"
+    /// Usage ID `0x31`: "Gun Clip"
     GunClip,
-    /// Usage ID `0x50`: "Gun Selector"
+    /// Usage ID `0x32`: "Gun Selector"
     GunSelector,
-    /// Usage ID `0x51`: "Gun Single Shot"
+    /// Usage ID `0x33`: "Gun Single Shot"
     GunSingleShot,
-    /// Usage ID `0x52`: "Gun Burst"
+    /// Usage ID `0x34`: "Gun Burst"
     GunBurst,
-    /// Usage ID `0x53`: "Gun Automatic"
+    /// Usage ID `0x35`: "Gun Automatic"
     GunAutomatic,
-    /// Usage ID `0x54`: "Gun Safety"
+    /// Usage ID `0x36`: "Gun Safety"
     GunSafety,
-    /// Usage ID `0x55`: "Gamepad Fire/Jump"
+    /// Usage ID `0x37`: "Gamepad Fire/Jump"
     GamepadFireJump,
-    /// Usage ID `0x57`: "Gamepad Trigger"
+    /// Usage ID `0x39`: "Gamepad Trigger"
     GamepadTrigger,
-    /// Usage ID `0x58`: "Form-fitting gamepad"
+    /// Usage ID `0x3A`: "Form-fitting gamepad"
     Formfittinggamepad,
 }
 
@@ -2098,51 +2098,51 @@ pub enum GenericDeviceControls {
     Unidentified,
     /// Usage ID `0x1`: "Background Controls"
     BackgroundControls,
-    /// Usage ID `0x32`: "Battery Strength"
+    /// Usage ID `0x20`: "Battery Strength"
     BatteryStrength,
-    /// Usage ID `0x33`: "Wireless Channel"
+    /// Usage ID `0x21`: "Wireless Channel"
     WirelessChannel,
-    /// Usage ID `0x34`: "Wireless ID"
+    /// Usage ID `0x22`: "Wireless ID"
     WirelessID,
-    /// Usage ID `0x35`: "Discover Wireless Control"
+    /// Usage ID `0x23`: "Discover Wireless Control"
     DiscoverWirelessControl,
-    /// Usage ID `0x36`: "Security Code Character Entered"
+    /// Usage ID `0x24`: "Security Code Character Entered"
     SecurityCodeCharacterEntered,
-    /// Usage ID `0x37`: "Security Code Character Erased"
+    /// Usage ID `0x25`: "Security Code Character Erased"
     SecurityCodeCharacterErased,
-    /// Usage ID `0x38`: "Security Code Cleared"
+    /// Usage ID `0x26`: "Security Code Cleared"
     SecurityCodeCleared,
-    /// Usage ID `0x39`: "Sequence ID"
+    /// Usage ID `0x27`: "Sequence ID"
     SequenceID,
-    /// Usage ID `0x40`: "Sequence ID Reset"
+    /// Usage ID `0x28`: "Sequence ID Reset"
     SequenceIDReset,
-    /// Usage ID `0x41`: "RF Signal Strength"
+    /// Usage ID `0x29`: "RF Signal Strength"
     RFSignalStrength,
-    /// Usage ID `0x42`: "Software Version"
+    /// Usage ID `0x2A`: "Software Version"
     SoftwareVersion,
-    /// Usage ID `0x43`: "Protocol Version"
+    /// Usage ID `0x2B`: "Protocol Version"
     ProtocolVersion,
-    /// Usage ID `0x44`: "Hardware Version"
+    /// Usage ID `0x2C`: "Hardware Version"
     HardwareVersion,
-    /// Usage ID `0x45`: "Major"
+    /// Usage ID `0x2D`: "Major"
     Major,
-    /// Usage ID `0x46`: "Minor"
+    /// Usage ID `0x2E`: "Minor"
     Minor,
-    /// Usage ID `0x47`: "Revision"
+    /// Usage ID `0x2F`: "Revision"
     Revision,
-    /// Usage ID `0x48`: "Handedness"
+    /// Usage ID `0x30`: "Handedness"
     Handedness,
-    /// Usage ID `0x49`: "Either Hand"
+    /// Usage ID `0x31`: "Either Hand"
     EitherHand,
-    /// Usage ID `0x50`: "Left Hand"
+    /// Usage ID `0x32`: "Left Hand"
     LeftHand,
-    /// Usage ID `0x51`: "Right Hand"
+    /// Usage ID `0x33`: "Right Hand"
     RightHand,
-    /// Usage ID `0x52`: "Both Hands"
+    /// Usage ID `0x34`: "Both Hands"
     BothHands,
-    /// Usage ID `0x64`: "Grip Pose Offset"
+    /// Usage ID `0x40`: "Grip Pose Offset"
     GripPoseOffset,
-    /// Usage ID `0x65`: "Pointer Pose Offset"
+    /// Usage ID `0x41`: "Pointer Pose Offset"
     PointerPoseOffset,
 }
 
@@ -2339,331 +2339,331 @@ pub enum Keyboard {
     eAndE,
     /// Usage ID `0x9`: "f and F"
     fAndF,
-    /// Usage ID `0x10`: "g and G"
+    /// Usage ID `0xA`: "g and G"
     gAndG,
-    /// Usage ID `0x11`: "h and H"
+    /// Usage ID `0xB`: "h and H"
     hAndH,
-    /// Usage ID `0x12`: "i and I"
+    /// Usage ID `0xC`: "i and I"
     iAndI,
-    /// Usage ID `0x13`: "j and J"
+    /// Usage ID `0xD`: "j and J"
     jAndJ,
-    /// Usage ID `0x14`: "k and K"
+    /// Usage ID `0xE`: "k and K"
     kAndK,
-    /// Usage ID `0x15`: "l and L"
+    /// Usage ID `0xF`: "l and L"
     lAndL,
-    /// Usage ID `0x16`: "m and M"
+    /// Usage ID `0x10`: "m and M"
     mAndM,
-    /// Usage ID `0x17`: "n and N"
+    /// Usage ID `0x11`: "n and N"
     nAndN,
-    /// Usage ID `0x18`: "o and O"
+    /// Usage ID `0x12`: "o and O"
     oAndO,
-    /// Usage ID `0x19`: "p and P"
+    /// Usage ID `0x13`: "p and P"
     pAndP,
-    /// Usage ID `0x20`: "q and Q"
+    /// Usage ID `0x14`: "q and Q"
     qAndQ,
-    /// Usage ID `0x21`: "r and R"
+    /// Usage ID `0x15`: "r and R"
     rAndR,
-    /// Usage ID `0x22`: "s and S"
+    /// Usage ID `0x16`: "s and S"
     sAndS,
-    /// Usage ID `0x23`: "t and T"
+    /// Usage ID `0x17`: "t and T"
     tAndT,
-    /// Usage ID `0x24`: "u and U"
+    /// Usage ID `0x18`: "u and U"
     uAndU,
-    /// Usage ID `0x25`: "v and V"
+    /// Usage ID `0x19`: "v and V"
     vAndV,
-    /// Usage ID `0x26`: "w and W"
+    /// Usage ID `0x1A`: "w and W"
     wAndW,
-    /// Usage ID `0x27`: "x and X"
+    /// Usage ID `0x1B`: "x and X"
     xAndX,
-    /// Usage ID `0x28`: "y and Y"
+    /// Usage ID `0x1C`: "y and Y"
     yAndY,
-    /// Usage ID `0x29`: "z and Z"
+    /// Usage ID `0x1D`: "z and Z"
     zAndZ,
-    /// Usage ID `0x30`: "1 and !"
+    /// Usage ID `0x1E`: "1 and !"
     OneAndExclamationMark,
-    /// Usage ID `0x31`: "2 and @"
+    /// Usage ID `0x1F`: "2 and @"
     TwoAndAt,
-    /// Usage ID `0x32`: "3 and #"
+    /// Usage ID `0x20`: "3 and #"
     ThreeAndHash,
-    /// Usage ID `0x33`: "4 and $"
+    /// Usage ID `0x21`: "4 and $"
     FourAndDollar,
-    /// Usage ID `0x34`: "5 and %"
+    /// Usage ID `0x22`: "5 and %"
     FiveAndPercent,
-    /// Usage ID `0x35`: "6 and ^"
+    /// Usage ID `0x23`: "6 and ^"
     SixAndCaret,
-    /// Usage ID `0x36`: "7 and &"
+    /// Usage ID `0x24`: "7 and &"
     SevenAndAmpersand,
-    /// Usage ID `0x37`: "8 and *"
+    /// Usage ID `0x25`: "8 and *"
     EightAndStar,
-    /// Usage ID `0x38`: "9 and ("
+    /// Usage ID `0x26`: "9 and ("
     NineAndOpenParenthesis,
-    /// Usage ID `0x39`: "0 and )"
+    /// Usage ID `0x27`: "0 and )"
     ZeroAndCloseParenthesis,
-    /// Usage ID `0x40`: "Return (ENTER)"
+    /// Usage ID `0x28`: "Return (ENTER)"
     ReturnOpenParenthesisENTERCloseParenthesis,
-    /// Usage ID `0x41`: "ESCAPE"
+    /// Usage ID `0x29`: "ESCAPE"
     ESCAPE,
-    /// Usage ID `0x42`: "DELETE (Backspace)"
+    /// Usage ID `0x2A`: "DELETE (Backspace)"
     DELETEOpenParenthesisBackspaceCloseParenthesis,
-    /// Usage ID `0x43`: "Tab"
+    /// Usage ID `0x2B`: "Tab"
     Tab,
-    /// Usage ID `0x44`: "Spacebar"
+    /// Usage ID `0x2C`: "Spacebar"
     Spacebar,
-    /// Usage ID `0x45`: "- and (underscore)"
+    /// Usage ID `0x2D`: "- and (underscore)"
     MinusAndOpenParenthesisunderscoreCloseParenthesis,
-    /// Usage ID `0x46`: "= and +"
+    /// Usage ID `0x2E`: "= and +"
     EqualsAndPlus,
-    /// Usage ID `0x47`: "[ and {"
+    /// Usage ID `0x2F`: "[ and {"
     OpenBracketAndOpenBrace,
-    /// Usage ID `0x48`: "] and }"
+    /// Usage ID `0x30`: "] and }"
     CloseBracketAndCloseBrace,
-    /// Usage ID `0x49`: "\\ and |"
+    /// Usage ID `0x31`: "\\ and |"
     BackslashAndPipe,
-    /// Usage ID `0x50`: "Non-US # and ~"
+    /// Usage ID `0x32`: "Non-US # and ~"
     NonMinusUSHashAndTilde,
-    /// Usage ID `0x51`: "; and :"
+    /// Usage ID `0x33`: "; and :"
     SemicolonAndColon,
-    /// Usage ID `0x52`: "' and \""
+    /// Usage ID `0x34`: "' and \""
     SingleQuoteAndDoubleQuote,
-    /// Usage ID `0x53`: "Grave Accent and Tilde"
+    /// Usage ID `0x35`: "Grave Accent and Tilde"
     GraveAccentAndTilde,
-    /// Usage ID `0x54`: "Keyboard, and <"
+    /// Usage ID `0x36`: "Keyboard, and <"
     KeyboardCommaAndLessThan,
-    /// Usage ID `0x55`: ". and >"
+    /// Usage ID `0x37`: ". and >"
     PeriodAndGreaterThan,
-    /// Usage ID `0x56`: "/ and ?"
+    /// Usage ID `0x38`: "/ and ?"
     SlashAndQuestionMark,
-    /// Usage ID `0x57`: "Caps Lock"
+    /// Usage ID `0x39`: "Caps Lock"
     CapsLock,
-    /// Usage ID `0x58`: "F1"
+    /// Usage ID `0x3A`: "F1"
     F1,
-    /// Usage ID `0x59`: "F2"
+    /// Usage ID `0x3B`: "F2"
     F2,
-    /// Usage ID `0x60`: "F3"
+    /// Usage ID `0x3C`: "F3"
     F3,
-    /// Usage ID `0x61`: "F4"
+    /// Usage ID `0x3D`: "F4"
     F4,
-    /// Usage ID `0x62`: "F5"
+    /// Usage ID `0x3E`: "F5"
     F5,
-    /// Usage ID `0x63`: "F6"
+    /// Usage ID `0x3F`: "F6"
     F6,
-    /// Usage ID `0x64`: "F7"
+    /// Usage ID `0x40`: "F7"
     F7,
-    /// Usage ID `0x65`: "F8"
+    /// Usage ID `0x41`: "F8"
     F8,
-    /// Usage ID `0x66`: "F9"
+    /// Usage ID `0x42`: "F9"
     F9,
-    /// Usage ID `0x67`: "F10"
+    /// Usage ID `0x43`: "F10"
     F10,
-    /// Usage ID `0x68`: "F11"
+    /// Usage ID `0x44`: "F11"
     F11,
-    /// Usage ID `0x69`: "F12"
+    /// Usage ID `0x45`: "F12"
     F12,
-    /// Usage ID `0x70`: "PrintScreen"
+    /// Usage ID `0x46`: "PrintScreen"
     PrintScreen,
-    /// Usage ID `0x71`: "Scroll Lock"
+    /// Usage ID `0x47`: "Scroll Lock"
     ScrollLock,
-    /// Usage ID `0x72`: "Pause"
+    /// Usage ID `0x48`: "Pause"
     Pause,
-    /// Usage ID `0x73`: "Insert"
+    /// Usage ID `0x49`: "Insert"
     Insert,
-    /// Usage ID `0x74`: "Home"
+    /// Usage ID `0x4A`: "Home"
     Home,
-    /// Usage ID `0x75`: "PageUp"
+    /// Usage ID `0x4B`: "PageUp"
     PageUp,
-    /// Usage ID `0x76`: "Delete Forward"
+    /// Usage ID `0x4C`: "Delete Forward"
     DeleteForward,
-    /// Usage ID `0x77`: "End"
+    /// Usage ID `0x4D`: "End"
     End,
-    /// Usage ID `0x78`: "PageDown"
+    /// Usage ID `0x4E`: "PageDown"
     PageDown,
-    /// Usage ID `0x79`: "RightArrow"
+    /// Usage ID `0x4F`: "RightArrow"
     RightArrow,
-    /// Usage ID `0x80`: "LeftArrow"
+    /// Usage ID `0x50`: "LeftArrow"
     LeftArrow,
-    /// Usage ID `0x81`: "DownArrow"
+    /// Usage ID `0x51`: "DownArrow"
     DownArrow,
-    /// Usage ID `0x82`: "UpArrow"
+    /// Usage ID `0x52`: "UpArrow"
     UpArrow,
-    /// Usage ID `0x83`: "Keypad Num Lock and Clear"
+    /// Usage ID `0x53`: "Keypad Num Lock and Clear"
     KeypadNumLockAndClear,
-    /// Usage ID `0x84`: "Keypad /"
+    /// Usage ID `0x54`: "Keypad /"
     KeypadSlash,
-    /// Usage ID `0x85`: "Keypad *"
+    /// Usage ID `0x55`: "Keypad *"
     KeypadStar,
-    /// Usage ID `0x86`: "Keypad -"
+    /// Usage ID `0x56`: "Keypad -"
     KeypadMinus,
-    /// Usage ID `0x87`: "Keypad +"
+    /// Usage ID `0x57`: "Keypad +"
     KeypadPlus,
-    /// Usage ID `0x88`: "Keypad ENTER"
+    /// Usage ID `0x58`: "Keypad ENTER"
     KeypadENTER,
-    /// Usage ID `0x89`: "Keypad 1 and End"
+    /// Usage ID `0x59`: "Keypad 1 and End"
     Keypad1AndEnd,
-    /// Usage ID `0x90`: "Keypad 2 and Down Arrow"
+    /// Usage ID `0x5A`: "Keypad 2 and Down Arrow"
     Keypad2AndDownArrow,
-    /// Usage ID `0x91`: "Keypad 3 and PageDn"
+    /// Usage ID `0x5B`: "Keypad 3 and PageDn"
     Keypad3AndPageDn,
-    /// Usage ID `0x92`: "Keypad 4 and Left Arrow"
+    /// Usage ID `0x5C`: "Keypad 4 and Left Arrow"
     Keypad4AndLeftArrow,
-    /// Usage ID `0x93`: "Keypad 5"
+    /// Usage ID `0x5D`: "Keypad 5"
     Keypad5,
-    /// Usage ID `0x94`: "Keypad 6 and Right Arrow"
+    /// Usage ID `0x5E`: "Keypad 6 and Right Arrow"
     Keypad6AndRightArrow,
-    /// Usage ID `0x95`: "Keypad 7 and Home"
+    /// Usage ID `0x5F`: "Keypad 7 and Home"
     Keypad7AndHome,
-    /// Usage ID `0x96`: "Keypad 8 and Up Arrow"
+    /// Usage ID `0x60`: "Keypad 8 and Up Arrow"
     Keypad8AndUpArrow,
-    /// Usage ID `0x97`: "Keypad 9 and PageUp"
+    /// Usage ID `0x61`: "Keypad 9 and PageUp"
     Keypad9AndPageUp,
-    /// Usage ID `0x98`: "Keypad 0 and Insert"
+    /// Usage ID `0x62`: "Keypad 0 and Insert"
     Keypad0AndInsert,
-    /// Usage ID `0x99`: "Keypad . and Delete"
+    /// Usage ID `0x63`: "Keypad . and Delete"
     KeypadPeriodAndDelete,
-    /// Usage ID `0x100`: "Non-US \\ and |"
+    /// Usage ID `0x64`: "Non-US \\ and |"
     NonMinusUSBackslashAndPipe,
-    /// Usage ID `0x101`: "Application"
+    /// Usage ID `0x65`: "Application"
     Application,
-    /// Usage ID `0x102`: "Power"
+    /// Usage ID `0x66`: "Power"
     Power,
-    /// Usage ID `0x103`: "Keypad ="
+    /// Usage ID `0x67`: "Keypad ="
     KeypadEquals,
-    /// Usage ID `0x104`: "F13"
+    /// Usage ID `0x68`: "F13"
     F13,
-    /// Usage ID `0x105`: "F14"
+    /// Usage ID `0x69`: "F14"
     F14,
-    /// Usage ID `0x106`: "F15"
+    /// Usage ID `0x6A`: "F15"
     F15,
-    /// Usage ID `0x107`: "F16"
+    /// Usage ID `0x6B`: "F16"
     F16,
-    /// Usage ID `0x108`: "F17"
+    /// Usage ID `0x6C`: "F17"
     F17,
-    /// Usage ID `0x109`: "F18"
+    /// Usage ID `0x6D`: "F18"
     F18,
-    /// Usage ID `0x110`: "F19"
+    /// Usage ID `0x6E`: "F19"
     F19,
-    /// Usage ID `0x111`: "F20"
+    /// Usage ID `0x6F`: "F20"
     F20,
-    /// Usage ID `0x112`: "F21"
+    /// Usage ID `0x70`: "F21"
     F21,
-    /// Usage ID `0x113`: "F22"
+    /// Usage ID `0x71`: "F22"
     F22,
-    /// Usage ID `0x114`: "F23"
+    /// Usage ID `0x72`: "F23"
     F23,
-    /// Usage ID `0x115`: "F24"
+    /// Usage ID `0x73`: "F24"
     F24,
-    /// Usage ID `0x116`: "Execute"
+    /// Usage ID `0x74`: "Execute"
     Execute,
-    /// Usage ID `0x117`: "Help"
+    /// Usage ID `0x75`: "Help"
     Help,
-    /// Usage ID `0x118`: "Menu"
+    /// Usage ID `0x76`: "Menu"
     Menu,
-    /// Usage ID `0x119`: "Select"
+    /// Usage ID `0x77`: "Select"
     Select,
-    /// Usage ID `0x120`: "Stop"
+    /// Usage ID `0x78`: "Stop"
     Stop,
-    /// Usage ID `0x121`: "Again"
+    /// Usage ID `0x79`: "Again"
     Again,
-    /// Usage ID `0x122`: "Undo"
+    /// Usage ID `0x7A`: "Undo"
     Undo,
-    /// Usage ID `0x123`: "Cut"
+    /// Usage ID `0x7B`: "Cut"
     Cut,
-    /// Usage ID `0x124`: "Copy"
+    /// Usage ID `0x7C`: "Copy"
     Copy,
-    /// Usage ID `0x125`: "Paste"
+    /// Usage ID `0x7D`: "Paste"
     Paste,
-    /// Usage ID `0x126`: "Find"
+    /// Usage ID `0x7E`: "Find"
     Find,
-    /// Usage ID `0x127`: "Mute"
+    /// Usage ID `0x7F`: "Mute"
     Mute,
-    /// Usage ID `0x128`: "Volume Up"
+    /// Usage ID `0x80`: "Volume Up"
     VolumeUp,
-    /// Usage ID `0x129`: "Volume Down"
+    /// Usage ID `0x81`: "Volume Down"
     VolumeDown,
-    /// Usage ID `0x130`: "Locking Caps Lock"
+    /// Usage ID `0x82`: "Locking Caps Lock"
     LockingCapsLock,
-    /// Usage ID `0x131`: "Locking Num Lock"
+    /// Usage ID `0x83`: "Locking Num Lock"
     LockingNumLock,
-    /// Usage ID `0x132`: "Locking Scroll Lock"
+    /// Usage ID `0x84`: "Locking Scroll Lock"
     LockingScrollLock,
-    /// Usage ID `0x133`: "Keypad Comma"
+    /// Usage ID `0x85`: "Keypad Comma"
     KeypadComma,
-    /// Usage ID `0x134`: "Keypad Equal Sign"
+    /// Usage ID `0x86`: "Keypad Equal Sign"
     KeypadEqualSign,
-    /// Usage ID `0x135`: "Kanji1"
+    /// Usage ID `0x87`: "Kanji1"
     Kanji1,
-    /// Usage ID `0x136`: "Kanji2"
+    /// Usage ID `0x88`: "Kanji2"
     Kanji2,
-    /// Usage ID `0x137`: "Kanji3"
+    /// Usage ID `0x89`: "Kanji3"
     Kanji3,
-    /// Usage ID `0x138`: "Kanji4"
+    /// Usage ID `0x8A`: "Kanji4"
     Kanji4,
-    /// Usage ID `0x139`: "Kanji5"
+    /// Usage ID `0x8B`: "Kanji5"
     Kanji5,
-    /// Usage ID `0x140`: "Kanji6"
+    /// Usage ID `0x8C`: "Kanji6"
     Kanji6,
-    /// Usage ID `0x141`: "Kanji7"
+    /// Usage ID `0x8D`: "Kanji7"
     Kanji7,
-    /// Usage ID `0x142`: "Kanji8"
+    /// Usage ID `0x8E`: "Kanji8"
     Kanji8,
-    /// Usage ID `0x143`: "Kanji9"
+    /// Usage ID `0x8F`: "Kanji9"
     Kanji9,
-    /// Usage ID `0x144`: "LANG1"
+    /// Usage ID `0x90`: "LANG1"
     LANG1,
-    /// Usage ID `0x145`: "LANG2"
+    /// Usage ID `0x91`: "LANG2"
     LANG2,
-    /// Usage ID `0x146`: "LANG3"
+    /// Usage ID `0x92`: "LANG3"
     LANG3,
-    /// Usage ID `0x147`: "LANG4"
+    /// Usage ID `0x93`: "LANG4"
     LANG4,
-    /// Usage ID `0x148`: "LANG5"
+    /// Usage ID `0x94`: "LANG5"
     LANG5,
-    /// Usage ID `0x149`: "LANG6"
+    /// Usage ID `0x95`: "LANG6"
     LANG6,
-    /// Usage ID `0x150`: "LANG7"
+    /// Usage ID `0x96`: "LANG7"
     LANG7,
-    /// Usage ID `0x151`: "LANG8"
+    /// Usage ID `0x97`: "LANG8"
     LANG8,
-    /// Usage ID `0x152`: "LANG9"
+    /// Usage ID `0x98`: "LANG9"
     LANG9,
-    /// Usage ID `0x153`: "Alternate Erase"
+    /// Usage ID `0x99`: "Alternate Erase"
     AlternateErase,
-    /// Usage ID `0x154`: "SysReq/Attention"
+    /// Usage ID `0x9A`: "SysReq/Attention"
     SysReqSlashAttention,
-    /// Usage ID `0x155`: "Cancel"
+    /// Usage ID `0x9B`: "Cancel"
     Cancel,
-    /// Usage ID `0x156`: "Clear"
+    /// Usage ID `0x9C`: "Clear"
     Clear,
-    /// Usage ID `0x157`: "Prior"
+    /// Usage ID `0x9D`: "Prior"
     Prior,
-    /// Usage ID `0x158`: "Return"
+    /// Usage ID `0x9E`: "Return"
     Return,
-    /// Usage ID `0x159`: "Separator"
+    /// Usage ID `0x9F`: "Separator"
     Separator,
-    /// Usage ID `0x160`: "Out"
+    /// Usage ID `0xA0`: "Out"
     Out,
-    /// Usage ID `0x161`: "Oper"
+    /// Usage ID `0xA1`: "Oper"
     Oper,
-    /// Usage ID `0x162`: "Clear/Again"
+    /// Usage ID `0xA2`: "Clear/Again"
     ClearSlashAgain,
-    /// Usage ID `0x163`: "CrSel/Props"
+    /// Usage ID `0xA3`: "CrSel/Props"
     CrSelSlashProps,
-    /// Usage ID `0x164`: "ExSel"
+    /// Usage ID `0xA4`: "ExSel"
     ExSel,
-    /// Usage ID `0x224`: "LeftControl"
+    /// Usage ID `0xE0`: "LeftControl"
     LeftControl,
-    /// Usage ID `0x225`: "LeftShift"
+    /// Usage ID `0xE1`: "LeftShift"
     LeftShift,
-    /// Usage ID `0x226`: "LeftAlt"
+    /// Usage ID `0xE2`: "LeftAlt"
     LeftAlt,
-    /// Usage ID `0x227`: "Left GUI"
+    /// Usage ID `0xE3`: "Left GUI"
     LeftGUI,
-    /// Usage ID `0x228`: "RightControl"
+    /// Usage ID `0xE4`: "RightControl"
     RightControl,
-    /// Usage ID `0x229`: "RightShift"
+    /// Usage ID `0xE5`: "RightShift"
     RightShift,
-    /// Usage ID `0x230`: "RightAlt"
+    /// Usage ID `0xE6`: "RightAlt"
     RightAlt,
-    /// Usage ID `0x231`: "Right GUI"
+    /// Usage ID `0xE7`: "Right GUI"
     RightGUI,
 }
 
@@ -3301,177 +3301,177 @@ pub enum LEDs {
     DoNotDisturb,
     /// Usage ID `0x9`: "Mute"
     Mute,
-    /// Usage ID `0x10`: "Tone Enable"
+    /// Usage ID `0xA`: "Tone Enable"
     ToneEnable,
-    /// Usage ID `0x11`: "High Cut Filter"
+    /// Usage ID `0xB`: "High Cut Filter"
     HighCutFilter,
-    /// Usage ID `0x12`: "Low Cut Filter"
+    /// Usage ID `0xC`: "Low Cut Filter"
     LowCutFilter,
-    /// Usage ID `0x13`: "Equalizer Enable"
+    /// Usage ID `0xD`: "Equalizer Enable"
     EqualizerEnable,
-    /// Usage ID `0x14`: "Sound Field On"
+    /// Usage ID `0xE`: "Sound Field On"
     SoundFieldOn,
-    /// Usage ID `0x15`: "Surround field On"
+    /// Usage ID `0xF`: "Surround field On"
     SurroundfieldOn,
-    /// Usage ID `0x16`: "Repeat"
+    /// Usage ID `0x10`: "Repeat"
     Repeat,
-    /// Usage ID `0x17`: "Stereo"
+    /// Usage ID `0x11`: "Stereo"
     Stereo,
-    /// Usage ID `0x18`: "Sampling Rate Detect"
+    /// Usage ID `0x12`: "Sampling Rate Detect"
     SamplingRateDetect,
-    /// Usage ID `0x19`: "Spinning"
+    /// Usage ID `0x13`: "Spinning"
     Spinning,
-    /// Usage ID `0x20`: "CAV"
+    /// Usage ID `0x14`: "CAV"
     CAV,
-    /// Usage ID `0x21`: "CLV"
+    /// Usage ID `0x15`: "CLV"
     CLV,
-    /// Usage ID `0x22`: "Recording Format Detect"
+    /// Usage ID `0x16`: "Recording Format Detect"
     RecordingFormatDetect,
-    /// Usage ID `0x23`: "Off-Hook"
+    /// Usage ID `0x17`: "Off-Hook"
     OffHook,
-    /// Usage ID `0x24`: "Ring"
+    /// Usage ID `0x18`: "Ring"
     Ring,
-    /// Usage ID `0x25`: "Message Waiting"
+    /// Usage ID `0x19`: "Message Waiting"
     MessageWaiting,
-    /// Usage ID `0x26`: "Data Mode"
+    /// Usage ID `0x1A`: "Data Mode"
     DataMode,
-    /// Usage ID `0x27`: "Battery Operation"
+    /// Usage ID `0x1B`: "Battery Operation"
     BatteryOperation,
-    /// Usage ID `0x28`: "Battery OK"
+    /// Usage ID `0x1C`: "Battery OK"
     BatteryOK,
-    /// Usage ID `0x29`: "Battery Low"
+    /// Usage ID `0x1D`: "Battery Low"
     BatteryLow,
-    /// Usage ID `0x30`: "Speaker"
+    /// Usage ID `0x1E`: "Speaker"
     Speaker,
-    /// Usage ID `0x31`: "Head Set"
+    /// Usage ID `0x1F`: "Head Set"
     HeadSet,
-    /// Usage ID `0x32`: "Hold"
+    /// Usage ID `0x20`: "Hold"
     Hold,
-    /// Usage ID `0x33`: "Microphone"
+    /// Usage ID `0x21`: "Microphone"
     Microphone,
-    /// Usage ID `0x34`: "Coverage"
+    /// Usage ID `0x22`: "Coverage"
     Coverage,
-    /// Usage ID `0x35`: "Night Mode"
+    /// Usage ID `0x23`: "Night Mode"
     NightMode,
-    /// Usage ID `0x36`: "Send Calls"
+    /// Usage ID `0x24`: "Send Calls"
     SendCalls,
-    /// Usage ID `0x37`: "Call Pickup"
+    /// Usage ID `0x25`: "Call Pickup"
     CallPickup,
-    /// Usage ID `0x38`: "Conference"
+    /// Usage ID `0x26`: "Conference"
     Conference,
-    /// Usage ID `0x39`: "Stand-by"
+    /// Usage ID `0x27`: "Stand-by"
     Standby,
-    /// Usage ID `0x40`: "Camera On"
+    /// Usage ID `0x28`: "Camera On"
     CameraOn,
-    /// Usage ID `0x41`: "Camera Off"
+    /// Usage ID `0x29`: "Camera Off"
     CameraOff,
-    /// Usage ID `0x42`: "On-Line"
+    /// Usage ID `0x2A`: "On-Line"
     OnLine,
-    /// Usage ID `0x43`: "Off-Line"
+    /// Usage ID `0x2B`: "Off-Line"
     OffLine,
-    /// Usage ID `0x44`: "Busy"
+    /// Usage ID `0x2C`: "Busy"
     Busy,
-    /// Usage ID `0x45`: "Ready"
+    /// Usage ID `0x2D`: "Ready"
     Ready,
-    /// Usage ID `0x46`: "Paper-Out"
+    /// Usage ID `0x2E`: "Paper-Out"
     PaperOut,
-    /// Usage ID `0x47`: "Paper-Jam"
+    /// Usage ID `0x2F`: "Paper-Jam"
     PaperJam,
-    /// Usage ID `0x48`: "Remote"
+    /// Usage ID `0x30`: "Remote"
     Remote,
-    /// Usage ID `0x49`: "Forward"
+    /// Usage ID `0x31`: "Forward"
     Forward,
-    /// Usage ID `0x50`: "Reverse"
+    /// Usage ID `0x32`: "Reverse"
     Reverse,
-    /// Usage ID `0x51`: "Stop"
+    /// Usage ID `0x33`: "Stop"
     Stop,
-    /// Usage ID `0x52`: "Rewind"
+    /// Usage ID `0x34`: "Rewind"
     Rewind,
-    /// Usage ID `0x53`: "Fast Forward"
+    /// Usage ID `0x35`: "Fast Forward"
     FastForward,
-    /// Usage ID `0x54`: "Play"
+    /// Usage ID `0x36`: "Play"
     Play,
-    /// Usage ID `0x55`: "Pause"
+    /// Usage ID `0x37`: "Pause"
     Pause,
-    /// Usage ID `0x56`: "Record"
+    /// Usage ID `0x38`: "Record"
     Record,
-    /// Usage ID `0x57`: "Error"
+    /// Usage ID `0x39`: "Error"
     Error,
-    /// Usage ID `0x58`: "Usage Selected Indicator"
+    /// Usage ID `0x3A`: "Usage Selected Indicator"
     UsageSelectedIndicator,
-    /// Usage ID `0x59`: "Usage In Use Indicator"
+    /// Usage ID `0x3B`: "Usage In Use Indicator"
     UsageInUseIndicator,
-    /// Usage ID `0x60`: "Usage Multi Mode Indicator"
+    /// Usage ID `0x3C`: "Usage Multi Mode Indicator"
     UsageMultiModeIndicator,
-    /// Usage ID `0x61`: "Indicator On"
+    /// Usage ID `0x3D`: "Indicator On"
     IndicatorOn,
-    /// Usage ID `0x62`: "Indicator Flash"
+    /// Usage ID `0x3E`: "Indicator Flash"
     IndicatorFlash,
-    /// Usage ID `0x63`: "Indicator Slow Blink"
+    /// Usage ID `0x3F`: "Indicator Slow Blink"
     IndicatorSlowBlink,
-    /// Usage ID `0x64`: "Indicator Fast Blink"
+    /// Usage ID `0x40`: "Indicator Fast Blink"
     IndicatorFastBlink,
-    /// Usage ID `0x65`: "Indicator Off"
+    /// Usage ID `0x41`: "Indicator Off"
     IndicatorOff,
-    /// Usage ID `0x66`: "Flash On Time"
+    /// Usage ID `0x42`: "Flash On Time"
     FlashOnTime,
-    /// Usage ID `0x67`: "Slow Blink On Time"
+    /// Usage ID `0x43`: "Slow Blink On Time"
     SlowBlinkOnTime,
-    /// Usage ID `0x68`: "Slow Blink Off Time"
+    /// Usage ID `0x44`: "Slow Blink Off Time"
     SlowBlinkOffTime,
-    /// Usage ID `0x69`: "Fast Blink On Time"
+    /// Usage ID `0x45`: "Fast Blink On Time"
     FastBlinkOnTime,
-    /// Usage ID `0x70`: "Fast Blink Off Time"
+    /// Usage ID `0x46`: "Fast Blink Off Time"
     FastBlinkOffTime,
-    /// Usage ID `0x71`: "Usage Indicator Color"
+    /// Usage ID `0x47`: "Usage Indicator Color"
     UsageIndicatorColor,
-    /// Usage ID `0x72`: "Indicator Red"
+    /// Usage ID `0x48`: "Indicator Red"
     IndicatorRed,
-    /// Usage ID `0x73`: "Indicator Green"
+    /// Usage ID `0x49`: "Indicator Green"
     IndicatorGreen,
-    /// Usage ID `0x74`: "Indicator Amber"
+    /// Usage ID `0x4A`: "Indicator Amber"
     IndicatorAmber,
-    /// Usage ID `0x75`: "Generic Indicator"
+    /// Usage ID `0x4B`: "Generic Indicator"
     GenericIndicator,
-    /// Usage ID `0x76`: "System Suspend"
+    /// Usage ID `0x4C`: "System Suspend"
     SystemSuspend,
-    /// Usage ID `0x77`: "External Power Connected"
+    /// Usage ID `0x4D`: "External Power Connected"
     ExternalPowerConnected,
-    /// Usage ID `0x78`: "Indicator Blue"
+    /// Usage ID `0x4E`: "Indicator Blue"
     IndicatorBlue,
-    /// Usage ID `0x79`: "Indicator Orange"
+    /// Usage ID `0x4F`: "Indicator Orange"
     IndicatorOrange,
-    /// Usage ID `0x80`: "Good Status"
+    /// Usage ID `0x50`: "Good Status"
     GoodStatus,
-    /// Usage ID `0x81`: "Warning Status"
+    /// Usage ID `0x51`: "Warning Status"
     WarningStatus,
-    /// Usage ID `0x82`: "RGBLED"
+    /// Usage ID `0x52`: "RGBLED"
     RGBLED,
-    /// Usage ID `0x83`: "Red LEDChannel"
+    /// Usage ID `0x53`: "Red LEDChannel"
     RedLEDChannel,
-    /// Usage ID `0x84`: "Greed LEDChannel"
+    /// Usage ID `0x54`: "Greed LEDChannel"
     GreedLEDChannel,
-    /// Usage ID `0x85`: "Blue LEDChannel"
+    /// Usage ID `0x55`: "Blue LEDChannel"
     BlueLEDChannel,
-    /// Usage ID `0x86`: "LEDIntensity"
+    /// Usage ID `0x56`: "LEDIntensity"
     LEDIntensity,
-    /// Usage ID `0x96`: "Player Indicator"
+    /// Usage ID `0x60`: "Player Indicator"
     PlayerIndicator,
-    /// Usage ID `0x97`: "Player 1"
+    /// Usage ID `0x61`: "Player 1"
     Player1,
-    /// Usage ID `0x98`: "Player 2"
+    /// Usage ID `0x62`: "Player 2"
     Player2,
-    /// Usage ID `0x99`: "Player 3"
+    /// Usage ID `0x63`: "Player 3"
     Player3,
-    /// Usage ID `0x100`: "Player 4"
+    /// Usage ID `0x64`: "Player 4"
     Player4,
-    /// Usage ID `0x101`: "Player 5"
+    /// Usage ID `0x65`: "Player 5"
     Player5,
-    /// Usage ID `0x102`: "Player 6"
+    /// Usage ID `0x66`: "Player 6"
     Player6,
-    /// Usage ID `0x103`: "Player 7"
+    /// Usage ID `0x67`: "Player 7"
     Player7,
-    /// Usage ID `0x104`: "Player 8"
+    /// Usage ID `0x68`: "Player 8"
     Player8,
 }
 
@@ -3844,7 +3844,7 @@ impl BitOr<u16> for LEDs {
     }
 }
 
-/// *Usage Page `0x11`: "Telephony Devices"*
+/// *Usage Page `0xB`: "Telephony Devices"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -3877,189 +3877,189 @@ pub enum TelephonyDevices {
     TelephonyKeyPad,
     /// Usage ID `0x7`: "Programmable Button"
     ProgrammableButton,
-    /// Usage ID `0x32`: "Hook Switch"
+    /// Usage ID `0x20`: "Hook Switch"
     HookSwitch,
-    /// Usage ID `0x33`: "Flash"
+    /// Usage ID `0x21`: "Flash"
     Flash,
-    /// Usage ID `0x34`: "Feature"
+    /// Usage ID `0x22`: "Feature"
     Feature,
-    /// Usage ID `0x35`: "Hold"
+    /// Usage ID `0x23`: "Hold"
     Hold,
-    /// Usage ID `0x36`: "Redial"
+    /// Usage ID `0x24`: "Redial"
     Redial,
-    /// Usage ID `0x37`: "Transfer"
+    /// Usage ID `0x25`: "Transfer"
     Transfer,
-    /// Usage ID `0x38`: "Drop"
+    /// Usage ID `0x26`: "Drop"
     Drop,
-    /// Usage ID `0x39`: "Park"
+    /// Usage ID `0x27`: "Park"
     Park,
-    /// Usage ID `0x40`: "Forward Calls"
+    /// Usage ID `0x28`: "Forward Calls"
     ForwardCalls,
-    /// Usage ID `0x41`: "Alternate Function"
+    /// Usage ID `0x29`: "Alternate Function"
     AlternateFunction,
-    /// Usage ID `0x42`: "Line OSC"
+    /// Usage ID `0x2A`: "Line OSC"
     LineOSC,
-    /// Usage ID `0x43`: "Speaker Phone"
+    /// Usage ID `0x2B`: "Speaker Phone"
     SpeakerPhone,
-    /// Usage ID `0x44`: "Conference"
+    /// Usage ID `0x2C`: "Conference"
     Conference,
-    /// Usage ID `0x45`: "Ring Enable"
+    /// Usage ID `0x2D`: "Ring Enable"
     RingEnable,
-    /// Usage ID `0x46`: "Ring Select"
+    /// Usage ID `0x2E`: "Ring Select"
     RingSelect,
-    /// Usage ID `0x47`: "Phone Mute"
+    /// Usage ID `0x2F`: "Phone Mute"
     PhoneMute,
-    /// Usage ID `0x48`: "Caller ID"
+    /// Usage ID `0x30`: "Caller ID"
     CallerID,
-    /// Usage ID `0x49`: "Send"
+    /// Usage ID `0x31`: "Send"
     Send,
-    /// Usage ID `0x80`: "Speed Dial"
+    /// Usage ID `0x50`: "Speed Dial"
     SpeedDial,
-    /// Usage ID `0x81`: "Store Number"
+    /// Usage ID `0x51`: "Store Number"
     StoreNumber,
-    /// Usage ID `0x82`: "Recall Number"
+    /// Usage ID `0x52`: "Recall Number"
     RecallNumber,
-    /// Usage ID `0x83`: "Phone Directory"
+    /// Usage ID `0x53`: "Phone Directory"
     PhoneDirectory,
-    /// Usage ID `0x112`: "Voice Mail"
+    /// Usage ID `0x70`: "Voice Mail"
     VoiceMail,
-    /// Usage ID `0x113`: "Screen Calls"
+    /// Usage ID `0x71`: "Screen Calls"
     ScreenCalls,
-    /// Usage ID `0x114`: "Do Not Disturb"
+    /// Usage ID `0x72`: "Do Not Disturb"
     DoNotDisturb,
-    /// Usage ID `0x115`: "Message"
+    /// Usage ID `0x73`: "Message"
     Message,
-    /// Usage ID `0x116`: "Answer On/Off"
+    /// Usage ID `0x74`: "Answer On/Off"
     AnswerOnOff,
-    /// Usage ID `0x144`: "Inside Dial Tone"
+    /// Usage ID `0x90`: "Inside Dial Tone"
     InsideDialTone,
-    /// Usage ID `0x145`: "Outside Dial Tone"
+    /// Usage ID `0x91`: "Outside Dial Tone"
     OutsideDialTone,
-    /// Usage ID `0x146`: "Inside Ring Tone"
+    /// Usage ID `0x92`: "Inside Ring Tone"
     InsideRingTone,
-    /// Usage ID `0x147`: "Outside Ring Tone"
+    /// Usage ID `0x93`: "Outside Ring Tone"
     OutsideRingTone,
-    /// Usage ID `0x148`: "Priority Ring Tone"
+    /// Usage ID `0x94`: "Priority Ring Tone"
     PriorityRingTone,
-    /// Usage ID `0x149`: "Inside Ringback"
+    /// Usage ID `0x95`: "Inside Ringback"
     InsideRingback,
-    /// Usage ID `0x150`: "Priority Ringback"
+    /// Usage ID `0x96`: "Priority Ringback"
     PriorityRingback,
-    /// Usage ID `0x151`: "Line Busy Tone"
+    /// Usage ID `0x97`: "Line Busy Tone"
     LineBusyTone,
-    /// Usage ID `0x152`: "Reorder Tone"
+    /// Usage ID `0x98`: "Reorder Tone"
     ReorderTone,
-    /// Usage ID `0x153`: "Call Waiting Tone"
+    /// Usage ID `0x99`: "Call Waiting Tone"
     CallWaitingTone,
-    /// Usage ID `0x154`: "Confirmation Tone 1"
+    /// Usage ID `0x9A`: "Confirmation Tone 1"
     ConfirmationTone1,
-    /// Usage ID `0x155`: "Confirmation Tone 2"
+    /// Usage ID `0x9B`: "Confirmation Tone 2"
     ConfirmationTone2,
-    /// Usage ID `0x156`: "Tones Off"
+    /// Usage ID `0x9C`: "Tones Off"
     TonesOff,
-    /// Usage ID `0x157`: "Outside Ringback"
+    /// Usage ID `0x9D`: "Outside Ringback"
     OutsideRingback,
-    /// Usage ID `0x158`: "Ringer"
+    /// Usage ID `0x9E`: "Ringer"
     Ringer,
-    /// Usage ID `0x176`: "Phone Key 0"
+    /// Usage ID `0xB0`: "Phone Key 0"
     PhoneKey0,
-    /// Usage ID `0x177`: "Phone Key 1"
+    /// Usage ID `0xB1`: "Phone Key 1"
     PhoneKey1,
-    /// Usage ID `0x178`: "Phone Key 2"
+    /// Usage ID `0xB2`: "Phone Key 2"
     PhoneKey2,
-    /// Usage ID `0x179`: "Phone Key 3"
+    /// Usage ID `0xB3`: "Phone Key 3"
     PhoneKey3,
-    /// Usage ID `0x180`: "Phone Key 4"
+    /// Usage ID `0xB4`: "Phone Key 4"
     PhoneKey4,
-    /// Usage ID `0x181`: "Phone Key 5"
+    /// Usage ID `0xB5`: "Phone Key 5"
     PhoneKey5,
-    /// Usage ID `0x182`: "Phone Key 6"
+    /// Usage ID `0xB6`: "Phone Key 6"
     PhoneKey6,
-    /// Usage ID `0x183`: "Phone Key 7"
+    /// Usage ID `0xB7`: "Phone Key 7"
     PhoneKey7,
-    /// Usage ID `0x184`: "Phone Key 8"
+    /// Usage ID `0xB8`: "Phone Key 8"
     PhoneKey8,
-    /// Usage ID `0x185`: "Phone Key 9"
+    /// Usage ID `0xB9`: "Phone Key 9"
     PhoneKey9,
-    /// Usage ID `0x186`: "Phone Key Star"
+    /// Usage ID `0xBA`: "Phone Key Star"
     PhoneKeyStar,
-    /// Usage ID `0x187`: "Phone Key Pound"
+    /// Usage ID `0xBB`: "Phone Key Pound"
     PhoneKeyPound,
-    /// Usage ID `0x188`: "Phone Key A"
+    /// Usage ID `0xBC`: "Phone Key A"
     PhoneKeyA,
-    /// Usage ID `0x189`: "Phone Key B"
+    /// Usage ID `0xBD`: "Phone Key B"
     PhoneKeyB,
-    /// Usage ID `0x190`: "Phone Key C"
+    /// Usage ID `0xBE`: "Phone Key C"
     PhoneKeyC,
-    /// Usage ID `0x191`: "Phone Key D"
+    /// Usage ID `0xBF`: "Phone Key D"
     PhoneKeyD,
-    /// Usage ID `0x192`: "Phone Call History Key"
+    /// Usage ID `0xC0`: "Phone Call History Key"
     PhoneCallHistoryKey,
-    /// Usage ID `0x193`: "Phone Caller ID Key"
+    /// Usage ID `0xC1`: "Phone Caller ID Key"
     PhoneCallerIDKey,
-    /// Usage ID `0x194`: "Phone Settings Key"
+    /// Usage ID `0xC2`: "Phone Settings Key"
     PhoneSettingsKey,
-    /// Usage ID `0x240`: "Host Control"
+    /// Usage ID `0xF0`: "Host Control"
     HostControl,
-    /// Usage ID `0x241`: "Host Available"
+    /// Usage ID `0xF1`: "Host Available"
     HostAvailable,
-    /// Usage ID `0x242`: "Host Call Active"
+    /// Usage ID `0xF2`: "Host Call Active"
     HostCallActive,
-    /// Usage ID `0x243`: "Activate Handset Audio"
+    /// Usage ID `0xF3`: "Activate Handset Audio"
     ActivateHandsetAudio,
-    /// Usage ID `0x244`: "Ring Type"
+    /// Usage ID `0xF4`: "Ring Type"
     RingType,
-    /// Usage ID `0x245`: "Re-dialable Phone Number"
+    /// Usage ID `0xF5`: "Re-dialable Phone Number"
     RedialablePhoneNumber,
-    /// Usage ID `0x248`: "Stop Ring Tone"
+    /// Usage ID `0xF8`: "Stop Ring Tone"
     StopRingTone,
-    /// Usage ID `0x249`: "PSTN Ring Tone"
+    /// Usage ID `0xF9`: "PSTN Ring Tone"
     PSTNRingTone,
-    /// Usage ID `0x250`: "Host Ring Tone"
+    /// Usage ID `0xFA`: "Host Ring Tone"
     HostRingTone,
-    /// Usage ID `0x251`: "Alert Sound Error"
+    /// Usage ID `0xFB`: "Alert Sound Error"
     AlertSoundError,
-    /// Usage ID `0x252`: "Alert Sound Confirm"
+    /// Usage ID `0xFC`: "Alert Sound Confirm"
     AlertSoundConfirm,
-    /// Usage ID `0x253`: "Alert Sound Notification"
+    /// Usage ID `0xFD`: "Alert Sound Notification"
     AlertSoundNotification,
-    /// Usage ID `0x254`: "Silent Ring"
+    /// Usage ID `0xFE`: "Silent Ring"
     SilentRing,
-    /// Usage ID `0x264`: "Email Message Waiting"
+    /// Usage ID `0x108`: "Email Message Waiting"
     EmailMessageWaiting,
-    /// Usage ID `0x265`: "oicemail Message Waiting"
+    /// Usage ID `0x109`: "oicemail Message Waiting"
     oicemailMessageWaiting,
-    /// Usage ID `0x266`: "ost Hold"
+    /// Usage ID `0x10A`: "ost Hold"
     ostHold,
-    /// Usage ID `0x272`: "Incoming Call History Count"
+    /// Usage ID `0x110`: "Incoming Call History Count"
     IncomingCallHistoryCount,
-    /// Usage ID `0x273`: "Outgoing Call History Count"
+    /// Usage ID `0x111`: "Outgoing Call History Count"
     OutgoingCallHistoryCount,
-    /// Usage ID `0x274`: "Incoming Call History"
+    /// Usage ID `0x112`: "Incoming Call History"
     IncomingCallHistory,
-    /// Usage ID `0x275`: "Outgoing Call History"
+    /// Usage ID `0x113`: "Outgoing Call History"
     OutgoingCallHistory,
-    /// Usage ID `0x276`: "Phone Locale"
+    /// Usage ID `0x114`: "Phone Locale"
     PhoneLocale,
-    /// Usage ID `0x320`: "Phone Time Second"
+    /// Usage ID `0x140`: "Phone Time Second"
     PhoneTimeSecond,
-    /// Usage ID `0x321`: "Phone Time Minute"
+    /// Usage ID `0x141`: "Phone Time Minute"
     PhoneTimeMinute,
-    /// Usage ID `0x322`: "Phone Time Hour"
+    /// Usage ID `0x142`: "Phone Time Hour"
     PhoneTimeHour,
-    /// Usage ID `0x323`: "Phone Date Day"
+    /// Usage ID `0x143`: "Phone Date Day"
     PhoneDateDay,
-    /// Usage ID `0x324`: "Phone Date Month"
+    /// Usage ID `0x144`: "Phone Date Month"
     PhoneDateMonth,
-    /// Usage ID `0x325`: "Phone Date Year"
+    /// Usage ID `0x145`: "Phone Date Year"
     PhoneDateYear,
-    /// Usage ID `0x326`: "Handset Nickname"
+    /// Usage ID `0x146`: "Handset Nickname"
     HandsetNickname,
-    /// Usage ID `0x327`: "Address Book ID"
+    /// Usage ID `0x147`: "Address Book ID"
     AddressBookID,
-    /// Usage ID `0x330`: "Call Duration"
+    /// Usage ID `0x14A`: "Call Duration"
     CallDuration,
-    /// Usage ID `0x331`: "Dual Mode Phone"
+    /// Usage ID `0x14B`: "Dual Mode Phone"
     DualModePhone,
 }
 
@@ -4078,7 +4078,7 @@ impl AsUsage for TelephonyDevices {
 impl AsUsagePage for TelephonyDevices {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x11` for [TelephonyDevices]
+    /// This value is `0xB` for [TelephonyDevices]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -4444,7 +4444,7 @@ impl BitOr<u16> for TelephonyDevices {
     }
 }
 
-/// *Usage Page `0x13`: "Digitizers"*
+/// *Usage Page `0xD`: "Digitizers"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -4481,191 +4481,191 @@ pub enum Digitizers {
     ThreeDDigitizer,
     /// Usage ID `0x9`: "Stereo Plotter"
     StereoPlotter,
-    /// Usage ID `0x10`: "Articulated Arm"
+    /// Usage ID `0xA`: "Articulated Arm"
     ArticulatedArm,
-    /// Usage ID `0x11`: "Armature"
+    /// Usage ID `0xB`: "Armature"
     Armature,
-    /// Usage ID `0x12`: "Multiple Point Digitizer"
+    /// Usage ID `0xC`: "Multiple Point Digitizer"
     MultiplePointDigitizer,
-    /// Usage ID `0x13`: "Free Space Wand"
+    /// Usage ID `0xD`: "Free Space Wand"
     FreeSpaceWand,
-    /// Usage ID `0x14`: "Device Configuration"
+    /// Usage ID `0xE`: "Device Configuration"
     DeviceConfiguration,
-    /// Usage ID `0x15`: "Capacitive Heat Map Digitizer"
+    /// Usage ID `0xF`: "Capacitive Heat Map Digitizer"
     CapacitiveHeatMapDigitizer,
-    /// Usage ID `0x32`: "Stylus"
+    /// Usage ID `0x20`: "Stylus"
     Stylus,
-    /// Usage ID `0x33`: "Puck"
+    /// Usage ID `0x21`: "Puck"
     Puck,
-    /// Usage ID `0x34`: "Finger"
+    /// Usage ID `0x22`: "Finger"
     Finger,
-    /// Usage ID `0x35`: "Device Settings"
+    /// Usage ID `0x23`: "Device Settings"
     DeviceSettings,
-    /// Usage ID `0x36`: "Character Gesture"
+    /// Usage ID `0x24`: "Character Gesture"
     CharacterGesture,
-    /// Usage ID `0x48`: "Tip Pressure"
+    /// Usage ID `0x30`: "Tip Pressure"
     TipPressure,
-    /// Usage ID `0x49`: "Barrel Pressure"
+    /// Usage ID `0x31`: "Barrel Pressure"
     BarrelPressure,
-    /// Usage ID `0x50`: "In Range"
+    /// Usage ID `0x32`: "In Range"
     InRange,
-    /// Usage ID `0x51`: "Touch"
+    /// Usage ID `0x33`: "Touch"
     Touch,
-    /// Usage ID `0x52`: "Untouch"
+    /// Usage ID `0x34`: "Untouch"
     Untouch,
-    /// Usage ID `0x53`: "Tap"
+    /// Usage ID `0x35`: "Tap"
     Tap,
-    /// Usage ID `0x54`: "Quality"
+    /// Usage ID `0x36`: "Quality"
     Quality,
-    /// Usage ID `0x55`: "Data Valid"
+    /// Usage ID `0x37`: "Data Valid"
     DataValid,
-    /// Usage ID `0x56`: "Transducer Index"
+    /// Usage ID `0x38`: "Transducer Index"
     TransducerIndex,
-    /// Usage ID `0x57`: "Tablet Function Keys"
+    /// Usage ID `0x39`: "Tablet Function Keys"
     TabletFunctionKeys,
-    /// Usage ID `0x58`: "Program Change Keys"
+    /// Usage ID `0x3A`: "Program Change Keys"
     ProgramChangeKeys,
-    /// Usage ID `0x59`: "Battery Strength"
+    /// Usage ID `0x3B`: "Battery Strength"
     BatteryStrength,
-    /// Usage ID `0x60`: "Invert"
+    /// Usage ID `0x3C`: "Invert"
     Invert,
-    /// Usage ID `0x61`: "X Tilt"
+    /// Usage ID `0x3D`: "X Tilt"
     XTilt,
-    /// Usage ID `0x62`: "Y Tilt"
+    /// Usage ID `0x3E`: "Y Tilt"
     YTilt,
-    /// Usage ID `0x63`: "Azimuth"
+    /// Usage ID `0x3F`: "Azimuth"
     Azimuth,
-    /// Usage ID `0x64`: "Altitude"
+    /// Usage ID `0x40`: "Altitude"
     Altitude,
-    /// Usage ID `0x65`: "Twist"
+    /// Usage ID `0x41`: "Twist"
     Twist,
-    /// Usage ID `0x66`: "Tip Switch"
+    /// Usage ID `0x42`: "Tip Switch"
     TipSwitch,
-    /// Usage ID `0x67`: "Secondary Tip Switch"
+    /// Usage ID `0x43`: "Secondary Tip Switch"
     SecondaryTipSwitch,
-    /// Usage ID `0x68`: "Barrel Switch"
+    /// Usage ID `0x44`: "Barrel Switch"
     BarrelSwitch,
-    /// Usage ID `0x69`: "Eraser"
+    /// Usage ID `0x45`: "Eraser"
     Eraser,
-    /// Usage ID `0x70`: "Tablet Pick"
+    /// Usage ID `0x46`: "Tablet Pick"
     TabletPick,
-    /// Usage ID `0x71`: "Confidence"
+    /// Usage ID `0x47`: "Confidence"
     Confidence,
-    /// Usage ID `0x72`: "Width"
+    /// Usage ID `0x48`: "Width"
     Width,
-    /// Usage ID `0x73`: "Height"
+    /// Usage ID `0x49`: "Height"
     Height,
-    /// Usage ID `0x81`: "Contact Id"
+    /// Usage ID `0x51`: "Contact Id"
     ContactId,
-    /// Usage ID `0x82`: "Inputmode"
+    /// Usage ID `0x52`: "Inputmode"
     Inputmode,
-    /// Usage ID `0x83`: "Device Index"
+    /// Usage ID `0x53`: "Device Index"
     DeviceIndex,
-    /// Usage ID `0x84`: "Contact Count"
+    /// Usage ID `0x54`: "Contact Count"
     ContactCount,
-    /// Usage ID `0x85`: "Contact Max"
+    /// Usage ID `0x55`: "Contact Max"
     ContactMax,
-    /// Usage ID `0x86`: "Scan Time"
+    /// Usage ID `0x56`: "Scan Time"
     ScanTime,
-    /// Usage ID `0x87`: "Surface Switch"
+    /// Usage ID `0x57`: "Surface Switch"
     SurfaceSwitch,
-    /// Usage ID `0x88`: "Button Switch"
+    /// Usage ID `0x58`: "Button Switch"
     ButtonSwitch,
-    /// Usage ID `0x89`: "Button Type"
+    /// Usage ID `0x59`: "Button Type"
     ButtonType,
-    /// Usage ID `0x90`: "Secondary Barrel Switch"
+    /// Usage ID `0x5A`: "Secondary Barrel Switch"
     SecondaryBarrelSwitch,
-    /// Usage ID `0x91`: "Transducer Serial Number"
+    /// Usage ID `0x5B`: "Transducer Serial Number"
     TransducerSerialNumber,
-    /// Usage ID `0x92`: "Preferred Inking Color"
+    /// Usage ID `0x5C`: "Preferred Inking Color"
     PreferredInkingColor,
-    /// Usage ID `0x93`: "Preferred Color is Locked"
+    /// Usage ID `0x5D`: "Preferred Color is Locked"
     PreferredColorisLocked,
-    /// Usage ID `0x94`: "Preferred Line Width"
+    /// Usage ID `0x5E`: "Preferred Line Width"
     PreferredLineWidth,
-    /// Usage ID `0x95`: "Preferred Line Width is Locked"
+    /// Usage ID `0x5F`: "Preferred Line Width is Locked"
     PreferredLineWidthisLocked,
-    /// Usage ID `0x97`: "Gesture Character Quality"
+    /// Usage ID `0x61`: "Gesture Character Quality"
     GestureCharacterQuality,
-    /// Usage ID `0x98`: "Character Gesture Data Length"
+    /// Usage ID `0x62`: "Character Gesture Data Length"
     CharacterGestureDataLength,
-    /// Usage ID `0x99`: "Character Gesture Data"
+    /// Usage ID `0x63`: "Character Gesture Data"
     CharacterGestureData,
-    /// Usage ID `0x100`: "Gesture Character Encoding"
+    /// Usage ID `0x64`: "Gesture Character Encoding"
     GestureCharacterEncoding,
-    /// Usage ID `0x101`: "UTF8 Character Gesture Encoding Sel"
+    /// Usage ID `0x65`: "UTF8 Character Gesture Encoding Sel"
     UTF8CharacterGestureEncodingSel,
-    /// Usage ID `0x102`: "UTF16 Little Endian Character Gesture Encoding Sel"
+    /// Usage ID `0x66`: "UTF16 Little Endian Character Gesture Encoding Sel"
     UTF16LittleEndianCharacterGestureEncodingSel,
-    /// Usage ID `0x103`: "UTF16 Big Endian Character Gesture Encoding Sel"
+    /// Usage ID `0x67`: "UTF16 Big Endian Character Gesture Encoding Sel"
     UTF16BigEndianCharacterGestureEncodingSel,
-    /// Usage ID `0x104`: "UTF32 Little Endian Character Gesture Encoding"
+    /// Usage ID `0x68`: "UTF32 Little Endian Character Gesture Encoding"
     UTF32LittleEndianCharacterGestureEncoding,
-    /// Usage ID `0x105`: "UTF32 Big Endian Character Gesture Encoding"
+    /// Usage ID `0x69`: "UTF32 Big Endian Character Gesture Encoding"
     UTF32BigEndianCharacterGestureEncoding,
-    /// Usage ID `0x106`: "Gesture Character Enable"
+    /// Usage ID `0x6A`: "Gesture Character Enable"
     GestureCharacterEnable,
-    /// Usage ID `0x107`: "Capacitive Heat Map Protocol Version"
+    /// Usage ID `0x6B`: "Capacitive Heat Map Protocol Version"
     CapacitiveHeatMapProtocolVersion,
-    /// Usage ID `0x108`: "Capacitive Heat Map Frame Data"
+    /// Usage ID `0x6C`: "Capacitive Heat Map Frame Data"
     CapacitiveHeatMapFrameData,
-    /// Usage ID `0x112`: "Preferred Line Style"
+    /// Usage ID `0x70`: "Preferred Line Style"
     PreferredLineStyle,
-    /// Usage ID `0x113`: "Preferred Line Style is Locked"
+    /// Usage ID `0x71`: "Preferred Line Style is Locked"
     PreferredLineStyleisLocked,
-    /// Usage ID `0x114`: "Ink"
+    /// Usage ID `0x72`: "Ink"
     Ink,
-    /// Usage ID `0x115`: "Pencil"
+    /// Usage ID `0x73`: "Pencil"
     Pencil,
-    /// Usage ID `0x116`: "Highlighter"
+    /// Usage ID `0x74`: "Highlighter"
     Highlighter,
-    /// Usage ID `0x117`: "Chisel Marker"
+    /// Usage ID `0x75`: "Chisel Marker"
     ChiselMarker,
-    /// Usage ID `0x118`: "Brush"
+    /// Usage ID `0x76`: "Brush"
     Brush,
-    /// Usage ID `0x119`: "No preference"
+    /// Usage ID `0x77`: "No preference"
     Nopreference,
-    /// Usage ID `0x128`: "Digitizer Diagnostic"
+    /// Usage ID `0x80`: "Digitizer Diagnostic"
     DigitizerDiagnostic,
-    /// Usage ID `0x129`: "Digitizer Error"
+    /// Usage ID `0x81`: "Digitizer Error"
     DigitizerError,
-    /// Usage ID `0x130`: "Err Normal Status"
+    /// Usage ID `0x82`: "Err Normal Status"
     ErrNormalStatus,
-    /// Usage ID `0x131`: "Err Transducers Exceeded"
+    /// Usage ID `0x83`: "Err Transducers Exceeded"
     ErrTransducersExceeded,
-    /// Usage ID `0x132`: "Err Full Trans Features Unavail"
+    /// Usage ID `0x84`: "Err Full Trans Features Unavail"
     ErrFullTransFeaturesUnavail,
-    /// Usage ID `0x133`: "Err Charge Low"
+    /// Usage ID `0x85`: "Err Charge Low"
     ErrChargeLow,
-    /// Usage ID `0x144`: "Transducer Software Info."
+    /// Usage ID `0x90`: "Transducer Software Info."
     TransducerSoftwareInfo,
-    /// Usage ID `0x145`: "Transducer Vendor ID"
+    /// Usage ID `0x91`: "Transducer Vendor ID"
     TransducerVendorID,
-    /// Usage ID `0x146`: "Transducer Product ID"
+    /// Usage ID `0x92`: "Transducer Product ID"
     TransducerProductID,
-    /// Usage ID `0x147`: "Device Supported Protocols"
+    /// Usage ID `0x93`: "Device Supported Protocols"
     DeviceSupportedProtocols,
-    /// Usage ID `0x148`: "Transducer Supported Protocols"
+    /// Usage ID `0x94`: "Transducer Supported Protocols"
     TransducerSupportedProtocols,
-    /// Usage ID `0x149`: "No Protocol"
+    /// Usage ID `0x95`: "No Protocol"
     NoProtocol,
-    /// Usage ID `0x150`: "Wacom AES Protocol"
+    /// Usage ID `0x96`: "Wacom AES Protocol"
     WacomAESProtocol,
-    /// Usage ID `0x151`: "USI Protocol"
+    /// Usage ID `0x97`: "USI Protocol"
     USIProtocol,
-    /// Usage ID `0x152`: "Microsoft Pen Protocol"
+    /// Usage ID `0x98`: "Microsoft Pen Protocol"
     MicrosoftPenProtocol,
-    /// Usage ID `0x160`: "Supported Report Rates"
+    /// Usage ID `0xA0`: "Supported Report Rates"
     SupportedReportRates,
-    /// Usage ID `0x161`: "Report Rate"
+    /// Usage ID `0xA1`: "Report Rate"
     ReportRate,
-    /// Usage ID `0x162`: "Transducer Connected"
+    /// Usage ID `0xA2`: "Transducer Connected"
     TransducerConnected,
-    /// Usage ID `0x163`: "Switch Disabled"
+    /// Usage ID `0xA3`: "Switch Disabled"
     SwitchDisabled,
-    /// Usage ID `0x164`: "Switch Unimplemented"
+    /// Usage ID `0xA4`: "Switch Unimplemented"
     SwitchUnimplemented,
-    /// Usage ID `0x165`: "Transducer Switches"
+    /// Usage ID `0xA5`: "Transducer Switches"
     TransducerSwitches,
 }
 
@@ -4684,7 +4684,7 @@ impl AsUsage for Digitizers {
 impl AsUsagePage for Digitizers {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x13` for [Digitizers]
+    /// This value is `0xD` for [Digitizers]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -5067,7 +5067,7 @@ impl BitOr<u16> for Digitizers {
     }
 }
 
-/// *Usage Page `0x14`: "Haptic"*
+/// *Usage Page `0xE`: "Haptic"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -5086,41 +5086,41 @@ impl BitOr<u16> for Digitizers {
 pub enum Haptic {
     /// Usage ID `0x1`: "Simple Haptic Controller"
     SimpleHapticController,
-    /// Usage ID `0x16`: "Waveform"
+    /// Usage ID `0x10`: "Waveform"
     Waveform,
-    /// Usage ID `0x17`: "Duration"
+    /// Usage ID `0x11`: "Duration"
     Duration,
-    /// Usage ID `0x32`: "Auto Trigger"
+    /// Usage ID `0x20`: "Auto Trigger"
     AutoTrigger,
-    /// Usage ID `0x33`: "Manual Trigger"
+    /// Usage ID `0x21`: "Manual Trigger"
     ManualTrigger,
-    /// Usage ID `0x34`: "Auto Trigger Associated Control"
+    /// Usage ID `0x22`: "Auto Trigger Associated Control"
     AutoTriggerAssociatedControl,
-    /// Usage ID `0x35`: "Intensity"
+    /// Usage ID `0x23`: "Intensity"
     Intensity,
-    /// Usage ID `0x36`: "Repeat Count"
+    /// Usage ID `0x24`: "Repeat Count"
     RepeatCount,
-    /// Usage ID `0x37`: "Retrigger Period"
+    /// Usage ID `0x25`: "Retrigger Period"
     RetriggerPeriod,
-    /// Usage ID `0x38`: "Waveform Vendor Page"
+    /// Usage ID `0x26`: "Waveform Vendor Page"
     WaveformVendorPage,
-    /// Usage ID `0x39`: "Waveform Vendor ID"
+    /// Usage ID `0x27`: "Waveform Vendor ID"
     WaveformVendorID,
-    /// Usage ID `0x40`: "Waveform Cutoff Time"
+    /// Usage ID `0x28`: "Waveform Cutoff Time"
     WaveformCutoffTime,
-    /// Usage ID `0x4097`: "WAVEFORM_NONE"
+    /// Usage ID `0x1001`: "WAVEFORM_NONE"
     WAVEFORM_NONE,
-    /// Usage ID `0x4098`: "WAVEFORM_STOP"
+    /// Usage ID `0x1002`: "WAVEFORM_STOP"
     WAVEFORM_STOP,
-    /// Usage ID `0x4099`: "WAVEFORM_CLICK"
+    /// Usage ID `0x1003`: "WAVEFORM_CLICK"
     WAVEFORM_CLICK,
-    /// Usage ID `0x4100`: "WAVEFORM_BUZZ_CONTINUOUS"
+    /// Usage ID `0x1004`: "WAVEFORM_BUZZ_CONTINUOUS"
     WAVEFORM_BUZZ_CONTINUOUS,
-    /// Usage ID `0x4101`: "WAVEFORM_RUMBLE_CONTINUOUS"
+    /// Usage ID `0x1005`: "WAVEFORM_RUMBLE_CONTINUOUS"
     WAVEFORM_RUMBLE_CONTINUOUS,
-    /// Usage ID `0x4102`: "WAVEFORM_PRESS"
+    /// Usage ID `0x1006`: "WAVEFORM_PRESS"
     WAVEFORM_PRESS,
-    /// Usage ID `0x4103`: "WAVEFORM_RELEASE"
+    /// Usage ID `0x1007`: "WAVEFORM_RELEASE"
     WAVEFORM_RELEASE,
 }
 
@@ -5139,7 +5139,7 @@ impl AsUsage for Haptic {
 impl AsUsagePage for Haptic {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x14` for [Haptic]
+    /// This value is `0xE` for [Haptic]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -5262,7 +5262,7 @@ impl BitOr<u16> for Haptic {
     }
 }
 
-/// *Usage Page `0x20`: "Auxiliary Display"*
+/// *Usage Page `0x14`: "Auxiliary Display"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -5285,151 +5285,151 @@ pub enum AuxiliaryDisplay {
     AlphanumericDisplay,
     /// Usage ID `0x2`: "Auxiliary Display"
     AuxiliaryDisplay,
-    /// Usage ID `0x32`: "Display Attributes Report"
+    /// Usage ID `0x20`: "Display Attributes Report"
     DisplayAttributesReport,
-    /// Usage ID `0x33`: "ASCII Character Set"
+    /// Usage ID `0x21`: "ASCII Character Set"
     ASCIICharacterSet,
-    /// Usage ID `0x34`: "Data Read Back"
+    /// Usage ID `0x22`: "Data Read Back"
     DataReadBack,
-    /// Usage ID `0x35`: "Font Read Back"
+    /// Usage ID `0x23`: "Font Read Back"
     FontReadBack,
-    /// Usage ID `0x36`: "Display Control Report"
+    /// Usage ID `0x24`: "Display Control Report"
     DisplayControlReport,
-    /// Usage ID `0x37`: "Clear Display"
+    /// Usage ID `0x25`: "Clear Display"
     ClearDisplay,
-    /// Usage ID `0x38`: "Display Enable"
+    /// Usage ID `0x26`: "Display Enable"
     DisplayEnable,
-    /// Usage ID `0x39`: "Screen Saver Delay"
+    /// Usage ID `0x27`: "Screen Saver Delay"
     ScreenSaverDelay,
-    /// Usage ID `0x40`: "Screen Saver Enable"
+    /// Usage ID `0x28`: "Screen Saver Enable"
     ScreenSaverEnable,
-    /// Usage ID `0x41`: "Vertical Scroll"
+    /// Usage ID `0x29`: "Vertical Scroll"
     VerticalScroll,
-    /// Usage ID `0x42`: "Horizontal Scroll"
+    /// Usage ID `0x2A`: "Horizontal Scroll"
     HorizontalScroll,
-    /// Usage ID `0x43`: "Character Report"
+    /// Usage ID `0x2B`: "Character Report"
     CharacterReport,
-    /// Usage ID `0x44`: "Display Data"
+    /// Usage ID `0x2C`: "Display Data"
     DisplayData,
-    /// Usage ID `0x45`: "Display Status"
+    /// Usage ID `0x2D`: "Display Status"
     DisplayStatus,
-    /// Usage ID `0x46`: "Stat Not Ready"
+    /// Usage ID `0x2E`: "Stat Not Ready"
     StatNotReady,
-    /// Usage ID `0x47`: "Stat Ready"
+    /// Usage ID `0x2F`: "Stat Ready"
     StatReady,
-    /// Usage ID `0x48`: "Err Not a loadable character"
+    /// Usage ID `0x30`: "Err Not a loadable character"
     ErrNotaloadablecharacter,
-    /// Usage ID `0x49`: "Err Font data cannot be read"
+    /// Usage ID `0x31`: "Err Font data cannot be read"
     ErrFontdatacannotberead,
-    /// Usage ID `0x50`: "Cursor Position Report"
+    /// Usage ID `0x32`: "Cursor Position Report"
     CursorPositionReport,
-    /// Usage ID `0x51`: "Row"
+    /// Usage ID `0x33`: "Row"
     Row,
-    /// Usage ID `0x52`: "Column"
+    /// Usage ID `0x34`: "Column"
     Column,
-    /// Usage ID `0x53`: "Rows"
+    /// Usage ID `0x35`: "Rows"
     Rows,
-    /// Usage ID `0x54`: "Columns"
+    /// Usage ID `0x36`: "Columns"
     Columns,
-    /// Usage ID `0x55`: "Cursor Pixel Positioning"
+    /// Usage ID `0x37`: "Cursor Pixel Positioning"
     CursorPixelPositioning,
-    /// Usage ID `0x56`: "Cursor Mode"
+    /// Usage ID `0x38`: "Cursor Mode"
     CursorMode,
-    /// Usage ID `0x57`: "Cursor Enable"
+    /// Usage ID `0x39`: "Cursor Enable"
     CursorEnable,
-    /// Usage ID `0x58`: "Cursor Blink"
+    /// Usage ID `0x3A`: "Cursor Blink"
     CursorBlink,
-    /// Usage ID `0x59`: "Font Report"
+    /// Usage ID `0x3B`: "Font Report"
     FontReport,
-    /// Usage ID `0x60`: "Font Data"
+    /// Usage ID `0x3C`: "Font Data"
     FontData,
-    /// Usage ID `0x61`: "Character Width"
+    /// Usage ID `0x3D`: "Character Width"
     CharacterWidth,
-    /// Usage ID `0x62`: "Character Height"
+    /// Usage ID `0x3E`: "Character Height"
     CharacterHeight,
-    /// Usage ID `0x63`: "Character Spacing Horizontal"
+    /// Usage ID `0x3F`: "Character Spacing Horizontal"
     CharacterSpacingHorizontal,
-    /// Usage ID `0x64`: "Character Spacing Vertical"
+    /// Usage ID `0x40`: "Character Spacing Vertical"
     CharacterSpacingVertical,
-    /// Usage ID `0x65`: "Unicode Character Set"
+    /// Usage ID `0x41`: "Unicode Character Set"
     UnicodeCharacterSet,
-    /// Usage ID `0x66`: "Font 7-Segment"
+    /// Usage ID `0x42`: "Font 7-Segment"
     Font7Segment,
-    /// Usage ID `0x67`: "7-Segment Direct Map"
+    /// Usage ID `0x43`: "7-Segment Direct Map"
     SevenSegmentDirectMap,
-    /// Usage ID `0x68`: "Font 14-Segment"
+    /// Usage ID `0x44`: "Font 14-Segment"
     Font14Segment,
-    /// Usage ID `0x69`: "14-Segment Direct Map"
+    /// Usage ID `0x45`: "14-Segment Direct Map"
     One4SegmentDirectMap,
-    /// Usage ID `0x70`: "Display Brightness"
+    /// Usage ID `0x46`: "Display Brightness"
     DisplayBrightness,
-    /// Usage ID `0x71`: "Display Contrast"
+    /// Usage ID `0x47`: "Display Contrast"
     DisplayContrast,
-    /// Usage ID `0x72`: "Character Attribute"
+    /// Usage ID `0x48`: "Character Attribute"
     CharacterAttribute,
-    /// Usage ID `0x73`: "Attribute Readback"
+    /// Usage ID `0x49`: "Attribute Readback"
     AttributeReadback,
-    /// Usage ID `0x74`: "Attribute Data"
+    /// Usage ID `0x4A`: "Attribute Data"
     AttributeData,
-    /// Usage ID `0x75`: "Char Attr Enhance"
+    /// Usage ID `0x4B`: "Char Attr Enhance"
     CharAttrEnhance,
-    /// Usage ID `0x76`: "Char Attr Underline"
+    /// Usage ID `0x4C`: "Char Attr Underline"
     CharAttrUnderline,
-    /// Usage ID `0x77`: "Char Attr Blink"
+    /// Usage ID `0x4D`: "Char Attr Blink"
     CharAttrBlink,
-    /// Usage ID `0x128`: "Bitmap Size X"
+    /// Usage ID `0x80`: "Bitmap Size X"
     BitmapSizeX,
-    /// Usage ID `0x129`: "Bitmap Size Y"
+    /// Usage ID `0x81`: "Bitmap Size Y"
     BitmapSizeY,
-    /// Usage ID `0x130`: "Max Blit Size"
+    /// Usage ID `0x82`: "Max Blit Size"
     MaxBlitSize,
-    /// Usage ID `0x131`: "Bit Depth Format"
+    /// Usage ID `0x83`: "Bit Depth Format"
     BitDepthFormat,
-    /// Usage ID `0x132`: "Display Orientation"
+    /// Usage ID `0x84`: "Display Orientation"
     DisplayOrientation,
-    /// Usage ID `0x133`: "Palette Report"
+    /// Usage ID `0x85`: "Palette Report"
     PaletteReport,
-    /// Usage ID `0x134`: "Palette Data Size"
+    /// Usage ID `0x86`: "Palette Data Size"
     PaletteDataSize,
-    /// Usage ID `0x135`: "Palette Data Offset"
+    /// Usage ID `0x87`: "Palette Data Offset"
     PaletteDataOffset,
-    /// Usage ID `0x136`: "Palette Data"
+    /// Usage ID `0x88`: "Palette Data"
     PaletteData,
-    /// Usage ID `0x138`: "Blit Report"
+    /// Usage ID `0x8A`: "Blit Report"
     BlitReport,
-    /// Usage ID `0x139`: "Blit Rectangle X1"
+    /// Usage ID `0x8B`: "Blit Rectangle X1"
     BlitRectangleX1,
-    /// Usage ID `0x140`: "Blit Rectangle Y1"
+    /// Usage ID `0x8C`: "Blit Rectangle Y1"
     BlitRectangleY1,
-    /// Usage ID `0x141`: "Blit Rectangle X2"
+    /// Usage ID `0x8D`: "Blit Rectangle X2"
     BlitRectangleX2,
-    /// Usage ID `0x142`: "Blit Rectangle Y2"
+    /// Usage ID `0x8E`: "Blit Rectangle Y2"
     BlitRectangleY2,
-    /// Usage ID `0x143`: "Blit Data"
+    /// Usage ID `0x8F`: "Blit Data"
     BlitData,
-    /// Usage ID `0x144`: "Soft Button"
+    /// Usage ID `0x90`: "Soft Button"
     SoftButton,
-    /// Usage ID `0x145`: "Soft Button ID"
+    /// Usage ID `0x91`: "Soft Button ID"
     SoftButtonID,
-    /// Usage ID `0x146`: "Soft Button Side"
+    /// Usage ID `0x92`: "Soft Button Side"
     SoftButtonSide,
-    /// Usage ID `0x147`: "Soft Button Offset1"
+    /// Usage ID `0x93`: "Soft Button Offset1"
     SoftButtonOffset1,
-    /// Usage ID `0x148`: "Soft Button Offset2"
+    /// Usage ID `0x94`: "Soft Button Offset2"
     SoftButtonOffset2,
-    /// Usage ID `0x149`: "Soft Button Report"
+    /// Usage ID `0x95`: "Soft Button Report"
     SoftButtonReport,
-    /// Usage ID `0x194`: "Soft Keys"
+    /// Usage ID `0xC2`: "Soft Keys"
     SoftKeys,
-    /// Usage ID `0x204`: "Display Data Extensions"
+    /// Usage ID `0xCC`: "Display Data Extensions"
     DisplayDataExtensions,
-    /// Usage ID `0x207`: "Character Mapping"
+    /// Usage ID `0xCF`: "Character Mapping"
     CharacterMapping,
-    /// Usage ID `0x221`: "Unicode Equivalent"
+    /// Usage ID `0xDD`: "Unicode Equivalent"
     UnicodeEquivalent,
-    /// Usage ID `0x223`: "Character Page Mapping"
+    /// Usage ID `0xDF`: "Character Page Mapping"
     CharacterPageMapping,
-    /// Usage ID `0x255`: "Request Report"
+    /// Usage ID `0xFF`: "Request Report"
     RequestReport,
 }
 
@@ -5448,7 +5448,7 @@ impl AsUsage for AuxiliaryDisplay {
 impl AsUsagePage for AuxiliaryDisplay {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x20` for [AuxiliaryDisplay]
+    /// This value is `0x14` for [AuxiliaryDisplay]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -5742,7 +5742,7 @@ impl BitOr<u16> for AuxiliaryDisplay {
     }
 }
 
-/// *Usage Page `0x32`: "Sensor"*
+/// *Usage Page `0x20`: "Sensor"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -5763,1167 +5763,1167 @@ pub enum Sensor {
     Undefined,
     /// Usage ID `0x1`: "Sensor"
     Sensor,
-    /// Usage ID `0x16`: "Biometric"
+    /// Usage ID `0x10`: "Biometric"
     Biometric,
-    /// Usage ID `0x17`: "Biometric Human Presence"
+    /// Usage ID `0x11`: "Biometric Human Presence"
     BiometricHumanPresence,
-    /// Usage ID `0x18`: "Biometric Human Proximity"
+    /// Usage ID `0x12`: "Biometric Human Proximity"
     BiometricHumanProximity,
-    /// Usage ID `0x19`: "Biometric Human Touch"
+    /// Usage ID `0x13`: "Biometric Human Touch"
     BiometricHumanTouch,
-    /// Usage ID `0x20`: "Biometric: Blood Pressure"
+    /// Usage ID `0x14`: "Biometric: Blood Pressure"
     BiometricBloodPressure,
-    /// Usage ID `0x21`: "Biometric: Body Temperature"
+    /// Usage ID `0x15`: "Biometric: Body Temperature"
     BiometricBodyTemperature,
-    /// Usage ID `0x22`: "Biometric: Heart Rate"
+    /// Usage ID `0x16`: "Biometric: Heart Rate"
     BiometricHeartRate,
-    /// Usage ID `0x23`: "Biometric: Heart Rate Variability"
+    /// Usage ID `0x17`: "Biometric: Heart Rate Variability"
     BiometricHeartRateVariability,
-    /// Usage ID `0x24`: "Biometric: Peripheral Oxygen Saturation"
+    /// Usage ID `0x18`: "Biometric: Peripheral Oxygen Saturation"
     BiometricPeripheralOxygenSaturation,
-    /// Usage ID `0x25`: "Biometric: Respiratory Rate"
+    /// Usage ID `0x19`: "Biometric: Respiratory Rate"
     BiometricRespiratoryRate,
-    /// Usage ID `0x32`: "Electrical"
+    /// Usage ID `0x20`: "Electrical"
     Electrical,
-    /// Usage ID `0x33`: "Electrical: Capacitance"
+    /// Usage ID `0x21`: "Electrical: Capacitance"
     ElectricalCapacitance,
-    /// Usage ID `0x34`: "Electrical: Current"
+    /// Usage ID `0x22`: "Electrical: Current"
     ElectricalCurrent,
-    /// Usage ID `0x35`: "Electrical: Power"
+    /// Usage ID `0x23`: "Electrical: Power"
     ElectricalPower,
-    /// Usage ID `0x36`: "Electrical: Inductance"
+    /// Usage ID `0x24`: "Electrical: Inductance"
     ElectricalInductance,
-    /// Usage ID `0x37`: "Electrical: Resistance"
+    /// Usage ID `0x25`: "Electrical: Resistance"
     ElectricalResistance,
-    /// Usage ID `0x38`: "Electrical: Voltage"
+    /// Usage ID `0x26`: "Electrical: Voltage"
     ElectricalVoltage,
-    /// Usage ID `0x39`: "Electrical: Potentiometer"
+    /// Usage ID `0x27`: "Electrical: Potentiometer"
     ElectricalPotentiometer,
-    /// Usage ID `0x40`: "Electrical: Frequency"
+    /// Usage ID `0x28`: "Electrical: Frequency"
     ElectricalFrequency,
-    /// Usage ID `0x41`: "Electrical: Period"
+    /// Usage ID `0x29`: "Electrical: Period"
     ElectricalPeriod,
-    /// Usage ID `0x48`: "Environmental"
+    /// Usage ID `0x30`: "Environmental"
     Environmental,
-    /// Usage ID `0x49`: "Environmental: Atmospheric Pressure"
+    /// Usage ID `0x31`: "Environmental: Atmospheric Pressure"
     EnvironmentalAtmosphericPressure,
-    /// Usage ID `0x50`: "Environmental: Humidity"
+    /// Usage ID `0x32`: "Environmental: Humidity"
     EnvironmentalHumidity,
-    /// Usage ID `0x51`: "Environmental: Temperature"
+    /// Usage ID `0x33`: "Environmental: Temperature"
     EnvironmentalTemperature,
-    /// Usage ID `0x52`: "Environmental: Wind Direction"
+    /// Usage ID `0x34`: "Environmental: Wind Direction"
     EnvironmentalWindDirection,
-    /// Usage ID `0x53`: "Environmental: Wind Speed"
+    /// Usage ID `0x35`: "Environmental: Wind Speed"
     EnvironmentalWindSpeed,
-    /// Usage ID `0x54`: "Environmental: Air Quality"
+    /// Usage ID `0x36`: "Environmental: Air Quality"
     EnvironmentalAirQuality,
-    /// Usage ID `0x55`: "Environmental: Heat Index"
+    /// Usage ID `0x37`: "Environmental: Heat Index"
     EnvironmentalHeatIndex,
-    /// Usage ID `0x56`: "Environmental: Surface Temperature"
+    /// Usage ID `0x38`: "Environmental: Surface Temperature"
     EnvironmentalSurfaceTemperature,
-    /// Usage ID `0x57`: "Environmental: Volatile Organic Compounds"
+    /// Usage ID `0x39`: "Environmental: Volatile Organic Compounds"
     EnvironmentalVolatileOrganicCompounds,
-    /// Usage ID `0x58`: "Environmental: Object Presence"
+    /// Usage ID `0x3A`: "Environmental: Object Presence"
     EnvironmentalObjectPresence,
-    /// Usage ID `0x59`: "Environmental: Object Proximity"
+    /// Usage ID `0x3B`: "Environmental: Object Proximity"
     EnvironmentalObjectProximity,
-    /// Usage ID `0x64`: "Light"
+    /// Usage ID `0x40`: "Light"
     Light,
-    /// Usage ID `0x65`: "Light: Ambient Light"
+    /// Usage ID `0x41`: "Light: Ambient Light"
     LightAmbientLight,
-    /// Usage ID `0x66`: "Light: Consumer Infrared"
+    /// Usage ID `0x42`: "Light: Consumer Infrared"
     LightConsumerInfrared,
-    /// Usage ID `0x67`: "Light: Infrared Light"
+    /// Usage ID `0x43`: "Light: Infrared Light"
     LightInfraredLight,
-    /// Usage ID `0x68`: "Light: Visible Light"
+    /// Usage ID `0x44`: "Light: Visible Light"
     LightVisibleLight,
-    /// Usage ID `0x69`: "Light: Ultraviolet Light"
+    /// Usage ID `0x45`: "Light: Ultraviolet Light"
     LightUltravioletLight,
-    /// Usage ID `0x80`: "Location"
+    /// Usage ID `0x50`: "Location"
     Location,
-    /// Usage ID `0x81`: "Location: Broadcast"
+    /// Usage ID `0x51`: "Location: Broadcast"
     LocationBroadcast,
-    /// Usage ID `0x82`: "Location: Dead Reckoning"
+    /// Usage ID `0x52`: "Location: Dead Reckoning"
     LocationDeadReckoning,
-    /// Usage ID `0x83`: "Location: GPS"
+    /// Usage ID `0x53`: "Location: GPS"
     LocationGPS,
-    /// Usage ID `0x84`: "Location: Lookup"
+    /// Usage ID `0x54`: "Location: Lookup"
     LocationLookup,
-    /// Usage ID `0x85`: "Location: Other"
+    /// Usage ID `0x55`: "Location: Other"
     LocationOther,
-    /// Usage ID `0x86`: "Location: Static"
+    /// Usage ID `0x56`: "Location: Static"
     LocationStatic,
-    /// Usage ID `0x87`: "Location: Triangulation"
+    /// Usage ID `0x57`: "Location: Triangulation"
     LocationTriangulation,
-    /// Usage ID `0x96`: "Mechanical"
+    /// Usage ID `0x60`: "Mechanical"
     Mechanical,
-    /// Usage ID `0x97`: "Mechanical: Boolean Switch"
+    /// Usage ID `0x61`: "Mechanical: Boolean Switch"
     MechanicalBooleanSwitch,
-    /// Usage ID `0x98`: "Mechanical: Boolean Switch Array"
+    /// Usage ID `0x62`: "Mechanical: Boolean Switch Array"
     MechanicalBooleanSwitchArray,
-    /// Usage ID `0x99`: "Mechanical: Multivalue Switch"
+    /// Usage ID `0x63`: "Mechanical: Multivalue Switch"
     MechanicalMultivalueSwitch,
-    /// Usage ID `0x100`: "Mechanical: Force"
+    /// Usage ID `0x64`: "Mechanical: Force"
     MechanicalForce,
-    /// Usage ID `0x101`: "Mechanical: Pressure"
+    /// Usage ID `0x65`: "Mechanical: Pressure"
     MechanicalPressure,
-    /// Usage ID `0x102`: "Mechanical: Strain"
+    /// Usage ID `0x66`: "Mechanical: Strain"
     MechanicalStrain,
-    /// Usage ID `0x103`: "Mechanical: Weight"
+    /// Usage ID `0x67`: "Mechanical: Weight"
     MechanicalWeight,
-    /// Usage ID `0x104`: "Mechanical: Haptic Vibrator"
+    /// Usage ID `0x68`: "Mechanical: Haptic Vibrator"
     MechanicalHapticVibrator,
-    /// Usage ID `0x105`: "Mechanical: Hall Effect Switch"
+    /// Usage ID `0x69`: "Mechanical: Hall Effect Switch"
     MechanicalHallEffectSwitch,
-    /// Usage ID `0x112`: "Motion"
+    /// Usage ID `0x70`: "Motion"
     Motion,
-    /// Usage ID `0x113`: "Motion: Accelerometer 1D"
+    /// Usage ID `0x71`: "Motion: Accelerometer 1D"
     MotionAccelerometer1D,
-    /// Usage ID `0x114`: "Motion: Accelerometer 2D"
+    /// Usage ID `0x72`: "Motion: Accelerometer 2D"
     MotionAccelerometer2D,
-    /// Usage ID `0x115`: "Motion: Accelerometer 3D"
+    /// Usage ID `0x73`: "Motion: Accelerometer 3D"
     MotionAccelerometer3D,
-    /// Usage ID `0x116`: "Motion: Gyrometer 1D"
+    /// Usage ID `0x74`: "Motion: Gyrometer 1D"
     MotionGyrometer1D,
-    /// Usage ID `0x117`: "Motion: Gyrometer 2D"
+    /// Usage ID `0x75`: "Motion: Gyrometer 2D"
     MotionGyrometer2D,
-    /// Usage ID `0x118`: "Motion: Gyrometer 3D"
+    /// Usage ID `0x76`: "Motion: Gyrometer 3D"
     MotionGyrometer3D,
-    /// Usage ID `0x119`: "Motion: Motion Detector"
+    /// Usage ID `0x77`: "Motion: Motion Detector"
     MotionMotionDetector,
-    /// Usage ID `0x120`: "Motion: Speedometer"
+    /// Usage ID `0x78`: "Motion: Speedometer"
     MotionSpeedometer,
-    /// Usage ID `0x121`: "Motion: Accelerometer"
+    /// Usage ID `0x79`: "Motion: Accelerometer"
     MotionAccelerometer,
-    /// Usage ID `0x122`: "Motion: Gyrometer"
+    /// Usage ID `0x7A`: "Motion: Gyrometer"
     MotionGyrometer,
-    /// Usage ID `0x123`: "Motion: Gravity Vector"
+    /// Usage ID `0x7B`: "Motion: Gravity Vector"
     MotionGravityVector,
-    /// Usage ID `0x124`: "Motion: Linear Accelerometer"
+    /// Usage ID `0x7C`: "Motion: Linear Accelerometer"
     MotionLinearAccelerometer,
-    /// Usage ID `0x128`: "Orientation"
+    /// Usage ID `0x80`: "Orientation"
     Orientation,
-    /// Usage ID `0x129`: "Orientation: Compass 1D"
+    /// Usage ID `0x81`: "Orientation: Compass 1D"
     OrientationCompass1D,
-    /// Usage ID `0x130`: "Orientation: Compass 2D"
+    /// Usage ID `0x82`: "Orientation: Compass 2D"
     OrientationCompass2D,
-    /// Usage ID `0x131`: "Orientation: Compass 3D"
+    /// Usage ID `0x83`: "Orientation: Compass 3D"
     OrientationCompass3D,
-    /// Usage ID `0x132`: "Orientation: Inclinometer 1D"
+    /// Usage ID `0x84`: "Orientation: Inclinometer 1D"
     OrientationInclinometer1D,
-    /// Usage ID `0x133`: "Orientation: Inclinometer 2D"
+    /// Usage ID `0x85`: "Orientation: Inclinometer 2D"
     OrientationInclinometer2D,
-    /// Usage ID `0x134`: "Orientation: Inclinometer 3D"
+    /// Usage ID `0x86`: "Orientation: Inclinometer 3D"
     OrientationInclinometer3D,
-    /// Usage ID `0x135`: "Orientation: Distance 1D"
+    /// Usage ID `0x87`: "Orientation: Distance 1D"
     OrientationDistance1D,
-    /// Usage ID `0x136`: "Orientation: Distance 2D"
+    /// Usage ID `0x88`: "Orientation: Distance 2D"
     OrientationDistance2D,
-    /// Usage ID `0x137`: "Orientation: Distance 3D"
+    /// Usage ID `0x89`: "Orientation: Distance 3D"
     OrientationDistance3D,
-    /// Usage ID `0x138`: "Orientation: Device Orientation"
+    /// Usage ID `0x8A`: "Orientation: Device Orientation"
     OrientationDeviceOrientation,
-    /// Usage ID `0x139`: "Orientation: Compass"
+    /// Usage ID `0x8B`: "Orientation: Compass"
     OrientationCompass,
-    /// Usage ID `0x140`: "Orientation: Inclinometer"
+    /// Usage ID `0x8C`: "Orientation: Inclinometer"
     OrientationInclinometer,
-    /// Usage ID `0x141`: "Orientation: Distance"
+    /// Usage ID `0x8D`: "Orientation: Distance"
     OrientationDistance,
-    /// Usage ID `0x142`: "Orientation: Relative Orientation"
+    /// Usage ID `0x8E`: "Orientation: Relative Orientation"
     OrientationRelativeOrientation,
-    /// Usage ID `0x143`: "Orientation: Simple Orientation"
+    /// Usage ID `0x8F`: "Orientation: Simple Orientation"
     OrientationSimpleOrientation,
-    /// Usage ID `0x144`: "Scanner"
+    /// Usage ID `0x90`: "Scanner"
     Scanner,
-    /// Usage ID `0x145`: "Scanner: Barcode"
+    /// Usage ID `0x91`: "Scanner: Barcode"
     ScannerBarcode,
-    /// Usage ID `0x146`: "Scanner: RFID"
+    /// Usage ID `0x92`: "Scanner: RFID"
     ScannerRFID,
-    /// Usage ID `0x147`: "Scanner: NFC"
+    /// Usage ID `0x93`: "Scanner: NFC"
     ScannerNFC,
-    /// Usage ID `0x160`: "Time"
+    /// Usage ID `0xA0`: "Time"
     Time,
-    /// Usage ID `0x161`: "Time: Alarm Timer"
+    /// Usage ID `0xA1`: "Time: Alarm Timer"
     TimeAlarmTimer,
-    /// Usage ID `0x162`: "Time: Real Time Clock"
+    /// Usage ID `0xA2`: "Time: Real Time Clock"
     TimeRealTimeClock,
-    /// Usage ID `0x176`: "Personal Activity"
+    /// Usage ID `0xB0`: "Personal Activity"
     PersonalActivity,
-    /// Usage ID `0x177`: "Personal Activity: Activity Detection"
+    /// Usage ID `0xB1`: "Personal Activity: Activity Detection"
     PersonalActivityActivityDetection,
-    /// Usage ID `0x178`: "Personal Activity: Device Position"
+    /// Usage ID `0xB2`: "Personal Activity: Device Position"
     PersonalActivityDevicePosition,
-    /// Usage ID `0x179`: "Personal Activity: Pedometer"
+    /// Usage ID `0xB3`: "Personal Activity: Pedometer"
     PersonalActivityPedometer,
-    /// Usage ID `0x180`: "Personal Activity: Step Detection"
+    /// Usage ID `0xB4`: "Personal Activity: Step Detection"
     PersonalActivityStepDetection,
-    /// Usage ID `0x192`: "Orientation Extended"
+    /// Usage ID `0xC0`: "Orientation Extended"
     OrientationExtended,
-    /// Usage ID `0x193`: "Orientation Extended: Geomagnetic Orientation"
+    /// Usage ID `0xC1`: "Orientation Extended: Geomagnetic Orientation"
     OrientationExtendedGeomagneticOrientation,
-    /// Usage ID `0x194`: "Orientation Extended: Magnetometer"
+    /// Usage ID `0xC2`: "Orientation Extended: Magnetometer"
     OrientationExtendedMagnetometer,
-    /// Usage ID `0x224`: "Other"
+    /// Usage ID `0xE0`: "Other"
     Other,
-    /// Usage ID `0x225`: "Other: Custom"
+    /// Usage ID `0xE1`: "Other: Custom"
     OtherCustom,
-    /// Usage ID `0x226`: "Other: Generic"
+    /// Usage ID `0xE2`: "Other: Generic"
     OtherGeneric,
-    /// Usage ID `0x227`: "Other: Generic Enumerator"
+    /// Usage ID `0xE3`: "Other: Generic Enumerator"
     OtherGenericEnumerator,
-    /// Usage ID `0x512`: "Event"
+    /// Usage ID `0x200`: "Event"
     Event,
-    /// Usage ID `0x513`: "Event: Sensor State"
+    /// Usage ID `0x201`: "Event: Sensor State"
     EventSensorState,
-    /// Usage ID `0x514`: "Event: Sensor Event"
+    /// Usage ID `0x202`: "Event: Sensor Event"
     EventSensorEvent,
-    /// Usage ID `0x768`: "Property"
+    /// Usage ID `0x300`: "Property"
     Property,
-    /// Usage ID `0x769`: "Property: Friendly Name"
+    /// Usage ID `0x301`: "Property: Friendly Name"
     PropertyFriendlyName,
-    /// Usage ID `0x770`: "Property: Persistent Unique ID"
+    /// Usage ID `0x302`: "Property: Persistent Unique ID"
     PropertyPersistentUniqueID,
-    /// Usage ID `0x771`: "Property: Sensor Status"
+    /// Usage ID `0x303`: "Property: Sensor Status"
     PropertySensorStatus,
-    /// Usage ID `0x772`: "Property: Minimum Report Interval"
+    /// Usage ID `0x304`: "Property: Minimum Report Interval"
     PropertyMinimumReportInterval,
-    /// Usage ID `0x773`: "Property: Sensor Manufacturer"
+    /// Usage ID `0x305`: "Property: Sensor Manufacturer"
     PropertySensorManufacturer,
-    /// Usage ID `0x774`: "Property: Sensor Model"
+    /// Usage ID `0x306`: "Property: Sensor Model"
     PropertySensorModel,
-    /// Usage ID `0x775`: "Property: Sensor Serial Number"
+    /// Usage ID `0x307`: "Property: Sensor Serial Number"
     PropertySensorSerialNumber,
-    /// Usage ID `0x776`: "Property: Sensor Description"
+    /// Usage ID `0x308`: "Property: Sensor Description"
     PropertySensorDescription,
-    /// Usage ID `0x777`: "Property: Sensor Connection Type"
+    /// Usage ID `0x309`: "Property: Sensor Connection Type"
     PropertySensorConnectionType,
-    /// Usage ID `0x778`: "Property: Sensor Device Path"
+    /// Usage ID `0x30A`: "Property: Sensor Device Path"
     PropertySensorDevicePath,
-    /// Usage ID `0x779`: "Property: Hardware Revision"
+    /// Usage ID `0x30B`: "Property: Hardware Revision"
     PropertyHardwareRevision,
-    /// Usage ID `0x780`: "Property: Firmware Version"
+    /// Usage ID `0x30C`: "Property: Firmware Version"
     PropertyFirmwareVersion,
-    /// Usage ID `0x781`: "Property: Release Date"
+    /// Usage ID `0x30D`: "Property: Release Date"
     PropertyReleaseDate,
-    /// Usage ID `0x782`: "Property: Report Interval"
+    /// Usage ID `0x30E`: "Property: Report Interval"
     PropertyReportInterval,
-    /// Usage ID `0x783`: "Property: Change Sensitivity Absolute"
+    /// Usage ID `0x30F`: "Property: Change Sensitivity Absolute"
     PropertyChangeSensitivityAbsolute,
-    /// Usage ID `0x784`: "Property: Change Sensitivity Percent of Range"
+    /// Usage ID `0x310`: "Property: Change Sensitivity Percent of Range"
     PropertyChangeSensitivityPercentofRange,
-    /// Usage ID `0x785`: "Property: Change Sensitivity Percent Relative"
+    /// Usage ID `0x311`: "Property: Change Sensitivity Percent Relative"
     PropertyChangeSensitivityPercentRelative,
-    /// Usage ID `0x786`: "Property: Accuracy"
+    /// Usage ID `0x312`: "Property: Accuracy"
     PropertyAccuracy,
-    /// Usage ID `0x787`: "Property: Resolution"
+    /// Usage ID `0x313`: "Property: Resolution"
     PropertyResolution,
-    /// Usage ID `0x788`: "Property: Maximum"
+    /// Usage ID `0x314`: "Property: Maximum"
     PropertyMaximum,
-    /// Usage ID `0x789`: "Property: Minimum"
+    /// Usage ID `0x315`: "Property: Minimum"
     PropertyMinimum,
-    /// Usage ID `0x790`: "Property: Reporting State"
+    /// Usage ID `0x316`: "Property: Reporting State"
     PropertyReportingState,
-    /// Usage ID `0x794`: "Property: Maximum FIFO Events"
+    /// Usage ID `0x31A`: "Property: Maximum FIFO Events"
     PropertyMaximumFIFOEvents,
-    /// Usage ID `0x795`: "Property: Report Latency"
+    /// Usage ID `0x31B`: "Property: Report Latency"
     PropertyReportLatency,
-    /// Usage ID `0x796`: "Property: Flush FIFO Events"
+    /// Usage ID `0x31C`: "Property: Flush FIFO Events"
     PropertyFlushFIFOEvents,
-    /// Usage ID `0x797`: "Property: Maximum Power Consumption"
+    /// Usage ID `0x31D`: "Property: Maximum Power Consumption"
     PropertyMaximumPowerConsumption,
-    /// Usage ID `0x1024`: "Data Field: Location"
+    /// Usage ID `0x400`: "Data Field: Location"
     DataFieldLocation,
-    /// Usage ID `0x1026`: "Data Field: Altitude Antenna Sea Level"
+    /// Usage ID `0x402`: "Data Field: Altitude Antenna Sea Level"
     DataFieldAltitudeAntennaSeaLevel,
-    /// Usage ID `0x1027`: "Data Field: Differential Reference Station ID"
+    /// Usage ID `0x403`: "Data Field: Differential Reference Station ID"
     DataFieldDifferentialReferenceStationID,
-    /// Usage ID `0x1028`: "Data Field: Altitude Ellipsoid Error"
+    /// Usage ID `0x404`: "Data Field: Altitude Ellipsoid Error"
     DataFieldAltitudeEllipsoidError,
-    /// Usage ID `0x1029`: "Data Field: Altitude Ellipsoid"
+    /// Usage ID `0x405`: "Data Field: Altitude Ellipsoid"
     DataFieldAltitudeEllipsoid,
-    /// Usage ID `0x1030`: "Data Field: Altitude Sea Level Error"
+    /// Usage ID `0x406`: "Data Field: Altitude Sea Level Error"
     DataFieldAltitudeSeaLevelError,
-    /// Usage ID `0x1031`: "Data Field: Altitude Sea Level"
+    /// Usage ID `0x407`: "Data Field: Altitude Sea Level"
     DataFieldAltitudeSeaLevel,
-    /// Usage ID `0x1032`: "Data Field: Differential GPS Data Age"
+    /// Usage ID `0x408`: "Data Field: Differential GPS Data Age"
     DataFieldDifferentialGPSDataAge,
-    /// Usage ID `0x1033`: "Data Field: Error Radius"
+    /// Usage ID `0x409`: "Data Field: Error Radius"
     DataFieldErrorRadius,
-    /// Usage ID `0x1034`: "Data Field: Fix Quality"
+    /// Usage ID `0x40A`: "Data Field: Fix Quality"
     DataFieldFixQuality,
-    /// Usage ID `0x1035`: "Data Field: Fix Type"
+    /// Usage ID `0x40B`: "Data Field: Fix Type"
     DataFieldFixType,
-    /// Usage ID `0x1036`: "Data Field: Geoidal Separation"
+    /// Usage ID `0x40C`: "Data Field: Geoidal Separation"
     DataFieldGeoidalSeparation,
-    /// Usage ID `0x1037`: "Data Field: GPS Operation Mode"
+    /// Usage ID `0x40D`: "Data Field: GPS Operation Mode"
     DataFieldGPSOperationMode,
-    /// Usage ID `0x1038`: "Data Field: GPS Selection Mode"
+    /// Usage ID `0x40E`: "Data Field: GPS Selection Mode"
     DataFieldGPSSelectionMode,
-    /// Usage ID `0x1039`: "Data Field: GPS Status"
+    /// Usage ID `0x40F`: "Data Field: GPS Status"
     DataFieldGPSStatus,
-    /// Usage ID `0x1040`: "Data Field: Position Dilution of Precision"
+    /// Usage ID `0x410`: "Data Field: Position Dilution of Precision"
     DataFieldPositionDilutionofPrecision,
-    /// Usage ID `0x1041`: "Data Field: Horizontal Dilution of Precision"
+    /// Usage ID `0x411`: "Data Field: Horizontal Dilution of Precision"
     DataFieldHorizontalDilutionofPrecision,
-    /// Usage ID `0x1042`: "Data Field: Vertical Dilution of Precision"
+    /// Usage ID `0x412`: "Data Field: Vertical Dilution of Precision"
     DataFieldVerticalDilutionofPrecision,
-    /// Usage ID `0x1043`: "Data Field: Latitude"
+    /// Usage ID `0x413`: "Data Field: Latitude"
     DataFieldLatitude,
-    /// Usage ID `0x1044`: "Data Field: Longitude"
+    /// Usage ID `0x414`: "Data Field: Longitude"
     DataFieldLongitude,
-    /// Usage ID `0x1045`: "Data Field: True Heading"
+    /// Usage ID `0x415`: "Data Field: True Heading"
     DataFieldTrueHeading,
-    /// Usage ID `0x1046`: "Data Field: Magnetic Heading"
+    /// Usage ID `0x416`: "Data Field: Magnetic Heading"
     DataFieldMagneticHeading,
-    /// Usage ID `0x1047`: "Data Field: Magnetic Variation"
+    /// Usage ID `0x417`: "Data Field: Magnetic Variation"
     DataFieldMagneticVariation,
-    /// Usage ID `0x1048`: "Data Field: Speed"
+    /// Usage ID `0x418`: "Data Field: Speed"
     DataFieldSpeed,
-    /// Usage ID `0x1049`: "Data Field: Satellites in View"
+    /// Usage ID `0x419`: "Data Field: Satellites in View"
     DataFieldSatellitesinView,
-    /// Usage ID `0x1050`: "Data Field: Satellites in View Azimuth"
+    /// Usage ID `0x41A`: "Data Field: Satellites in View Azimuth"
     DataFieldSatellitesinViewAzimuth,
-    /// Usage ID `0x1051`: "Data Field: Satellites in View Elevation"
+    /// Usage ID `0x41B`: "Data Field: Satellites in View Elevation"
     DataFieldSatellitesinViewElevation,
-    /// Usage ID `0x1052`: "Data Field: Satellites in View IDs"
+    /// Usage ID `0x41C`: "Data Field: Satellites in View IDs"
     DataFieldSatellitesinViewIDs,
-    /// Usage ID `0x1053`: "Data Field: Satellites in View PRNs"
+    /// Usage ID `0x41D`: "Data Field: Satellites in View PRNs"
     DataFieldSatellitesinViewPRNs,
-    /// Usage ID `0x1054`: "Data Field: Satellites in View S/N Ratios"
+    /// Usage ID `0x41E`: "Data Field: Satellites in View S/N Ratios"
     DataFieldSatellitesinViewSNRatios,
-    /// Usage ID `0x1055`: "Data Field: Satellites Used Count"
+    /// Usage ID `0x41F`: "Data Field: Satellites Used Count"
     DataFieldSatellitesUsedCount,
-    /// Usage ID `0x1056`: "Data Field: Satellites Used PRNs"
+    /// Usage ID `0x420`: "Data Field: Satellites Used PRNs"
     DataFieldSatellitesUsedPRNs,
-    /// Usage ID `0x1057`: "Data Field: NMEA Sentence"
+    /// Usage ID `0x421`: "Data Field: NMEA Sentence"
     DataFieldNMEASentence,
-    /// Usage ID `0x1058`: "Data Field: Address Line 1"
+    /// Usage ID `0x422`: "Data Field: Address Line 1"
     DataFieldAddressLine1,
-    /// Usage ID `0x1059`: "Data Field: Address Line 2"
+    /// Usage ID `0x423`: "Data Field: Address Line 2"
     DataFieldAddressLine2,
-    /// Usage ID `0x1060`: "Data Field: City"
+    /// Usage ID `0x424`: "Data Field: City"
     DataFieldCity,
-    /// Usage ID `0x1061`: "Data Field: State or Province"
+    /// Usage ID `0x425`: "Data Field: State or Province"
     DataFieldStateorProvince,
-    /// Usage ID `0x1062`: "Data Field: Country or Region"
+    /// Usage ID `0x426`: "Data Field: Country or Region"
     DataFieldCountryorRegion,
-    /// Usage ID `0x1063`: "Data Field: Postal Code"
+    /// Usage ID `0x427`: "Data Field: Postal Code"
     DataFieldPostalCode,
-    /// Usage ID `0x1066`: "Property: Location"
+    /// Usage ID `0x42A`: "Property: Location"
     PropertyLocation,
-    /// Usage ID `0x1067`: "Property: Location Desired Accuracy"
+    /// Usage ID `0x42B`: "Property: Location Desired Accuracy"
     PropertyLocationDesiredAccuracy,
-    /// Usage ID `0x1072`: "Data Field: Environmental"
+    /// Usage ID `0x430`: "Data Field: Environmental"
     DataFieldEnvironmental,
-    /// Usage ID `0x1073`: "Data Field: Atmospheric Pressure"
+    /// Usage ID `0x431`: "Data Field: Atmospheric Pressure"
     DataFieldAtmosphericPressure,
-    /// Usage ID `0x1075`: "Data Field: Relative Humidity"
+    /// Usage ID `0x433`: "Data Field: Relative Humidity"
     DataFieldRelativeHumidity,
-    /// Usage ID `0x1076`: "Data Field: Temperature"
+    /// Usage ID `0x434`: "Data Field: Temperature"
     DataFieldTemperature,
-    /// Usage ID `0x1077`: "Data Field: Wind Direction"
+    /// Usage ID `0x435`: "Data Field: Wind Direction"
     DataFieldWindDirection,
-    /// Usage ID `0x1078`: "Data Field: Wind Speed"
+    /// Usage ID `0x436`: "Data Field: Wind Speed"
     DataFieldWindSpeed,
-    /// Usage ID `0x1079`: "Data Field: Air Quality Index"
+    /// Usage ID `0x437`: "Data Field: Air Quality Index"
     DataFieldAirQualityIndex,
-    /// Usage ID `0x1080`: "Data Field: Equivalent CO2"
+    /// Usage ID `0x438`: "Data Field: Equivalent CO2"
     DataFieldEquivalentCO2,
-    /// Usage ID `0x1081`: "Data Field: Volatile Organic Compound Concentration"
+    /// Usage ID `0x439`: "Data Field: Volatile Organic Compound Concentration"
     DataFieldVolatileOrganicCompoundConcentration,
-    /// Usage ID `0x1082`: "Data Field: Object Presence"
+    /// Usage ID `0x43A`: "Data Field: Object Presence"
     DataFieldObjectPresence,
-    /// Usage ID `0x1083`: "Data Field: Object Proximity Range"
+    /// Usage ID `0x43B`: "Data Field: Object Proximity Range"
     DataFieldObjectProximityRange,
-    /// Usage ID `0x1084`: "Data Field: Object Proximity Out of Range"
+    /// Usage ID `0x43C`: "Data Field: Object Proximity Out of Range"
     DataFieldObjectProximityOutofRange,
-    /// Usage ID `0x1088`: "Property: Environmental"
+    /// Usage ID `0x440`: "Property: Environmental"
     PropertyEnvironmental,
-    /// Usage ID `0x1089`: "Property: Reference Pressure"
+    /// Usage ID `0x441`: "Property: Reference Pressure"
     PropertyReferencePressure,
-    /// Usage ID `0x1104`: "Data Field: Motion"
+    /// Usage ID `0x450`: "Data Field: Motion"
     DataFieldMotion,
-    /// Usage ID `0x1105`: "Data Field: Motion State"
+    /// Usage ID `0x451`: "Data Field: Motion State"
     DataFieldMotionState,
-    /// Usage ID `0x1106`: "Data Field: Acceleration"
+    /// Usage ID `0x452`: "Data Field: Acceleration"
     DataFieldAcceleration,
-    /// Usage ID `0x1107`: "Data Field: Acceleration Axis X"
+    /// Usage ID `0x453`: "Data Field: Acceleration Axis X"
     DataFieldAccelerationAxisX,
-    /// Usage ID `0x1108`: "Data Field: Acceleration Axis Y"
+    /// Usage ID `0x454`: "Data Field: Acceleration Axis Y"
     DataFieldAccelerationAxisY,
-    /// Usage ID `0x1109`: "Data Field: Acceleration Axis Z"
+    /// Usage ID `0x455`: "Data Field: Acceleration Axis Z"
     DataFieldAccelerationAxisZ,
-    /// Usage ID `0x1110`: "Data Field: Angular Velocity"
+    /// Usage ID `0x456`: "Data Field: Angular Velocity"
     DataFieldAngularVelocity,
-    /// Usage ID `0x1111`: "Data Field: Angular Velocity about X Axis"
+    /// Usage ID `0x457`: "Data Field: Angular Velocity about X Axis"
     DataFieldAngularVelocityaboutXAxis,
-    /// Usage ID `0x1112`: "Data Field: Angular Velocity about Y Axis"
+    /// Usage ID `0x458`: "Data Field: Angular Velocity about Y Axis"
     DataFieldAngularVelocityaboutYAxis,
-    /// Usage ID `0x1113`: "Data Field: Angular Velocity about Z Axis"
+    /// Usage ID `0x459`: "Data Field: Angular Velocity about Z Axis"
     DataFieldAngularVelocityaboutZAxis,
-    /// Usage ID `0x1114`: "Data Field: Angular Position"
+    /// Usage ID `0x45A`: "Data Field: Angular Position"
     DataFieldAngularPosition,
-    /// Usage ID `0x1115`: "Data Field: Angular Position about X Axis"
+    /// Usage ID `0x45B`: "Data Field: Angular Position about X Axis"
     DataFieldAngularPositionaboutXAxis,
-    /// Usage ID `0x1116`: "Data Field: Angular Position about Y Axis"
+    /// Usage ID `0x45C`: "Data Field: Angular Position about Y Axis"
     DataFieldAngularPositionaboutYAxis,
-    /// Usage ID `0x1117`: "Data Field: Angular Position about Z Axis"
+    /// Usage ID `0x45D`: "Data Field: Angular Position about Z Axis"
     DataFieldAngularPositionaboutZAxis,
-    /// Usage ID `0x1118`: "Data Field: Motion Speed"
+    /// Usage ID `0x45E`: "Data Field: Motion Speed"
     DataFieldMotionSpeed,
-    /// Usage ID `0x1119`: "Data Field: Motion Intensity"
+    /// Usage ID `0x45F`: "Data Field: Motion Intensity"
     DataFieldMotionIntensity,
-    /// Usage ID `0x1136`: "Data Field: Orientation"
+    /// Usage ID `0x470`: "Data Field: Orientation"
     DataFieldOrientation,
-    /// Usage ID `0x1137`: "Data Field: Heading"
+    /// Usage ID `0x471`: "Data Field: Heading"
     DataFieldHeading,
-    /// Usage ID `0x1138`: "Data Field: Heading X Axis"
+    /// Usage ID `0x472`: "Data Field: Heading X Axis"
     DataFieldHeadingXAxis,
-    /// Usage ID `0x16499`: "Data Field: Heading Y Axis"
+    /// Usage ID `0x4073`: "Data Field: Heading Y Axis"
     DataFieldHeadingYAxis,
-    /// Usage ID `0x1140`: "Data Field: Heading Z Axis"
+    /// Usage ID `0x474`: "Data Field: Heading Z Axis"
     DataFieldHeadingZAxis,
-    /// Usage ID `0x1141`: "Data Field: Heading Compensated Magnetic North"
+    /// Usage ID `0x475`: "Data Field: Heading Compensated Magnetic North"
     DataFieldHeadingCompensatedMagneticNorth,
-    /// Usage ID `0x1142`: "Data Field: Heading Compensated True North"
+    /// Usage ID `0x476`: "Data Field: Heading Compensated True North"
     DataFieldHeadingCompensatedTrueNorth,
-    /// Usage ID `0x1143`: "Data Field: Heading Magnetic North"
+    /// Usage ID `0x477`: "Data Field: Heading Magnetic North"
     DataFieldHeadingMagneticNorth,
-    /// Usage ID `0x1144`: "Data Field: Heading True North"
+    /// Usage ID `0x478`: "Data Field: Heading True North"
     DataFieldHeadingTrueNorth,
-    /// Usage ID `0x1145`: "Data Field: Distance"
+    /// Usage ID `0x479`: "Data Field: Distance"
     DataFieldDistance,
-    /// Usage ID `0x1146`: "Data Field: Distance X Axis"
+    /// Usage ID `0x47A`: "Data Field: Distance X Axis"
     DataFieldDistanceXAxis,
-    /// Usage ID `0x1147`: "Data Field: Distance Y Axis"
+    /// Usage ID `0x47B`: "Data Field: Distance Y Axis"
     DataFieldDistanceYAxis,
-    /// Usage ID `0x1148`: "Data Field: Distance Z Axis"
+    /// Usage ID `0x47C`: "Data Field: Distance Z Axis"
     DataFieldDistanceZAxis,
-    /// Usage ID `0x1149`: "Data Field: Distance Out-of-Range"
+    /// Usage ID `0x47D`: "Data Field: Distance Out-of-Range"
     DataFieldDistanceOutofRange,
-    /// Usage ID `0x1150`: "Data Field: Tilt"
+    /// Usage ID `0x47E`: "Data Field: Tilt"
     DataFieldTilt,
-    /// Usage ID `0x1151`: "Data Field: Tilt X Axis"
+    /// Usage ID `0x47F`: "Data Field: Tilt X Axis"
     DataFieldTiltXAxis,
-    /// Usage ID `0x1152`: "Data Field: Tilt Y Axis"
+    /// Usage ID `0x480`: "Data Field: Tilt Y Axis"
     DataFieldTiltYAxis,
-    /// Usage ID `0x1153`: "Data Field: Tilt Z Axis"
+    /// Usage ID `0x481`: "Data Field: Tilt Z Axis"
     DataFieldTiltZAxis,
-    /// Usage ID `0x1154`: "Data Field: Rotation Matrix"
+    /// Usage ID `0x482`: "Data Field: Rotation Matrix"
     DataFieldRotationMatrix,
-    /// Usage ID `0x1155`: "Data Field: Quaternion"
+    /// Usage ID `0x483`: "Data Field: Quaternion"
     DataFieldQuaternion,
-    /// Usage ID `0x1156`: "Data Field: Magnetic Flux"
+    /// Usage ID `0x484`: "Data Field: Magnetic Flux"
     DataFieldMagneticFlux,
-    /// Usage ID `0x1157`: "Data Field: Magnetic Flux X Axis"
+    /// Usage ID `0x485`: "Data Field: Magnetic Flux X Axis"
     DataFieldMagneticFluxXAxis,
-    /// Usage ID `0x1158`: "Data Field: Magnetic Flux Y Axis"
+    /// Usage ID `0x486`: "Data Field: Magnetic Flux Y Axis"
     DataFieldMagneticFluxYAxis,
-    /// Usage ID `0x1159`: "Data Field: Magnetic Flux Z Axis"
+    /// Usage ID `0x487`: "Data Field: Magnetic Flux Z Axis"
     DataFieldMagneticFluxZAxis,
-    /// Usage ID `0x1160`: "Data Field: Magnetometer Accuracy"
+    /// Usage ID `0x488`: "Data Field: Magnetometer Accuracy"
     DataFieldMagnetometerAccuracy,
-    /// Usage ID `0x1161`: "Data Field: Simple Orientation Direction"
+    /// Usage ID `0x489`: "Data Field: Simple Orientation Direction"
     DataFieldSimpleOrientationDirection,
-    /// Usage ID `0x1168`: "Data Field: Mechanical"
+    /// Usage ID `0x490`: "Data Field: Mechanical"
     DataFieldMechanical,
-    /// Usage ID `0x1169`: "Data Field: Boolean Switch State"
+    /// Usage ID `0x491`: "Data Field: Boolean Switch State"
     DataFieldBooleanSwitchState,
-    /// Usage ID `0x1170`: "Data Field: Boolean Switch Array States"
+    /// Usage ID `0x492`: "Data Field: Boolean Switch Array States"
     DataFieldBooleanSwitchArrayStates,
-    /// Usage ID `0x1171`: "Data Field: Multivalue Switch Value"
+    /// Usage ID `0x493`: "Data Field: Multivalue Switch Value"
     DataFieldMultivalueSwitchValue,
-    /// Usage ID `0x1172`: "Data Field: Force"
+    /// Usage ID `0x494`: "Data Field: Force"
     DataFieldForce,
-    /// Usage ID `0x1173`: "Data Field: Absolute Pressure"
+    /// Usage ID `0x495`: "Data Field: Absolute Pressure"
     DataFieldAbsolutePressure,
-    /// Usage ID `0x1174`: "Data Field: Gauge Pressure"
+    /// Usage ID `0x496`: "Data Field: Gauge Pressure"
     DataFieldGaugePressure,
-    /// Usage ID `0x1175`: "Data Field: Strain"
+    /// Usage ID `0x497`: "Data Field: Strain"
     DataFieldStrain,
-    /// Usage ID `0x1176`: "Data Field: Weight"
+    /// Usage ID `0x498`: "Data Field: Weight"
     DataFieldWeight,
-    /// Usage ID `0x1184`: "Property: Mechanical"
+    /// Usage ID `0x4A0`: "Property: Mechanical"
     PropertyMechanical,
-    /// Usage ID `0x1185`: "Property: Vibration State"
+    /// Usage ID `0x4A1`: "Property: Vibration State"
     PropertyVibrationState,
-    /// Usage ID `0x1186`: "Property: Forward Vibration Speed"
+    /// Usage ID `0x4A2`: "Property: Forward Vibration Speed"
     PropertyForwardVibrationSpeed,
-    /// Usage ID `0x1187`: "Property: Backward Vibration Speed"
+    /// Usage ID `0x4A3`: "Property: Backward Vibration Speed"
     PropertyBackwardVibrationSpeed,
-    /// Usage ID `0x1200`: "Data Field: Biometric"
+    /// Usage ID `0x4B0`: "Data Field: Biometric"
     DataFieldBiometric,
-    /// Usage ID `0x1201`: "Data Field: Human Presence"
+    /// Usage ID `0x4B1`: "Data Field: Human Presence"
     DataFieldHumanPresence,
-    /// Usage ID `0x1202`: "Data Field: Human Proximity Range"
+    /// Usage ID `0x4B2`: "Data Field: Human Proximity Range"
     DataFieldHumanProximityRange,
-    /// Usage ID `0x1203`: "Data Field: Human Proximity Out of Range"
+    /// Usage ID `0x4B3`: "Data Field: Human Proximity Out of Range"
     DataFieldHumanProximityOutofRange,
-    /// Usage ID `0x1204`: "Data Field: Human Touch State"
+    /// Usage ID `0x4B4`: "Data Field: Human Touch State"
     DataFieldHumanTouchState,
-    /// Usage ID `0x1205`: "Data Field: Blood Pressure"
+    /// Usage ID `0x4B5`: "Data Field: Blood Pressure"
     DataFieldBloodPressure,
-    /// Usage ID `0x1206`: "Data Field: Blood Pressure Diastolic"
+    /// Usage ID `0x4B6`: "Data Field: Blood Pressure Diastolic"
     DataFieldBloodPressureDiastolic,
-    /// Usage ID `0x1207`: "Data Field: Blood Pressure Systolic"
+    /// Usage ID `0x4B7`: "Data Field: Blood Pressure Systolic"
     DataFieldBloodPressureSystolic,
-    /// Usage ID `0x1208`: "Data Field: Heart Rate"
+    /// Usage ID `0x4B8`: "Data Field: Heart Rate"
     DataFieldHeartRate,
-    /// Usage ID `0x1209`: "Data Field: Resting Heart Rate"
+    /// Usage ID `0x4B9`: "Data Field: Resting Heart Rate"
     DataFieldRestingHeartRate,
-    /// Usage ID `0x1210`: "Data Field: Heartbeat Interval"
+    /// Usage ID `0x4BA`: "Data Field: Heartbeat Interval"
     DataFieldHeartbeatInterval,
-    /// Usage ID `0x1211`: "Data Field: Respiratory Rate"
+    /// Usage ID `0x4BB`: "Data Field: Respiratory Rate"
     DataFieldRespiratoryRate,
-    /// Usage ID `0x1212`: "Data Field: SpO2"
+    /// Usage ID `0x4BC`: "Data Field: SpO2"
     DataFieldSpO2,
-    /// Usage ID `0x1232`: "Data Field: Light"
+    /// Usage ID `0x4D0`: "Data Field: Light"
     DataFieldLight,
-    /// Usage ID `0x1233`: "Data Field: Illuminance"
+    /// Usage ID `0x4D1`: "Data Field: Illuminance"
     DataFieldIlluminance,
-    /// Usage ID `0x1234`: "Data Field: Color Temperature"
+    /// Usage ID `0x4D2`: "Data Field: Color Temperature"
     DataFieldColorTemperature,
-    /// Usage ID `0x1235`: "Data Field: Chromaticity"
+    /// Usage ID `0x4D3`: "Data Field: Chromaticity"
     DataFieldChromaticity,
-    /// Usage ID `0x1236`: "Data Field: Chromaticity X"
+    /// Usage ID `0x4D4`: "Data Field: Chromaticity X"
     DataFieldChromaticityX,
-    /// Usage ID `0x1237`: "Data Field: Chromaticity Y"
+    /// Usage ID `0x4D5`: "Data Field: Chromaticity Y"
     DataFieldChromaticityY,
-    /// Usage ID `0x1238`: "Data Field: Consumer IR Sentence Receive"
+    /// Usage ID `0x4D6`: "Data Field: Consumer IR Sentence Receive"
     DataFieldConsumerIRSentenceReceive,
-    /// Usage ID `0x1239`: "Data Field: Infrared Light"
+    /// Usage ID `0x4D7`: "Data Field: Infrared Light"
     DataFieldInfraredLight,
-    /// Usage ID `0x1240`: "Data Field: Red Light"
+    /// Usage ID `0x4D8`: "Data Field: Red Light"
     DataFieldRedLight,
-    /// Usage ID `0x1241`: "Data Field: Green Light"
+    /// Usage ID `0x4D9`: "Data Field: Green Light"
     DataFieldGreenLight,
-    /// Usage ID `0x1242`: "Data Field: Blue Light"
+    /// Usage ID `0x4DA`: "Data Field: Blue Light"
     DataFieldBlueLight,
-    /// Usage ID `0x1243`: "Data Field: Ultraviolet A Light"
+    /// Usage ID `0x4DB`: "Data Field: Ultraviolet A Light"
     DataFieldUltravioletALight,
-    /// Usage ID `0x1244`: "Data Field: Ultraviolet B Light"
+    /// Usage ID `0x4DC`: "Data Field: Ultraviolet B Light"
     DataFieldUltravioletBLight,
-    /// Usage ID `0x1245`: "Data Field: Ultraviolet Index"
+    /// Usage ID `0x4DD`: "Data Field: Ultraviolet Index"
     DataFieldUltravioletIndex,
-    /// Usage ID `0x1248`: "Property: Light"
+    /// Usage ID `0x4E0`: "Property: Light"
     PropertyLight,
-    /// Usage ID `0x1249`: "Property: Consumer IR Sentence Send"
+    /// Usage ID `0x4E1`: "Property: Consumer IR Sentence Send"
     PropertyConsumerIRSentenceSend,
-    /// Usage ID `0x1264`: "Data Field: Scanner"
+    /// Usage ID `0x4F0`: "Data Field: Scanner"
     DataFieldScanner,
-    /// Usage ID `0x1265`: "Data Field: RFID Tag 40 Bit"
+    /// Usage ID `0x4F1`: "Data Field: RFID Tag 40 Bit"
     DataFieldRFIDTag40Bit,
-    /// Usage ID `0x1266`: "Data Field: NFC Sentence Receive"
+    /// Usage ID `0x4F2`: "Data Field: NFC Sentence Receive"
     DataFieldNFCSentenceReceive,
-    /// Usage ID `0x1272`: "Property: Scanner"
+    /// Usage ID `0x4F8`: "Property: Scanner"
     PropertyScanner,
-    /// Usage ID `0x1273`: "Property: NFC Sentence Send"
+    /// Usage ID `0x4F9`: "Property: NFC Sentence Send"
     PropertyNFCSentenceSend,
-    /// Usage ID `0x1280`: "Data Field: Electrical"
+    /// Usage ID `0x500`: "Data Field: Electrical"
     DataFieldElectrical,
-    /// Usage ID `0x1281`: "Data Field: Capacitance"
+    /// Usage ID `0x501`: "Data Field: Capacitance"
     DataFieldCapacitance,
-    /// Usage ID `0x1282`: "Data Field: Current"
+    /// Usage ID `0x502`: "Data Field: Current"
     DataFieldCurrent,
-    /// Usage ID `0x1283`: "Data Field: Electrical Power"
+    /// Usage ID `0x503`: "Data Field: Electrical Power"
     DataFieldElectricalPower,
-    /// Usage ID `0x1284`: "Data Field: Inductance"
+    /// Usage ID `0x504`: "Data Field: Inductance"
     DataFieldInductance,
-    /// Usage ID `0x1285`: "Data Field: Resistance"
+    /// Usage ID `0x505`: "Data Field: Resistance"
     DataFieldResistance,
-    /// Usage ID `0x1286`: "Data Field: Voltage"
+    /// Usage ID `0x506`: "Data Field: Voltage"
     DataFieldVoltage,
-    /// Usage ID `0x1287`: "Data Field: Frequency"
+    /// Usage ID `0x507`: "Data Field: Frequency"
     DataFieldFrequency,
-    /// Usage ID `0x1288`: "Data Field: Period"
+    /// Usage ID `0x508`: "Data Field: Period"
     DataFieldPeriod,
-    /// Usage ID `0x1289`: "Data Field: Percent of Range"
+    /// Usage ID `0x509`: "Data Field: Percent of Range"
     DataFieldPercentofRange,
-    /// Usage ID `0x1312`: "Data Field: Time"
+    /// Usage ID `0x520`: "Data Field: Time"
     DataFieldTime,
-    /// Usage ID `0x1313`: "Data Field: Year"
+    /// Usage ID `0x521`: "Data Field: Year"
     DataFieldYear,
-    /// Usage ID `0x1314`: "Data Field: Month"
+    /// Usage ID `0x522`: "Data Field: Month"
     DataFieldMonth,
-    /// Usage ID `0x1315`: "Data Field: Day"
+    /// Usage ID `0x523`: "Data Field: Day"
     DataFieldDay,
-    /// Usage ID `0x1316`: "Data Field: Day of Week"
+    /// Usage ID `0x524`: "Data Field: Day of Week"
     DataFieldDayofWeek,
-    /// Usage ID `0x1317`: "Data Field: Hour"
+    /// Usage ID `0x525`: "Data Field: Hour"
     DataFieldHour,
-    /// Usage ID `0x1318`: "Data Field: Minute"
+    /// Usage ID `0x526`: "Data Field: Minute"
     DataFieldMinute,
-    /// Usage ID `0x1319`: "Data Field: Second"
+    /// Usage ID `0x527`: "Data Field: Second"
     DataFieldSecond,
-    /// Usage ID `0x1320`: "Data Field: Millisecond"
+    /// Usage ID `0x528`: "Data Field: Millisecond"
     DataFieldMillisecond,
-    /// Usage ID `0x1321`: "Data Field: Timestamp"
+    /// Usage ID `0x529`: "Data Field: Timestamp"
     DataFieldTimestamp,
-    /// Usage ID `0x1322`: "Data Field: Julian Day of Year"
+    /// Usage ID `0x52A`: "Data Field: Julian Day of Year"
     DataFieldJulianDayofYear,
-    /// Usage ID `0x1323`: "Data Field: Time Since System Boot"
+    /// Usage ID `0x52B`: "Data Field: Time Since System Boot"
     DataFieldTimeSinceSystemBoot,
-    /// Usage ID `0x1328`: "Property: Time"
+    /// Usage ID `0x530`: "Property: Time"
     PropertyTime,
-    /// Usage ID `0x1329`: "Property: Time Zone Offset from UTC"
+    /// Usage ID `0x531`: "Property: Time Zone Offset from UTC"
     PropertyTimeZoneOffsetfromUTC,
-    /// Usage ID `0x1330`: "Property: Time Zone Name"
+    /// Usage ID `0x532`: "Property: Time Zone Name"
     PropertyTimeZoneName,
-    /// Usage ID `0x1331`: "Property: Daylight Savings Time Observed"
+    /// Usage ID `0x533`: "Property: Daylight Savings Time Observed"
     PropertyDaylightSavingsTimeObserved,
-    /// Usage ID `0x1332`: "Property: Time Trim Adjustment"
+    /// Usage ID `0x534`: "Property: Time Trim Adjustment"
     PropertyTimeTrimAdjustment,
-    /// Usage ID `0x1333`: "Property: Arm Alarm"
+    /// Usage ID `0x535`: "Property: Arm Alarm"
     PropertyArmAlarm,
-    /// Usage ID `0x1344`: "Data Field: Custom"
+    /// Usage ID `0x540`: "Data Field: Custom"
     DataFieldCustom,
-    /// Usage ID `0x1345`: "Data Field: Custom Usage"
+    /// Usage ID `0x541`: "Data Field: Custom Usage"
     DataFieldCustomUsage,
-    /// Usage ID `0x1346`: "Data Field: Custom Boolean Array"
+    /// Usage ID `0x542`: "Data Field: Custom Boolean Array"
     DataFieldCustomBooleanArray,
-    /// Usage ID `0x1347`: "Data Field: Custom Value"
+    /// Usage ID `0x543`: "Data Field: Custom Value"
     DataFieldCustomValue,
-    /// Usage ID `0x1348`: "Data Field: Custom Value 1"
+    /// Usage ID `0x544`: "Data Field: Custom Value 1"
     DataFieldCustomValue1,
-    /// Usage ID `0x1349`: "Data Field: Custom Value 2"
+    /// Usage ID `0x545`: "Data Field: Custom Value 2"
     DataFieldCustomValue2,
-    /// Usage ID `0x1350`: "Data Field: Custom Value 3"
+    /// Usage ID `0x546`: "Data Field: Custom Value 3"
     DataFieldCustomValue3,
-    /// Usage ID `0x1351`: "Data Field: Custom Value 4"
+    /// Usage ID `0x547`: "Data Field: Custom Value 4"
     DataFieldCustomValue4,
-    /// Usage ID `0x1352`: "Data Field: Custom Value 5"
+    /// Usage ID `0x548`: "Data Field: Custom Value 5"
     DataFieldCustomValue5,
-    /// Usage ID `0x1353`: "Data Field: Custom Value 6"
+    /// Usage ID `0x549`: "Data Field: Custom Value 6"
     DataFieldCustomValue6,
-    /// Usage ID `0x1354`: "Data Field: Custom Value 7"
+    /// Usage ID `0x54A`: "Data Field: Custom Value 7"
     DataFieldCustomValue7,
-    /// Usage ID `0x1355`: "Data Field: Custom Value 8"
+    /// Usage ID `0x54B`: "Data Field: Custom Value 8"
     DataFieldCustomValue8,
-    /// Usage ID `0x1356`: "Data Field: Custom Value 9"
+    /// Usage ID `0x54C`: "Data Field: Custom Value 9"
     DataFieldCustomValue9,
-    /// Usage ID `0x1357`: "Data Field: Custom Value 10"
+    /// Usage ID `0x54D`: "Data Field: Custom Value 10"
     DataFieldCustomValue10,
-    /// Usage ID `0x1358`: "Data Field: Custom Value 11"
+    /// Usage ID `0x54E`: "Data Field: Custom Value 11"
     DataFieldCustomValue11,
-    /// Usage ID `0x1359`: "Data Field: Custom Value 12"
+    /// Usage ID `0x54F`: "Data Field: Custom Value 12"
     DataFieldCustomValue12,
-    /// Usage ID `0x1360`: "Data Field: Custom Value 13"
+    /// Usage ID `0x550`: "Data Field: Custom Value 13"
     DataFieldCustomValue13,
-    /// Usage ID `0x1361`: "Data Field: Custom Value 14"
+    /// Usage ID `0x551`: "Data Field: Custom Value 14"
     DataFieldCustomValue14,
-    /// Usage ID `0x1362`: "Data Field: Custom Value 15"
+    /// Usage ID `0x552`: "Data Field: Custom Value 15"
     DataFieldCustomValue15,
-    /// Usage ID `0x1363`: "Data Field: Custom Value 16"
+    /// Usage ID `0x553`: "Data Field: Custom Value 16"
     DataFieldCustomValue16,
-    /// Usage ID `0x1364`: "Data Field: Custom Value 17"
+    /// Usage ID `0x554`: "Data Field: Custom Value 17"
     DataFieldCustomValue17,
-    /// Usage ID `0x1365`: "Data Field: Custom Value 18"
+    /// Usage ID `0x555`: "Data Field: Custom Value 18"
     DataFieldCustomValue18,
-    /// Usage ID `0x1366`: "Data Field: Custom Value 19"
+    /// Usage ID `0x556`: "Data Field: Custom Value 19"
     DataFieldCustomValue19,
-    /// Usage ID `0x1367`: "Data Field: Custom Value 20"
+    /// Usage ID `0x557`: "Data Field: Custom Value 20"
     DataFieldCustomValue20,
-    /// Usage ID `0x1368`: "Data Field: Custom Value 21"
+    /// Usage ID `0x558`: "Data Field: Custom Value 21"
     DataFieldCustomValue21,
-    /// Usage ID `0x1369`: "Data Field: Custom Value 22"
+    /// Usage ID `0x559`: "Data Field: Custom Value 22"
     DataFieldCustomValue22,
-    /// Usage ID `0x1370`: "Data Field: Custom Value 23"
+    /// Usage ID `0x55A`: "Data Field: Custom Value 23"
     DataFieldCustomValue23,
-    /// Usage ID `0x1371`: "Data Field: Custom Value 24"
+    /// Usage ID `0x55B`: "Data Field: Custom Value 24"
     DataFieldCustomValue24,
-    /// Usage ID `0x1372`: "Data Field: Custom Value 25"
+    /// Usage ID `0x55C`: "Data Field: Custom Value 25"
     DataFieldCustomValue25,
-    /// Usage ID `0x1373`: "Data Field: Custom Value 26"
+    /// Usage ID `0x55D`: "Data Field: Custom Value 26"
     DataFieldCustomValue26,
-    /// Usage ID `0x1374`: "Data Field: Custom Value 27"
+    /// Usage ID `0x55E`: "Data Field: Custom Value 27"
     DataFieldCustomValue27,
-    /// Usage ID `0x1375`: "Data Field: Custom Value 28"
+    /// Usage ID `0x55F`: "Data Field: Custom Value 28"
     DataFieldCustomValue28,
-    /// Usage ID `0x1376`: "Data Field: Generic"
+    /// Usage ID `0x560`: "Data Field: Generic"
     DataFieldGeneric,
-    /// Usage ID `0x1377`: "Data Field: Generic GUID or PROPERTYKEY"
+    /// Usage ID `0x561`: "Data Field: Generic GUID or PROPERTYKEY"
     DataFieldGenericGUIDorPROPERTYKEY,
-    /// Usage ID `0x1378`: "Data Field: Generic Category GUID"
+    /// Usage ID `0x562`: "Data Field: Generic Category GUID"
     DataFieldGenericCategoryGUID,
-    /// Usage ID `0x1379`: "Data Field: Generic Type GUID"
+    /// Usage ID `0x563`: "Data Field: Generic Type GUID"
     DataFieldGenericTypeGUID,
-    /// Usage ID `0x1380`: "Data Field: Generic Event PROPERTYKEY"
+    /// Usage ID `0x564`: "Data Field: Generic Event PROPERTYKEY"
     DataFieldGenericEventPROPERTYKEY,
-    /// Usage ID `0x1381`: "Data Field: Generic Property PROPERTYKEY"
+    /// Usage ID `0x565`: "Data Field: Generic Property PROPERTYKEY"
     DataFieldGenericPropertyPROPERTYKEY,
-    /// Usage ID `0x1382`: "Data Field: Generic Data Field PROPERTYKEY"
+    /// Usage ID `0x566`: "Data Field: Generic Data Field PROPERTYKEY"
     DataFieldGenericDataFieldPROPERTYKEY,
-    /// Usage ID `0x1383`: "Data Field: Generic Event"
+    /// Usage ID `0x567`: "Data Field: Generic Event"
     DataFieldGenericEvent,
-    /// Usage ID `0x1384`: "Data Field: Generic Property"
+    /// Usage ID `0x568`: "Data Field: Generic Property"
     DataFieldGenericProperty,
-    /// Usage ID `0x1385`: "Data Field: Generic Data Field"
+    /// Usage ID `0x569`: "Data Field: Generic Data Field"
     DataFieldGenericDataField,
-    /// Usage ID `0x1386`: "Data Field: Enumerator Table Row Index"
+    /// Usage ID `0x56A`: "Data Field: Enumerator Table Row Index"
     DataFieldEnumeratorTableRowIndex,
-    /// Usage ID `0x1387`: "Data Field: Enumerator Table Row Count"
+    /// Usage ID `0x56B`: "Data Field: Enumerator Table Row Count"
     DataFieldEnumeratorTableRowCount,
-    /// Usage ID `0x1388`: "Data Field: Generic GUID or PROPERTYKEY kind"
+    /// Usage ID `0x56C`: "Data Field: Generic GUID or PROPERTYKEY kind"
     DataFieldGenericGUIDorPROPERTYKEYkind,
-    /// Usage ID `0x1389`: "Data Field: Generic GUID"
+    /// Usage ID `0x56D`: "Data Field: Generic GUID"
     DataFieldGenericGUID,
-    /// Usage ID `0x1390`: "Data Field: Generic PROPERTYKEY"
+    /// Usage ID `0x56E`: "Data Field: Generic PROPERTYKEY"
     DataFieldGenericPROPERTYKEY,
-    /// Usage ID `0x1391`: "Data Field: Generic Top Level Collection ID"
+    /// Usage ID `0x56F`: "Data Field: Generic Top Level Collection ID"
     DataFieldGenericTopLevelCollectionID,
-    /// Usage ID `0x1392`: "Data Field: Generic Report ID"
+    /// Usage ID `0x570`: "Data Field: Generic Report ID"
     DataFieldGenericReportID,
-    /// Usage ID `0x1393`: "Data Field: Generic Report Item Position Index"
+    /// Usage ID `0x571`: "Data Field: Generic Report Item Position Index"
     DataFieldGenericReportItemPositionIndex,
-    /// Usage ID `0x1394`: "Data Field: Generic Firmware VARTYPE"
+    /// Usage ID `0x572`: "Data Field: Generic Firmware VARTYPE"
     DataFieldGenericFirmwareVARTYPE,
-    /// Usage ID `0x1395`: "Data Field: Generic Unit of Measure"
+    /// Usage ID `0x573`: "Data Field: Generic Unit of Measure"
     DataFieldGenericUnitofMeasure,
-    /// Usage ID `0x1396`: "Data Field: Generic Unit Exponent"
+    /// Usage ID `0x574`: "Data Field: Generic Unit Exponent"
     DataFieldGenericUnitExponent,
-    /// Usage ID `0x1397`: "Data Field: Generic Report Size"
+    /// Usage ID `0x575`: "Data Field: Generic Report Size"
     DataFieldGenericReportSize,
-    /// Usage ID `0x1398`: "Data Field: Generic Report Count"
+    /// Usage ID `0x576`: "Data Field: Generic Report Count"
     DataFieldGenericReportCount,
-    /// Usage ID `0x1408`: "Property: Generic"
+    /// Usage ID `0x580`: "Property: Generic"
     PropertyGeneric,
-    /// Usage ID `0x1409`: "Property: Enumerator Table Row Index"
+    /// Usage ID `0x581`: "Property: Enumerator Table Row Index"
     PropertyEnumeratorTableRowIndex,
-    /// Usage ID `0x1410`: "Property: Enumerator Table Row Count"
+    /// Usage ID `0x582`: "Property: Enumerator Table Row Count"
     PropertyEnumeratorTableRowCount,
-    /// Usage ID `0x1424`: "Data Field: Personal Activity"
+    /// Usage ID `0x590`: "Data Field: Personal Activity"
     DataFieldPersonalActivity,
-    /// Usage ID `0x1425`: "Data Field: Activity Type"
+    /// Usage ID `0x591`: "Data Field: Activity Type"
     DataFieldActivityType,
-    /// Usage ID `0x1426`: "Data Field: Activity State"
+    /// Usage ID `0x592`: "Data Field: Activity State"
     DataFieldActivityState,
-    /// Usage ID `0x1427`: "Data Field: Device Position"
+    /// Usage ID `0x593`: "Data Field: Device Position"
     DataFieldDevicePosition,
-    /// Usage ID `0x1428`: "Data Field: Step Count"
+    /// Usage ID `0x594`: "Data Field: Step Count"
     DataFieldStepCount,
-    /// Usage ID `0x1429`: "Data Field: Step Count Reset"
+    /// Usage ID `0x595`: "Data Field: Step Count Reset"
     DataFieldStepCountReset,
-    /// Usage ID `0x1430`: "Data Field: Step Duration"
+    /// Usage ID `0x596`: "Data Field: Step Duration"
     DataFieldStepDuration,
-    /// Usage ID `0x1431`: "Data Field: Step Type"
+    /// Usage ID `0x597`: "Data Field: Step Type"
     DataFieldStepType,
-    /// Usage ID `0x1440`: "Property: Minimum Activity Detection Interval"
+    /// Usage ID `0x5A0`: "Property: Minimum Activity Detection Interval"
     PropertyMinimumActivityDetectionInterval,
-    /// Usage ID `0x1441`: "Property: Supported Activity Types"
+    /// Usage ID `0x5A1`: "Property: Supported Activity Types"
     PropertySupportedActivityTypes,
-    /// Usage ID `0x1442`: "Property: Subscribed Activity Types"
+    /// Usage ID `0x5A2`: "Property: Subscribed Activity Types"
     PropertySubscribedActivityTypes,
-    /// Usage ID `0x1443`: "Property: Supported Step Types"
+    /// Usage ID `0x5A3`: "Property: Supported Step Types"
     PropertySupportedStepTypes,
-    /// Usage ID `0x1444`: "Property: Subscribed Step Types"
+    /// Usage ID `0x5A4`: "Property: Subscribed Step Types"
     PropertySubscribedStepTypes,
-    /// Usage ID `0x1445`: "Property: Floor Height"
+    /// Usage ID `0x5A5`: "Property: Floor Height"
     PropertyFloorHeight,
-    /// Usage ID `0x1456`: "Data Field: Custom Type ID"
+    /// Usage ID `0x5B0`: "Data Field: Custom Type ID"
     DataFieldCustomTypeID,
-    /// Usage ID `0x2048`: "Sensor State: Undefined"
+    /// Usage ID `0x800`: "Sensor State: Undefined"
     SensorStateUndefined,
-    /// Usage ID `0x2049`: "Sensor State: Ready"
+    /// Usage ID `0x801`: "Sensor State: Ready"
     SensorStateReady,
-    /// Usage ID `0x2050`: "Sensor State: Not Available"
+    /// Usage ID `0x802`: "Sensor State: Not Available"
     SensorStateNotAvailable,
-    /// Usage ID `0x2051`: "Sensor State: No Data Sel"
+    /// Usage ID `0x803`: "Sensor State: No Data Sel"
     SensorStateNoDataSel,
-    /// Usage ID `0x2052`: "Sensor State: Initializing"
+    /// Usage ID `0x804`: "Sensor State: Initializing"
     SensorStateInitializing,
-    /// Usage ID `0x2053`: "Sensor State: Access Denied"
+    /// Usage ID `0x805`: "Sensor State: Access Denied"
     SensorStateAccessDenied,
-    /// Usage ID `0x2054`: "Sensor State: Error"
+    /// Usage ID `0x806`: "Sensor State: Error"
     SensorStateError,
-    /// Usage ID `0x2064`: "Sensor Event: Unknown"
+    /// Usage ID `0x810`: "Sensor Event: Unknown"
     SensorEventUnknown,
-    /// Usage ID `0x2065`: "Sensor Event: State Changed"
+    /// Usage ID `0x811`: "Sensor Event: State Changed"
     SensorEventStateChanged,
-    /// Usage ID `0x2066`: "Sensor Event: Property Changed"
+    /// Usage ID `0x812`: "Sensor Event: Property Changed"
     SensorEventPropertyChanged,
-    /// Usage ID `0x2067`: "Sensor Event: Data Updated"
+    /// Usage ID `0x813`: "Sensor Event: Data Updated"
     SensorEventDataUpdated,
-    /// Usage ID `0x2068`: "Sensor Event: Poll Response"
+    /// Usage ID `0x814`: "Sensor Event: Poll Response"
     SensorEventPollResponse,
-    /// Usage ID `0x2069`: "Sensor Event: Change Sensitivity"
+    /// Usage ID `0x815`: "Sensor Event: Change Sensitivity"
     SensorEventChangeSensitivity,
-    /// Usage ID `0x2070`: "Sensor Event: Range Maximum Reached"
+    /// Usage ID `0x816`: "Sensor Event: Range Maximum Reached"
     SensorEventRangeMaximumReached,
-    /// Usage ID `0x2071`: "Sensor Event: Range Minimum Reached"
+    /// Usage ID `0x817`: "Sensor Event: Range Minimum Reached"
     SensorEventRangeMinimumReached,
-    /// Usage ID `0x2072`: "Sensor Event: High Threshold Cross Upward"
+    /// Usage ID `0x818`: "Sensor Event: High Threshold Cross Upward"
     SensorEventHighThresholdCrossUpward,
-    /// Usage ID `0x2073`: "Sensor Event: High Threshold Cross Downward"
+    /// Usage ID `0x819`: "Sensor Event: High Threshold Cross Downward"
     SensorEventHighThresholdCrossDownward,
-    /// Usage ID `0x2074`: "Sensor Event: Low Threshold Cross Upward"
+    /// Usage ID `0x81A`: "Sensor Event: Low Threshold Cross Upward"
     SensorEventLowThresholdCrossUpward,
-    /// Usage ID `0x2075`: "Sensor Event: Low Threshold Cross Downward"
+    /// Usage ID `0x81B`: "Sensor Event: Low Threshold Cross Downward"
     SensorEventLowThresholdCrossDownward,
-    /// Usage ID `0x2076`: "Sensor Event: Zero Threshold Cross Upward"
+    /// Usage ID `0x81C`: "Sensor Event: Zero Threshold Cross Upward"
     SensorEventZeroThresholdCrossUpward,
-    /// Usage ID `0x2077`: "Sensor Event: Zero Threshold Cross Downward"
+    /// Usage ID `0x81D`: "Sensor Event: Zero Threshold Cross Downward"
     SensorEventZeroThresholdCrossDownward,
-    /// Usage ID `0x2078`: "Sensor Event: Period Exceeded"
+    /// Usage ID `0x81E`: "Sensor Event: Period Exceeded"
     SensorEventPeriodExceeded,
-    /// Usage ID `0x2079`: "Sensor Event: Frequency Exceeded"
+    /// Usage ID `0x81F`: "Sensor Event: Frequency Exceeded"
     SensorEventFrequencyExceeded,
-    /// Usage ID `0x2080`: "Sensor Event: Complex Trigger"
+    /// Usage ID `0x820`: "Sensor Event: Complex Trigger"
     SensorEventComplexTrigger,
-    /// Usage ID `0x2096`: "Connection Type: PC Integrated"
+    /// Usage ID `0x830`: "Connection Type: PC Integrated"
     ConnectionTypePCIntegrated,
-    /// Usage ID `0x2097`: "Connection Type: PC Attached"
+    /// Usage ID `0x831`: "Connection Type: PC Attached"
     ConnectionTypePCAttached,
-    /// Usage ID `0x2098`: "Connection Type: PC External"
+    /// Usage ID `0x832`: "Connection Type: PC External"
     ConnectionTypePCExternal,
-    /// Usage ID `0x2112`: "Reporting State: Report No Events"
+    /// Usage ID `0x840`: "Reporting State: Report No Events"
     ReportingStateReportNoEvents,
-    /// Usage ID `0x2113`: "Reporting State: Report All Events"
+    /// Usage ID `0x841`: "Reporting State: Report All Events"
     ReportingStateReportAllEvents,
-    /// Usage ID `0x2114`: "Reporting State: Report Threshold Events"
+    /// Usage ID `0x842`: "Reporting State: Report Threshold Events"
     ReportingStateReportThresholdEvents,
-    /// Usage ID `0x2115`: "Reporting State: Wake On No Events"
+    /// Usage ID `0x843`: "Reporting State: Wake On No Events"
     ReportingStateWakeOnNoEvents,
-    /// Usage ID `0x2116`: "Reporting State: Wake On All Events"
+    /// Usage ID `0x844`: "Reporting State: Wake On All Events"
     ReportingStateWakeOnAllEvents,
-    /// Usage ID `0x2117`: "Reporting State: Wake On Threshold Events"
+    /// Usage ID `0x845`: "Reporting State: Wake On Threshold Events"
     ReportingStateWakeOnThresholdEvents,
-    /// Usage ID `0x791`: "Property: Sampling Rate"
+    /// Usage ID `0x317`: "Property: Sampling Rate"
     PropertySamplingRate,
-    /// Usage ID `0x792`: "Property: Response Curve"
+    /// Usage ID `0x318`: "Property: Response Curve"
     PropertyResponseCurve,
-    /// Usage ID `0x793`: "Property: Power State"
+    /// Usage ID `0x319`: "Property: Power State"
     PropertyPowerState,
-    /// Usage ID `0x2128`: "Power State: Undefined"
+    /// Usage ID `0x850`: "Power State: Undefined"
     PowerStateUndefined,
-    /// Usage ID `0x2129`: "Power State: D0 Full Power"
+    /// Usage ID `0x851`: "Power State: D0 Full Power"
     PowerStateD0FullPower,
-    /// Usage ID `0x2130`: "Power State: D1 Low Power"
+    /// Usage ID `0x852`: "Power State: D1 Low Power"
     PowerStateD1LowPower,
-    /// Usage ID `0x2131`: "Power State: D2 Standby Power with Wakeup"
+    /// Usage ID `0x853`: "Power State: D2 Standby Power with Wakeup"
     PowerStateD2StandbyPowerwithWakeup,
-    /// Usage ID `0x2132`: "Power State: D3 Sleep with Wakeup"
+    /// Usage ID `0x854`: "Power State: D3 Sleep with Wakeup"
     PowerStateD3SleepwithWakeup,
-    /// Usage ID `0x2133`: "Power State: D4 Power Off"
+    /// Usage ID `0x855`: "Power State: D4 Power Off"
     PowerStateD4PowerOff,
-    /// Usage ID `0x2144`: "Accuracy: Default"
+    /// Usage ID `0x860`: "Accuracy: Default"
     AccuracyDefault,
-    /// Usage ID `0x2145`: "Accuracy: High"
+    /// Usage ID `0x861`: "Accuracy: High"
     AccuracyHigh,
-    /// Usage ID `0x2146`: "Accuracy: Medium"
+    /// Usage ID `0x862`: "Accuracy: Medium"
     AccuracyMedium,
-    /// Usage ID `0x2147`: "Accuracy: Low"
+    /// Usage ID `0x863`: "Accuracy: Low"
     AccuracyLow,
-    /// Usage ID `0x2160`: "Fix Quality: No Fix"
+    /// Usage ID `0x870`: "Fix Quality: No Fix"
     FixQualityNoFix,
-    /// Usage ID `0x2161`: "Fix Quality: GPS"
+    /// Usage ID `0x871`: "Fix Quality: GPS"
     FixQualityGPS,
-    /// Usage ID `0x2162`: "Fix Quality: DGPS"
+    /// Usage ID `0x872`: "Fix Quality: DGPS"
     FixQualityDGPS,
-    /// Usage ID `0x1035`: "Data Field: Fix Type NAry 1.10"
+    /// Usage ID `0x40B`: "Data Field: Fix Type NAry 1.10"
     DataFieldFixTypeNAry110,
-    /// Usage ID `0x2176`: "Fix Type: No Fix"
+    /// Usage ID `0x880`: "Fix Type: No Fix"
     FixTypeNoFix,
-    /// Usage ID `0x2177`: "Fix Type: GPS SPS Mode, Fix Valid"
+    /// Usage ID `0x881`: "Fix Type: GPS SPS Mode, Fix Valid"
     FixTypeGPSSPSModeFixValid,
-    /// Usage ID `0x2178`: "Fix Type: DGPS SPS Mode, Fix Valid"
+    /// Usage ID `0x882`: "Fix Type: DGPS SPS Mode, Fix Valid"
     FixTypeDGPSSPSModeFixValid,
-    /// Usage ID `0x2179`: "Fix Type: GPS PPS Mode, Fix Valid"
+    /// Usage ID `0x883`: "Fix Type: GPS PPS Mode, Fix Valid"
     FixTypeGPSPPSModeFixValid,
-    /// Usage ID `0x2180`: "Fix Type: Real Time Kinematic"
+    /// Usage ID `0x884`: "Fix Type: Real Time Kinematic"
     FixTypeRealTimeKinematic,
-    /// Usage ID `0x2181`: "Fix Type: Float RTK"
+    /// Usage ID `0x885`: "Fix Type: Float RTK"
     FixTypeFloatRTK,
-    /// Usage ID `0x2182`: "Fix Type: Estimated (dead reckoned)"
+    /// Usage ID `0x886`: "Fix Type: Estimated (dead reckoned)"
     FixTypeEstimateddeadreckoned,
-    /// Usage ID `0x2183`: "Fix Type: Manual Input Mode"
+    /// Usage ID `0x887`: "Fix Type: Manual Input Mode"
     FixTypeManualInputMode,
-    /// Usage ID `0x2184`: "Fix Type: Simulator Mode"
+    /// Usage ID `0x888`: "Fix Type: Simulator Mode"
     FixTypeSimulatorMode,
-    /// Usage ID `0x2192`: "GPS Operation Mode: Manual"
+    /// Usage ID `0x890`: "GPS Operation Mode: Manual"
     GPSOperationModeManual,
-    /// Usage ID `0x2193`: "GPS Operation Mode: Automatic"
+    /// Usage ID `0x891`: "GPS Operation Mode: Automatic"
     GPSOperationModeAutomatic,
-    /// Usage ID `0x2208`: "GPS Selection Mode: Autonomous"
+    /// Usage ID `0x8A0`: "GPS Selection Mode: Autonomous"
     GPSSelectionModeAutonomous,
-    /// Usage ID `0x2209`: "GPS Selection Mode: DGPS"
+    /// Usage ID `0x8A1`: "GPS Selection Mode: DGPS"
     GPSSelectionModeDGPS,
-    /// Usage ID `0x2210`: "GPS Selection Mode: Estimated (dead reckoned)"
+    /// Usage ID `0x8A2`: "GPS Selection Mode: Estimated (dead reckoned)"
     GPSSelectionModeEstimateddeadreckoned,
-    /// Usage ID `0x2211`: "GPS Selection Mode: Manual Input"
+    /// Usage ID `0x8A3`: "GPS Selection Mode: Manual Input"
     GPSSelectionModeManualInput,
-    /// Usage ID `0x2212`: "GPS Selection Mode: Simulator"
+    /// Usage ID `0x8A4`: "GPS Selection Mode: Simulator"
     GPSSelectionModeSimulator,
-    /// Usage ID `0x2213`: "GPS Selection Mode: Data Not Valid"
+    /// Usage ID `0x8A5`: "GPS Selection Mode: Data Not Valid"
     GPSSelectionModeDataNotValid,
-    /// Usage ID `0x2224`: "GPS Status: Data Valid"
+    /// Usage ID `0x8B0`: "GPS Status: Data Valid"
     GPSStatusDataValid,
-    /// Usage ID `0x2225`: "GPS Status: Data Not Valid"
+    /// Usage ID `0x8B1`: "GPS Status: Data Not Valid"
     GPSStatusDataNotValid,
-    /// Usage ID `0x2240`: "Day of Week: Sunday"
+    /// Usage ID `0x8C0`: "Day of Week: Sunday"
     DayofWeekSunday,
-    /// Usage ID `0x2241`: "Day of Week: Monday"
+    /// Usage ID `0x8C1`: "Day of Week: Monday"
     DayofWeekMonday,
-    /// Usage ID `0x2242`: "Day of Week: Tuesday"
+    /// Usage ID `0x8C2`: "Day of Week: Tuesday"
     DayofWeekTuesday,
-    /// Usage ID `0x2243`: "Day of Week: Wednesday"
+    /// Usage ID `0x8C3`: "Day of Week: Wednesday"
     DayofWeekWednesday,
-    /// Usage ID `0x2244`: "Day of Week: Thursday"
+    /// Usage ID `0x8C4`: "Day of Week: Thursday"
     DayofWeekThursday,
-    /// Usage ID `0x2245`: "Day of Week: Friday"
+    /// Usage ID `0x8C5`: "Day of Week: Friday"
     DayofWeekFriday,
-    /// Usage ID `0x2246`: "Day of Week: Saturday"
+    /// Usage ID `0x8C6`: "Day of Week: Saturday"
     DayofWeekSaturday,
-    /// Usage ID `0x2256`: "Kind: Category"
+    /// Usage ID `0x8D0`: "Kind: Category"
     KindCategory,
-    /// Usage ID `0x2257`: "Kind: Type"
+    /// Usage ID `0x8D1`: "Kind: Type"
     KindType,
-    /// Usage ID `0x2258`: "Kind: Event"
+    /// Usage ID `0x8D2`: "Kind: Event"
     KindEvent,
-    /// Usage ID `0x2259`: "Kind: Property"
+    /// Usage ID `0x8D3`: "Kind: Property"
     KindProperty,
-    /// Usage ID `0x2260`: "Kind: Data Field"
+    /// Usage ID `0x8D4`: "Kind: Data Field"
     KindDataField,
-    /// Usage ID `0x2272`: "Magnetometer Accuracy: Low"
+    /// Usage ID `0x8E0`: "Magnetometer Accuracy: Low"
     MagnetometerAccuracyLow,
-    /// Usage ID `0x2273`: "Magnetometer Accuracy: Medium"
+    /// Usage ID `0x8E1`: "Magnetometer Accuracy: Medium"
     MagnetometerAccuracyMedium,
-    /// Usage ID `0x2274`: "Magnetometer Accuracy: High"
+    /// Usage ID `0x8E2`: "Magnetometer Accuracy: High"
     MagnetometerAccuracyHigh,
-    /// Usage ID `0x2288`: "Simple Orientation Direction: Not Rotated"
+    /// Usage ID `0x8F0`: "Simple Orientation Direction: Not Rotated"
     SimpleOrientationDirectionNotRotated,
-    /// Usage ID `0x2289`: "Simple Orientation Direction: Rotated 90 Degrees"
+    /// Usage ID `0x8F1`: "Simple Orientation Direction: Rotated 90 Degrees"
     SimpleOrientationDirectionRotated90Degrees,
-    /// Usage ID `0x2290`: "Simple Orientation Direction:  Rotated 180 Degrees"
+    /// Usage ID `0x8F2`: "Simple Orientation Direction:  Rotated 180 Degrees"
     SimpleOrientationDirectionRotated180Degrees,
-    /// Usage ID `0x2291`: "Simple Orientation Direction:  Rotated 270 Degrees"
+    /// Usage ID `0x8F3`: "Simple Orientation Direction:  Rotated 270 Degrees"
     SimpleOrientationDirectionRotated270Degrees,
-    /// Usage ID `0x2292`: "Simple Orientation Direction: Face Up"
+    /// Usage ID `0x8F4`: "Simple Orientation Direction: Face Up"
     SimpleOrientationDirectionFaceUp,
-    /// Usage ID `0x2293`: "Simple Orientation Direction: Face Down"
+    /// Usage ID `0x8F5`: "Simple Orientation Direction: Face Down"
     SimpleOrientationDirectionFaceDown,
-    /// Usage ID `0x2304`: "VT_NULL: Empty"
+    /// Usage ID `0x900`: "VT_NULL: Empty"
     VT_NULLEmpty,
-    /// Usage ID `0x2305`: "VT_BOOL: Boolean"
+    /// Usage ID `0x901`: "VT_BOOL: Boolean"
     VT_BOOLBoolean,
-    /// Usage ID `0x2306`: "VT_UI1: Byte"
+    /// Usage ID `0x902`: "VT_UI1: Byte"
     VT_UI1Byte,
-    /// Usage ID `0x2307`: "VT_I1: Character"
+    /// Usage ID `0x903`: "VT_I1: Character"
     VT_I1Character,
-    /// Usage ID `0x2308`: "VT_UI2: Unsigned Short"
+    /// Usage ID `0x904`: "VT_UI2: Unsigned Short"
     VT_UI2UnsignedShort,
-    /// Usage ID `0x2309`: "VT_I2: Short"
+    /// Usage ID `0x905`: "VT_I2: Short"
     VT_I2Short,
-    /// Usage ID `0x2310`: "VT_UI4: Unsigned Long"
+    /// Usage ID `0x906`: "VT_UI4: Unsigned Long"
     VT_UI4UnsignedLong,
-    /// Usage ID `0x2311`: "VT_I4: Long"
+    /// Usage ID `0x907`: "VT_I4: Long"
     VT_I4Long,
-    /// Usage ID `0x2312`: "VT_UI8: Unsigned Long Long"
+    /// Usage ID `0x908`: "VT_UI8: Unsigned Long Long"
     VT_UI8UnsignedLongLong,
-    /// Usage ID `0x2313`: "VT_I8: Long Long"
+    /// Usage ID `0x909`: "VT_I8: Long Long"
     VT_I8LongLong,
-    /// Usage ID `0x2314`: "VT_R4: Float"
+    /// Usage ID `0x90A`: "VT_R4: Float"
     VT_R4Float,
-    /// Usage ID `0x2315`: "VT_R8: Double"
+    /// Usage ID `0x90B`: "VT_R8: Double"
     VT_R8Double,
-    /// Usage ID `0x2316`: "VT_WSTR: Wide String"
+    /// Usage ID `0x90C`: "VT_WSTR: Wide String"
     VT_WSTRWideString,
-    /// Usage ID `0x2317`: "VT_STR: Narrow String"
+    /// Usage ID `0x90D`: "VT_STR: Narrow String"
     VT_STRNarrowString,
-    /// Usage ID `0x2318`: "VT_CLSID: Guid"
+    /// Usage ID `0x90E`: "VT_CLSID: Guid"
     VT_CLSIDGuid,
-    /// Usage ID `0x2319`: "VT_VECTOR|VT_UI1: Opaque Structure"
+    /// Usage ID `0x90F`: "VT_VECTOR|VT_UI1: Opaque Structure"
     VT_VECTORVT_UI1OpaqueStructure,
-    /// Usage ID `0x2320`: "VT_F16E0: HID 16-bit Float with Unit Exponent 0"
+    /// Usage ID `0x910`: "VT_F16E0: HID 16-bit Float with Unit Exponent 0"
     VT_F16E0HID16bitFloatwithUnitExponent0,
-    /// Usage ID `0x2321`: "VT_F16E1: HID 16-bit Float with Unit Exponent 1"
+    /// Usage ID `0x911`: "VT_F16E1: HID 16-bit Float with Unit Exponent 1"
     VT_F16E1HID16bitFloatwithUnitExponent1,
-    /// Usage ID `0x2322`: "VT_F16E2: HID 16-bit Float with Unit Exponent 2"
+    /// Usage ID `0x912`: "VT_F16E2: HID 16-bit Float with Unit Exponent 2"
     VT_F16E2HID16bitFloatwithUnitExponent2,
-    /// Usage ID `0x2323`: "VT_F16E3: HID 16-bit Float with Unit Exponent 3"
+    /// Usage ID `0x913`: "VT_F16E3: HID 16-bit Float with Unit Exponent 3"
     VT_F16E3HID16bitFloatwithUnitExponent3,
-    /// Usage ID `0x2324`: "VT_F16E4: HID 16-bit Float with Unit Exponent 4"
+    /// Usage ID `0x914`: "VT_F16E4: HID 16-bit Float with Unit Exponent 4"
     VT_F16E4HID16bitFloatwithUnitExponent4,
-    /// Usage ID `0x2325`: "VT_F16E5: HID 16-bit Float with Unit Exponent 5"
+    /// Usage ID `0x915`: "VT_F16E5: HID 16-bit Float with Unit Exponent 5"
     VT_F16E5HID16bitFloatwithUnitExponent5,
-    /// Usage ID `0x2326`: "VT_F16E6: HID 16-bit Float with Unit Exponent 6"
+    /// Usage ID `0x916`: "VT_F16E6: HID 16-bit Float with Unit Exponent 6"
     VT_F16E6HID16bitFloatwithUnitExponent6,
-    /// Usage ID `0x2327`: "VT_F16E7: HID 16-bit Float with Unit Exponent 7"
+    /// Usage ID `0x917`: "VT_F16E7: HID 16-bit Float with Unit Exponent 7"
     VT_F16E7HID16bitFloatwithUnitExponent7,
-    /// Usage ID `0x2328`: "VT_F16E8: HID 16-bit Float with Unit Exponent 8"
+    /// Usage ID `0x918`: "VT_F16E8: HID 16-bit Float with Unit Exponent 8"
     VT_F16E8HID16bitFloatwithUnitExponent8,
-    /// Usage ID `0x2329`: "VT_F16E9: HID 16-bit Float with Unit Exponent 9"
+    /// Usage ID `0x919`: "VT_F16E9: HID 16-bit Float with Unit Exponent 9"
     VT_F16E9HID16bitFloatwithUnitExponent9,
-    /// Usage ID `0x2330`: "VT_F16EA: HID 16-bit Float with Unit Exponent A"
+    /// Usage ID `0x91A`: "VT_F16EA: HID 16-bit Float with Unit Exponent A"
     VT_F16EAHID16bitFloatwithUnitExponentA,
-    /// Usage ID `0x2331`: "VT_F16EB: HID 16-bit Float with Unit Exponent B"
+    /// Usage ID `0x91B`: "VT_F16EB: HID 16-bit Float with Unit Exponent B"
     VT_F16EBHID16bitFloatwithUnitExponentB,
-    /// Usage ID `0x2332`: "VT_F16EC: HID 16-bit Float with Unit Exponent C"
+    /// Usage ID `0x91C`: "VT_F16EC: HID 16-bit Float with Unit Exponent C"
     VT_F16ECHID16bitFloatwithUnitExponentC,
-    /// Usage ID `0x2333`: "VT_F16ED: HID 16-bit Float with Unit Exponent D"
+    /// Usage ID `0x91D`: "VT_F16ED: HID 16-bit Float with Unit Exponent D"
     VT_F16EDHID16bitFloatwithUnitExponentD,
-    /// Usage ID `0x2334`: "VT_F16EE: HID 16-bit Float with Unit Exponent E"
+    /// Usage ID `0x91E`: "VT_F16EE: HID 16-bit Float with Unit Exponent E"
     VT_F16EEHID16bitFloatwithUnitExponentE,
-    /// Usage ID `0x2335`: "VT_F16EF: HID 16-bit Float with Unit Exponent F"
+    /// Usage ID `0x91F`: "VT_F16EF: HID 16-bit Float with Unit Exponent F"
     VT_F16EFHID16bitFloatwithUnitExponentF,
-    /// Usage ID `0x2336`: "VT_F32E0: HID 32-bit Float with Unit Exponent 0"
+    /// Usage ID `0x920`: "VT_F32E0: HID 32-bit Float with Unit Exponent 0"
     VT_F32E0HID32bitFloatwithUnitExponent0,
-    /// Usage ID `0x2337`: "VT_F32E1: HID 32-bit Float with Unit Exponent 1"
+    /// Usage ID `0x921`: "VT_F32E1: HID 32-bit Float with Unit Exponent 1"
     VT_F32E1HID32bitFloatwithUnitExponent1,
-    /// Usage ID `0x2338`: "VT_F32E2: HID 32-bit Float with Unit Exponent 2"
+    /// Usage ID `0x922`: "VT_F32E2: HID 32-bit Float with Unit Exponent 2"
     VT_F32E2HID32bitFloatwithUnitExponent2,
-    /// Usage ID `0x2339`: "VT_F32E3: HID 32-bit Float with Unit Exponent 3"
+    /// Usage ID `0x923`: "VT_F32E3: HID 32-bit Float with Unit Exponent 3"
     VT_F32E3HID32bitFloatwithUnitExponent3,
-    /// Usage ID `0x2340`: "VT_F32E4: HID 32-bit Float with Unit Exponent 4"
+    /// Usage ID `0x924`: "VT_F32E4: HID 32-bit Float with Unit Exponent 4"
     VT_F32E4HID32bitFloatwithUnitExponent4,
-    /// Usage ID `0x2341`: "VT_F32E5: HID 32-bit Float with Unit Exponent 5"
+    /// Usage ID `0x925`: "VT_F32E5: HID 32-bit Float with Unit Exponent 5"
     VT_F32E5HID32bitFloatwithUnitExponent5,
-    /// Usage ID `0x2342`: "VT_F32E6: HID 32-bit Float with Unit Exponent 6"
+    /// Usage ID `0x926`: "VT_F32E6: HID 32-bit Float with Unit Exponent 6"
     VT_F32E6HID32bitFloatwithUnitExponent6,
-    /// Usage ID `0x2343`: "VT_F32E7: HID 32-bit Float with Unit Exponent 7"
+    /// Usage ID `0x927`: "VT_F32E7: HID 32-bit Float with Unit Exponent 7"
     VT_F32E7HID32bitFloatwithUnitExponent7,
-    /// Usage ID `0x2344`: "VT_F32E8: HID 32-bit Float with Unit Exponent 8"
+    /// Usage ID `0x928`: "VT_F32E8: HID 32-bit Float with Unit Exponent 8"
     VT_F32E8HID32bitFloatwithUnitExponent8,
-    /// Usage ID `0x2345`: "VT_F32E9: HID 32-bit Float with Unit Exponent 9"
+    /// Usage ID `0x929`: "VT_F32E9: HID 32-bit Float with Unit Exponent 9"
     VT_F32E9HID32bitFloatwithUnitExponent9,
-    /// Usage ID `0x2346`: "VT_F32EA: HID 32-bit Float with Unit Exponent A"
+    /// Usage ID `0x92A`: "VT_F32EA: HID 32-bit Float with Unit Exponent A"
     VT_F32EAHID32bitFloatwithUnitExponentA,
-    /// Usage ID `0x2347`: "VT_F32EB: HID 32-bit Float with Unit Exponent B"
+    /// Usage ID `0x92B`: "VT_F32EB: HID 32-bit Float with Unit Exponent B"
     VT_F32EBHID32bitFloatwithUnitExponentB,
-    /// Usage ID `0x2348`: "VT_F32EC: HID 32-bit Float with Unit Exponent C"
+    /// Usage ID `0x92C`: "VT_F32EC: HID 32-bit Float with Unit Exponent C"
     VT_F32ECHID32bitFloatwithUnitExponentC,
-    /// Usage ID `0x2349`: "VT_F32ED: HID 32-bit Float with Unit Exponent D"
+    /// Usage ID `0x92D`: "VT_F32ED: HID 32-bit Float with Unit Exponent D"
     VT_F32EDHID32bitFloatwithUnitExponentD,
-    /// Usage ID `0x2350`: "VT_F32EE: HID 32-bit Float with Unit Exponent E"
+    /// Usage ID `0x92E`: "VT_F32EE: HID 32-bit Float with Unit Exponent E"
     VT_F32EEHID32bitFloatwithUnitExponentE,
-    /// Usage ID `0x2351`: "VT_F32EF: HID 32-bit Float with Unit Exponent F"
+    /// Usage ID `0x92F`: "VT_F32EF: HID 32-bit Float with Unit Exponent F"
     VT_F32EFHID32bitFloatwithUnitExponentF,
-    /// Usage ID `0x2352`: "Activity Type: Unknown"
+    /// Usage ID `0x930`: "Activity Type: Unknown"
     ActivityTypeUnknown,
-    /// Usage ID `0x2353`: "Activity Type: Stationary"
+    /// Usage ID `0x931`: "Activity Type: Stationary"
     ActivityTypeStationary,
-    /// Usage ID `0x2354`: "Activity Type: Fidgeting"
+    /// Usage ID `0x932`: "Activity Type: Fidgeting"
     ActivityTypeFidgeting,
-    /// Usage ID `0x2355`: "Activity Type: Walking"
+    /// Usage ID `0x933`: "Activity Type: Walking"
     ActivityTypeWalking,
-    /// Usage ID `0x2356`: "Activity Type: Running"
+    /// Usage ID `0x934`: "Activity Type: Running"
     ActivityTypeRunning,
-    /// Usage ID `0x2357`: "Activity Type: In Vehicle"
+    /// Usage ID `0x935`: "Activity Type: In Vehicle"
     ActivityTypeInVehicle,
-    /// Usage ID `0x2358`: "Activity Type: Biking"
+    /// Usage ID `0x936`: "Activity Type: Biking"
     ActivityTypeBiking,
-    /// Usage ID `0x2359`: "Activity Type: Idle"
+    /// Usage ID `0x937`: "Activity Type: Idle"
     ActivityTypeIdle,
-    /// Usage ID `0x2368`: "Unit: Not Specified"
+    /// Usage ID `0x940`: "Unit: Not Specified"
     UnitNotSpecified,
-    /// Usage ID `0x2369`: "Unit: Lux"
+    /// Usage ID `0x941`: "Unit: Lux"
     UnitLux,
-    /// Usage ID `0x2370`: "Unit: Degrees Kelvin"
+    /// Usage ID `0x942`: "Unit: Degrees Kelvin"
     UnitDegreesKelvin,
-    /// Usage ID `0x2371`: "Unit: Degrees Celsius"
+    /// Usage ID `0x943`: "Unit: Degrees Celsius"
     UnitDegreesCelsius,
-    /// Usage ID `0x2372`: "Unit: Pascal"
+    /// Usage ID `0x944`: "Unit: Pascal"
     UnitPascal,
-    /// Usage ID `0x2373`: "Unit: Newton"
+    /// Usage ID `0x945`: "Unit: Newton"
     UnitNewton,
-    /// Usage ID `0x2374`: "Unit: Meters/Second"
+    /// Usage ID `0x946`: "Unit: Meters/Second"
     UnitMetersSecond,
-    /// Usage ID `0x2375`: "Unit: Kilogram"
+    /// Usage ID `0x947`: "Unit: Kilogram"
     UnitKilogram,
-    /// Usage ID `0x2376`: "Unit: Meter"
+    /// Usage ID `0x948`: "Unit: Meter"
     UnitMeter,
-    /// Usage ID `0x2377`: "Unit: Meters/Second/Second"
+    /// Usage ID `0x949`: "Unit: Meters/Second/Second"
     UnitMetersSecondSecond,
-    /// Usage ID `0x2378`: "Unit: Farad"
+    /// Usage ID `0x94A`: "Unit: Farad"
     UnitFarad,
-    /// Usage ID `0x2379`: "Unit: Ampere"
+    /// Usage ID `0x94B`: "Unit: Ampere"
     UnitAmpere,
-    /// Usage ID `0x2380`: "Unit: Watt"
+    /// Usage ID `0x94C`: "Unit: Watt"
     UnitWatt,
-    /// Usage ID `0x2381`: "Unit: Henry"
+    /// Usage ID `0x94D`: "Unit: Henry"
     UnitHenry,
-    /// Usage ID `0x2382`: "Unit: Ohm"
+    /// Usage ID `0x94E`: "Unit: Ohm"
     UnitOhm,
-    /// Usage ID `0x2383`: "Unit: Volt"
+    /// Usage ID `0x94F`: "Unit: Volt"
     UnitVolt,
-    /// Usage ID `0x2384`: "Unit: Hertz"
+    /// Usage ID `0x950`: "Unit: Hertz"
     UnitHertz,
-    /// Usage ID `0x2385`: "Unit: Bar"
+    /// Usage ID `0x951`: "Unit: Bar"
     UnitBar,
-    /// Usage ID `0x2386`: "Unit: Degrees Anti-clockwise"
+    /// Usage ID `0x952`: "Unit: Degrees Anti-clockwise"
     UnitDegreesAnticlockwise,
-    /// Usage ID `0x2387`: "Unit: Degrees Clockwise"
+    /// Usage ID `0x953`: "Unit: Degrees Clockwise"
     UnitDegreesClockwise,
-    /// Usage ID `0x2388`: "Unit: Degrees"
+    /// Usage ID `0x954`: "Unit: Degrees"
     UnitDegrees,
-    /// Usage ID `0x2389`: "Unit: Degrees/Second"
+    /// Usage ID `0x955`: "Unit: Degrees/Second"
     UnitDegreesSecond,
-    /// Usage ID `0x2390`: "Unit: Degrees/Second/Second"
+    /// Usage ID `0x956`: "Unit: Degrees/Second/Second"
     UnitDegreesSecondSecond,
-    /// Usage ID `0x2391`: "Unit: Knot"
+    /// Usage ID `0x957`: "Unit: Knot"
     UnitKnot,
-    /// Usage ID `0x2392`: "Unit: Percent"
+    /// Usage ID `0x958`: "Unit: Percent"
     UnitPercent,
-    /// Usage ID `0x2393`: "Unit: Second"
+    /// Usage ID `0x959`: "Unit: Second"
     UnitSecond,
-    /// Usage ID `0x2394`: "Unit: Millisecond"
+    /// Usage ID `0x95A`: "Unit: Millisecond"
     UnitMillisecond,
-    /// Usage ID `0x2395`: "Unit: G"
+    /// Usage ID `0x95B`: "Unit: G"
     UnitG,
-    /// Usage ID `0x2396`: "Unit: Bytes"
+    /// Usage ID `0x95C`: "Unit: Bytes"
     UnitBytes,
-    /// Usage ID `0x2397`: "Unit: Milligauss"
+    /// Usage ID `0x95D`: "Unit: Milligauss"
     UnitMilligauss,
-    /// Usage ID `0x2398`: "Unit: Bits"
+    /// Usage ID `0x95E`: "Unit: Bits"
     UnitBits,
-    /// Usage ID `0x2400`: "Activity State: No State Change"
+    /// Usage ID `0x960`: "Activity State: No State Change"
     ActivityStateNoStateChange,
-    /// Usage ID `0x2401`: "Activity State: Start Activity"
+    /// Usage ID `0x961`: "Activity State: Start Activity"
     ActivityStateStartActivity,
-    /// Usage ID `0x2402`: "Activity State: End Activity"
+    /// Usage ID `0x962`: "Activity State: End Activity"
     ActivityStateEndActivity,
-    /// Usage ID `0x2416`: "Exponent 0: 1"
+    /// Usage ID `0x970`: "Exponent 0: 1"
     Exponent01,
-    /// Usage ID `0x2417`: "Exponent 1: 10"
+    /// Usage ID `0x971`: "Exponent 1: 10"
     Exponent110,
-    /// Usage ID `0x2418`: "Exponent 2: 100"
+    /// Usage ID `0x972`: "Exponent 2: 100"
     Exponent2100,
-    /// Usage ID `0x2419`: "Exponent 3: 1 000"
+    /// Usage ID `0x973`: "Exponent 3: 1 000"
     Exponent31000,
-    /// Usage ID `0x2420`: "Exponent 4: 10 000"
+    /// Usage ID `0x974`: "Exponent 4: 10 000"
     Exponent410000,
-    /// Usage ID `0x2421`: "Exponent 5: 100 000"
+    /// Usage ID `0x975`: "Exponent 5: 100 000"
     Exponent5100000,
-    /// Usage ID `0x2422`: "Exponent 6: 1 000 000"
+    /// Usage ID `0x976`: "Exponent 6: 1 000 000"
     Exponent61000000,
-    /// Usage ID `0x2423`: "Exponent 7: 10 000 000"
+    /// Usage ID `0x977`: "Exponent 7: 10 000 000"
     Exponent710000000,
-    /// Usage ID `0x2424`: "Exponent 8: 0.00 000 001"
+    /// Usage ID `0x978`: "Exponent 8: 0.00 000 001"
     Exponent8000000001,
-    /// Usage ID `0x2425`: "Exponent 9: 0.0 000 001"
+    /// Usage ID `0x979`: "Exponent 9: 0.0 000 001"
     Exponent900000001,
-    /// Usage ID `0x2426`: "Exponent A: 0.000 001"
+    /// Usage ID `0x97A`: "Exponent A: 0.000 001"
     ExponentA0000001,
-    /// Usage ID `0x2427`: "Exponent B: 0.00 001"
+    /// Usage ID `0x97B`: "Exponent B: 0.00 001"
     ExponentB000001,
-    /// Usage ID `0x2428`: "Exponent C: 0.0 001"
+    /// Usage ID `0x97C`: "Exponent C: 0.0 001"
     ExponentC00001,
-    /// Usage ID `0x2429`: "Exponent D: 0.001"
+    /// Usage ID `0x97D`: "Exponent D: 0.001"
     ExponentD0001,
-    /// Usage ID `0x2430`: "Exponent E: 0.01"
+    /// Usage ID `0x97E`: "Exponent E: 0.01"
     ExponentE001,
-    /// Usage ID `0x2431`: "Exponent F: 0.1"
+    /// Usage ID `0x97F`: "Exponent F: 0.1"
     ExponentF01,
-    /// Usage ID `0x2432`: "Device Position: Unknown"
+    /// Usage ID `0x980`: "Device Position: Unknown"
     DevicePositionUnknown,
-    /// Usage ID `0x2433`: "Device Position: Unchanged"
+    /// Usage ID `0x981`: "Device Position: Unchanged"
     DevicePositionUnchanged,
-    /// Usage ID `0x2434`: "Device Position: On Desk"
+    /// Usage ID `0x982`: "Device Position: On Desk"
     DevicePositionOnDesk,
-    /// Usage ID `0x2435`: "Device Position: In Hand"
+    /// Usage ID `0x983`: "Device Position: In Hand"
     DevicePositionInHand,
-    /// Usage ID `0x2436`: "Device Position: Moving in Bag"
+    /// Usage ID `0x984`: "Device Position: Moving in Bag"
     DevicePositionMovinginBag,
-    /// Usage ID `0x2437`: "Device Position: Stationary in Bag"
+    /// Usage ID `0x985`: "Device Position: Stationary in Bag"
     DevicePositionStationaryinBag,
 }
 
@@ -6942,7 +6942,7 @@ impl AsUsage for Sensor {
 impl AsUsagePage for Sensor {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x32` for [Sensor]
+    /// This value is `0x20` for [Sensor]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -8909,7 +8909,7 @@ impl BitOr<u16> for Sensor {
     }
 }
 
-/// *Usage Page `0x64`: "Medical Instruments"*
+/// *Usage Page `0x40`: "Medical Instruments"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -8930,61 +8930,61 @@ pub enum MedicalInstruments {
     Undefined,
     /// Usage ID `0x1`: "Medical Ultrasound"
     MedicalUltrasound,
-    /// Usage ID `0x32`: "VCR/Acquisition"
+    /// Usage ID `0x20`: "VCR/Acquisition"
     VCRAcquisition,
-    /// Usage ID `0x33`: "Freeze/Thaw"
+    /// Usage ID `0x21`: "Freeze/Thaw"
     FreezeThaw,
-    /// Usage ID `0x34`: "Clip Store"
+    /// Usage ID `0x22`: "Clip Store"
     ClipStore,
-    /// Usage ID `0x35`: "Update"
+    /// Usage ID `0x23`: "Update"
     Update,
-    /// Usage ID `0x36`: "Next"
+    /// Usage ID `0x24`: "Next"
     Next,
-    /// Usage ID `0x37`: "Save"
+    /// Usage ID `0x25`: "Save"
     Save,
-    /// Usage ID `0x38`: "Print"
+    /// Usage ID `0x26`: "Print"
     Print,
-    /// Usage ID `0x39`: "Microphone Enable"
+    /// Usage ID `0x27`: "Microphone Enable"
     MicrophoneEnable,
-    /// Usage ID `0x64`: "Cine"
+    /// Usage ID `0x40`: "Cine"
     Cine,
-    /// Usage ID `0x65`: "Transmit Power"
+    /// Usage ID `0x41`: "Transmit Power"
     TransmitPower,
-    /// Usage ID `0x66`: "Volume"
+    /// Usage ID `0x42`: "Volume"
     Volume,
-    /// Usage ID `0x67`: "Focus"
+    /// Usage ID `0x43`: "Focus"
     Focus,
-    /// Usage ID `0x68`: "Depth"
+    /// Usage ID `0x44`: "Depth"
     Depth,
-    /// Usage ID `0x96`: "Soft Step-Primary"
+    /// Usage ID `0x60`: "Soft Step-Primary"
     SoftStepPrimary,
-    /// Usage ID `0x97`: "Soft Step-Secondary"
+    /// Usage ID `0x61`: "Soft Step-Secondary"
     SoftStepSecondary,
-    /// Usage ID `0x112`: "Depth Gain Compensation"
+    /// Usage ID `0x70`: "Depth Gain Compensation"
     DepthGainCompensation,
-    /// Usage ID `0x128`: "Zoom Select"
+    /// Usage ID `0x80`: "Zoom Select"
     ZoomSelect,
-    /// Usage ID `0x129`: "Zoom Adjust"
+    /// Usage ID `0x81`: "Zoom Adjust"
     ZoomAdjust,
-    /// Usage ID `0x130`: "Spectral Doppler Mode Select"
+    /// Usage ID `0x82`: "Spectral Doppler Mode Select"
     SpectralDopplerModeSelect,
-    /// Usage ID `0x131`: "Spectral Doppler Adjust"
+    /// Usage ID `0x83`: "Spectral Doppler Adjust"
     SpectralDopplerAdjust,
-    /// Usage ID `0x132`: "Color Doppler Mode Select"
+    /// Usage ID `0x84`: "Color Doppler Mode Select"
     ColorDopplerModeSelect,
-    /// Usage ID `0x133`: "Color Doppler Adjust"
+    /// Usage ID `0x85`: "Color Doppler Adjust"
     ColorDopplerAdjust,
-    /// Usage ID `0x134`: "Motion Mode Select"
+    /// Usage ID `0x86`: "Motion Mode Select"
     MotionModeSelect,
-    /// Usage ID `0x135`: "Motion Mode Adjust"
+    /// Usage ID `0x87`: "Motion Mode Adjust"
     MotionModeAdjust,
-    /// Usage ID `0x136`: "2-D Mode Select"
+    /// Usage ID `0x88`: "2-D Mode Select"
     TwoDModeSelect,
-    /// Usage ID `0x137`: "2-D Mode Adjust"
+    /// Usage ID `0x89`: "2-D Mode Adjust"
     TwoDModeAdjust,
-    /// Usage ID `0x160`: "Soft Control Select"
+    /// Usage ID `0xA0`: "Soft Control Select"
     SoftControlSelect,
-    /// Usage ID `0x161`: "Soft Control Adjust"
+    /// Usage ID `0xA1`: "Soft Control Adjust"
     SoftControlAdjust,
 }
 
@@ -9003,7 +9003,7 @@ impl AsUsage for MedicalInstruments {
 impl AsUsagePage for MedicalInstruments {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x64` for [MedicalInstruments]
+    /// This value is `0x40` for [MedicalInstruments]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -9159,7 +9159,7 @@ impl BitOr<u16> for MedicalInstruments {
     }
 }
 
-/// *Usage Page `0x65`: "Braille Display"*
+/// *Usage Page `0x41`: "Braille Display"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -9192,75 +9192,75 @@ pub enum BrailleDisplay {
     ScreenReaderControl,
     /// Usage ID `0x7`: "Screen Reader Identifier"
     ScreenReaderIdentifier,
-    /// Usage ID `0x250`: "Router Set 1"
+    /// Usage ID `0xFA`: "Router Set 1"
     RouterSet1,
-    /// Usage ID `0x251`: "Router Set 2"
+    /// Usage ID `0xFB`: "Router Set 2"
     RouterSet2,
-    /// Usage ID `0x252`: "Router Set 3"
+    /// Usage ID `0xFC`: "Router Set 3"
     RouterSet3,
-    /// Usage ID `0x256`: "Router Button"
+    /// Usage ID `0x100`: "Router Button"
     RouterButton,
-    /// Usage ID `0x512`: "Braille Buttons"
+    /// Usage ID `0x200`: "Braille Buttons"
     BrailleButtons,
-    /// Usage ID `0x513`: "Braille Keyboard Dot 1"
+    /// Usage ID `0x201`: "Braille Keyboard Dot 1"
     BrailleKeyboardDot1,
-    /// Usage ID `0x514`: "Braille Keyboard Dot 2"
+    /// Usage ID `0x202`: "Braille Keyboard Dot 2"
     BrailleKeyboardDot2,
-    /// Usage ID `0x515`: "Braille Keyboard Dot 3"
+    /// Usage ID `0x203`: "Braille Keyboard Dot 3"
     BrailleKeyboardDot3,
-    /// Usage ID `0x516`: "Braille Keyboard Dot 4"
+    /// Usage ID `0x204`: "Braille Keyboard Dot 4"
     BrailleKeyboardDot4,
-    /// Usage ID `0x517`: "Braille Keyboard Dot 5"
+    /// Usage ID `0x205`: "Braille Keyboard Dot 5"
     BrailleKeyboardDot5,
-    /// Usage ID `0x518`: "Braille Keyboard Dot 6"
+    /// Usage ID `0x206`: "Braille Keyboard Dot 6"
     BrailleKeyboardDot6,
-    /// Usage ID `0x519`: "Braille Keyboard Dot 7"
+    /// Usage ID `0x207`: "Braille Keyboard Dot 7"
     BrailleKeyboardDot7,
-    /// Usage ID `0x520`: "Braille Keyboard Dot 8"
+    /// Usage ID `0x208`: "Braille Keyboard Dot 8"
     BrailleKeyboardDot8,
-    /// Usage ID `0x521`: "Braille Keyboard Space"
+    /// Usage ID `0x209`: "Braille Keyboard Space"
     BrailleKeyboardSpace,
-    /// Usage ID `0x522`: "Braille Keyboard Left Space"
+    /// Usage ID `0x20A`: "Braille Keyboard Left Space"
     BrailleKeyboardLeftSpace,
-    /// Usage ID `0x523`: "Braille Keyboard Right Space"
+    /// Usage ID `0x20B`: "Braille Keyboard Right Space"
     BrailleKeyboardRightSpace,
-    /// Usage ID `0x524`: "Braille Face Controls"
+    /// Usage ID `0x20C`: "Braille Face Controls"
     BrailleFaceControls,
-    /// Usage ID `0x525`: "Braille Left Controls"
+    /// Usage ID `0x20D`: "Braille Left Controls"
     BrailleLeftControls,
-    /// Usage ID `0x526`: "Braille Right Controls"
+    /// Usage ID `0x20E`: "Braille Right Controls"
     BrailleRightControls,
-    /// Usage ID `0x527`: "Braille Top Controls"
+    /// Usage ID `0x20F`: "Braille Top Controls"
     BrailleTopControls,
-    /// Usage ID `0x528`: "Braille Joystick Center"
+    /// Usage ID `0x210`: "Braille Joystick Center"
     BrailleJoystickCenter,
-    /// Usage ID `0x529`: "Braille Joystick Up"
+    /// Usage ID `0x211`: "Braille Joystick Up"
     BrailleJoystickUp,
-    /// Usage ID `0x530`: "Braille Joystick Down"
+    /// Usage ID `0x212`: "Braille Joystick Down"
     BrailleJoystickDown,
-    /// Usage ID `0x531`: "Braille Joystick Left"
+    /// Usage ID `0x213`: "Braille Joystick Left"
     BrailleJoystickLeft,
-    /// Usage ID `0x548`: "Braille Joystick Right"
+    /// Usage ID `0x224`: "Braille Joystick Right"
     BrailleJoystickRight,
-    /// Usage ID `0x549`: "Braille D ‐ Pad Center"
+    /// Usage ID `0x225`: "Braille D ‐ Pad Center"
     BrailleDPadCenter,
-    /// Usage ID `0x550`: "Braille D ‐ Pad Up"
+    /// Usage ID `0x226`: "Braille D ‐ Pad Up"
     BrailleDPadUp,
-    /// Usage ID `0x535`: "Braille D ‐ Pad Down"
+    /// Usage ID `0x217`: "Braille D ‐ Pad Down"
     BrailleDPadDown,
-    /// Usage ID `0x536`: "Braille D ‐ Pad Left"
+    /// Usage ID `0x218`: "Braille D ‐ Pad Left"
     BrailleDPadLeft,
-    /// Usage ID `0x537`: "Braille D ‐ Pad Right"
+    /// Usage ID `0x219`: "Braille D ‐ Pad Right"
     BrailleDPadRight,
-    /// Usage ID `0x538`: "Braille Pan Left"
+    /// Usage ID `0x21A`: "Braille Pan Left"
     BraillePanLeft,
-    /// Usage ID `0x539`: "Braille Pan Right"
+    /// Usage ID `0x21B`: "Braille Pan Right"
     BraillePanRight,
-    /// Usage ID `0x540`: "Braille Rocker Up"
+    /// Usage ID `0x21C`: "Braille Rocker Up"
     BrailleRockerUp,
-    /// Usage ID `0x541`: "Braille Rocker Down"
+    /// Usage ID `0x21D`: "Braille Rocker Down"
     BrailleRockerDown,
-    /// Usage ID `0x542`: "Braille Rocker Press"
+    /// Usage ID `0x21E`: "Braille Rocker Press"
     BrailleRockerPress,
 }
 
@@ -9279,7 +9279,7 @@ impl AsUsage for BrailleDisplay {
 impl AsUsagePage for BrailleDisplay {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x65` for [BrailleDisplay]
+    /// This value is `0x41` for [BrailleDisplay]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -9474,7 +9474,7 @@ impl BitOr<u16> for BrailleDisplay {
     }
 }
 
-/// *Usage Page `0x89`: "Lighting and Illumination"*
+/// *Usage Page `0x59`: "Lighting and Illumination"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -9509,55 +9509,55 @@ pub enum LightingandIllumination {
     LampArrayKind,
     /// Usage ID `0x8`: "Min Update Interval In Microseconds"
     MinUpdateIntervalInMicroseconds,
-    /// Usage ID `0x32`: "Lamp Attributes Request Report"
+    /// Usage ID `0x20`: "Lamp Attributes Request Report"
     LampAttributesRequestReport,
-    /// Usage ID `0x33`: "Lamp Id"
+    /// Usage ID `0x21`: "Lamp Id"
     LampId,
-    /// Usage ID `0x34`: "Lamp Attributes Response Report"
+    /// Usage ID `0x22`: "Lamp Attributes Response Report"
     LampAttributesResponseReport,
-    /// Usage ID `0x35`: "Position X In Micrometers"
+    /// Usage ID `0x23`: "Position X In Micrometers"
     PositionXInMicrometers,
-    /// Usage ID `0x36`: "Position Y In Micrometers"
+    /// Usage ID `0x24`: "Position Y In Micrometers"
     PositionYInMicrometers,
-    /// Usage ID `0x37`: "Position Z In Micrometers"
+    /// Usage ID `0x25`: "Position Z In Micrometers"
     PositionZInMicrometers,
-    /// Usage ID `0x38`: "Lamp Purposes"
+    /// Usage ID `0x26`: "Lamp Purposes"
     LampPurposes,
-    /// Usage ID `0x39`: "Update Latency In Microseconds"
+    /// Usage ID `0x27`: "Update Latency In Microseconds"
     UpdateLatencyInMicroseconds,
-    /// Usage ID `0x40`: "Red Level Count"
+    /// Usage ID `0x28`: "Red Level Count"
     RedLevelCount,
-    /// Usage ID `0x41`: "Green Level Count"
+    /// Usage ID `0x29`: "Green Level Count"
     GreenLevelCount,
-    /// Usage ID `0x42`: "Blue Level Count"
+    /// Usage ID `0x2A`: "Blue Level Count"
     BlueLevelCount,
-    /// Usage ID `0x43`: "Intensity Level Count"
+    /// Usage ID `0x2B`: "Intensity Level Count"
     IntensityLevelCount,
-    /// Usage ID `0x44`: "Is Programmable"
+    /// Usage ID `0x2C`: "Is Programmable"
     IsProgrammable,
-    /// Usage ID `0x45`: "Input Binding"
+    /// Usage ID `0x2D`: "Input Binding"
     InputBinding,
-    /// Usage ID `0x80`: "Lamp Multi Update Report"
+    /// Usage ID `0x50`: "Lamp Multi Update Report"
     LampMultiUpdateReport,
-    /// Usage ID `0x81`: "Red Update Channel"
+    /// Usage ID `0x51`: "Red Update Channel"
     RedUpdateChannel,
-    /// Usage ID `0x82`: "Green Update Channel"
+    /// Usage ID `0x52`: "Green Update Channel"
     GreenUpdateChannel,
-    /// Usage ID `0x83`: "Blue Update Channel"
+    /// Usage ID `0x53`: "Blue Update Channel"
     BlueUpdateChannel,
-    /// Usage ID `0x84`: "Intensity Update Channel"
+    /// Usage ID `0x54`: "Intensity Update Channel"
     IntensityUpdateChannel,
-    /// Usage ID `0x85`: "Lamp Update Flags"
+    /// Usage ID `0x55`: "Lamp Update Flags"
     LampUpdateFlags,
-    /// Usage ID `0x96`: "Lamp Range Update Report"
+    /// Usage ID `0x60`: "Lamp Range Update Report"
     LampRangeUpdateReport,
-    /// Usage ID `0x97`: "Lamp Id Start"
+    /// Usage ID `0x61`: "Lamp Id Start"
     LampIdStart,
-    /// Usage ID `0x98`: "Lamp Id End"
+    /// Usage ID `0x62`: "Lamp Id End"
     LampIdEnd,
-    /// Usage ID `0x112`: "Lamp Array Control Report"
+    /// Usage ID `0x70`: "Lamp Array Control Report"
     LampArrayControlReport,
-    /// Usage ID `0x113`: "Autonomous Mode"
+    /// Usage ID `0x71`: "Autonomous Mode"
     AutonomousMode,
 }
 
@@ -9576,7 +9576,7 @@ impl AsUsage for LightingandIllumination {
 impl AsUsagePage for LightingandIllumination {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x89` for [LightingandIllumination]
+    /// This value is `0x59` for [LightingandIllumination]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -9758,7 +9758,7 @@ impl BitOr<u16> for LightingandIllumination {
     }
 }
 
-/// *Usage Page `0x128`: "Monitor"*
+/// *Usage Page `0x80`: "Monitor"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -9795,11 +9795,11 @@ pub enum Monitor {
     PolarityVertSynch,
     /// Usage ID `0x9`: "Sync Type"
     SyncType,
-    /// Usage ID `0x10`: "Screen Position"
+    /// Usage ID `0xA`: "Screen Position"
     ScreenPosition,
-    /// Usage ID `0x11`: "Horizontal Frequency"
+    /// Usage ID `0xB`: "Horizontal Frequency"
     HorizontalFrequency,
-    /// Usage ID `0x12`: "Vertical Frequency"
+    /// Usage ID `0xC`: "Vertical Frequency"
     VerticalFrequency,
 }
 
@@ -9818,7 +9818,7 @@ impl AsUsage for Monitor {
 impl AsUsagePage for Monitor {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x128` for [Monitor]
+    /// This value is `0x80` for [Monitor]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -9923,7 +9923,7 @@ impl BitOr<u16> for Monitor {
     }
 }
 
-/// *Usage Page `0x129`: "Monitor Enumerated Values"*
+/// *Usage Page `0x81`: "Monitor Enumerated Values"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -9959,7 +9959,7 @@ impl AsUsage for MonitorEnumeratedValues {
 impl AsUsagePage for MonitorEnumeratedValues {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x129` for [MonitorEnumeratedValues]
+    /// This value is `0x81` for [MonitorEnumeratedValues]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10028,7 +10028,7 @@ impl BitOr<u16> for MonitorEnumeratedValues {
     }
 }
 
-/// *Usage Page `0x130`: "VESA Virtual Controls"*
+/// *Usage Page `0x82`: "VESA Virtual Controls"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10045,75 +10045,75 @@ impl BitOr<u16> for MonitorEnumeratedValues {
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum VESAVirtualControls {
-    /// Usage ID `0x16`: "Brightness"
+    /// Usage ID `0x10`: "Brightness"
     Brightness,
-    /// Usage ID `0x18`: "Contrast"
+    /// Usage ID `0x12`: "Contrast"
     Contrast,
-    /// Usage ID `0x22`: "Video Gain Red"
+    /// Usage ID `0x16`: "Video Gain Red"
     VideoGainRed,
-    /// Usage ID `0x24`: "Video Gain Green"
+    /// Usage ID `0x18`: "Video Gain Green"
     VideoGainGreen,
-    /// Usage ID `0x26`: "Video Gain Blue"
+    /// Usage ID `0x1A`: "Video Gain Blue"
     VideoGainBlue,
-    /// Usage ID `0x28`: "Focus"
+    /// Usage ID `0x1C`: "Focus"
     Focus,
-    /// Usage ID `0x32`: "Horizontal Position"
+    /// Usage ID `0x20`: "Horizontal Position"
     HorizontalPosition,
-    /// Usage ID `0x34`: "Horizontal Size"
+    /// Usage ID `0x22`: "Horizontal Size"
     HorizontalSize,
-    /// Usage ID `0x36`: "Horizontal Pincushion"
+    /// Usage ID `0x24`: "Horizontal Pincushion"
     HorizontalPincushion,
-    /// Usage ID `0x38`: "Horizontal Pincushion Balance"
+    /// Usage ID `0x26`: "Horizontal Pincushion Balance"
     HorizontalPincushionBalance,
-    /// Usage ID `0x40`: "Horizontal Misconvergence"
+    /// Usage ID `0x28`: "Horizontal Misconvergence"
     HorizontalMisconvergence,
-    /// Usage ID `0x42`: "Horizontal Linearity"
+    /// Usage ID `0x2A`: "Horizontal Linearity"
     HorizontalLinearity,
-    /// Usage ID `0x44`: "Horizontal Linearity Balance"
+    /// Usage ID `0x2C`: "Horizontal Linearity Balance"
     HorizontalLinearityBalance,
-    /// Usage ID `0x48`: "Vertical Position"
+    /// Usage ID `0x30`: "Vertical Position"
     VerticalPosition,
-    /// Usage ID `0x50`: "Vertical Size"
+    /// Usage ID `0x32`: "Vertical Size"
     VerticalSize,
-    /// Usage ID `0x52`: "Vertical Pincushion"
+    /// Usage ID `0x34`: "Vertical Pincushion"
     VerticalPincushion,
-    /// Usage ID `0x54`: "Vertical Pincushion Balance"
+    /// Usage ID `0x36`: "Vertical Pincushion Balance"
     VerticalPincushionBalance,
-    /// Usage ID `0x56`: "Vertical Misconvergence"
+    /// Usage ID `0x38`: "Vertical Misconvergence"
     VerticalMisconvergence,
-    /// Usage ID `0x58`: "Vertical Linearity"
+    /// Usage ID `0x3A`: "Vertical Linearity"
     VerticalLinearity,
-    /// Usage ID `0x60`: "Vertical Linearity Balance"
+    /// Usage ID `0x3C`: "Vertical Linearity Balance"
     VerticalLinearityBalance,
-    /// Usage ID `0x64`: "Parallelogram Distortion"
+    /// Usage ID `0x40`: "Parallelogram Distortion"
     ParallelogramDistortion,
-    /// Usage ID `0x66`: "Trapezoidal Distortion"
+    /// Usage ID `0x42`: "Trapezoidal Distortion"
     TrapezoidalDistortion,
-    /// Usage ID `0x68`: "Tilt"
+    /// Usage ID `0x44`: "Tilt"
     Tilt,
-    /// Usage ID `0x70`: "Top Corner Distortion Control"
+    /// Usage ID `0x46`: "Top Corner Distortion Control"
     TopCornerDistortionControl,
-    /// Usage ID `0x72`: "Top Corner Distortion Balance"
+    /// Usage ID `0x48`: "Top Corner Distortion Balance"
     TopCornerDistortionBalance,
-    /// Usage ID `0x74`: "Bottom Corner Distortion Control"
+    /// Usage ID `0x4A`: "Bottom Corner Distortion Control"
     BottomCornerDistortionControl,
-    /// Usage ID `0x76`: "Bottom Corner Distortion Balance"
+    /// Usage ID `0x4C`: "Bottom Corner Distortion Balance"
     BottomCornerDistortionBalance,
-    /// Usage ID `0x86`: "Moiré Horizontal"
+    /// Usage ID `0x56`: "Moiré Horizontal"
     MoiréHorizontal,
-    /// Usage ID `0x88`: "Moiré Vertical"
+    /// Usage ID `0x58`: "Moiré Vertical"
     MoiréVertical,
-    /// Usage ID `0x94`: "Input Level Select"
+    /// Usage ID `0x5E`: "Input Level Select"
     InputLevelSelect,
-    /// Usage ID `0x96`: "Input Source Select"
+    /// Usage ID `0x60`: "Input Source Select"
     InputSourceSelect,
-    /// Usage ID `0x98`: "Stereo Mode"
+    /// Usage ID `0x62`: "Stereo Mode"
     StereoMode,
-    /// Usage ID `0x108`: "Video Black Level Red"
+    /// Usage ID `0x6C`: "Video Black Level Red"
     VideoBlackLevelRed,
-    /// Usage ID `0x110`: "Video Black Level Green"
+    /// Usage ID `0x6E`: "Video Black Level Green"
     VideoBlackLevelGreen,
-    /// Usage ID `0x112`: "Video Black Level Blue"
+    /// Usage ID `0x70`: "Video Black Level Blue"
     VideoBlackLevelBlue,
 }
 
@@ -10132,7 +10132,7 @@ impl AsUsage for VESAVirtualControls {
 impl AsUsagePage for VESAVirtualControls {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x130` for [VESAVirtualControls]
+    /// This value is `0x82` for [VESAVirtualControls]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10307,7 +10307,7 @@ impl BitOr<u16> for VESAVirtualControls {
     }
 }
 
-/// *Usage Page `0x131`: "VESA Command"*
+/// *Usage Page `0x83`: "VESA Command"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10347,7 +10347,7 @@ impl AsUsage for VESACommand {
 impl AsUsagePage for VESACommand {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x131` for [VESACommand]
+    /// This value is `0x83` for [VESACommand]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10422,7 +10422,7 @@ impl BitOr<u16> for VESACommand {
     }
 }
 
-/// *Usage Page `0x132`: "Power Device"*
+/// *Usage Page `0x84`: "Power Device"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10458,7 +10458,7 @@ impl AsUsage for PowerDevice {
 impl AsUsagePage for PowerDevice {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x132` for [PowerDevice]
+    /// This value is `0x84` for [PowerDevice]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10527,7 +10527,7 @@ impl BitOr<u16> for PowerDevice {
     }
 }
 
-/// *Usage Page `0x133`: "Battery System"*
+/// *Usage Page `0x85`: "Battery System"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10560,7 +10560,7 @@ impl AsUsage for BatterySystem {
 impl AsUsagePage for BatterySystem {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x133` for [BatterySystem]
+    /// This value is `0x85` for [BatterySystem]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10628,7 +10628,7 @@ impl BitOr<u16> for BatterySystem {
     }
 }
 
-/// *Usage Page `0x140`: "Bar Code Scanner"*
+/// *Usage Page `0x8C`: "Bar Code Scanner"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10664,7 +10664,7 @@ impl AsUsage for BarCodeScanner {
 impl AsUsagePage for BarCodeScanner {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x140` for [BarCodeScanner]
+    /// This value is `0x8C` for [BarCodeScanner]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10733,7 +10733,7 @@ impl BitOr<u16> for BarCodeScanner {
     }
 }
 
-/// *Usage Page `0x141`: "Scale"*
+/// *Usage Page `0x8D`: "Scale"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10769,7 +10769,7 @@ impl AsUsage for Scale {
 impl AsUsagePage for Scale {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x141` for [Scale]
+    /// This value is `0x8D` for [Scale]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10838,7 +10838,7 @@ impl BitOr<u16> for Scale {
     }
 }
 
-/// *Usage Page `0x142`: "Magnetic Stripe Reading"*
+/// *Usage Page `0x8E`: "Magnetic Stripe Reading"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10874,7 +10874,7 @@ impl AsUsage for MagneticStripeReading {
 impl AsUsagePage for MagneticStripeReading {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x142` for [MagneticStripeReading]
+    /// This value is `0x8E` for [MagneticStripeReading]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -10943,7 +10943,7 @@ impl BitOr<u16> for MagneticStripeReading {
     }
 }
 
-/// *Usage Page `0x144`: "Camera Control"*
+/// *Usage Page `0x90`: "Camera Control"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -10962,9 +10962,9 @@ impl BitOr<u16> for MagneticStripeReading {
 pub enum CameraControl {
     /// Usage ID `0x0`: "Undefined"
     Undefined,
-    /// Usage ID `0x32`: "Camera Auto-focus"
+    /// Usage ID `0x20`: "Camera Auto-focus"
     CameraAutofocus,
-    /// Usage ID `0x33`: "Camera Shutter"
+    /// Usage ID `0x21`: "Camera Shutter"
     CameraShutter,
 }
 
@@ -10983,7 +10983,7 @@ impl AsUsage for CameraControl {
 impl AsUsagePage for CameraControl {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x144` for [CameraControl]
+    /// This value is `0x90` for [CameraControl]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -11058,7 +11058,7 @@ impl BitOr<u16> for CameraControl {
     }
 }
 
-/// *Usage Page `0x145`: "Arcade Page OAAF"*
+/// *Usage Page `0x91`: "Arcade Page OAAF"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -11094,7 +11094,7 @@ impl AsUsage for ArcadePageOAAF {
 impl AsUsagePage for ArcadePageOAAF {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x145` for [ArcadePageOAAF]
+    /// This value is `0x91` for [ArcadePageOAAF]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -11163,7 +11163,7 @@ impl BitOr<u16> for ArcadePageOAAF {
     }
 }
 
-/// *Usage Page `0x146`: "Gaming Device"*
+/// *Usage Page `0x92`: "Gaming Device"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -11196,7 +11196,7 @@ impl AsUsage for GamingDevice {
 impl AsUsagePage for GamingDevice {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x146` for [GamingDevice]
+    /// This value is `0x92` for [GamingDevice]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -11264,7 +11264,7 @@ impl BitOr<u16> for GamingDevice {
     }
 }
 
-/// *Usage Page `0x61904`: "FIDO Alliance"*
+/// *Usage Page `0xF1D0`: "FIDO Alliance"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -11285,9 +11285,9 @@ pub enum FIDOAlliance {
     Undefined,
     /// Usage ID `0x1`: "U2F Authenticator Device"
     U2FAuthenticatorDevice,
-    /// Usage ID `0x32`: "Input Report Data"
+    /// Usage ID `0x20`: "Input Report Data"
     InputReportData,
-    /// Usage ID `0x33`: "Output Report Data"
+    /// Usage ID `0x21`: "Output Report Data"
     OutputReportData,
 }
 
@@ -11306,7 +11306,7 @@ impl AsUsage for FIDOAlliance {
 impl AsUsagePage for FIDOAlliance {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x61904` for [FIDOAlliance]
+    /// This value is `0xF1D0` for [FIDOAlliance]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -11384,7 +11384,7 @@ impl BitOr<u16> for FIDOAlliance {
     }
 }
 
-/// *Usage Page `0x65293`: "Wacom"*
+/// *Usage Page `0xFF0D`: "Wacom"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -11419,199 +11419,199 @@ pub enum Wacom {
     ThreeDDigitizer,
     /// Usage ID `0x9`: "Stereo Plotter"
     StereoPlotter,
-    /// Usage ID `0x10`: "Articulated Arm"
+    /// Usage ID `0xA`: "Articulated Arm"
     ArticulatedArm,
-    /// Usage ID `0x11`: "Armature"
+    /// Usage ID `0xB`: "Armature"
     Armature,
-    /// Usage ID `0x12`: "Multiple Point Digitizer"
+    /// Usage ID `0xC`: "Multiple Point Digitizer"
     MultiplePointDigitizer,
-    /// Usage ID `0x13`: "Free Space Wand"
+    /// Usage ID `0xD`: "Free Space Wand"
     FreeSpaceWand,
-    /// Usage ID `0x14`: "Device Configuration"
+    /// Usage ID `0xE`: "Device Configuration"
     DeviceConfiguration,
-    /// Usage ID `0x32`: "Stylus"
+    /// Usage ID `0x20`: "Stylus"
     Stylus,
-    /// Usage ID `0x33`: "Puck"
+    /// Usage ID `0x21`: "Puck"
     Puck,
-    /// Usage ID `0x34`: "Finger"
+    /// Usage ID `0x22`: "Finger"
     Finger,
-    /// Usage ID `0x35`: "Device Settings"
+    /// Usage ID `0x23`: "Device Settings"
     DeviceSettings,
-    /// Usage ID `0x48`: "Tip Pressure"
+    /// Usage ID `0x30`: "Tip Pressure"
     TipPressure,
-    /// Usage ID `0x49`: "Barrel Pressure"
+    /// Usage ID `0x31`: "Barrel Pressure"
     BarrelPressure,
-    /// Usage ID `0x50`: "In Range"
+    /// Usage ID `0x32`: "In Range"
     InRange,
-    /// Usage ID `0x51`: "Touch"
+    /// Usage ID `0x33`: "Touch"
     Touch,
-    /// Usage ID `0x52`: "Untouch"
+    /// Usage ID `0x34`: "Untouch"
     Untouch,
-    /// Usage ID `0x53`: "Tap"
+    /// Usage ID `0x35`: "Tap"
     Tap,
-    /// Usage ID `0x54`: "Wacom Sense"
+    /// Usage ID `0x36`: "Wacom Sense"
     WacomSense,
-    /// Usage ID `0x55`: "Data Valid"
+    /// Usage ID `0x37`: "Data Valid"
     DataValid,
-    /// Usage ID `0x56`: "Transducer Index"
+    /// Usage ID `0x38`: "Transducer Index"
     TransducerIndex,
-    /// Usage ID `0x57`: "Wacom DigitizerFnKeys"
+    /// Usage ID `0x39`: "Wacom DigitizerFnKeys"
     WacomDigitizerFnKeys,
-    /// Usage ID `0x58`: "Program Change Keys"
+    /// Usage ID `0x3A`: "Program Change Keys"
     ProgramChangeKeys,
-    /// Usage ID `0x59`: "Battery Strength"
+    /// Usage ID `0x3B`: "Battery Strength"
     BatteryStrength,
-    /// Usage ID `0x60`: "Invert"
+    /// Usage ID `0x3C`: "Invert"
     Invert,
-    /// Usage ID `0x61`: "X Tilt"
+    /// Usage ID `0x3D`: "X Tilt"
     XTilt,
-    /// Usage ID `0x62`: "Y Tilt"
+    /// Usage ID `0x3E`: "Y Tilt"
     YTilt,
-    /// Usage ID `0x63`: "Azimuth"
+    /// Usage ID `0x3F`: "Azimuth"
     Azimuth,
-    /// Usage ID `0x64`: "Altitude"
+    /// Usage ID `0x40`: "Altitude"
     Altitude,
-    /// Usage ID `0x65`: "Twist"
+    /// Usage ID `0x41`: "Twist"
     Twist,
-    /// Usage ID `0x66`: "Tip Switch"
+    /// Usage ID `0x42`: "Tip Switch"
     TipSwitch,
-    /// Usage ID `0x67`: "Secondary Tip Switch"
+    /// Usage ID `0x43`: "Secondary Tip Switch"
     SecondaryTipSwitch,
-    /// Usage ID `0x68`: "Barrel Switch"
+    /// Usage ID `0x44`: "Barrel Switch"
     BarrelSwitch,
-    /// Usage ID `0x69`: "Eraser"
+    /// Usage ID `0x45`: "Eraser"
     Eraser,
-    /// Usage ID `0x70`: "Tablet Pick"
+    /// Usage ID `0x46`: "Tablet Pick"
     TabletPick,
-    /// Usage ID `0x71`: "Confidence"
+    /// Usage ID `0x47`: "Confidence"
     Confidence,
-    /// Usage ID `0x72`: "Width"
+    /// Usage ID `0x48`: "Width"
     Width,
-    /// Usage ID `0x73`: "Height"
+    /// Usage ID `0x49`: "Height"
     Height,
-    /// Usage ID `0x81`: "Contact Id"
+    /// Usage ID `0x51`: "Contact Id"
     ContactId,
-    /// Usage ID `0x82`: "Inputmode"
+    /// Usage ID `0x52`: "Inputmode"
     Inputmode,
-    /// Usage ID `0x83`: "Device Index"
+    /// Usage ID `0x53`: "Device Index"
     DeviceIndex,
-    /// Usage ID `0x84`: "Contact Count"
+    /// Usage ID `0x54`: "Contact Count"
     ContactCount,
-    /// Usage ID `0x85`: "Contact Max"
+    /// Usage ID `0x55`: "Contact Max"
     ContactMax,
-    /// Usage ID `0x86`: "Scan Time"
+    /// Usage ID `0x56`: "Scan Time"
     ScanTime,
-    /// Usage ID `0x87`: "Surface Switch"
+    /// Usage ID `0x57`: "Surface Switch"
     SurfaceSwitch,
-    /// Usage ID `0x88`: "Button Switch"
+    /// Usage ID `0x58`: "Button Switch"
     ButtonSwitch,
-    /// Usage ID `0x89`: "Button Type"
+    /// Usage ID `0x59`: "Button Type"
     ButtonType,
-    /// Usage ID `0x90`: "Secondary Barrel Switch"
+    /// Usage ID `0x5A`: "Secondary Barrel Switch"
     SecondaryBarrelSwitch,
-    /// Usage ID `0x91`: "Transducer Serial Number"
+    /// Usage ID `0x5B`: "Transducer Serial Number"
     TransducerSerialNumber,
-    /// Usage ID `0x92`: "Wacom SerialHi"
+    /// Usage ID `0x5C`: "Wacom SerialHi"
     WacomSerialHi,
-    /// Usage ID `0x93`: "Preferred Color is Locked"
+    /// Usage ID `0x5D`: "Preferred Color is Locked"
     PreferredColorisLocked,
-    /// Usage ID `0x94`: "Preferred Line Width"
+    /// Usage ID `0x5E`: "Preferred Line Width"
     PreferredLineWidth,
-    /// Usage ID `0x95`: "Preferred Line Width is Locked"
+    /// Usage ID `0x5F`: "Preferred Line Width is Locked"
     PreferredLineWidthisLocked,
-    /// Usage ID `0x112`: "Preferred Line Style"
+    /// Usage ID `0x70`: "Preferred Line Style"
     PreferredLineStyle,
-    /// Usage ID `0x113`: "Preferred Line Style is Locked"
+    /// Usage ID `0x71`: "Preferred Line Style is Locked"
     PreferredLineStyleisLocked,
-    /// Usage ID `0x114`: "Ink"
+    /// Usage ID `0x72`: "Ink"
     Ink,
-    /// Usage ID `0x115`: "Pencil"
+    /// Usage ID `0x73`: "Pencil"
     Pencil,
-    /// Usage ID `0x116`: "Highlighter"
+    /// Usage ID `0x74`: "Highlighter"
     Highlighter,
-    /// Usage ID `0x117`: "Chisel Marker"
+    /// Usage ID `0x75`: "Chisel Marker"
     ChiselMarker,
-    /// Usage ID `0x118`: "Brush"
+    /// Usage ID `0x76`: "Brush"
     Brush,
-    /// Usage ID `0x119`: "Wacom ToolType"
+    /// Usage ID `0x77`: "Wacom ToolType"
     WacomToolType,
-    /// Usage ID `0x128`: "Digitizer Diagnostic"
+    /// Usage ID `0x80`: "Digitizer Diagnostic"
     DigitizerDiagnostic,
-    /// Usage ID `0x129`: "Digitizer Error"
+    /// Usage ID `0x81`: "Digitizer Error"
     DigitizerError,
-    /// Usage ID `0x130`: "Err Normal Status"
+    /// Usage ID `0x82`: "Err Normal Status"
     ErrNormalStatus,
-    /// Usage ID `0x131`: "Err Transducers Exceeded"
+    /// Usage ID `0x83`: "Err Transducers Exceeded"
     ErrTransducersExceeded,
-    /// Usage ID `0x132`: "Err Full Trans Features Unavail"
+    /// Usage ID `0x84`: "Err Full Trans Features Unavail"
     ErrFullTransFeaturesUnavail,
-    /// Usage ID `0x133`: "Err Charge Low"
+    /// Usage ID `0x85`: "Err Charge Low"
     ErrChargeLow,
-    /// Usage ID `0x304`: "X"
+    /// Usage ID `0x130`: "X"
     X,
-    /// Usage ID `0x305`: "Y"
+    /// Usage ID `0x131`: "Y"
     Y,
-    /// Usage ID `0x306`: "Wacom Distance"
+    /// Usage ID `0x132`: "Wacom Distance"
     WacomDistance,
-    /// Usage ID `0x310`: "Wacom TouchStrip"
+    /// Usage ID `0x136`: "Wacom TouchStrip"
     WacomTouchStrip,
-    /// Usage ID `0x311`: "Wacom TouchStrip2"
+    /// Usage ID `0x137`: "Wacom TouchStrip2"
     WacomTouchStrip2,
-    /// Usage ID `0x312`: "Wacom TouchRing"
+    /// Usage ID `0x138`: "Wacom TouchRing"
     WacomTouchRing,
-    /// Usage ID `0x313`: "Wacom TouchRingStatus"
+    /// Usage ID `0x139`: "Wacom TouchRingStatus"
     WacomTouchRingStatus,
-    /// Usage ID `0x1025`: "Wacom Accelerometer X"
+    /// Usage ID `0x401`: "Wacom Accelerometer X"
     WacomAccelerometerX,
-    /// Usage ID `0x1026`: "Wacom Accelerometer Y"
+    /// Usage ID `0x402`: "Wacom Accelerometer Y"
     WacomAccelerometerY,
-    /// Usage ID `0x1027`: "Wacom Accelerometer Z"
+    /// Usage ID `0x403`: "Wacom Accelerometer Z"
     WacomAccelerometerZ,
-    /// Usage ID `0x1028`: "Wacom Battery Charging"
+    /// Usage ID `0x404`: "Wacom Battery Charging"
     WacomBatteryCharging,
-    /// Usage ID `0x1108`: "Wacom TouchOnOff"
+    /// Usage ID `0x454`: "Wacom TouchOnOff"
     WacomTouchOnOff,
-    /// Usage ID `0x1083`: "Wacom Battery Level"
+    /// Usage ID `0x43B`: "Wacom Battery Level"
     WacomBatteryLevel,
-    /// Usage ID `0x2320`: "Wacom ExpressKey00"
+    /// Usage ID `0x910`: "Wacom ExpressKey00"
     WacomExpressKey00,
-    /// Usage ID `0x2384`: "Wacom ExpressKeyCap00"
+    /// Usage ID `0x950`: "Wacom ExpressKeyCap00"
     WacomExpressKeyCap00,
-    /// Usage ID `0x2432`: "Wacom Mode Change"
+    /// Usage ID `0x980`: "Wacom Mode Change"
     WacomModeChange,
-    /// Usage ID `0x2433`: "Wacom Button Desktop Center"
+    /// Usage ID `0x981`: "Wacom Button Desktop Center"
     WacomButtonDesktopCenter,
-    /// Usage ID `0x2434`: "Wacom Button On Screen Keyboard"
+    /// Usage ID `0x982`: "Wacom Button On Screen Keyboard"
     WacomButtonOnScreenKeyboard,
-    /// Usage ID `0x2435`: "Wacom Button Display Setting"
+    /// Usage ID `0x983`: "Wacom Button Display Setting"
     WacomButtonDisplaySetting,
-    /// Usage ID `0x2438`: "Wacom Button Touch On/Off"
+    /// Usage ID `0x986`: "Wacom Button Touch On/Off"
     WacomButtonTouchOnOff,
-    /// Usage ID `0x2448`: "Wacom Button Home"
+    /// Usage ID `0x990`: "Wacom Button Home"
     WacomButtonHome,
-    /// Usage ID `0x2449`: "Wacom Button Up"
+    /// Usage ID `0x991`: "Wacom Button Up"
     WacomButtonUp,
-    /// Usage ID `0x2450`: "Wacom Button Down"
+    /// Usage ID `0x992`: "Wacom Button Down"
     WacomButtonDown,
-    /// Usage ID `0x2451`: "Wacom Button Left"
+    /// Usage ID `0x993`: "Wacom Button Left"
     WacomButtonLeft,
-    /// Usage ID `0x2452`: "Wacom Button Right"
+    /// Usage ID `0x994`: "Wacom Button Right"
     WacomButtonRight,
-    /// Usage ID `0x2453`: "Wacom Button Center"
+    /// Usage ID `0x995`: "Wacom Button Center"
     WacomButtonCenter,
-    /// Usage ID `0x3331`: "Wacom FingerWheel"
+    /// Usage ID `0xD03`: "Wacom FingerWheel"
     WacomFingerWheel,
-    /// Usage ID `0x3376`: "Wacom Offset Left"
+    /// Usage ID `0xD30`: "Wacom Offset Left"
     WacomOffsetLeft,
-    /// Usage ID `0x3377`: "Wacom Offset Top"
+    /// Usage ID `0xD31`: "Wacom Offset Top"
     WacomOffsetTop,
-    /// Usage ID `0x3378`: "Wacom Offset Right"
+    /// Usage ID `0xD32`: "Wacom Offset Right"
     WacomOffsetRight,
-    /// Usage ID `0x3379`: "Wacom Offset Bottom"
+    /// Usage ID `0xD33`: "Wacom Offset Bottom"
     WacomOffsetBottom,
-    /// Usage ID `0x4098`: "Wacom DataMode"
+    /// Usage ID `0x1002`: "Wacom DataMode"
     WacomDataMode,
-    /// Usage ID `0x4115`: "Wacom Digitizer Info"
+    /// Usage ID `0x1013`: "Wacom Digitizer Info"
     WacomDigitizerInfo,
 }
 
@@ -11630,7 +11630,7 @@ impl AsUsage for Wacom {
 impl AsUsagePage for Wacom {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x65293` for [Wacom]
+    /// This value is `0xFF0D` for [Wacom]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -12014,7 +12014,7 @@ impl BitOr<u16> for Wacom {
     }
 }
 
-/// *Usage Page `0x12`: "Consumer Devices"*
+/// *Usage Page `0xC`: "Consumer Devices"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -12043,873 +12043,873 @@ pub enum ConsumerDevices {
     Headphone,
     /// Usage ID `0x6`: "Graphic Equalizer"
     GraphicEqualizer,
-    /// Usage ID `0x32`: "+10"
+    /// Usage ID `0x20`: "+10"
     Plus10,
-    /// Usage ID `0x33`: "+100"
+    /// Usage ID `0x21`: "+100"
     Plus100,
-    /// Usage ID `0x34`: "AM/PM"
+    /// Usage ID `0x22`: "AM/PM"
     AMPM,
-    /// Usage ID `0x48`: "Power"
+    /// Usage ID `0x30`: "Power"
     Power,
-    /// Usage ID `0x49`: "Reset"
+    /// Usage ID `0x31`: "Reset"
     Reset,
-    /// Usage ID `0x50`: "Sleep"
+    /// Usage ID `0x32`: "Sleep"
     Sleep,
-    /// Usage ID `0x51`: "Sleep After"
+    /// Usage ID `0x33`: "Sleep After"
     SleepAfter,
-    /// Usage ID `0x52`: "Sleep Mode"
+    /// Usage ID `0x34`: "Sleep Mode"
     SleepMode,
-    /// Usage ID `0x53`: "Illumination"
+    /// Usage ID `0x35`: "Illumination"
     Illumination,
-    /// Usage ID `0x54`: "Function Buttons"
+    /// Usage ID `0x36`: "Function Buttons"
     FunctionButtons,
-    /// Usage ID `0x64`: "Menu"
+    /// Usage ID `0x40`: "Menu"
     Menu,
-    /// Usage ID `0x65`: "Menu Pick"
+    /// Usage ID `0x41`: "Menu Pick"
     MenuPick,
-    /// Usage ID `0x66`: "Menu Up"
+    /// Usage ID `0x42`: "Menu Up"
     MenuUp,
-    /// Usage ID `0x67`: "Menu Down"
+    /// Usage ID `0x43`: "Menu Down"
     MenuDown,
-    /// Usage ID `0x68`: "Menu Left"
+    /// Usage ID `0x44`: "Menu Left"
     MenuLeft,
-    /// Usage ID `0x69`: "Menu Right"
+    /// Usage ID `0x45`: "Menu Right"
     MenuRight,
-    /// Usage ID `0x70`: "Menu Escape"
+    /// Usage ID `0x46`: "Menu Escape"
     MenuEscape,
-    /// Usage ID `0x71`: "Menu Value Increase"
+    /// Usage ID `0x47`: "Menu Value Increase"
     MenuValueIncrease,
-    /// Usage ID `0x72`: "Menu Value Decrease"
+    /// Usage ID `0x48`: "Menu Value Decrease"
     MenuValueDecrease,
-    /// Usage ID `0x96`: "Data On Screen"
+    /// Usage ID `0x60`: "Data On Screen"
     DataOnScreen,
-    /// Usage ID `0x97`: "Closed Caption"
+    /// Usage ID `0x61`: "Closed Caption"
     ClosedCaption,
-    /// Usage ID `0x98`: "Closed Caption Select"
+    /// Usage ID `0x62`: "Closed Caption Select"
     ClosedCaptionSelect,
-    /// Usage ID `0x99`: "VCR/TV"
+    /// Usage ID `0x63`: "VCR/TV"
     VCRTV,
-    /// Usage ID `0x100`: "Broadcast Mode"
+    /// Usage ID `0x64`: "Broadcast Mode"
     BroadcastMode,
-    /// Usage ID `0x101`: "Snapshot"
+    /// Usage ID `0x65`: "Snapshot"
     Snapshot,
-    /// Usage ID `0x102`: "Still"
+    /// Usage ID `0x66`: "Still"
     Still,
-    /// Usage ID `0x103`: "Picture-in-Picture Toggle"
+    /// Usage ID `0x67`: "Picture-in-Picture Toggle"
     PictureinPictureToggle,
-    /// Usage ID `0x104`: "Picture-in-Picture Swap"
+    /// Usage ID `0x68`: "Picture-in-Picture Swap"
     PictureinPictureSwap,
-    /// Usage ID `0x105`: "Red Menu Button"
+    /// Usage ID `0x69`: "Red Menu Button"
     RedMenuButton,
-    /// Usage ID `0x106`: "Green Menu Button"
+    /// Usage ID `0x6A`: "Green Menu Button"
     GreenMenuButton,
-    /// Usage ID `0x107`: "Blue Menu Button"
+    /// Usage ID `0x6B`: "Blue Menu Button"
     BlueMenuButton,
-    /// Usage ID `0x108`: "Yellow Menu Button"
+    /// Usage ID `0x6C`: "Yellow Menu Button"
     YellowMenuButton,
-    /// Usage ID `0x109`: "Aspect"
+    /// Usage ID `0x6D`: "Aspect"
     Aspect,
-    /// Usage ID `0x110`: "3D Mode Select"
+    /// Usage ID `0x6E`: "3D Mode Select"
     ThreeDModeSelect,
-    /// Usage ID `0x111`: "Display Brightness Increment"
+    /// Usage ID `0x6F`: "Display Brightness Increment"
     DisplayBrightnessIncrement,
-    /// Usage ID `0x112`: "Display Brightness Decrement"
+    /// Usage ID `0x70`: "Display Brightness Decrement"
     DisplayBrightnessDecrement,
-    /// Usage ID `0x113`: "Display Brightness"
+    /// Usage ID `0x71`: "Display Brightness"
     DisplayBrightness,
-    /// Usage ID `0x114`: "Display Backlight Toggle"
+    /// Usage ID `0x72`: "Display Backlight Toggle"
     DisplayBacklightToggle,
-    /// Usage ID `0x115`: "Display Set Brightness to Minimum"
+    /// Usage ID `0x73`: "Display Set Brightness to Minimum"
     DisplaySetBrightnesstoMinimum,
-    /// Usage ID `0x116`: "Display Set Brightness to Maximum"
+    /// Usage ID `0x74`: "Display Set Brightness to Maximum"
     DisplaySetBrightnesstoMaximum,
-    /// Usage ID `0x117`: "Display Set Auto Brightness"
+    /// Usage ID `0x75`: "Display Set Auto Brightness"
     DisplaySetAutoBrightness,
-    /// Usage ID `0x118`: "Camera Access Enabled"
+    /// Usage ID `0x76`: "Camera Access Enabled"
     CameraAccessEnabled,
-    /// Usage ID `0x119`: "Camera Access Disabled"
+    /// Usage ID `0x77`: "Camera Access Disabled"
     CameraAccessDisabled,
-    /// Usage ID `0x120`: "Camera Access Toggle"
+    /// Usage ID `0x78`: "Camera Access Toggle"
     CameraAccessToggle,
-    /// Usage ID `0x121`: "Keyboard Brightness Increment"
+    /// Usage ID `0x79`: "Keyboard Brightness Increment"
     KeyboardBrightnessIncrement,
-    /// Usage ID `0x122`: "Keyboard Brightness Decrement"
+    /// Usage ID `0x7A`: "Keyboard Brightness Decrement"
     KeyboardBrightnessDecrement,
-    /// Usage ID `0x123`: "Keyboard Backlight Set Level"
+    /// Usage ID `0x7B`: "Keyboard Backlight Set Level"
     KeyboardBacklightSetLevel,
-    /// Usage ID `0x124`: "Keyboard Backlight OOC"
+    /// Usage ID `0x7C`: "Keyboard Backlight OOC"
     KeyboardBacklightOOC,
-    /// Usage ID `0x125`: "Keyboard Backlight Set Minimum"
+    /// Usage ID `0x7D`: "Keyboard Backlight Set Minimum"
     KeyboardBacklightSetMinimum,
-    /// Usage ID `0x126`: "Keyboard Backlight Set Maximum"
+    /// Usage ID `0x7E`: "Keyboard Backlight Set Maximum"
     KeyboardBacklightSetMaximum,
-    /// Usage ID `0x127`: "Keyboard Backlight Auto"
+    /// Usage ID `0x7F`: "Keyboard Backlight Auto"
     KeyboardBacklightAuto,
-    /// Usage ID `0x128`: "Selection"
+    /// Usage ID `0x80`: "Selection"
     Selection,
-    /// Usage ID `0x129`: "Assign Selection"
+    /// Usage ID `0x81`: "Assign Selection"
     AssignSelection,
-    /// Usage ID `0x130`: "Mode Step"
+    /// Usage ID `0x82`: "Mode Step"
     ModeStep,
-    /// Usage ID `0x131`: "Recall Last"
+    /// Usage ID `0x83`: "Recall Last"
     RecallLast,
-    /// Usage ID `0x132`: "Enter Channel"
+    /// Usage ID `0x84`: "Enter Channel"
     EnterChannel,
-    /// Usage ID `0x133`: "Order Movie"
+    /// Usage ID `0x85`: "Order Movie"
     OrderMovie,
-    /// Usage ID `0x134`: "Channel"
+    /// Usage ID `0x86`: "Channel"
     Channel,
-    /// Usage ID `0x135`: "Media Selection"
+    /// Usage ID `0x87`: "Media Selection"
     MediaSelection,
-    /// Usage ID `0x136`: "Media Select Computer"
+    /// Usage ID `0x88`: "Media Select Computer"
     MediaSelectComputer,
-    /// Usage ID `0x137`: "Media Select TV"
+    /// Usage ID `0x89`: "Media Select TV"
     MediaSelectTV,
-    /// Usage ID `0x138`: "Media Select WWW"
+    /// Usage ID `0x8A`: "Media Select WWW"
     MediaSelectWWW,
-    /// Usage ID `0x139`: "Media Select DVD"
+    /// Usage ID `0x8B`: "Media Select DVD"
     MediaSelectDVD,
-    /// Usage ID `0x140`: "Media Select Telephone"
+    /// Usage ID `0x8C`: "Media Select Telephone"
     MediaSelectTelephone,
-    /// Usage ID `0x141`: "Media Select Program Guide"
+    /// Usage ID `0x8D`: "Media Select Program Guide"
     MediaSelectProgramGuide,
-    /// Usage ID `0x142`: "Media Select Video Phone"
+    /// Usage ID `0x8E`: "Media Select Video Phone"
     MediaSelectVideoPhone,
-    /// Usage ID `0x143`: "Media Select Games"
+    /// Usage ID `0x8F`: "Media Select Games"
     MediaSelectGames,
-    /// Usage ID `0x144`: "Media Select Messages"
+    /// Usage ID `0x90`: "Media Select Messages"
     MediaSelectMessages,
-    /// Usage ID `0x145`: "Media Select CD"
+    /// Usage ID `0x91`: "Media Select CD"
     MediaSelectCD,
-    /// Usage ID `0x146`: "Media Select VCR"
+    /// Usage ID `0x92`: "Media Select VCR"
     MediaSelectVCR,
-    /// Usage ID `0x147`: "Media Select Tuner"
+    /// Usage ID `0x93`: "Media Select Tuner"
     MediaSelectTuner,
-    /// Usage ID `0x148`: "Quit"
+    /// Usage ID `0x94`: "Quit"
     Quit,
-    /// Usage ID `0x149`: "Help"
+    /// Usage ID `0x95`: "Help"
     Help,
-    /// Usage ID `0x150`: "Media Select Tape"
+    /// Usage ID `0x96`: "Media Select Tape"
     MediaSelectTape,
-    /// Usage ID `0x151`: "Media Select Cable"
+    /// Usage ID `0x97`: "Media Select Cable"
     MediaSelectCable,
-    /// Usage ID `0x152`: "Media Select Satellite"
+    /// Usage ID `0x98`: "Media Select Satellite"
     MediaSelectSatellite,
-    /// Usage ID `0x153`: "Media Select Security"
+    /// Usage ID `0x99`: "Media Select Security"
     MediaSelectSecurity,
-    /// Usage ID `0x154`: "Media Select Home"
+    /// Usage ID `0x9A`: "Media Select Home"
     MediaSelectHome,
-    /// Usage ID `0x155`: "Media Select Call"
+    /// Usage ID `0x9B`: "Media Select Call"
     MediaSelectCall,
-    /// Usage ID `0x156`: "Channel Increment"
+    /// Usage ID `0x9C`: "Channel Increment"
     ChannelIncrement,
-    /// Usage ID `0x157`: "Channel Decrement"
+    /// Usage ID `0x9D`: "Channel Decrement"
     ChannelDecrement,
-    /// Usage ID `0x158`: "Media Select SAP"
+    /// Usage ID `0x9E`: "Media Select SAP"
     MediaSelectSAP,
-    /// Usage ID `0x160`: "VCR Plus"
+    /// Usage ID `0xA0`: "VCR Plus"
     VCRPlus,
-    /// Usage ID `0x161`: "Once"
+    /// Usage ID `0xA1`: "Once"
     Once,
-    /// Usage ID `0x162`: "Daily"
+    /// Usage ID `0xA2`: "Daily"
     Daily,
-    /// Usage ID `0x163`: "Weekly"
+    /// Usage ID `0xA3`: "Weekly"
     Weekly,
-    /// Usage ID `0x164`: "Monthly"
+    /// Usage ID `0xA4`: "Monthly"
     Monthly,
-    /// Usage ID `0x176`: "Play"
+    /// Usage ID `0xB0`: "Play"
     Play,
-    /// Usage ID `0x177`: "Pause"
+    /// Usage ID `0xB1`: "Pause"
     Pause,
-    /// Usage ID `0x178`: "Record"
+    /// Usage ID `0xB2`: "Record"
     Record,
-    /// Usage ID `0x179`: "Fast Forward"
+    /// Usage ID `0xB3`: "Fast Forward"
     FastForward,
-    /// Usage ID `0x180`: "Rewind"
+    /// Usage ID `0xB4`: "Rewind"
     Rewind,
-    /// Usage ID `0x181`: "Scan Next Track"
+    /// Usage ID `0xB5`: "Scan Next Track"
     ScanNextTrack,
-    /// Usage ID `0x182`: "Scan Previous Track"
+    /// Usage ID `0xB6`: "Scan Previous Track"
     ScanPreviousTrack,
-    /// Usage ID `0x183`: "Stop"
+    /// Usage ID `0xB7`: "Stop"
     Stop,
-    /// Usage ID `0x184`: "Eject"
+    /// Usage ID `0xB8`: "Eject"
     Eject,
-    /// Usage ID `0x185`: "Random Play"
+    /// Usage ID `0xB9`: "Random Play"
     RandomPlay,
-    /// Usage ID `0x186`: "Select Disc"
+    /// Usage ID `0xBA`: "Select Disc"
     SelectDisc,
-    /// Usage ID `0x187`: "Enter Disc"
+    /// Usage ID `0xBB`: "Enter Disc"
     EnterDisc,
-    /// Usage ID `0x188`: "Repeat"
+    /// Usage ID `0xBC`: "Repeat"
     Repeat,
-    /// Usage ID `0x189`: "Tracking"
+    /// Usage ID `0xBD`: "Tracking"
     Tracking,
-    /// Usage ID `0x190`: "Track Normal"
+    /// Usage ID `0xBE`: "Track Normal"
     TrackNormal,
-    /// Usage ID `0x191`: "Slow Tracking"
+    /// Usage ID `0xBF`: "Slow Tracking"
     SlowTracking,
-    /// Usage ID `0x192`: "Frame Forward"
+    /// Usage ID `0xC0`: "Frame Forward"
     FrameForward,
-    /// Usage ID `0x193`: "Frame Back"
+    /// Usage ID `0xC1`: "Frame Back"
     FrameBack,
-    /// Usage ID `0x194`: "Mark"
+    /// Usage ID `0xC2`: "Mark"
     Mark,
-    /// Usage ID `0x195`: "Clear Mark"
+    /// Usage ID `0xC3`: "Clear Mark"
     ClearMark,
-    /// Usage ID `0x196`: "Repeat From Mark"
+    /// Usage ID `0xC4`: "Repeat From Mark"
     RepeatFromMark,
-    /// Usage ID `0x197`: "Return To Mark"
+    /// Usage ID `0xC5`: "Return To Mark"
     ReturnToMark,
-    /// Usage ID `0x198`: "Search Mark Forward"
+    /// Usage ID `0xC6`: "Search Mark Forward"
     SearchMarkForward,
-    /// Usage ID `0x199`: "Search Mark Backwards"
+    /// Usage ID `0xC7`: "Search Mark Backwards"
     SearchMarkBackwards,
-    /// Usage ID `0x200`: "Counter Reset"
+    /// Usage ID `0xC8`: "Counter Reset"
     CounterReset,
-    /// Usage ID `0x201`: "Show Counter"
+    /// Usage ID `0xC9`: "Show Counter"
     ShowCounter,
-    /// Usage ID `0x202`: "Tracking Increment"
+    /// Usage ID `0xCA`: "Tracking Increment"
     TrackingIncrement,
-    /// Usage ID `0x203`: "Tracking Decrement"
+    /// Usage ID `0xCB`: "Tracking Decrement"
     TrackingDecrement,
-    /// Usage ID `0x204`: "Stop/Eject"
+    /// Usage ID `0xCC`: "Stop/Eject"
     StopEject,
-    /// Usage ID `0x205`: "Play/Pause"
+    /// Usage ID `0xCD`: "Play/Pause"
     PlayPause,
-    /// Usage ID `0x206`: "Play/Skip"
+    /// Usage ID `0xCE`: "Play/Skip"
     PlaySkip,
-    /// Usage ID `0x207`: "Voice Command"
+    /// Usage ID `0xCF`: "Voice Command"
     VoiceCommand,
-    /// Usage ID `0x208`: "Invoke Capture Interface"
+    /// Usage ID `0xD0`: "Invoke Capture Interface"
     InvokeCaptureInterface,
-    /// Usage ID `0x209`: "Start or Stop Game Recording"
+    /// Usage ID `0xD1`: "Start or Stop Game Recording"
     StartorStopGameRecording,
-    /// Usage ID `0x210`: "Historical Game Capture"
+    /// Usage ID `0xD2`: "Historical Game Capture"
     HistoricalGameCapture,
-    /// Usage ID `0x211`: "Capture Game Screenshot"
+    /// Usage ID `0xD3`: "Capture Game Screenshot"
     CaptureGameScreenshot,
-    /// Usage ID `0x212`: "Show or Hide Recording Indicator"
+    /// Usage ID `0xD4`: "Show or Hide Recording Indicator"
     ShoworHideRecordingIndicator,
-    /// Usage ID `0x213`: "Start or Stop Microphone Capture"
+    /// Usage ID `0xD5`: "Start or Stop Microphone Capture"
     StartorStopMicrophoneCapture,
-    /// Usage ID `0x214`: "Start or Stop Camera Capture"
+    /// Usage ID `0xD6`: "Start or Stop Camera Capture"
     StartorStopCameraCapture,
-    /// Usage ID `0x215`: "Start or Stop Game Broadcast"
+    /// Usage ID `0xD7`: "Start or Stop Game Broadcast"
     StartorStopGameBroadcast,
-    /// Usage ID `0x224`: "Volume"
+    /// Usage ID `0xE0`: "Volume"
     Volume,
-    /// Usage ID `0x225`: "Balance"
+    /// Usage ID `0xE1`: "Balance"
     Balance,
-    /// Usage ID `0x226`: "Mute"
+    /// Usage ID `0xE2`: "Mute"
     Mute,
-    /// Usage ID `0x227`: "Bass"
+    /// Usage ID `0xE3`: "Bass"
     Bass,
-    /// Usage ID `0x228`: "Treble"
+    /// Usage ID `0xE4`: "Treble"
     Treble,
-    /// Usage ID `0x229`: "Bass Boost"
+    /// Usage ID `0xE5`: "Bass Boost"
     BassBoost,
-    /// Usage ID `0x230`: "Surround Mode"
+    /// Usage ID `0xE6`: "Surround Mode"
     SurroundMode,
-    /// Usage ID `0x231`: "Loudness"
+    /// Usage ID `0xE7`: "Loudness"
     Loudness,
-    /// Usage ID `0x232`: "MPX"
+    /// Usage ID `0xE8`: "MPX"
     MPX,
-    /// Usage ID `0x233`: "Volume Up"
+    /// Usage ID `0xE9`: "Volume Up"
     VolumeUp,
-    /// Usage ID `0x234`: "Volume Down"
+    /// Usage ID `0xEA`: "Volume Down"
     VolumeDown,
-    /// Usage ID `0x240`: "Speed Select"
+    /// Usage ID `0xF0`: "Speed Select"
     SpeedSelect,
-    /// Usage ID `0x241`: "Playback Speed"
+    /// Usage ID `0xF1`: "Playback Speed"
     PlaybackSpeed,
-    /// Usage ID `0x242`: "Standard Play"
+    /// Usage ID `0xF2`: "Standard Play"
     StandardPlay,
-    /// Usage ID `0x243`: "Long Play"
+    /// Usage ID `0xF3`: "Long Play"
     LongPlay,
-    /// Usage ID `0x244`: "Extended Play"
+    /// Usage ID `0xF4`: "Extended Play"
     ExtendedPlay,
-    /// Usage ID `0x245`: "Slow"
+    /// Usage ID `0xF5`: "Slow"
     Slow,
-    /// Usage ID `0x256`: "Fan Enable"
+    /// Usage ID `0x100`: "Fan Enable"
     FanEnable,
-    /// Usage ID `0x257`: "Fan Speed"
+    /// Usage ID `0x101`: "Fan Speed"
     FanSpeed,
-    /// Usage ID `0x258`: "Light Enable"
+    /// Usage ID `0x102`: "Light Enable"
     LightEnable,
-    /// Usage ID `0x259`: "Light Illumination Level"
+    /// Usage ID `0x103`: "Light Illumination Level"
     LightIlluminationLevel,
-    /// Usage ID `0x260`: "Climate Control Enable"
+    /// Usage ID `0x104`: "Climate Control Enable"
     ClimateControlEnable,
-    /// Usage ID `0x261`: "Room Temperature"
+    /// Usage ID `0x105`: "Room Temperature"
     RoomTemperature,
-    /// Usage ID `0x262`: "Security Enable"
+    /// Usage ID `0x106`: "Security Enable"
     SecurityEnable,
-    /// Usage ID `0x263`: "Fire Alarm"
+    /// Usage ID `0x107`: "Fire Alarm"
     FireAlarm,
-    /// Usage ID `0x264`: "Police Alarm"
+    /// Usage ID `0x108`: "Police Alarm"
     PoliceAlarm,
-    /// Usage ID `0x265`: "Proximity"
+    /// Usage ID `0x109`: "Proximity"
     Proximity,
-    /// Usage ID `0x266`: "Motion"
+    /// Usage ID `0x10A`: "Motion"
     Motion,
-    /// Usage ID `0x267`: "Duress Alarm"
+    /// Usage ID `0x10B`: "Duress Alarm"
     DuressAlarm,
-    /// Usage ID `0x268`: "Holdup Alarm"
+    /// Usage ID `0x10C`: "Holdup Alarm"
     HoldupAlarm,
-    /// Usage ID `0x269`: "Medical Alarm"
+    /// Usage ID `0x10D`: "Medical Alarm"
     MedicalAlarm,
-    /// Usage ID `0x336`: "Balance Right"
+    /// Usage ID `0x150`: "Balance Right"
     BalanceRight,
-    /// Usage ID `0x337`: "Balance Left"
+    /// Usage ID `0x151`: "Balance Left"
     BalanceLeft,
-    /// Usage ID `0x338`: "Bass Increment"
+    /// Usage ID `0x152`: "Bass Increment"
     BassIncrement,
-    /// Usage ID `0x339`: "Bass Decrement"
+    /// Usage ID `0x153`: "Bass Decrement"
     BassDecrement,
-    /// Usage ID `0x340`: "Treble Increment"
+    /// Usage ID `0x154`: "Treble Increment"
     TrebleIncrement,
-    /// Usage ID `0x341`: "Treble Decrement"
+    /// Usage ID `0x155`: "Treble Decrement"
     TrebleDecrement,
-    /// Usage ID `0x352`: "Speaker System"
+    /// Usage ID `0x160`: "Speaker System"
     SpeakerSystem,
-    /// Usage ID `0x353`: "Channel Left"
+    /// Usage ID `0x161`: "Channel Left"
     ChannelLeft,
-    /// Usage ID `0x354`: "Channel Right"
+    /// Usage ID `0x162`: "Channel Right"
     ChannelRight,
-    /// Usage ID `0x355`: "Channel Center"
+    /// Usage ID `0x163`: "Channel Center"
     ChannelCenter,
-    /// Usage ID `0x356`: "Channel Front"
+    /// Usage ID `0x164`: "Channel Front"
     ChannelFront,
-    /// Usage ID `0x357`: "Channel Center Front"
+    /// Usage ID `0x165`: "Channel Center Front"
     ChannelCenterFront,
-    /// Usage ID `0x358`: "Channel Side"
+    /// Usage ID `0x166`: "Channel Side"
     ChannelSide,
-    /// Usage ID `0x359`: "Channel Surround"
+    /// Usage ID `0x167`: "Channel Surround"
     ChannelSurround,
-    /// Usage ID `0x360`: "Channel Low Freq Enhancement"
+    /// Usage ID `0x168`: "Channel Low Freq Enhancement"
     ChannelLowFreqEnhancement,
-    /// Usage ID `0x361`: "Channel Top"
+    /// Usage ID `0x169`: "Channel Top"
     ChannelTop,
-    /// Usage ID `0x362`: "Channel Unknown"
+    /// Usage ID `0x16A`: "Channel Unknown"
     ChannelUnknown,
-    /// Usage ID `0x368`: "Sub-channel"
+    /// Usage ID `0x170`: "Sub-channel"
     Subchannel,
-    /// Usage ID `0x369`: "Sub-channel Increment"
+    /// Usage ID `0x171`: "Sub-channel Increment"
     SubchannelIncrement,
-    /// Usage ID `0x370`: "Sub-channel Decrement"
+    /// Usage ID `0x172`: "Sub-channel Decrement"
     SubchannelDecrement,
-    /// Usage ID `0x371`: "Alternate Audio Increment"
+    /// Usage ID `0x173`: "Alternate Audio Increment"
     AlternateAudioIncrement,
-    /// Usage ID `0x372`: "Alternate Audio Decrement"
+    /// Usage ID `0x174`: "Alternate Audio Decrement"
     AlternateAudioDecrement,
-    /// Usage ID `0x384`: "Application Launch Buttons"
+    /// Usage ID `0x180`: "Application Launch Buttons"
     ApplicationLaunchButtons,
-    /// Usage ID `0x385`: "AL Launch Button Config Tool"
+    /// Usage ID `0x181`: "AL Launch Button Config Tool"
     ALLaunchButtonConfigTool,
-    /// Usage ID `0x386`: "AL Programmable Button Config"
+    /// Usage ID `0x182`: "AL Programmable Button Config"
     ALProgrammableButtonConfig,
-    /// Usage ID `0x387`: "AL Consumer Control Config"
+    /// Usage ID `0x183`: "AL Consumer Control Config"
     ALConsumerControlConfig,
-    /// Usage ID `0x388`: "AL Word Processor"
+    /// Usage ID `0x184`: "AL Word Processor"
     ALWordProcessor,
-    /// Usage ID `0x389`: "AL Text Editor"
+    /// Usage ID `0x185`: "AL Text Editor"
     ALTextEditor,
-    /// Usage ID `0x390`: "AL Spreadsheet"
+    /// Usage ID `0x186`: "AL Spreadsheet"
     ALSpreadsheet,
-    /// Usage ID `0x391`: "AL Graphics Editor"
+    /// Usage ID `0x187`: "AL Graphics Editor"
     ALGraphicsEditor,
-    /// Usage ID `0x392`: "AL Presentation App"
+    /// Usage ID `0x188`: "AL Presentation App"
     ALPresentationApp,
-    /// Usage ID `0x393`: "AL Database App"
+    /// Usage ID `0x189`: "AL Database App"
     ALDatabaseApp,
-    /// Usage ID `0x394`: "AL Email Reader"
+    /// Usage ID `0x18A`: "AL Email Reader"
     ALEmailReader,
-    /// Usage ID `0x395`: "AL Newsreader"
+    /// Usage ID `0x18B`: "AL Newsreader"
     ALNewsreader,
-    /// Usage ID `0x396`: "AL Voicemail"
+    /// Usage ID `0x18C`: "AL Voicemail"
     ALVoicemail,
-    /// Usage ID `0x397`: "AL Contacts/Address Book"
+    /// Usage ID `0x18D`: "AL Contacts/Address Book"
     ALContactsAddressBook,
-    /// Usage ID `0x398`: "AL Calendar/Schedule"
+    /// Usage ID `0x18E`: "AL Calendar/Schedule"
     ALCalendarSchedule,
-    /// Usage ID `0x399`: "AL Task/Project Manager"
+    /// Usage ID `0x18F`: "AL Task/Project Manager"
     ALTaskProjectManager,
-    /// Usage ID `0x400`: "AL Log/Journal/Timecard"
+    /// Usage ID `0x190`: "AL Log/Journal/Timecard"
     ALLogJournalTimecard,
-    /// Usage ID `0x401`: "AL Checkbook/Finance"
+    /// Usage ID `0x191`: "AL Checkbook/Finance"
     ALCheckbookFinance,
-    /// Usage ID `0x402`: "AL Calculator"
+    /// Usage ID `0x192`: "AL Calculator"
     ALCalculator,
-    /// Usage ID `0x403`: "AL A/VCapture/Playback"
+    /// Usage ID `0x193`: "AL A/VCapture/Playback"
     ALAVCapturePlayback,
-    /// Usage ID `0x404`: "AL Local Machine Browser"
+    /// Usage ID `0x194`: "AL Local Machine Browser"
     ALLocalMachineBrowser,
-    /// Usage ID `0x405`: "AL LAN/WANBrowser"
+    /// Usage ID `0x195`: "AL LAN/WANBrowser"
     ALLANWANBrowser,
-    /// Usage ID `0x406`: "AL Internet Browser"
+    /// Usage ID `0x196`: "AL Internet Browser"
     ALInternetBrowser,
-    /// Usage ID `0x407`: "AL Remote Networking/ISPConnect"
+    /// Usage ID `0x197`: "AL Remote Networking/ISPConnect"
     ALRemoteNetworkingISPConnect,
-    /// Usage ID `0x408`: "AL Network Conference"
+    /// Usage ID `0x198`: "AL Network Conference"
     ALNetworkConference,
-    /// Usage ID `0x409`: "AL Network Chat"
+    /// Usage ID `0x199`: "AL Network Chat"
     ALNetworkChat,
-    /// Usage ID `0x410`: "AL Telephony/Dialer"
+    /// Usage ID `0x19A`: "AL Telephony/Dialer"
     ALTelephonyDialer,
-    /// Usage ID `0x411`: "AL Logon"
+    /// Usage ID `0x19B`: "AL Logon"
     ALLogon,
-    /// Usage ID `0x412`: "AL Logoff"
+    /// Usage ID `0x19C`: "AL Logoff"
     ALLogoff,
-    /// Usage ID `0x413`: "AL Logon/Logoff"
+    /// Usage ID `0x19D`: "AL Logon/Logoff"
     ALLogonLogoff,
-    /// Usage ID `0x414`: "AL Terminal Lock/Screensaver"
+    /// Usage ID `0x19E`: "AL Terminal Lock/Screensaver"
     ALTerminalLockScreensaver,
-    /// Usage ID `0x415`: "AL Control Panel"
+    /// Usage ID `0x19F`: "AL Control Panel"
     ALControlPanel,
-    /// Usage ID `0x416`: "AL Command Line Processor/Run"
+    /// Usage ID `0x1A0`: "AL Command Line Processor/Run"
     ALCommandLineProcessorRun,
-    /// Usage ID `0x417`: "AL Process/Task Manager"
+    /// Usage ID `0x1A1`: "AL Process/Task Manager"
     ALProcessTaskManager,
-    /// Usage ID `0x418`: "AL Select Task/Application"
+    /// Usage ID `0x1A2`: "AL Select Task/Application"
     ALSelectTaskApplication,
-    /// Usage ID `0x419`: "AL Next Task/Application"
+    /// Usage ID `0x1A3`: "AL Next Task/Application"
     ALNextTaskApplication,
-    /// Usage ID `0x420`: "AL Previous Task/Application"
+    /// Usage ID `0x1A4`: "AL Previous Task/Application"
     ALPreviousTaskApplication,
-    /// Usage ID `0x421`: "AL Preempt Halt Task/Application"
+    /// Usage ID `0x1A5`: "AL Preempt Halt Task/Application"
     ALPreemptHaltTaskApplication,
-    /// Usage ID `0x422`: "AL Integrated Help Center"
+    /// Usage ID `0x1A6`: "AL Integrated Help Center"
     ALIntegratedHelpCenter,
-    /// Usage ID `0x423`: "AL Documents"
+    /// Usage ID `0x1A7`: "AL Documents"
     ALDocuments,
-    /// Usage ID `0x424`: "AL Thesaurus"
+    /// Usage ID `0x1A8`: "AL Thesaurus"
     ALThesaurus,
-    /// Usage ID `0x425`: "AL Dictionary"
+    /// Usage ID `0x1A9`: "AL Dictionary"
     ALDictionary,
-    /// Usage ID `0x426`: "AL Desktop"
+    /// Usage ID `0x1AA`: "AL Desktop"
     ALDesktop,
-    /// Usage ID `0x427`: "AL Spell Check"
+    /// Usage ID `0x1AB`: "AL Spell Check"
     ALSpellCheck,
-    /// Usage ID `0x428`: "AL Grammar Check"
+    /// Usage ID `0x1AC`: "AL Grammar Check"
     ALGrammarCheck,
-    /// Usage ID `0x429`: "AL Wireless Status"
+    /// Usage ID `0x1AD`: "AL Wireless Status"
     ALWirelessStatus,
-    /// Usage ID `0x430`: "AL Keyboard Layout"
+    /// Usage ID `0x1AE`: "AL Keyboard Layout"
     ALKeyboardLayout,
-    /// Usage ID `0x431`: "AL Virus Protection"
+    /// Usage ID `0x1AF`: "AL Virus Protection"
     ALVirusProtection,
-    /// Usage ID `0x432`: "AL Encryption"
+    /// Usage ID `0x1B0`: "AL Encryption"
     ALEncryption,
-    /// Usage ID `0x433`: "AL Screen Saver"
+    /// Usage ID `0x1B1`: "AL Screen Saver"
     ALScreenSaver,
-    /// Usage ID `0x434`: "AL Alarms"
+    /// Usage ID `0x1B2`: "AL Alarms"
     ALAlarms,
-    /// Usage ID `0x435`: "AL Clock"
+    /// Usage ID `0x1B3`: "AL Clock"
     ALClock,
-    /// Usage ID `0x436`: "AL File Browser"
+    /// Usage ID `0x1B4`: "AL File Browser"
     ALFileBrowser,
-    /// Usage ID `0x437`: "AL Power Status"
+    /// Usage ID `0x1B5`: "AL Power Status"
     ALPowerStatus,
-    /// Usage ID `0x438`: "AL Image Browser"
+    /// Usage ID `0x1B6`: "AL Image Browser"
     ALImageBrowser,
-    /// Usage ID `0x439`: "AL Audio Browser"
+    /// Usage ID `0x1B7`: "AL Audio Browser"
     ALAudioBrowser,
-    /// Usage ID `0x440`: "AL Movie Browser"
+    /// Usage ID `0x1B8`: "AL Movie Browser"
     ALMovieBrowser,
-    /// Usage ID `0x441`: "AL Digital Rights Manager"
+    /// Usage ID `0x1B9`: "AL Digital Rights Manager"
     ALDigitalRightsManager,
-    /// Usage ID `0x442`: "AL Digital Wallet"
+    /// Usage ID `0x1BA`: "AL Digital Wallet"
     ALDigitalWallet,
-    /// Usage ID `0x444`: "AL Instant Messaging"
+    /// Usage ID `0x1BC`: "AL Instant Messaging"
     ALInstantMessaging,
-    /// Usage ID `0x445`: "AL OEMFeatures Tips Tuto Browser"
+    /// Usage ID `0x1BD`: "AL OEMFeatures Tips Tuto Browser"
     ALOEMFeaturesTipsTutoBrowser,
-    /// Usage ID `0x446`: "AL OEMHelp"
+    /// Usage ID `0x1BE`: "AL OEMHelp"
     ALOEMHelp,
-    /// Usage ID `0x447`: "AL Online Community"
+    /// Usage ID `0x1BF`: "AL Online Community"
     ALOnlineCommunity,
-    /// Usage ID `0x448`: "AL Entertainment Content Browser"
+    /// Usage ID `0x1C0`: "AL Entertainment Content Browser"
     ALEntertainmentContentBrowser,
-    /// Usage ID `0x449`: "AL Online Shopping Browser"
+    /// Usage ID `0x1C1`: "AL Online Shopping Browser"
     ALOnlineShoppingBrowser,
-    /// Usage ID `0x450`: "AL Smart Card Information/Help"
+    /// Usage ID `0x1C2`: "AL Smart Card Information/Help"
     ALSmartCardInformationHelp,
-    /// Usage ID `0x451`: "AL Market Monitor Finance Browser"
+    /// Usage ID `0x1C3`: "AL Market Monitor Finance Browser"
     ALMarketMonitorFinanceBrowser,
-    /// Usage ID `0x452`: "AL Customized Corp News Browser"
+    /// Usage ID `0x1C4`: "AL Customized Corp News Browser"
     ALCustomizedCorpNewsBrowser,
-    /// Usage ID `0x453`: "AL Online Activity Browser"
+    /// Usage ID `0x1C5`: "AL Online Activity Browser"
     ALOnlineActivityBrowser,
-    /// Usage ID `0x454`: "AL Research/Search Browser"
+    /// Usage ID `0x1C6`: "AL Research/Search Browser"
     ALResearchSearchBrowser,
-    /// Usage ID `0x455`: "AL Audio Player"
+    /// Usage ID `0x1C7`: "AL Audio Player"
     ALAudioPlayer,
-    /// Usage ID `0x456`: "AL Message Status"
+    /// Usage ID `0x1C8`: "AL Message Status"
     ALMessageStatus,
-    /// Usage ID `0x457`: "AL Contact Sync"
+    /// Usage ID `0x1C9`: "AL Contact Sync"
     ALContactSync,
-    /// Usage ID `0x512`: "Generic GUIApplication Controls"
+    /// Usage ID `0x200`: "Generic GUIApplication Controls"
     GenericGUIApplicationControls,
-    /// Usage ID `0x513`: "AC New"
+    /// Usage ID `0x201`: "AC New"
     ACNew,
-    /// Usage ID `0x514`: "AC Open"
+    /// Usage ID `0x202`: "AC Open"
     ACOpen,
-    /// Usage ID `0x515`: "AC Close"
+    /// Usage ID `0x203`: "AC Close"
     ACClose,
-    /// Usage ID `0x516`: "AC Exit"
+    /// Usage ID `0x204`: "AC Exit"
     ACExit,
-    /// Usage ID `0x517`: "AC Maximize"
+    /// Usage ID `0x205`: "AC Maximize"
     ACMaximize,
-    /// Usage ID `0x518`: "AC Minimize"
+    /// Usage ID `0x206`: "AC Minimize"
     ACMinimize,
-    /// Usage ID `0x519`: "AC Save"
+    /// Usage ID `0x207`: "AC Save"
     ACSave,
-    /// Usage ID `0x520`: "AC Print"
+    /// Usage ID `0x208`: "AC Print"
     ACPrint,
-    /// Usage ID `0x521`: "AC Properties"
+    /// Usage ID `0x209`: "AC Properties"
     ACProperties,
-    /// Usage ID `0x538`: "AC Undo"
+    /// Usage ID `0x21A`: "AC Undo"
     ACUndo,
-    /// Usage ID `0x539`: "AC Copy"
+    /// Usage ID `0x21B`: "AC Copy"
     ACCopy,
-    /// Usage ID `0x540`: "AC Cut"
+    /// Usage ID `0x21C`: "AC Cut"
     ACCut,
-    /// Usage ID `0x541`: "AC Paste"
+    /// Usage ID `0x21D`: "AC Paste"
     ACPaste,
-    /// Usage ID `0x542`: "AC Select All"
+    /// Usage ID `0x21E`: "AC Select All"
     ACSelectAll,
-    /// Usage ID `0x543`: "AC Find"
+    /// Usage ID `0x21F`: "AC Find"
     ACFind,
-    /// Usage ID `0x544`: "AC Findand Replace"
+    /// Usage ID `0x220`: "AC Findand Replace"
     ACFindandReplace,
-    /// Usage ID `0x545`: "AC Search"
+    /// Usage ID `0x221`: "AC Search"
     ACSearch,
-    /// Usage ID `0x546`: "AC Go To"
+    /// Usage ID `0x222`: "AC Go To"
     ACGoTo,
-    /// Usage ID `0x547`: "AC Home"
+    /// Usage ID `0x223`: "AC Home"
     ACHome,
-    /// Usage ID `0x548`: "AC Back"
+    /// Usage ID `0x224`: "AC Back"
     ACBack,
-    /// Usage ID `0x549`: "AC Forward"
+    /// Usage ID `0x225`: "AC Forward"
     ACForward,
-    /// Usage ID `0x550`: "AC Stop"
+    /// Usage ID `0x226`: "AC Stop"
     ACStop,
-    /// Usage ID `0x551`: "AC Refresh"
+    /// Usage ID `0x227`: "AC Refresh"
     ACRefresh,
-    /// Usage ID `0x552`: "AC Previous Link"
+    /// Usage ID `0x228`: "AC Previous Link"
     ACPreviousLink,
-    /// Usage ID `0x553`: "AC Next Link"
+    /// Usage ID `0x229`: "AC Next Link"
     ACNextLink,
-    /// Usage ID `0x554`: "AC Bookmarks"
+    /// Usage ID `0x22A`: "AC Bookmarks"
     ACBookmarks,
-    /// Usage ID `0x555`: "AC History"
+    /// Usage ID `0x22B`: "AC History"
     ACHistory,
-    /// Usage ID `0x556`: "AC Subscriptions"
+    /// Usage ID `0x22C`: "AC Subscriptions"
     ACSubscriptions,
-    /// Usage ID `0x557`: "AC Zoom In"
+    /// Usage ID `0x22D`: "AC Zoom In"
     ACZoomIn,
-    /// Usage ID `0x558`: "AC Zoom Out"
+    /// Usage ID `0x22E`: "AC Zoom Out"
     ACZoomOut,
-    /// Usage ID `0x559`: "AC Zoom"
+    /// Usage ID `0x22F`: "AC Zoom"
     ACZoom,
-    /// Usage ID `0x560`: "AC Full Screen View"
+    /// Usage ID `0x230`: "AC Full Screen View"
     ACFullScreenView,
-    /// Usage ID `0x561`: "AC Normal View"
+    /// Usage ID `0x231`: "AC Normal View"
     ACNormalView,
-    /// Usage ID `0x562`: "AC View Toggle"
+    /// Usage ID `0x232`: "AC View Toggle"
     ACViewToggle,
-    /// Usage ID `0x563`: "AC Scroll Up"
+    /// Usage ID `0x233`: "AC Scroll Up"
     ACScrollUp,
-    /// Usage ID `0x564`: "AC Scroll Down"
+    /// Usage ID `0x234`: "AC Scroll Down"
     ACScrollDown,
-    /// Usage ID `0x565`: "AC Scroll"
+    /// Usage ID `0x235`: "AC Scroll"
     ACScroll,
-    /// Usage ID `0x566`: "AC Pan Left"
+    /// Usage ID `0x236`: "AC Pan Left"
     ACPanLeft,
-    /// Usage ID `0x567`: "AC Pan Right"
+    /// Usage ID `0x237`: "AC Pan Right"
     ACPanRight,
-    /// Usage ID `0x568`: "AC Pan"
+    /// Usage ID `0x238`: "AC Pan"
     ACPan,
-    /// Usage ID `0x569`: "AC New Window"
+    /// Usage ID `0x239`: "AC New Window"
     ACNewWindow,
-    /// Usage ID `0x570`: "AC Tile Horizontally"
+    /// Usage ID `0x23A`: "AC Tile Horizontally"
     ACTileHorizontally,
-    /// Usage ID `0x571`: "AC Tile Vertically"
+    /// Usage ID `0x23B`: "AC Tile Vertically"
     ACTileVertically,
-    /// Usage ID `0x572`: "AC Format"
+    /// Usage ID `0x23C`: "AC Format"
     ACFormat,
-    /// Usage ID `0x573`: "AC Edit"
+    /// Usage ID `0x23D`: "AC Edit"
     ACEdit,
-    /// Usage ID `0x574`: "AC Bold"
+    /// Usage ID `0x23E`: "AC Bold"
     ACBold,
-    /// Usage ID `0x575`: "AC Italics"
+    /// Usage ID `0x23F`: "AC Italics"
     ACItalics,
-    /// Usage ID `0x576`: "AC Underline"
+    /// Usage ID `0x240`: "AC Underline"
     ACUnderline,
-    /// Usage ID `0x577`: "AC Strikethrough"
+    /// Usage ID `0x241`: "AC Strikethrough"
     ACStrikethrough,
-    /// Usage ID `0x578`: "AC Subscript"
+    /// Usage ID `0x242`: "AC Subscript"
     ACSubscript,
-    /// Usage ID `0x579`: "AC Superscript"
+    /// Usage ID `0x243`: "AC Superscript"
     ACSuperscript,
-    /// Usage ID `0x580`: "AC All Caps"
+    /// Usage ID `0x244`: "AC All Caps"
     ACAllCaps,
-    /// Usage ID `0x581`: "AC Rotate"
+    /// Usage ID `0x245`: "AC Rotate"
     ACRotate,
-    /// Usage ID `0x582`: "AC Resize"
+    /// Usage ID `0x246`: "AC Resize"
     ACResize,
-    /// Usage ID `0x583`: "AC Fliphorizontal"
+    /// Usage ID `0x247`: "AC Fliphorizontal"
     ACFliphorizontal,
-    /// Usage ID `0x584`: "AC Flip Vertical"
+    /// Usage ID `0x248`: "AC Flip Vertical"
     ACFlipVertical,
-    /// Usage ID `0x585`: "AC Mirror Horizontal"
+    /// Usage ID `0x249`: "AC Mirror Horizontal"
     ACMirrorHorizontal,
-    /// Usage ID `0x586`: "AC Mirror Vertical"
+    /// Usage ID `0x24A`: "AC Mirror Vertical"
     ACMirrorVertical,
-    /// Usage ID `0x587`: "AC Font Select"
+    /// Usage ID `0x24B`: "AC Font Select"
     ACFontSelect,
-    /// Usage ID `0x588`: "AC Font Color"
+    /// Usage ID `0x24C`: "AC Font Color"
     ACFontColor,
-    /// Usage ID `0x589`: "AC Font Size"
+    /// Usage ID `0x24D`: "AC Font Size"
     ACFontSize,
-    /// Usage ID `0x590`: "AC Justify Left"
+    /// Usage ID `0x24E`: "AC Justify Left"
     ACJustifyLeft,
-    /// Usage ID `0x591`: "AC Justify Center H"
+    /// Usage ID `0x24F`: "AC Justify Center H"
     ACJustifyCenterH,
-    /// Usage ID `0x592`: "AC Justify Right"
+    /// Usage ID `0x250`: "AC Justify Right"
     ACJustifyRight,
-    /// Usage ID `0x593`: "AC Justify Block H"
+    /// Usage ID `0x251`: "AC Justify Block H"
     ACJustifyBlockH,
-    /// Usage ID `0x594`: "AC Justify Top"
+    /// Usage ID `0x252`: "AC Justify Top"
     ACJustifyTop,
-    /// Usage ID `0x595`: "AC Justify Center V"
+    /// Usage ID `0x253`: "AC Justify Center V"
     ACJustifyCenterV,
-    /// Usage ID `0x596`: "AC Justify Bottom"
+    /// Usage ID `0x254`: "AC Justify Bottom"
     ACJustifyBottom,
-    /// Usage ID `0x597`: "AC Justify Block V"
+    /// Usage ID `0x255`: "AC Justify Block V"
     ACJustifyBlockV,
-    /// Usage ID `0x598`: "AC Indent Decrease"
+    /// Usage ID `0x256`: "AC Indent Decrease"
     ACIndentDecrease,
-    /// Usage ID `0x599`: "AC Indent Increase"
+    /// Usage ID `0x257`: "AC Indent Increase"
     ACIndentIncrease,
-    /// Usage ID `0x600`: "AC Numbered List"
+    /// Usage ID `0x258`: "AC Numbered List"
     ACNumberedList,
-    /// Usage ID `0x601`: "AC Restart Numbering"
+    /// Usage ID `0x259`: "AC Restart Numbering"
     ACRestartNumbering,
-    /// Usage ID `0x602`: "AC Bulleted List"
+    /// Usage ID `0x25A`: "AC Bulleted List"
     ACBulletedList,
-    /// Usage ID `0x603`: "AC Promote"
+    /// Usage ID `0x25B`: "AC Promote"
     ACPromote,
-    /// Usage ID `0x604`: "AC Demote"
+    /// Usage ID `0x25C`: "AC Demote"
     ACDemote,
-    /// Usage ID `0x605`: "AC Yes"
+    /// Usage ID `0x25D`: "AC Yes"
     ACYes,
-    /// Usage ID `0x606`: "AC No"
+    /// Usage ID `0x25E`: "AC No"
     ACNo,
-    /// Usage ID `0x607`: "AC Cancel"
+    /// Usage ID `0x25F`: "AC Cancel"
     ACCancel,
-    /// Usage ID `0x608`: "AC Catalog"
+    /// Usage ID `0x260`: "AC Catalog"
     ACCatalog,
-    /// Usage ID `0x609`: "AC Buy/Checkout"
+    /// Usage ID `0x261`: "AC Buy/Checkout"
     ACBuyCheckout,
-    /// Usage ID `0x610`: "AC Addto Cart"
+    /// Usage ID `0x262`: "AC Addto Cart"
     ACAddtoCart,
-    /// Usage ID `0x611`: "AC Expand"
+    /// Usage ID `0x263`: "AC Expand"
     ACExpand,
-    /// Usage ID `0x612`: "AC Expand All"
+    /// Usage ID `0x264`: "AC Expand All"
     ACExpandAll,
-    /// Usage ID `0x613`: "AC Collapse"
+    /// Usage ID `0x265`: "AC Collapse"
     ACCollapse,
-    /// Usage ID `0x614`: "AC Collapse All"
+    /// Usage ID `0x266`: "AC Collapse All"
     ACCollapseAll,
-    /// Usage ID `0x615`: "AC Print Preview"
+    /// Usage ID `0x267`: "AC Print Preview"
     ACPrintPreview,
-    /// Usage ID `0x616`: "AC Paste Special"
+    /// Usage ID `0x268`: "AC Paste Special"
     ACPasteSpecial,
-    /// Usage ID `0x617`: "AC Insert Mode"
+    /// Usage ID `0x269`: "AC Insert Mode"
     ACInsertMode,
-    /// Usage ID `0x618`: "AC Delete"
+    /// Usage ID `0x26A`: "AC Delete"
     ACDelete,
-    /// Usage ID `0x619`: "AC Lock"
+    /// Usage ID `0x26B`: "AC Lock"
     ACLock,
-    /// Usage ID `0x620`: "AC Unlock"
+    /// Usage ID `0x26C`: "AC Unlock"
     ACUnlock,
-    /// Usage ID `0x621`: "AC Protect"
+    /// Usage ID `0x26D`: "AC Protect"
     ACProtect,
-    /// Usage ID `0x622`: "AC Unprotect"
+    /// Usage ID `0x26E`: "AC Unprotect"
     ACUnprotect,
-    /// Usage ID `0x623`: "AC Attach Comment"
+    /// Usage ID `0x26F`: "AC Attach Comment"
     ACAttachComment,
-    /// Usage ID `0x624`: "AC Delete Comment"
+    /// Usage ID `0x270`: "AC Delete Comment"
     ACDeleteComment,
-    /// Usage ID `0x625`: "AC View Comment"
+    /// Usage ID `0x271`: "AC View Comment"
     ACViewComment,
-    /// Usage ID `0x626`: "AC Select Word"
+    /// Usage ID `0x272`: "AC Select Word"
     ACSelectWord,
-    /// Usage ID `0x627`: "AC Select Sentence"
+    /// Usage ID `0x273`: "AC Select Sentence"
     ACSelectSentence,
-    /// Usage ID `0x628`: "AC Select Paragraph"
+    /// Usage ID `0x274`: "AC Select Paragraph"
     ACSelectParagraph,
-    /// Usage ID `0x629`: "AC Select Column"
+    /// Usage ID `0x275`: "AC Select Column"
     ACSelectColumn,
-    /// Usage ID `0x630`: "AC Select Row"
+    /// Usage ID `0x276`: "AC Select Row"
     ACSelectRow,
-    /// Usage ID `0x631`: "AC Select Table"
+    /// Usage ID `0x277`: "AC Select Table"
     ACSelectTable,
-    /// Usage ID `0x632`: "AC Select Object"
+    /// Usage ID `0x278`: "AC Select Object"
     ACSelectObject,
-    /// Usage ID `0x633`: "AC Redo/Repeat"
+    /// Usage ID `0x279`: "AC Redo/Repeat"
     ACRedoRepeat,
-    /// Usage ID `0x634`: "AC Sort"
+    /// Usage ID `0x27A`: "AC Sort"
     ACSort,
-    /// Usage ID `0x635`: "AC Sort Ascending"
+    /// Usage ID `0x27B`: "AC Sort Ascending"
     ACSortAscending,
-    /// Usage ID `0x636`: "AC Sort Descending"
+    /// Usage ID `0x27C`: "AC Sort Descending"
     ACSortDescending,
-    /// Usage ID `0x637`: "AC Filter"
+    /// Usage ID `0x27D`: "AC Filter"
     ACFilter,
-    /// Usage ID `0x638`: "AC Set Clock"
+    /// Usage ID `0x27E`: "AC Set Clock"
     ACSetClock,
-    /// Usage ID `0x639`: "AC View Clock"
+    /// Usage ID `0x27F`: "AC View Clock"
     ACViewClock,
-    /// Usage ID `0x640`: "AC Select Time Zone"
+    /// Usage ID `0x280`: "AC Select Time Zone"
     ACSelectTimeZone,
-    /// Usage ID `0x641`: "AC Edit Time Zones"
+    /// Usage ID `0x281`: "AC Edit Time Zones"
     ACEditTimeZones,
-    /// Usage ID `0x642`: "AC Set Alarm"
+    /// Usage ID `0x282`: "AC Set Alarm"
     ACSetAlarm,
-    /// Usage ID `0x643`: "AC Clear Alarm"
+    /// Usage ID `0x283`: "AC Clear Alarm"
     ACClearAlarm,
-    /// Usage ID `0x644`: "AC Snooze Alarm"
+    /// Usage ID `0x284`: "AC Snooze Alarm"
     ACSnoozeAlarm,
-    /// Usage ID `0x645`: "AC Reset Alarm"
+    /// Usage ID `0x285`: "AC Reset Alarm"
     ACResetAlarm,
-    /// Usage ID `0x646`: "AC Synchronize"
+    /// Usage ID `0x286`: "AC Synchronize"
     ACSynchronize,
-    /// Usage ID `0x647`: "AC Send/Receive"
+    /// Usage ID `0x287`: "AC Send/Receive"
     ACSendReceive,
-    /// Usage ID `0x648`: "AC Send To"
+    /// Usage ID `0x288`: "AC Send To"
     ACSendTo,
-    /// Usage ID `0x649`: "AC Reply"
+    /// Usage ID `0x289`: "AC Reply"
     ACReply,
-    /// Usage ID `0x650`: "AC Reply All"
+    /// Usage ID `0x28A`: "AC Reply All"
     ACReplyAll,
-    /// Usage ID `0x651`: "AC Forward Msg"
+    /// Usage ID `0x28B`: "AC Forward Msg"
     ACForwardMsg,
-    /// Usage ID `0x652`: "AC Send"
+    /// Usage ID `0x28C`: "AC Send"
     ACSend,
-    /// Usage ID `0x653`: "AC Attach File"
+    /// Usage ID `0x28D`: "AC Attach File"
     ACAttachFile,
-    /// Usage ID `0x654`: "AC Upload"
+    /// Usage ID `0x28E`: "AC Upload"
     ACUpload,
-    /// Usage ID `0x655`: "AC Download(Save Target As)"
+    /// Usage ID `0x28F`: "AC Download(Save Target As)"
     ACDownloadSaveTargetAs,
-    /// Usage ID `0x656`: "AC Set Borders"
+    /// Usage ID `0x290`: "AC Set Borders"
     ACSetBorders,
-    /// Usage ID `0x657`: "AC Insert Row"
+    /// Usage ID `0x291`: "AC Insert Row"
     ACInsertRow,
-    /// Usage ID `0x658`: "AC Insert Column"
+    /// Usage ID `0x292`: "AC Insert Column"
     ACInsertColumn,
-    /// Usage ID `0x659`: "AC Insert File"
+    /// Usage ID `0x293`: "AC Insert File"
     ACInsertFile,
-    /// Usage ID `0x660`: "AC Insert Picture"
+    /// Usage ID `0x294`: "AC Insert Picture"
     ACInsertPicture,
-    /// Usage ID `0x661`: "AC Insert Object"
+    /// Usage ID `0x295`: "AC Insert Object"
     ACInsertObject,
-    /// Usage ID `0x662`: "AC Insert Symbol"
+    /// Usage ID `0x296`: "AC Insert Symbol"
     ACInsertSymbol,
-    /// Usage ID `0x663`: "AC Saveand Close"
+    /// Usage ID `0x297`: "AC Saveand Close"
     ACSaveandClose,
-    /// Usage ID `0x664`: "AC Rename"
+    /// Usage ID `0x298`: "AC Rename"
     ACRename,
-    /// Usage ID `0x665`: "AC Merge"
+    /// Usage ID `0x299`: "AC Merge"
     ACMerge,
-    /// Usage ID `0x666`: "AC Split"
+    /// Usage ID `0x29A`: "AC Split"
     ACSplit,
-    /// Usage ID `0x667`: "AC Disribute Horizontally"
+    /// Usage ID `0x29B`: "AC Disribute Horizontally"
     ACDisributeHorizontally,
-    /// Usage ID `0x668`: "AC Distribute Vertically"
+    /// Usage ID `0x29C`: "AC Distribute Vertically"
     ACDistributeVertically,
-    /// Usage ID `0x669`: "AC Next Keyboard Layout Select"
+    /// Usage ID `0x29D`: "AC Next Keyboard Layout Select"
     ACNextKeyboardLayoutSelect,
-    /// Usage ID `0x670`: "AC Navigation Guidance"
+    /// Usage ID `0x29E`: "AC Navigation Guidance"
     ACNavigationGuidance,
-    /// Usage ID `0x671`: "AC Desktop Show All Windows"
+    /// Usage ID `0x29F`: "AC Desktop Show All Windows"
     ACDesktopShowAllWindows,
-    /// Usage ID `0x672`: "ACSoft Key Left"
+    /// Usage ID `0x2A0`: "ACSoft Key Left"
     ACSoftKeyLeft,
-    /// Usage ID `0x673`: "ACSoft Key Right"
+    /// Usage ID `0x2A1`: "ACSoft Key Right"
     ACSoftKeyRight,
-    /// Usage ID `0x688`: "AC Idle Keep Alive"
+    /// Usage ID `0x2B0`: "AC Idle Keep Alive"
     ACIdleKeepAlive,
-    /// Usage ID `0x704`: "Extended Keyboard Attributes Collection"
+    /// Usage ID `0x2C0`: "Extended Keyboard Attributes Collection"
     ExtendedKeyboardAttributesCollection,
-    /// Usage ID `0x705`: "Keyboard Form Factor"
+    /// Usage ID `0x2C1`: "Keyboard Form Factor"
     KeyboardFormFactor,
-    /// Usage ID `0x706`: "Keyboard Key Type"
+    /// Usage ID `0x2C2`: "Keyboard Key Type"
     KeyboardKeyType,
-    /// Usage ID `0x707`: "Keyboard Physical Layout"
+    /// Usage ID `0x2C3`: "Keyboard Physical Layout"
     KeyboardPhysicalLayout,
-    /// Usage ID `0x708`: "Vendor-Specific Keyboard Physical Layout"
+    /// Usage ID `0x2C4`: "Vendor-Specific Keyboard Physical Layout"
     VendorSpecificKeyboardPhysicalLayout,
-    /// Usage ID `0x709`: "Keyboard IETF Language Tag Index"
+    /// Usage ID `0x2C5`: "Keyboard IETF Language Tag Index"
     KeyboardIETFLanguageTagIndex,
-    /// Usage ID `0x710`: "Implemented Keyboard Input AssistControls"
+    /// Usage ID `0x2C6`: "Implemented Keyboard Input AssistControls"
     ImplementedKeyboardInputAssistControls,
-    /// Usage ID `0x711`: "Keyboard Input Assist Previous"
+    /// Usage ID `0x2C7`: "Keyboard Input Assist Previous"
     KeyboardInputAssistPrevious,
-    /// Usage ID `0x712`: "Keyboard Input Assist NextS"
+    /// Usage ID `0x2C8`: "Keyboard Input Assist NextS"
     KeyboardInputAssistNextS,
-    /// Usage ID `0x713`: "Keyboard Input Assist Previous Group"
+    /// Usage ID `0x2C9`: "Keyboard Input Assist Previous Group"
     KeyboardInputAssistPreviousGroup,
-    /// Usage ID `0x714`: "Keyboard Input Assist NextGroup"
+    /// Usage ID `0x2CA`: "Keyboard Input Assist NextGroup"
     KeyboardInputAssistNextGroup,
-    /// Usage ID `0x715`: "Keyboard Input Assist Accept"
+    /// Usage ID `0x2CB`: "Keyboard Input Assist Accept"
     KeyboardInputAssistAccept,
-    /// Usage ID `0x716`: "Keyboard Input Assist Cancel"
+    /// Usage ID `0x2CC`: "Keyboard Input Assist Cancel"
     KeyboardInputAssistCancel,
-    /// Usage ID `0x1280`: "Contact Edited"
+    /// Usage ID `0x500`: "Contact Edited"
     ContactEdited,
-    /// Usage ID `0x1281`: "Contact Added"
+    /// Usage ID `0x501`: "Contact Added"
     ContactAdded,
-    /// Usage ID `0x1282`: "Contact Record Active"
+    /// Usage ID `0x502`: "Contact Record Active"
     ContactRecordActive,
-    /// Usage ID `0x1283`: "Contact Index"
+    /// Usage ID `0x503`: "Contact Index"
     ContactIndex,
-    /// Usage ID `0x1284`: "Contact Nickname"
+    /// Usage ID `0x504`: "Contact Nickname"
     ContactNickname,
-    /// Usage ID `0x1285`: "Contact First Name"
+    /// Usage ID `0x505`: "Contact First Name"
     ContactFirstName,
-    /// Usage ID `0x1286`: "Contact Last Name"
+    /// Usage ID `0x506`: "Contact Last Name"
     ContactLastName,
-    /// Usage ID `0x1287`: "Contact Full Name"
+    /// Usage ID `0x507`: "Contact Full Name"
     ContactFullName,
-    /// Usage ID `0x1288`: "Contact Phone Number Personal"
+    /// Usage ID `0x508`: "Contact Phone Number Personal"
     ContactPhoneNumberPersonal,
-    /// Usage ID `0x1289`: "Contact Phone Number Business"
+    /// Usage ID `0x509`: "Contact Phone Number Business"
     ContactPhoneNumberBusiness,
-    /// Usage ID `0x1290`: "Contact Phone Number Mobile"
+    /// Usage ID `0x50A`: "Contact Phone Number Mobile"
     ContactPhoneNumberMobile,
-    /// Usage ID `0x1291`: "Contact Phone Number Pager"
+    /// Usage ID `0x50B`: "Contact Phone Number Pager"
     ContactPhoneNumberPager,
-    /// Usage ID `0x1292`: "Contact Phone Number Fax"
+    /// Usage ID `0x50C`: "Contact Phone Number Fax"
     ContactPhoneNumberFax,
-    /// Usage ID `0x1293`: "Contact Phone Number Other"
+    /// Usage ID `0x50D`: "Contact Phone Number Other"
     ContactPhoneNumberOther,
-    /// Usage ID `0x1294`: "Contact Email Personal"
+    /// Usage ID `0x50E`: "Contact Email Personal"
     ContactEmailPersonal,
-    /// Usage ID `0x1295`: "Contact Email Business"
+    /// Usage ID `0x50F`: "Contact Email Business"
     ContactEmailBusiness,
-    /// Usage ID `0x1296`: "Contact Email Other"
+    /// Usage ID `0x510`: "Contact Email Other"
     ContactEmailOther,
-    /// Usage ID `0x1297`: "Contact Email Main"
+    /// Usage ID `0x511`: "Contact Email Main"
     ContactEmailMain,
-    /// Usage ID `0x1298`: "Contact Speed Dial Number"
+    /// Usage ID `0x512`: "Contact Speed Dial Number"
     ContactSpeedDialNumber,
-    /// Usage ID `0x1299`: "Contact Status Flag"
+    /// Usage ID `0x513`: "Contact Status Flag"
     ContactStatusFlag,
-    /// Usage ID `0x1300`: "Contact Misc."
+    /// Usage ID `0x514`: "Contact Misc."
     ContactMisc,
 }
 
@@ -12928,7 +12928,7 @@ impl AsUsage for ConsumerDevices {
 impl AsUsagePage for ConsumerDevices {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x12` for [ConsumerDevices]
+    /// This value is `0xC` for [ConsumerDevices]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
@@ -14322,7 +14322,7 @@ impl BitOr<u16> for ConsumerDevices {
     }
 }
 
-/// *Usage Page `0x18`: "Eye and Head Trackers"*
+/// *Usage Page `0x12`: "Eye and Head Trackers"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
 /// ```
@@ -14343,69 +14343,69 @@ pub enum EyeandHeadTrackers {
     EyeTracker,
     /// Usage ID `0x2`: "Head Tracker"
     HeadTracker,
-    /// Usage ID `0x16`: "Tracking Data"
+    /// Usage ID `0x10`: "Tracking Data"
     TrackingData,
-    /// Usage ID `0x17`: "Capabilities"
+    /// Usage ID `0x11`: "Capabilities"
     Capabilities,
-    /// Usage ID `0x18`: "Configuration"
+    /// Usage ID `0x12`: "Configuration"
     Configuration,
-    /// Usage ID `0x19`: "Status"
+    /// Usage ID `0x13`: "Status"
     Status,
-    /// Usage ID `0x20`: "Control"
+    /// Usage ID `0x14`: "Control"
     Control,
-    /// Usage ID `0x32`: "Sensor Timestamp"
+    /// Usage ID `0x20`: "Sensor Timestamp"
     SensorTimestamp,
-    /// Usage ID `0x33`: "Position X"
+    /// Usage ID `0x21`: "Position X"
     PositionX,
-    /// Usage ID `0x34`: "Position Y"
+    /// Usage ID `0x22`: "Position Y"
     PositionY,
-    /// Usage ID `0x35`: "Position Z"
+    /// Usage ID `0x23`: "Position Z"
     PositionZ,
-    /// Usage ID `0x36`: "Gaze Point"
+    /// Usage ID `0x24`: "Gaze Point"
     GazePoint,
-    /// Usage ID `0x37`: "Left Eye Position"
+    /// Usage ID `0x25`: "Left Eye Position"
     LeftEyePosition,
-    /// Usage ID `0x38`: "Right Eye Position"
+    /// Usage ID `0x26`: "Right Eye Position"
     RightEyePosition,
-    /// Usage ID `0x39`: "Head Position"
+    /// Usage ID `0x27`: "Head Position"
     HeadPosition,
-    /// Usage ID `0x40`: "Head Direction Point"
+    /// Usage ID `0x28`: "Head Direction Point"
     HeadDirectionPoint,
-    /// Usage ID `0x41`: "Rotation about X axis"
+    /// Usage ID `0x29`: "Rotation about X axis"
     RotationaboutXaxis,
-    /// Usage ID `0x42`: "Rotation about Y axis"
+    /// Usage ID `0x2A`: "Rotation about Y axis"
     RotationaboutYaxis,
-    /// Usage ID `0x43`: "Rotation about Z axis"
+    /// Usage ID `0x2B`: "Rotation about Z axis"
     RotationaboutZaxis,
-    /// Usage ID `0x256`: "Tracker Quality"
+    /// Usage ID `0x100`: "Tracker Quality"
     TrackerQuality,
-    /// Usage ID `0x257`: "Minimum Tracking Distance"
+    /// Usage ID `0x101`: "Minimum Tracking Distance"
     MinimumTrackingDistance,
-    /// Usage ID `0x258`: "Optimum Tracking Distance"
+    /// Usage ID `0x102`: "Optimum Tracking Distance"
     OptimumTrackingDistance,
-    /// Usage ID `0x259`: "Maximum Tracking Distance"
+    /// Usage ID `0x103`: "Maximum Tracking Distance"
     MaximumTrackingDistance,
-    /// Usage ID `0x260`: "Maximum Screen Plane Width"
+    /// Usage ID `0x104`: "Maximum Screen Plane Width"
     MaximumScreenPlaneWidth,
-    /// Usage ID `0x261`: "Maximum Screen Plane Height"
+    /// Usage ID `0x105`: "Maximum Screen Plane Height"
     MaximumScreenPlaneHeight,
-    /// Usage ID `0x512`: "Display Manufacturer ID"
+    /// Usage ID `0x200`: "Display Manufacturer ID"
     DisplayManufacturerID,
-    /// Usage ID `0x513`: "Display Product ID"
+    /// Usage ID `0x201`: "Display Product ID"
     DisplayProductID,
-    /// Usage ID `0x514`: "Display Serial Number"
+    /// Usage ID `0x202`: "Display Serial Number"
     DisplaySerialNumber,
-    /// Usage ID `0x515`: "Display Manufacturer Date"
+    /// Usage ID `0x203`: "Display Manufacturer Date"
     DisplayManufacturerDate,
-    /// Usage ID `0x516`: "Calibrated Screen Width"
+    /// Usage ID `0x204`: "Calibrated Screen Width"
     CalibratedScreenWidth,
-    /// Usage ID `0x517`: "Calibrated Screen Height"
+    /// Usage ID `0x205`: "Calibrated Screen Height"
     CalibratedScreenHeight,
-    /// Usage ID `0x768`: "Sampling Frequency"
+    /// Usage ID `0x300`: "Sampling Frequency"
     SamplingFrequency,
-    /// Usage ID `0x769`: "Configuration Status"
+    /// Usage ID `0x301`: "Configuration Status"
     ConfigurationStatus,
-    /// Usage ID `0x1024`: "Device Mode Request"
+    /// Usage ID `0x400`: "Device Mode Request"
     DeviceModeRequest,
 }
 
@@ -14424,7 +14424,7 @@ impl AsUsage for EyeandHeadTrackers {
 impl AsUsagePage for EyeandHeadTrackers {
     /// Returns the 16 bit value of this UsagePage
     ///
-    /// This value is `0x18` for [EyeandHeadTrackers]
+    /// This value is `0x12` for [EyeandHeadTrackers]
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
