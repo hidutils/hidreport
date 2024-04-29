@@ -21650,10 +21650,10 @@ impl From<&Usage> for u32 {
             } => 18 << 16 | 1024,
             Usage::Button {
                 usage: Button::Button { button },
-            } => 0x09 | *button as u32,
+            } => 0x090000 | *button as u32,
             Usage::Ordinals {
                 usage: Ordinals::Ordinal { ordinal },
-            } => 0x0A | *ordinal as u32,
+            } => 0x0A0000 | *ordinal as u32,
             Usage::VendorDefinedPage1 {
                 usage: VendorDefinedPage1::Undefined,
             } => 0xff000000,
@@ -28116,10 +28116,10 @@ impl TryFrom<u32> for Usage {
             (18, 1024) => Ok(Usage::EyeandHeadTrackers {
                 usage: EyeandHeadTrackers::DeviceModeRequest,
             }),
-            (0x009, n) => Ok(Usage::Button {
+            (0x0009, n) => Ok(Usage::Button {
                 usage: Button::Button { button: n as u16 },
             }),
-            (0x00a, n) => Ok(Usage::Ordinals {
+            (0x000a, n) => Ok(Usage::Ordinals {
                 usage: Ordinals::Ordinal { ordinal: n as u16 },
             }),
             (0xff00, n) => Ok(Usage::VendorDefinedPage1 {

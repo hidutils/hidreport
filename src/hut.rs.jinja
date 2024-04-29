@@ -524,8 +524,8 @@ impl From<&Usage> for u32 {
             Usage::{{usage_page.name}} { usage: {{usage_page.name}}::{{usage.name}} } => {{usage_page.value}} << 16 | {{usage.value}},
 {% endfor  %}
 {% endfor  %}
-            Usage::Button { usage: Button::Button { button } } => 0x09 | *button as u32,
-            Usage::Ordinals { usage: Ordinals::Ordinal { ordinal } } => 0x0A | *ordinal as u32,
+            Usage::Button { usage: Button::Button { button } } => 0x090000 | *button as u32,
+            Usage::Ordinals { usage: Ordinals::Ordinal { ordinal } } => 0x0A0000 | *ordinal as u32,
             Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::Undefined } => 0xff000000,
             Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::VendorUsage { usage_id } } => 0xff00000u32 | *usage_id as u32,
             _ => panic!("Unhandled usage {usage:?}"),
@@ -553,8 +553,8 @@ impl TryFrom<u32> for Usage {
             ({{usage_page.value}},  {{usage.value}}) => Ok(Usage::{{usage_page.name}} { usage: {{usage_page.name}}::{{usage.name}} }),
 {% endfor  %}
 {% endfor  %}
-            (0x009, n) => Ok(Usage::Button { usage: Button::Button { button: n as u16 } }),
-            (0x00a, n) => Ok(Usage::Ordinals { usage: Ordinals::Ordinal { ordinal: n as u16 } }),
+            (0x0009, n) => Ok(Usage::Button { usage: Button::Button { button: n as u16 } }),
+            (0x000a, n) => Ok(Usage::Ordinals { usage: Ordinals::Ordinal { ordinal: n as u16 } }),
             (0xff00, n) => Ok(Usage::VendorDefinedPage1 { usage: VendorDefinedPage1::VendorUsage { usage_id: n as u16 } }),
             (_, _) => Err(HutError::UnknownUsage),
         }
