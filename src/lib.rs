@@ -516,7 +516,8 @@ impl From<&Usage> for UsageMaximum {
 
 impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+/// A unique (within this report descriptor) identifier for a [Field].
+#[derive(Clone, Copy, Debug, PartialEq, Hash, PartialOrd)]
 pub struct FieldId(u32);
 
 /// A single field inside a [Report].
