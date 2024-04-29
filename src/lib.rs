@@ -477,6 +477,9 @@ impl From<&Usage> for UsageMaximum {
 
 impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct FieldId(u32);
+
 /// A single field inside a [Report].
 ///
 /// Fields may be [Field::Variable] and represent a
@@ -494,6 +497,13 @@ pub enum Field {
 }
 
 impl Field {
+    pub fn id(&self) -> FieldId {
+        match self {
+            Field::Variable(f) => f.id,
+            Field::Array(f) => f.id,
+            Field::Constant(f) => f.id,
+        }
+    }
     /// Returns the bit range that make up this field.
     pub fn bits(&self) -> &RangeInclusive<usize> {
         match self {
@@ -526,11 +536,20 @@ impl Field {
     fn len(&self) -> usize {
         return self.bits().len();
     }
+
+    pub fn collections(&self) -> &[Collection] {
+        match self {
+            Field::Variable(f) => &f.collections,
+            Field::Array(f) => &f.collections,
+            Field::Constant(..) => &[],
+        }
+    }
 }
 
 /// A [VariableField] represents a single physical control.
 #[derive(Clone, Debug)]
 pub struct VariableField {
+    id: FieldId,
     report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     pub usage: Usage,
@@ -661,6 +680,7 @@ impl UsageRange {
 /// > button
 #[derive(Clone, Debug)]
 pub struct ArrayField {
+    id: FieldId,
     report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
@@ -826,6 +846,7 @@ impl ArrayField {
 /// value on a byte boundary.
 #[derive(Clone, Debug)]
 pub struct ConstantField {
+    id: FieldId,
     report_id: Option<ReportId>,
     pub bits: RangeInclusive<usize>,
     usages: Vec<Usage>,
@@ -1076,7 +1097,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
     }
 }
 
-fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
+fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<Vec<Field>> {
     let globals = stack.globals_const();
     let locals = stack.locals_const();
 
@@ -1106,6 +1127,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
 
         let field = ConstantField {
+            id: FieldId(base_id + bit_offset as u32),
             bits,
             report_id,
             usages: vec![],
@@ -1146,6 +1168,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
 
             let usage = usages.get(c).or_else(|| usages.last()).unwrap();
             let field = VariableField {
+                id: FieldId(base_id + bit_offset as u32),
                 usage: *usage,
                 bits,
                 logical_minimum,
@@ -1166,6 +1189,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack) -> Result<Vec<Field>> {
         let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
 
         let field = ArrayField {
+            id: FieldId(base_id + bit_offset as u32),
             usages,
             bits,
             logical_minimum,
@@ -1235,16 +1259,17 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 stack.reset_locals();
             }
             ItemType::Main(item) => {
-                let mut fields = match handle_main_item(&item, &mut stack) {
-                    Ok(fields) => fields,
-                    Err(ParserError::InvalidData { message, .. }) => {
-                        return Err(ParserError::InvalidData {
-                            offset: rdesc_item.offset(),
-                            message,
-                        })
-                    }
-                    Err(e) => return Err(e),
-                };
+                let mut fields =
+                    match handle_main_item(&item, &mut stack, (rdesc_item.offset() * 8) as u32) {
+                        Ok(fields) => fields,
+                        Err(ParserError::InvalidData { message, .. }) => {
+                            return Err(ParserError::InvalidData {
+                                offset: rdesc_item.offset(),
+                                message,
+                            })
+                        }
+                        Err(e) => return Err(e),
+                    };
                 ensure!(
                     !fields.is_empty(),
                     ParserError::InvalidData {
@@ -1289,7 +1314,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     Some(r) => r,
                 };
 
-                // We know which report the fields belong to, let's update the offsets
+                // We know which report the fields belong to, let's update the offsets and field id
                 let offset = report.size;
                 fields.iter_mut().for_each(|f| {
                     f.update_bit_offset(offset);
