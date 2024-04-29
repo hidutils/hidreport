@@ -182,7 +182,7 @@ impl AsUsagePage for UsagePage {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -467,7 +467,7 @@ impl fmt::Display for UsagePage {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -491,7 +491,7 @@ pub enum Usage {
 }
 
 impl Usage {
-    pub fn new_from_values(usage_page: u16, usage_id: u16) -> Result<Usage> {
+    pub fn new_from_page_and_id(usage_page: u16, usage_id: u16) -> Result<Usage> {
         Usage::try_from((usage_page as u32) << 16 | usage_id as u32)
     }
 }
@@ -571,7 +571,7 @@ impl TryFrom<&HidUsage> for Usage {
     fn try_from(usage: &HidUsage) -> Result<Usage> {
         let up = u16::from(usage.usage_page);
         let u = u16::from(usage.usage_id);
-        Usage::new_from_values(up, u)
+        Usage::new_from_page_and_id(up, u)
     }
 }
 

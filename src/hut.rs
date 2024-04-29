@@ -318,7 +318,7 @@ impl AsUsagePage for UsagePage {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -423,7 +423,7 @@ impl BitOr<u16> for Undefined {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -1028,7 +1028,7 @@ impl BitOr<u16> for GenericDesktop {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -1393,7 +1393,7 @@ impl BitOr<u16> for SimulationControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -1558,7 +1558,7 @@ impl BitOr<u16> for VRControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -1833,7 +1833,7 @@ impl BitOr<u16> for SportsControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -2083,7 +2083,7 @@ impl BitOr<u16> for GamingControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -2310,7 +2310,7 @@ impl BitOr<u16> for GenericDeviceControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -3270,7 +3270,7 @@ impl BitOr<u16> for Keyboard {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -3850,7 +3850,7 @@ impl BitOr<u16> for LEDs {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -4450,7 +4450,7 @@ impl BitOr<u16> for TelephonyDevices {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -5073,7 +5073,7 @@ impl BitOr<u16> for Digitizers {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -5268,7 +5268,7 @@ impl BitOr<u16> for Haptic {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -5748,7 +5748,7 @@ impl BitOr<u16> for AuxiliaryDisplay {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -8915,7 +8915,7 @@ impl BitOr<u16> for Sensor {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -9165,7 +9165,7 @@ impl BitOr<u16> for MedicalInstruments {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -9480,7 +9480,7 @@ impl BitOr<u16> for BrailleDisplay {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -9764,7 +9764,7 @@ impl BitOr<u16> for LightingandIllumination {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -9929,7 +9929,7 @@ impl BitOr<u16> for Monitor {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10034,7 +10034,7 @@ impl BitOr<u16> for MonitorEnumeratedValues {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10313,7 +10313,7 @@ impl BitOr<u16> for VESAVirtualControls {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10428,7 +10428,7 @@ impl BitOr<u16> for VESACommand {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10533,7 +10533,7 @@ impl BitOr<u16> for PowerDevice {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10634,7 +10634,7 @@ impl BitOr<u16> for BatterySystem {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10739,7 +10739,7 @@ impl BitOr<u16> for BarCodeScanner {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10844,7 +10844,7 @@ impl BitOr<u16> for Scale {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -10949,7 +10949,7 @@ impl BitOr<u16> for MagneticStripeReading {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -11064,7 +11064,7 @@ impl BitOr<u16> for CameraControl {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -11169,7 +11169,7 @@ impl BitOr<u16> for ArcadePageOAAF {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -11270,7 +11270,7 @@ impl BitOr<u16> for GamingDevice {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -11390,7 +11390,7 @@ impl BitOr<u16> for FIDOAlliance {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -12020,7 +12020,7 @@ impl BitOr<u16> for Wacom {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -14328,7 +14328,7 @@ impl BitOr<u16> for ConsumerDevices {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -14889,7 +14889,7 @@ impl fmt::Display for UsagePage {
 /// ```
 /// # use hidreport::hut::*;
 /// let u1 = Usage::GenericDesktop { usage: GenericDesktop::Mouse};
-/// let u2 = Usage::new_from_values(0x01, 0x02).unwrap();
+/// let u2 = Usage::new_from_page_and_id(0x01, 0x02).unwrap();
 /// assert_eq!(u1, u2);
 ///
 /// assert_eq!(0x1, u1.usage_page_value());
@@ -15051,7 +15051,7 @@ pub enum Usage {
 }
 
 impl Usage {
-    pub fn new_from_values(usage_page: u16, usage_id: u16) -> Result<Usage> {
+    pub fn new_from_page_and_id(usage_page: u16, usage_id: u16) -> Result<Usage> {
         Usage::try_from((usage_page as u32) << 16 | usage_id as u32)
     }
 }
@@ -21603,7 +21603,7 @@ impl TryFrom<&HidUsage> for Usage {
     fn try_from(usage: &HidUsage) -> Result<Usage> {
         let up = u16::from(usage.usage_page);
         let u = u16::from(usage.usage_id);
-        Usage::new_from_values(up, u)
+        Usage::new_from_page_and_id(up, u)
     }
 }
 
