@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 
+use std::hash::{Hash, Hasher};
 use std::ops::{Range, RangeInclusive};
 use thiserror::Error;
 
@@ -841,7 +842,7 @@ impl ConstantField {
 /// A device may have multiple collections that are otherwise identical
 /// (in particular logical collections), the collection ID serves
 /// to identify whether two fields are part of the same collection.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Hash, PartialOrd)]
 pub struct CollectionId(u32);
 
 /// Collections group [Fields](Field) together into logical or physical
@@ -862,7 +863,7 @@ pub struct CollectionId(u32);
 /// # }
 /// ```
 ///
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct Collection {
     id: CollectionId,
     collection_type: CollectionType,
@@ -882,6 +883,20 @@ impl Collection {
     /// Returns the usages assigned to this collection
     pub fn usages(&self) -> &[Usage] {
         &self.usages
+    }
+}
+
+impl PartialEq for Collection {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl Eq for Collection {}
+
+impl Hash for Collection {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
     }
 }
 
