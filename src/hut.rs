@@ -324,87 +324,12 @@ pub enum Undefined {
     Undefined,
 }
 
-impl AsUsage for Undefined {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Undefined {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x0` for [Undefined]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Undefined {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             Undefined::Undefined => "Undefined",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&Undefined> for u16 {
-    fn from(up: &Undefined) -> u16 {
-        match *up {
-            Undefined::Undefined => 0,
-        }
-    }
-}
-
-impl From<Undefined> for u16 {
-    fn from(up: Undefined) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Undefined> for u32 {
-    fn from(usage: &Undefined) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Undefined::Undefined => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&Undefined> for UsagePage {
-    fn from(_up: &Undefined) -> UsagePage {
-        UsagePage::Undefined
-    }
-}
-
-impl From<Undefined> for UsagePage {
-    fn from(up: Undefined) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Undefined {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -626,28 +551,6 @@ pub enum GenericDesktop {
     ControlEnable,
 }
 
-impl AsUsage for GenericDesktop {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for GenericDesktop {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x1` for [GenericDesktop]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for GenericDesktop {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -762,255 +665,6 @@ impl fmt::Display for GenericDesktop {
             GenericDesktop::ControlEnable => "Control Enable",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&GenericDesktop> for u16 {
-    fn from(up: &GenericDesktop) -> u16 {
-        match *up {
-            GenericDesktop::Undefined => 0,
-            GenericDesktop::Pointer => 1,
-            GenericDesktop::Mouse => 2,
-            GenericDesktop::Joystick => 4,
-            GenericDesktop::GamePad => 5,
-            GenericDesktop::Keyboard => 6,
-            GenericDesktop::Keypad => 7,
-            GenericDesktop::MultiAxis => 8,
-            GenericDesktop::WaterCoolingDevice => 10,
-            GenericDesktop::ComputerChassisDevice => 11,
-            GenericDesktop::WirelessRadioControls => 12,
-            GenericDesktop::PortableDeviceControl => 13,
-            GenericDesktop::SystemMultiAxisController => 14,
-            GenericDesktop::SpatialController => 15,
-            GenericDesktop::AssistiveControl => 16,
-            GenericDesktop::X => 48,
-            GenericDesktop::Y => 49,
-            GenericDesktop::Z => 50,
-            GenericDesktop::Rx => 51,
-            GenericDesktop::Ry => 52,
-            GenericDesktop::Rz => 53,
-            GenericDesktop::Slider => 54,
-            GenericDesktop::Dial => 55,
-            GenericDesktop::Wheel => 56,
-            GenericDesktop::Hatswitch => 57,
-            GenericDesktop::CountedBuffer => 58,
-            GenericDesktop::ByteCount => 59,
-            GenericDesktop::Motion => 60,
-            GenericDesktop::Start => 61,
-            GenericDesktop::Select => 62,
-            GenericDesktop::Vx => 64,
-            GenericDesktop::Vy => 65,
-            GenericDesktop::Vz => 66,
-            GenericDesktop::Vbrx => 67,
-            GenericDesktop::Vbry => 68,
-            GenericDesktop::Vbrz => 69,
-            GenericDesktop::Vno => 70,
-            GenericDesktop::Feature => 71,
-            GenericDesktop::ResolutionMultiplier => 72,
-            GenericDesktop::Qx => 73,
-            GenericDesktop::Qy => 74,
-            GenericDesktop::Qz => 75,
-            GenericDesktop::Qw => 76,
-            GenericDesktop::SystemControl => 128,
-            GenericDesktop::SystemPowerDown => 129,
-            GenericDesktop::SystemSleep => 130,
-            GenericDesktop::SystemWakeUp => 131,
-            GenericDesktop::SystemContextMenu => 132,
-            GenericDesktop::SystemMainMenu => 133,
-            GenericDesktop::SystemAppMenu => 134,
-            GenericDesktop::SystemHelpMenu => 135,
-            GenericDesktop::SystemMenuExit => 136,
-            GenericDesktop::SystemMenuSelect => 137,
-            GenericDesktop::SystemMenuRight => 138,
-            GenericDesktop::SystemMenuLeft => 139,
-            GenericDesktop::SystemMenuUp => 140,
-            GenericDesktop::SystemMenuDown => 141,
-            GenericDesktop::SystemColdRestart => 142,
-            GenericDesktop::SystemWarmRestart => 143,
-            GenericDesktop::DPadUp => 144,
-            GenericDesktop::DPadDown => 145,
-            GenericDesktop::DPadRight => 146,
-            GenericDesktop::DPadLeft => 147,
-            GenericDesktop::IndexTrigger => 148,
-            GenericDesktop::PalmTrigger => 149,
-            GenericDesktop::Thumbstick => 150,
-            GenericDesktop::SystemFunctionShift => 151,
-            GenericDesktop::SystemFunctionShiftLock => 152,
-            GenericDesktop::SystemFunctionShiftLockIndicator => 153,
-            GenericDesktop::SystemDismissNotification => 154,
-            GenericDesktop::SystemDock => 160,
-            GenericDesktop::SystemUnDock => 161,
-            GenericDesktop::SystemSetup => 162,
-            GenericDesktop::SystemBreak => 163,
-            GenericDesktop::SystemDebuggerBreak => 164,
-            GenericDesktop::ApplicationBreak => 165,
-            GenericDesktop::ApplicationDebuggerBreak => 166,
-            GenericDesktop::SystemSpeakerMute => 167,
-            GenericDesktop::SystemHibernate => 168,
-            GenericDesktop::SystemDisplayInvert => 176,
-            GenericDesktop::SystemDisplayInternal => 177,
-            GenericDesktop::SystemDisplayExternal => 178,
-            GenericDesktop::SystemDisplayBoth => 179,
-            GenericDesktop::SystemDisplayDual => 180,
-            GenericDesktop::SystemDisplayToggleInternalExternal => 181,
-            GenericDesktop::SystemDisplaySwapPrimarySecondary => 182,
-            GenericDesktop::SystemDisplayLCDAutoScale => 183,
-            GenericDesktop::SensorZone => 192,
-            GenericDesktop::RPM => 193,
-            GenericDesktop::CoolantLevel => 194,
-            GenericDesktop::CoolantCriticalLevel => 195,
-            GenericDesktop::CoolantPump => 196,
-            GenericDesktop::ChassisEnclosure => 197,
-            GenericDesktop::WirelessRadioButton => 198,
-            GenericDesktop::WirelessRadioLED => 199,
-            GenericDesktop::WirelessRadioSliderSwitch => 200,
-            GenericDesktop::SystemDisplayRotationLockButton => 201,
-            GenericDesktop::SystemDisplayRotationLockSliderSwitch => 202,
-            GenericDesktop::ControlEnable => 203,
-        }
-    }
-}
-
-impl From<GenericDesktop> for u16 {
-    fn from(up: GenericDesktop) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&GenericDesktop> for u32 {
-    fn from(usage: &GenericDesktop) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            GenericDesktop::Undefined => 0,
-            GenericDesktop::Pointer => 1,
-            GenericDesktop::Mouse => 2,
-            GenericDesktop::Joystick => 4,
-            GenericDesktop::GamePad => 5,
-            GenericDesktop::Keyboard => 6,
-            GenericDesktop::Keypad => 7,
-            GenericDesktop::MultiAxis => 8,
-            GenericDesktop::WaterCoolingDevice => 10,
-            GenericDesktop::ComputerChassisDevice => 11,
-            GenericDesktop::WirelessRadioControls => 12,
-            GenericDesktop::PortableDeviceControl => 13,
-            GenericDesktop::SystemMultiAxisController => 14,
-            GenericDesktop::SpatialController => 15,
-            GenericDesktop::AssistiveControl => 16,
-            GenericDesktop::X => 48,
-            GenericDesktop::Y => 49,
-            GenericDesktop::Z => 50,
-            GenericDesktop::Rx => 51,
-            GenericDesktop::Ry => 52,
-            GenericDesktop::Rz => 53,
-            GenericDesktop::Slider => 54,
-            GenericDesktop::Dial => 55,
-            GenericDesktop::Wheel => 56,
-            GenericDesktop::Hatswitch => 57,
-            GenericDesktop::CountedBuffer => 58,
-            GenericDesktop::ByteCount => 59,
-            GenericDesktop::Motion => 60,
-            GenericDesktop::Start => 61,
-            GenericDesktop::Select => 62,
-            GenericDesktop::Vx => 64,
-            GenericDesktop::Vy => 65,
-            GenericDesktop::Vz => 66,
-            GenericDesktop::Vbrx => 67,
-            GenericDesktop::Vbry => 68,
-            GenericDesktop::Vbrz => 69,
-            GenericDesktop::Vno => 70,
-            GenericDesktop::Feature => 71,
-            GenericDesktop::ResolutionMultiplier => 72,
-            GenericDesktop::Qx => 73,
-            GenericDesktop::Qy => 74,
-            GenericDesktop::Qz => 75,
-            GenericDesktop::Qw => 76,
-            GenericDesktop::SystemControl => 128,
-            GenericDesktop::SystemPowerDown => 129,
-            GenericDesktop::SystemSleep => 130,
-            GenericDesktop::SystemWakeUp => 131,
-            GenericDesktop::SystemContextMenu => 132,
-            GenericDesktop::SystemMainMenu => 133,
-            GenericDesktop::SystemAppMenu => 134,
-            GenericDesktop::SystemHelpMenu => 135,
-            GenericDesktop::SystemMenuExit => 136,
-            GenericDesktop::SystemMenuSelect => 137,
-            GenericDesktop::SystemMenuRight => 138,
-            GenericDesktop::SystemMenuLeft => 139,
-            GenericDesktop::SystemMenuUp => 140,
-            GenericDesktop::SystemMenuDown => 141,
-            GenericDesktop::SystemColdRestart => 142,
-            GenericDesktop::SystemWarmRestart => 143,
-            GenericDesktop::DPadUp => 144,
-            GenericDesktop::DPadDown => 145,
-            GenericDesktop::DPadRight => 146,
-            GenericDesktop::DPadLeft => 147,
-            GenericDesktop::IndexTrigger => 148,
-            GenericDesktop::PalmTrigger => 149,
-            GenericDesktop::Thumbstick => 150,
-            GenericDesktop::SystemFunctionShift => 151,
-            GenericDesktop::SystemFunctionShiftLock => 152,
-            GenericDesktop::SystemFunctionShiftLockIndicator => 153,
-            GenericDesktop::SystemDismissNotification => 154,
-            GenericDesktop::SystemDock => 160,
-            GenericDesktop::SystemUnDock => 161,
-            GenericDesktop::SystemSetup => 162,
-            GenericDesktop::SystemBreak => 163,
-            GenericDesktop::SystemDebuggerBreak => 164,
-            GenericDesktop::ApplicationBreak => 165,
-            GenericDesktop::ApplicationDebuggerBreak => 166,
-            GenericDesktop::SystemSpeakerMute => 167,
-            GenericDesktop::SystemHibernate => 168,
-            GenericDesktop::SystemDisplayInvert => 176,
-            GenericDesktop::SystemDisplayInternal => 177,
-            GenericDesktop::SystemDisplayExternal => 178,
-            GenericDesktop::SystemDisplayBoth => 179,
-            GenericDesktop::SystemDisplayDual => 180,
-            GenericDesktop::SystemDisplayToggleInternalExternal => 181,
-            GenericDesktop::SystemDisplaySwapPrimarySecondary => 182,
-            GenericDesktop::SystemDisplayLCDAutoScale => 183,
-            GenericDesktop::SensorZone => 192,
-            GenericDesktop::RPM => 193,
-            GenericDesktop::CoolantLevel => 194,
-            GenericDesktop::CoolantCriticalLevel => 195,
-            GenericDesktop::CoolantPump => 196,
-            GenericDesktop::ChassisEnclosure => 197,
-            GenericDesktop::WirelessRadioButton => 198,
-            GenericDesktop::WirelessRadioLED => 199,
-            GenericDesktop::WirelessRadioSliderSwitch => 200,
-            GenericDesktop::SystemDisplayRotationLockButton => 201,
-            GenericDesktop::SystemDisplayRotationLockSliderSwitch => 202,
-            GenericDesktop::ControlEnable => 203,
-        };
-        up | id
-    }
-}
-
-impl From<&GenericDesktop> for UsagePage {
-    fn from(_up: &GenericDesktop) -> UsagePage {
-        UsagePage::GenericDesktop
-    }
-}
-
-impl From<GenericDesktop> for UsagePage {
-    fn from(up: GenericDesktop) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for GenericDesktop {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -1140,28 +794,6 @@ pub enum SimulationControls {
     RearBrake,
 }
 
-impl AsUsage for SimulationControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for SimulationControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x2` for [SimulationControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for SimulationControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -1223,163 +855,6 @@ impl fmt::Display for SimulationControls {
     }
 }
 
-impl From<&SimulationControls> for u16 {
-    fn from(up: &SimulationControls) -> u16 {
-        match *up {
-            SimulationControls::Undefined => 0,
-            SimulationControls::FlightSimulationDevice => 1,
-            SimulationControls::AutomobileSimulationDevice => 2,
-            SimulationControls::TankSimulationDevice => 3,
-            SimulationControls::SpaceshipSimulationDevice => 4,
-            SimulationControls::SubmarineSimulationDevice => 5,
-            SimulationControls::SailingSimulationDevice => 6,
-            SimulationControls::MotorcycleSimulationDevice => 7,
-            SimulationControls::SportsSimulationDevice => 8,
-            SimulationControls::AirplaneSimulationDevice => 9,
-            SimulationControls::HelicopterSimulationDevice => 10,
-            SimulationControls::MagicCarpetSimulationDevice => 11,
-            SimulationControls::Bicycle => 12,
-            SimulationControls::FlightControlStick => 32,
-            SimulationControls::FlightStick => 33,
-            SimulationControls::CyclicControl => 34,
-            SimulationControls::CyclicTrim => 35,
-            SimulationControls::FlightYoke => 36,
-            SimulationControls::TrackControl => 37,
-            SimulationControls::DrivingControl => 38,
-            SimulationControls::Aileron => 176,
-            SimulationControls::AileronTrim => 177,
-            SimulationControls::AntiTorqueControl => 178,
-            SimulationControls::Autopilotenable => 179,
-            SimulationControls::ChaffRelease => 180,
-            SimulationControls::CollectiveControl => 181,
-            SimulationControls::DiveBrake => 182,
-            SimulationControls::ElectronicCounterMeasures => 183,
-            SimulationControls::Elevator => 184,
-            SimulationControls::ElevatorTrim => 185,
-            SimulationControls::Rudder => 186,
-            SimulationControls::Throttle => 187,
-            SimulationControls::FlightCommunication => 188,
-            SimulationControls::FlareRelease => 189,
-            SimulationControls::LandingGear => 190,
-            SimulationControls::ToeBrake => 191,
-            SimulationControls::Trigger => 192,
-            SimulationControls::WeaponsArm => 193,
-            SimulationControls::WeaponsSelect => 194,
-            SimulationControls::WingFlaps => 195,
-            SimulationControls::Accelerator => 196,
-            SimulationControls::Brake => 197,
-            SimulationControls::Clutch => 198,
-            SimulationControls::Shifter => 199,
-            SimulationControls::Steering => 200,
-            SimulationControls::TurretDirection => 201,
-            SimulationControls::BarrelElevation => 202,
-            SimulationControls::DivePlane => 203,
-            SimulationControls::Ballast => 204,
-            SimulationControls::BicycleCrank => 205,
-            SimulationControls::HandleBars => 206,
-            SimulationControls::FrontBrake => 207,
-            SimulationControls::RearBrake => 208,
-        }
-    }
-}
-
-impl From<SimulationControls> for u16 {
-    fn from(up: SimulationControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&SimulationControls> for u32 {
-    fn from(usage: &SimulationControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            SimulationControls::Undefined => 0,
-            SimulationControls::FlightSimulationDevice => 1,
-            SimulationControls::AutomobileSimulationDevice => 2,
-            SimulationControls::TankSimulationDevice => 3,
-            SimulationControls::SpaceshipSimulationDevice => 4,
-            SimulationControls::SubmarineSimulationDevice => 5,
-            SimulationControls::SailingSimulationDevice => 6,
-            SimulationControls::MotorcycleSimulationDevice => 7,
-            SimulationControls::SportsSimulationDevice => 8,
-            SimulationControls::AirplaneSimulationDevice => 9,
-            SimulationControls::HelicopterSimulationDevice => 10,
-            SimulationControls::MagicCarpetSimulationDevice => 11,
-            SimulationControls::Bicycle => 12,
-            SimulationControls::FlightControlStick => 32,
-            SimulationControls::FlightStick => 33,
-            SimulationControls::CyclicControl => 34,
-            SimulationControls::CyclicTrim => 35,
-            SimulationControls::FlightYoke => 36,
-            SimulationControls::TrackControl => 37,
-            SimulationControls::DrivingControl => 38,
-            SimulationControls::Aileron => 176,
-            SimulationControls::AileronTrim => 177,
-            SimulationControls::AntiTorqueControl => 178,
-            SimulationControls::Autopilotenable => 179,
-            SimulationControls::ChaffRelease => 180,
-            SimulationControls::CollectiveControl => 181,
-            SimulationControls::DiveBrake => 182,
-            SimulationControls::ElectronicCounterMeasures => 183,
-            SimulationControls::Elevator => 184,
-            SimulationControls::ElevatorTrim => 185,
-            SimulationControls::Rudder => 186,
-            SimulationControls::Throttle => 187,
-            SimulationControls::FlightCommunication => 188,
-            SimulationControls::FlareRelease => 189,
-            SimulationControls::LandingGear => 190,
-            SimulationControls::ToeBrake => 191,
-            SimulationControls::Trigger => 192,
-            SimulationControls::WeaponsArm => 193,
-            SimulationControls::WeaponsSelect => 194,
-            SimulationControls::WingFlaps => 195,
-            SimulationControls::Accelerator => 196,
-            SimulationControls::Brake => 197,
-            SimulationControls::Clutch => 198,
-            SimulationControls::Shifter => 199,
-            SimulationControls::Steering => 200,
-            SimulationControls::TurretDirection => 201,
-            SimulationControls::BarrelElevation => 202,
-            SimulationControls::DivePlane => 203,
-            SimulationControls::Ballast => 204,
-            SimulationControls::BicycleCrank => 205,
-            SimulationControls::HandleBars => 206,
-            SimulationControls::FrontBrake => 207,
-            SimulationControls::RearBrake => 208,
-        };
-        up | id
-    }
-}
-
-impl From<&SimulationControls> for UsagePage {
-    fn from(_up: &SimulationControls) -> UsagePage {
-        UsagePage::SimulationControls
-    }
-}
-
-impl From<SimulationControls> for UsagePage {
-    fn from(up: SimulationControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for SimulationControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0x3`: "VR Controls"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -1426,28 +901,6 @@ pub enum VRControls {
     DisplayEnable,
 }
 
-impl AsUsage for VRControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for VRControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x3` for [VRControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for VRControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -1466,83 +919,6 @@ impl fmt::Display for VRControls {
             VRControls::DisplayEnable => "Display Enable",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&VRControls> for u16 {
-    fn from(up: &VRControls) -> u16 {
-        match *up {
-            VRControls::Unidentified => 0,
-            VRControls::Belt => 1,
-            VRControls::BodySuit => 2,
-            VRControls::Flexor => 3,
-            VRControls::Glove => 4,
-            VRControls::HeadTracker => 5,
-            VRControls::HeadMountedDisplay => 6,
-            VRControls::HandTracker => 7,
-            VRControls::Oculometer => 8,
-            VRControls::Vest => 9,
-            VRControls::AnimatronicDevice => 10,
-            VRControls::StereoEnable => 32,
-            VRControls::DisplayEnable => 33,
-        }
-    }
-}
-
-impl From<VRControls> for u16 {
-    fn from(up: VRControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&VRControls> for u32 {
-    fn from(usage: &VRControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            VRControls::Unidentified => 0,
-            VRControls::Belt => 1,
-            VRControls::BodySuit => 2,
-            VRControls::Flexor => 3,
-            VRControls::Glove => 4,
-            VRControls::HeadTracker => 5,
-            VRControls::HeadMountedDisplay => 6,
-            VRControls::HandTracker => 7,
-            VRControls::Oculometer => 8,
-            VRControls::Vest => 9,
-            VRControls::AnimatronicDevice => 10,
-            VRControls::StereoEnable => 32,
-            VRControls::DisplayEnable => 33,
-        };
-        up | id
-    }
-}
-
-impl From<&VRControls> for UsagePage {
-    fn from(_up: &VRControls) -> UsagePage {
-        UsagePage::VRControls
-    }
-}
-
-impl From<VRControls> for UsagePage {
-    fn from(up: VRControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for VRControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -1636,28 +1012,6 @@ pub enum SportsControls {
     NineWood,
 }
 
-impl AsUsage for SportsControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for SportsControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x4` for [SportsControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for SportsControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -1698,127 +1052,6 @@ impl fmt::Display for SportsControls {
             SportsControls::NineWood => "9 Wood",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&SportsControls> for u16 {
-    fn from(up: &SportsControls) -> u16 {
-        match *up {
-            SportsControls::Unidentified => 0,
-            SportsControls::BaseballBat => 1,
-            SportsControls::GolfClub => 2,
-            SportsControls::RowingMachine => 3,
-            SportsControls::Treadmill => 4,
-            SportsControls::Oar => 48,
-            SportsControls::Slope => 49,
-            SportsControls::Rate => 50,
-            SportsControls::StickSpeed => 51,
-            SportsControls::StickFaceAngle => 52,
-            SportsControls::StickHeelToe => 53,
-            SportsControls::StickFollowThrough => 54,
-            SportsControls::StickTempo => 55,
-            SportsControls::StickType => 56,
-            SportsControls::StickHeight => 57,
-            SportsControls::Putter => 80,
-            SportsControls::OneIron => 81,
-            SportsControls::TwoIron => 82,
-            SportsControls::ThreeIron => 83,
-            SportsControls::FourIron => 84,
-            SportsControls::FiveIron => 85,
-            SportsControls::SixIron => 86,
-            SportsControls::SevenIron => 87,
-            SportsControls::EightIron => 88,
-            SportsControls::NineIron => 89,
-            SportsControls::One0Iron => 90,
-            SportsControls::One1Iron => 91,
-            SportsControls::SandWedge => 92,
-            SportsControls::LoftWedge => 93,
-            SportsControls::PowerWedge => 94,
-            SportsControls::OneWood => 95,
-            SportsControls::ThreeWood => 96,
-            SportsControls::FiveWood => 97,
-            SportsControls::SevenWood => 98,
-            SportsControls::NineWood => 99,
-        }
-    }
-}
-
-impl From<SportsControls> for u16 {
-    fn from(up: SportsControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&SportsControls> for u32 {
-    fn from(usage: &SportsControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            SportsControls::Unidentified => 0,
-            SportsControls::BaseballBat => 1,
-            SportsControls::GolfClub => 2,
-            SportsControls::RowingMachine => 3,
-            SportsControls::Treadmill => 4,
-            SportsControls::Oar => 48,
-            SportsControls::Slope => 49,
-            SportsControls::Rate => 50,
-            SportsControls::StickSpeed => 51,
-            SportsControls::StickFaceAngle => 52,
-            SportsControls::StickHeelToe => 53,
-            SportsControls::StickFollowThrough => 54,
-            SportsControls::StickTempo => 55,
-            SportsControls::StickType => 56,
-            SportsControls::StickHeight => 57,
-            SportsControls::Putter => 80,
-            SportsControls::OneIron => 81,
-            SportsControls::TwoIron => 82,
-            SportsControls::ThreeIron => 83,
-            SportsControls::FourIron => 84,
-            SportsControls::FiveIron => 85,
-            SportsControls::SixIron => 86,
-            SportsControls::SevenIron => 87,
-            SportsControls::EightIron => 88,
-            SportsControls::NineIron => 89,
-            SportsControls::One0Iron => 90,
-            SportsControls::One1Iron => 91,
-            SportsControls::SandWedge => 92,
-            SportsControls::LoftWedge => 93,
-            SportsControls::PowerWedge => 94,
-            SportsControls::OneWood => 95,
-            SportsControls::ThreeWood => 96,
-            SportsControls::FiveWood => 97,
-            SportsControls::SevenWood => 98,
-            SportsControls::NineWood => 99,
-        };
-        up | id
-    }
-}
-
-impl From<&SportsControls> for UsagePage {
-    fn from(_up: &SportsControls) -> UsagePage {
-        UsagePage::SportsControls
-    }
-}
-
-impl From<SportsControls> for UsagePage {
-    fn from(up: SportsControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for SportsControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -1902,28 +1135,6 @@ pub enum GamingControls {
     Formfittinggamepad,
 }
 
-impl AsUsage for GamingControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for GamingControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x5` for [GamingControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for GamingControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -1959,117 +1170,6 @@ impl fmt::Display for GamingControls {
             GamingControls::Formfittinggamepad => "Form-fitting gamepad",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&GamingControls> for u16 {
-    fn from(up: &GamingControls) -> u16 {
-        match *up {
-            GamingControls::Undefined => 0,
-            GamingControls::ThreeDGameController => 1,
-            GamingControls::PinballDevice => 2,
-            GamingControls::GunDevice => 3,
-            GamingControls::PointofView => 32,
-            GamingControls::TurnRightLeft => 33,
-            GamingControls::PitchForwardBackward => 34,
-            GamingControls::RollRightLeft => 35,
-            GamingControls::MoveRightLeft => 36,
-            GamingControls::MoveForwardBackward => 37,
-            GamingControls::MoveUpDown => 38,
-            GamingControls::LeanRightLeft => 39,
-            GamingControls::LeanForwardBackward => 40,
-            GamingControls::HeightofPOV => 41,
-            GamingControls::Flipper => 42,
-            GamingControls::SecondaryFlipper => 43,
-            GamingControls::Bump => 44,
-            GamingControls::NewGame => 45,
-            GamingControls::ShootBall => 46,
-            GamingControls::Player => 47,
-            GamingControls::GunBolt => 48,
-            GamingControls::GunClip => 49,
-            GamingControls::GunSelector => 50,
-            GamingControls::GunSingleShot => 51,
-            GamingControls::GunBurst => 52,
-            GamingControls::GunAutomatic => 53,
-            GamingControls::GunSafety => 54,
-            GamingControls::GamepadFireJump => 55,
-            GamingControls::GamepadTrigger => 57,
-            GamingControls::Formfittinggamepad => 58,
-        }
-    }
-}
-
-impl From<GamingControls> for u16 {
-    fn from(up: GamingControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&GamingControls> for u32 {
-    fn from(usage: &GamingControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            GamingControls::Undefined => 0,
-            GamingControls::ThreeDGameController => 1,
-            GamingControls::PinballDevice => 2,
-            GamingControls::GunDevice => 3,
-            GamingControls::PointofView => 32,
-            GamingControls::TurnRightLeft => 33,
-            GamingControls::PitchForwardBackward => 34,
-            GamingControls::RollRightLeft => 35,
-            GamingControls::MoveRightLeft => 36,
-            GamingControls::MoveForwardBackward => 37,
-            GamingControls::MoveUpDown => 38,
-            GamingControls::LeanRightLeft => 39,
-            GamingControls::LeanForwardBackward => 40,
-            GamingControls::HeightofPOV => 41,
-            GamingControls::Flipper => 42,
-            GamingControls::SecondaryFlipper => 43,
-            GamingControls::Bump => 44,
-            GamingControls::NewGame => 45,
-            GamingControls::ShootBall => 46,
-            GamingControls::Player => 47,
-            GamingControls::GunBolt => 48,
-            GamingControls::GunClip => 49,
-            GamingControls::GunSelector => 50,
-            GamingControls::GunSingleShot => 51,
-            GamingControls::GunBurst => 52,
-            GamingControls::GunAutomatic => 53,
-            GamingControls::GunSafety => 54,
-            GamingControls::GamepadFireJump => 55,
-            GamingControls::GamepadTrigger => 57,
-            GamingControls::Formfittinggamepad => 58,
-        };
-        up | id
-    }
-}
-
-impl From<&GamingControls> for UsagePage {
-    fn from(_up: &GamingControls) -> UsagePage {
-        UsagePage::GamingControls
-    }
-}
-
-impl From<GamingControls> for UsagePage {
-    fn from(up: GamingControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for GamingControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -2143,28 +1243,6 @@ pub enum GenericDeviceControls {
     PointerPoseOffset,
 }
 
-impl AsUsage for GenericDeviceControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for GenericDeviceControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x6` for [GenericDeviceControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for GenericDeviceControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -2197,107 +1275,6 @@ impl fmt::Display for GenericDeviceControls {
             GenericDeviceControls::PointerPoseOffset => "Pointer Pose Offset",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&GenericDeviceControls> for u16 {
-    fn from(up: &GenericDeviceControls) -> u16 {
-        match *up {
-            GenericDeviceControls::Unidentified => 0,
-            GenericDeviceControls::BackgroundControls => 1,
-            GenericDeviceControls::BatteryStrength => 32,
-            GenericDeviceControls::WirelessChannel => 33,
-            GenericDeviceControls::WirelessID => 34,
-            GenericDeviceControls::DiscoverWirelessControl => 35,
-            GenericDeviceControls::SecurityCodeCharacterEntered => 36,
-            GenericDeviceControls::SecurityCodeCharacterErased => 37,
-            GenericDeviceControls::SecurityCodeCleared => 38,
-            GenericDeviceControls::SequenceID => 39,
-            GenericDeviceControls::SequenceIDReset => 40,
-            GenericDeviceControls::RFSignalStrength => 41,
-            GenericDeviceControls::SoftwareVersion => 42,
-            GenericDeviceControls::ProtocolVersion => 43,
-            GenericDeviceControls::HardwareVersion => 44,
-            GenericDeviceControls::Major => 45,
-            GenericDeviceControls::Minor => 46,
-            GenericDeviceControls::Revision => 47,
-            GenericDeviceControls::Handedness => 48,
-            GenericDeviceControls::EitherHand => 49,
-            GenericDeviceControls::LeftHand => 50,
-            GenericDeviceControls::RightHand => 51,
-            GenericDeviceControls::BothHands => 52,
-            GenericDeviceControls::GripPoseOffset => 64,
-            GenericDeviceControls::PointerPoseOffset => 65,
-        }
-    }
-}
-
-impl From<GenericDeviceControls> for u16 {
-    fn from(up: GenericDeviceControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&GenericDeviceControls> for u32 {
-    fn from(usage: &GenericDeviceControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            GenericDeviceControls::Unidentified => 0,
-            GenericDeviceControls::BackgroundControls => 1,
-            GenericDeviceControls::BatteryStrength => 32,
-            GenericDeviceControls::WirelessChannel => 33,
-            GenericDeviceControls::WirelessID => 34,
-            GenericDeviceControls::DiscoverWirelessControl => 35,
-            GenericDeviceControls::SecurityCodeCharacterEntered => 36,
-            GenericDeviceControls::SecurityCodeCharacterErased => 37,
-            GenericDeviceControls::SecurityCodeCleared => 38,
-            GenericDeviceControls::SequenceID => 39,
-            GenericDeviceControls::SequenceIDReset => 40,
-            GenericDeviceControls::RFSignalStrength => 41,
-            GenericDeviceControls::SoftwareVersion => 42,
-            GenericDeviceControls::ProtocolVersion => 43,
-            GenericDeviceControls::HardwareVersion => 44,
-            GenericDeviceControls::Major => 45,
-            GenericDeviceControls::Minor => 46,
-            GenericDeviceControls::Revision => 47,
-            GenericDeviceControls::Handedness => 48,
-            GenericDeviceControls::EitherHand => 49,
-            GenericDeviceControls::LeftHand => 50,
-            GenericDeviceControls::RightHand => 51,
-            GenericDeviceControls::BothHands => 52,
-            GenericDeviceControls::GripPoseOffset => 64,
-            GenericDeviceControls::PointerPoseOffset => 65,
-        };
-        up | id
-    }
-}
-
-impl From<&GenericDeviceControls> for UsagePage {
-    fn from(_up: &GenericDeviceControls) -> UsagePage {
-        UsagePage::GenericDeviceControls
-    }
-}
-
-impl From<GenericDeviceControls> for UsagePage {
-    fn from(up: GenericDeviceControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for GenericDeviceControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -2665,28 +1642,6 @@ pub enum Keyboard {
     RightGUI,
 }
 
-impl AsUsage for Keyboard {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Keyboard {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x7` for [Keyboard]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Keyboard {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -2864,401 +1819,6 @@ impl fmt::Display for Keyboard {
             Keyboard::RightGUI => "Right GUI",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&Keyboard> for u16 {
-    fn from(up: &Keyboard) -> u16 {
-        match *up {
-            Keyboard::ErrorRollOver => 1,
-            Keyboard::POSTFail => 2,
-            Keyboard::ErrorUndefine => 3,
-            Keyboard::aAndA => 4,
-            Keyboard::bAndB => 5,
-            Keyboard::cAndC => 6,
-            Keyboard::dAndD => 7,
-            Keyboard::eAndE => 8,
-            Keyboard::fAndF => 9,
-            Keyboard::gAndG => 10,
-            Keyboard::hAndH => 11,
-            Keyboard::iAndI => 12,
-            Keyboard::jAndJ => 13,
-            Keyboard::kAndK => 14,
-            Keyboard::lAndL => 15,
-            Keyboard::mAndM => 16,
-            Keyboard::nAndN => 17,
-            Keyboard::oAndO => 18,
-            Keyboard::pAndP => 19,
-            Keyboard::qAndQ => 20,
-            Keyboard::rAndR => 21,
-            Keyboard::sAndS => 22,
-            Keyboard::tAndT => 23,
-            Keyboard::uAndU => 24,
-            Keyboard::vAndV => 25,
-            Keyboard::wAndW => 26,
-            Keyboard::xAndX => 27,
-            Keyboard::yAndY => 28,
-            Keyboard::zAndZ => 29,
-            Keyboard::OneAndExclamationMark => 30,
-            Keyboard::TwoAndAt => 31,
-            Keyboard::ThreeAndHash => 32,
-            Keyboard::FourAndDollar => 33,
-            Keyboard::FiveAndPercent => 34,
-            Keyboard::SixAndCaret => 35,
-            Keyboard::SevenAndAmpersand => 36,
-            Keyboard::EightAndStar => 37,
-            Keyboard::NineAndOpenParenthesis => 38,
-            Keyboard::ZeroAndCloseParenthesis => 39,
-            Keyboard::ReturnOpenParenthesisENTERCloseParenthesis => 40,
-            Keyboard::ESCAPE => 41,
-            Keyboard::DELETEOpenParenthesisBackspaceCloseParenthesis => 42,
-            Keyboard::Tab => 43,
-            Keyboard::Spacebar => 44,
-            Keyboard::MinusAndOpenParenthesisunderscoreCloseParenthesis => 45,
-            Keyboard::EqualsAndPlus => 46,
-            Keyboard::OpenBracketAndOpenBrace => 47,
-            Keyboard::CloseBracketAndCloseBrace => 48,
-            Keyboard::BackslashAndPipe => 49,
-            Keyboard::NonMinusUSHashAndTilde => 50,
-            Keyboard::SemicolonAndColon => 51,
-            Keyboard::SingleQuoteAndDoubleQuote => 52,
-            Keyboard::GraveAccentAndTilde => 53,
-            Keyboard::KeyboardCommaAndLessThan => 54,
-            Keyboard::PeriodAndGreaterThan => 55,
-            Keyboard::SlashAndQuestionMark => 56,
-            Keyboard::CapsLock => 57,
-            Keyboard::F1 => 58,
-            Keyboard::F2 => 59,
-            Keyboard::F3 => 60,
-            Keyboard::F4 => 61,
-            Keyboard::F5 => 62,
-            Keyboard::F6 => 63,
-            Keyboard::F7 => 64,
-            Keyboard::F8 => 65,
-            Keyboard::F9 => 66,
-            Keyboard::F10 => 67,
-            Keyboard::F11 => 68,
-            Keyboard::F12 => 69,
-            Keyboard::PrintScreen => 70,
-            Keyboard::ScrollLock => 71,
-            Keyboard::Pause => 72,
-            Keyboard::Insert => 73,
-            Keyboard::Home => 74,
-            Keyboard::PageUp => 75,
-            Keyboard::DeleteForward => 76,
-            Keyboard::End => 77,
-            Keyboard::PageDown => 78,
-            Keyboard::RightArrow => 79,
-            Keyboard::LeftArrow => 80,
-            Keyboard::DownArrow => 81,
-            Keyboard::UpArrow => 82,
-            Keyboard::KeypadNumLockAndClear => 83,
-            Keyboard::KeypadSlash => 84,
-            Keyboard::KeypadStar => 85,
-            Keyboard::KeypadMinus => 86,
-            Keyboard::KeypadPlus => 87,
-            Keyboard::KeypadENTER => 88,
-            Keyboard::Keypad1AndEnd => 89,
-            Keyboard::Keypad2AndDownArrow => 90,
-            Keyboard::Keypad3AndPageDn => 91,
-            Keyboard::Keypad4AndLeftArrow => 92,
-            Keyboard::Keypad5 => 93,
-            Keyboard::Keypad6AndRightArrow => 94,
-            Keyboard::Keypad7AndHome => 95,
-            Keyboard::Keypad8AndUpArrow => 96,
-            Keyboard::Keypad9AndPageUp => 97,
-            Keyboard::Keypad0AndInsert => 98,
-            Keyboard::KeypadPeriodAndDelete => 99,
-            Keyboard::NonMinusUSBackslashAndPipe => 100,
-            Keyboard::Application => 101,
-            Keyboard::Power => 102,
-            Keyboard::KeypadEquals => 103,
-            Keyboard::F13 => 104,
-            Keyboard::F14 => 105,
-            Keyboard::F15 => 106,
-            Keyboard::F16 => 107,
-            Keyboard::F17 => 108,
-            Keyboard::F18 => 109,
-            Keyboard::F19 => 110,
-            Keyboard::F20 => 111,
-            Keyboard::F21 => 112,
-            Keyboard::F22 => 113,
-            Keyboard::F23 => 114,
-            Keyboard::F24 => 115,
-            Keyboard::Execute => 116,
-            Keyboard::Help => 117,
-            Keyboard::Menu => 118,
-            Keyboard::Select => 119,
-            Keyboard::Stop => 120,
-            Keyboard::Again => 121,
-            Keyboard::Undo => 122,
-            Keyboard::Cut => 123,
-            Keyboard::Copy => 124,
-            Keyboard::Paste => 125,
-            Keyboard::Find => 126,
-            Keyboard::Mute => 127,
-            Keyboard::VolumeUp => 128,
-            Keyboard::VolumeDown => 129,
-            Keyboard::LockingCapsLock => 130,
-            Keyboard::LockingNumLock => 131,
-            Keyboard::LockingScrollLock => 132,
-            Keyboard::KeypadComma => 133,
-            Keyboard::KeypadEqualSign => 134,
-            Keyboard::Kanji1 => 135,
-            Keyboard::Kanji2 => 136,
-            Keyboard::Kanji3 => 137,
-            Keyboard::Kanji4 => 138,
-            Keyboard::Kanji5 => 139,
-            Keyboard::Kanji6 => 140,
-            Keyboard::Kanji7 => 141,
-            Keyboard::Kanji8 => 142,
-            Keyboard::Kanji9 => 143,
-            Keyboard::LANG1 => 144,
-            Keyboard::LANG2 => 145,
-            Keyboard::LANG3 => 146,
-            Keyboard::LANG4 => 147,
-            Keyboard::LANG5 => 148,
-            Keyboard::LANG6 => 149,
-            Keyboard::LANG7 => 150,
-            Keyboard::LANG8 => 151,
-            Keyboard::LANG9 => 152,
-            Keyboard::AlternateErase => 153,
-            Keyboard::SysReqSlashAttention => 154,
-            Keyboard::Cancel => 155,
-            Keyboard::Clear => 156,
-            Keyboard::Prior => 157,
-            Keyboard::Return => 158,
-            Keyboard::Separator => 159,
-            Keyboard::Out => 160,
-            Keyboard::Oper => 161,
-            Keyboard::ClearSlashAgain => 162,
-            Keyboard::CrSelSlashProps => 163,
-            Keyboard::ExSel => 164,
-            Keyboard::LeftControl => 224,
-            Keyboard::LeftShift => 225,
-            Keyboard::LeftAlt => 226,
-            Keyboard::LeftGUI => 227,
-            Keyboard::RightControl => 228,
-            Keyboard::RightShift => 229,
-            Keyboard::RightAlt => 230,
-            Keyboard::RightGUI => 231,
-        }
-    }
-}
-
-impl From<Keyboard> for u16 {
-    fn from(up: Keyboard) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Keyboard> for u32 {
-    fn from(usage: &Keyboard) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Keyboard::ErrorRollOver => 1,
-            Keyboard::POSTFail => 2,
-            Keyboard::ErrorUndefine => 3,
-            Keyboard::aAndA => 4,
-            Keyboard::bAndB => 5,
-            Keyboard::cAndC => 6,
-            Keyboard::dAndD => 7,
-            Keyboard::eAndE => 8,
-            Keyboard::fAndF => 9,
-            Keyboard::gAndG => 10,
-            Keyboard::hAndH => 11,
-            Keyboard::iAndI => 12,
-            Keyboard::jAndJ => 13,
-            Keyboard::kAndK => 14,
-            Keyboard::lAndL => 15,
-            Keyboard::mAndM => 16,
-            Keyboard::nAndN => 17,
-            Keyboard::oAndO => 18,
-            Keyboard::pAndP => 19,
-            Keyboard::qAndQ => 20,
-            Keyboard::rAndR => 21,
-            Keyboard::sAndS => 22,
-            Keyboard::tAndT => 23,
-            Keyboard::uAndU => 24,
-            Keyboard::vAndV => 25,
-            Keyboard::wAndW => 26,
-            Keyboard::xAndX => 27,
-            Keyboard::yAndY => 28,
-            Keyboard::zAndZ => 29,
-            Keyboard::OneAndExclamationMark => 30,
-            Keyboard::TwoAndAt => 31,
-            Keyboard::ThreeAndHash => 32,
-            Keyboard::FourAndDollar => 33,
-            Keyboard::FiveAndPercent => 34,
-            Keyboard::SixAndCaret => 35,
-            Keyboard::SevenAndAmpersand => 36,
-            Keyboard::EightAndStar => 37,
-            Keyboard::NineAndOpenParenthesis => 38,
-            Keyboard::ZeroAndCloseParenthesis => 39,
-            Keyboard::ReturnOpenParenthesisENTERCloseParenthesis => 40,
-            Keyboard::ESCAPE => 41,
-            Keyboard::DELETEOpenParenthesisBackspaceCloseParenthesis => 42,
-            Keyboard::Tab => 43,
-            Keyboard::Spacebar => 44,
-            Keyboard::MinusAndOpenParenthesisunderscoreCloseParenthesis => 45,
-            Keyboard::EqualsAndPlus => 46,
-            Keyboard::OpenBracketAndOpenBrace => 47,
-            Keyboard::CloseBracketAndCloseBrace => 48,
-            Keyboard::BackslashAndPipe => 49,
-            Keyboard::NonMinusUSHashAndTilde => 50,
-            Keyboard::SemicolonAndColon => 51,
-            Keyboard::SingleQuoteAndDoubleQuote => 52,
-            Keyboard::GraveAccentAndTilde => 53,
-            Keyboard::KeyboardCommaAndLessThan => 54,
-            Keyboard::PeriodAndGreaterThan => 55,
-            Keyboard::SlashAndQuestionMark => 56,
-            Keyboard::CapsLock => 57,
-            Keyboard::F1 => 58,
-            Keyboard::F2 => 59,
-            Keyboard::F3 => 60,
-            Keyboard::F4 => 61,
-            Keyboard::F5 => 62,
-            Keyboard::F6 => 63,
-            Keyboard::F7 => 64,
-            Keyboard::F8 => 65,
-            Keyboard::F9 => 66,
-            Keyboard::F10 => 67,
-            Keyboard::F11 => 68,
-            Keyboard::F12 => 69,
-            Keyboard::PrintScreen => 70,
-            Keyboard::ScrollLock => 71,
-            Keyboard::Pause => 72,
-            Keyboard::Insert => 73,
-            Keyboard::Home => 74,
-            Keyboard::PageUp => 75,
-            Keyboard::DeleteForward => 76,
-            Keyboard::End => 77,
-            Keyboard::PageDown => 78,
-            Keyboard::RightArrow => 79,
-            Keyboard::LeftArrow => 80,
-            Keyboard::DownArrow => 81,
-            Keyboard::UpArrow => 82,
-            Keyboard::KeypadNumLockAndClear => 83,
-            Keyboard::KeypadSlash => 84,
-            Keyboard::KeypadStar => 85,
-            Keyboard::KeypadMinus => 86,
-            Keyboard::KeypadPlus => 87,
-            Keyboard::KeypadENTER => 88,
-            Keyboard::Keypad1AndEnd => 89,
-            Keyboard::Keypad2AndDownArrow => 90,
-            Keyboard::Keypad3AndPageDn => 91,
-            Keyboard::Keypad4AndLeftArrow => 92,
-            Keyboard::Keypad5 => 93,
-            Keyboard::Keypad6AndRightArrow => 94,
-            Keyboard::Keypad7AndHome => 95,
-            Keyboard::Keypad8AndUpArrow => 96,
-            Keyboard::Keypad9AndPageUp => 97,
-            Keyboard::Keypad0AndInsert => 98,
-            Keyboard::KeypadPeriodAndDelete => 99,
-            Keyboard::NonMinusUSBackslashAndPipe => 100,
-            Keyboard::Application => 101,
-            Keyboard::Power => 102,
-            Keyboard::KeypadEquals => 103,
-            Keyboard::F13 => 104,
-            Keyboard::F14 => 105,
-            Keyboard::F15 => 106,
-            Keyboard::F16 => 107,
-            Keyboard::F17 => 108,
-            Keyboard::F18 => 109,
-            Keyboard::F19 => 110,
-            Keyboard::F20 => 111,
-            Keyboard::F21 => 112,
-            Keyboard::F22 => 113,
-            Keyboard::F23 => 114,
-            Keyboard::F24 => 115,
-            Keyboard::Execute => 116,
-            Keyboard::Help => 117,
-            Keyboard::Menu => 118,
-            Keyboard::Select => 119,
-            Keyboard::Stop => 120,
-            Keyboard::Again => 121,
-            Keyboard::Undo => 122,
-            Keyboard::Cut => 123,
-            Keyboard::Copy => 124,
-            Keyboard::Paste => 125,
-            Keyboard::Find => 126,
-            Keyboard::Mute => 127,
-            Keyboard::VolumeUp => 128,
-            Keyboard::VolumeDown => 129,
-            Keyboard::LockingCapsLock => 130,
-            Keyboard::LockingNumLock => 131,
-            Keyboard::LockingScrollLock => 132,
-            Keyboard::KeypadComma => 133,
-            Keyboard::KeypadEqualSign => 134,
-            Keyboard::Kanji1 => 135,
-            Keyboard::Kanji2 => 136,
-            Keyboard::Kanji3 => 137,
-            Keyboard::Kanji4 => 138,
-            Keyboard::Kanji5 => 139,
-            Keyboard::Kanji6 => 140,
-            Keyboard::Kanji7 => 141,
-            Keyboard::Kanji8 => 142,
-            Keyboard::Kanji9 => 143,
-            Keyboard::LANG1 => 144,
-            Keyboard::LANG2 => 145,
-            Keyboard::LANG3 => 146,
-            Keyboard::LANG4 => 147,
-            Keyboard::LANG5 => 148,
-            Keyboard::LANG6 => 149,
-            Keyboard::LANG7 => 150,
-            Keyboard::LANG8 => 151,
-            Keyboard::LANG9 => 152,
-            Keyboard::AlternateErase => 153,
-            Keyboard::SysReqSlashAttention => 154,
-            Keyboard::Cancel => 155,
-            Keyboard::Clear => 156,
-            Keyboard::Prior => 157,
-            Keyboard::Return => 158,
-            Keyboard::Separator => 159,
-            Keyboard::Out => 160,
-            Keyboard::Oper => 161,
-            Keyboard::ClearSlashAgain => 162,
-            Keyboard::CrSelSlashProps => 163,
-            Keyboard::ExSel => 164,
-            Keyboard::LeftControl => 224,
-            Keyboard::LeftShift => 225,
-            Keyboard::LeftAlt => 226,
-            Keyboard::LeftGUI => 227,
-            Keyboard::RightControl => 228,
-            Keyboard::RightShift => 229,
-            Keyboard::RightAlt => 230,
-            Keyboard::RightGUI => 231,
-        };
-        up | id
-    }
-}
-
-impl From<&Keyboard> for UsagePage {
-    fn from(_up: &Keyboard) -> UsagePage {
-        UsagePage::Keyboard
-    }
-}
-
-impl From<Keyboard> for UsagePage {
-    fn from(up: Keyboard) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Keyboard {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -3474,28 +2034,6 @@ pub enum LEDs {
     Player8,
 }
 
-impl AsUsage for LEDs {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for LEDs {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x8` for [LEDs]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for LEDs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -3597,249 +2135,6 @@ impl fmt::Display for LEDs {
             LEDs::Player8 => "Player 8",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&LEDs> for u16 {
-    fn from(up: &LEDs) -> u16 {
-        match *up {
-            LEDs::Undefined => 0,
-            LEDs::NumLock => 1,
-            LEDs::CapsLock => 2,
-            LEDs::ScrollLock => 3,
-            LEDs::Compose => 4,
-            LEDs::Kana => 5,
-            LEDs::Power => 6,
-            LEDs::Shift => 7,
-            LEDs::DoNotDisturb => 8,
-            LEDs::Mute => 9,
-            LEDs::ToneEnable => 10,
-            LEDs::HighCutFilter => 11,
-            LEDs::LowCutFilter => 12,
-            LEDs::EqualizerEnable => 13,
-            LEDs::SoundFieldOn => 14,
-            LEDs::SurroundfieldOn => 15,
-            LEDs::Repeat => 16,
-            LEDs::Stereo => 17,
-            LEDs::SamplingRateDetect => 18,
-            LEDs::Spinning => 19,
-            LEDs::CAV => 20,
-            LEDs::CLV => 21,
-            LEDs::RecordingFormatDetect => 22,
-            LEDs::OffHook => 23,
-            LEDs::Ring => 24,
-            LEDs::MessageWaiting => 25,
-            LEDs::DataMode => 26,
-            LEDs::BatteryOperation => 27,
-            LEDs::BatteryOK => 28,
-            LEDs::BatteryLow => 29,
-            LEDs::Speaker => 30,
-            LEDs::HeadSet => 31,
-            LEDs::Hold => 32,
-            LEDs::Microphone => 33,
-            LEDs::Coverage => 34,
-            LEDs::NightMode => 35,
-            LEDs::SendCalls => 36,
-            LEDs::CallPickup => 37,
-            LEDs::Conference => 38,
-            LEDs::Standby => 39,
-            LEDs::CameraOn => 40,
-            LEDs::CameraOff => 41,
-            LEDs::OnLine => 42,
-            LEDs::OffLine => 43,
-            LEDs::Busy => 44,
-            LEDs::Ready => 45,
-            LEDs::PaperOut => 46,
-            LEDs::PaperJam => 47,
-            LEDs::Remote => 48,
-            LEDs::Forward => 49,
-            LEDs::Reverse => 50,
-            LEDs::Stop => 51,
-            LEDs::Rewind => 52,
-            LEDs::FastForward => 53,
-            LEDs::Play => 54,
-            LEDs::Pause => 55,
-            LEDs::Record => 56,
-            LEDs::Error => 57,
-            LEDs::UsageSelectedIndicator => 58,
-            LEDs::UsageInUseIndicator => 59,
-            LEDs::UsageMultiModeIndicator => 60,
-            LEDs::IndicatorOn => 61,
-            LEDs::IndicatorFlash => 62,
-            LEDs::IndicatorSlowBlink => 63,
-            LEDs::IndicatorFastBlink => 64,
-            LEDs::IndicatorOff => 65,
-            LEDs::FlashOnTime => 66,
-            LEDs::SlowBlinkOnTime => 67,
-            LEDs::SlowBlinkOffTime => 68,
-            LEDs::FastBlinkOnTime => 69,
-            LEDs::FastBlinkOffTime => 70,
-            LEDs::UsageIndicatorColor => 71,
-            LEDs::IndicatorRed => 72,
-            LEDs::IndicatorGreen => 73,
-            LEDs::IndicatorAmber => 74,
-            LEDs::GenericIndicator => 75,
-            LEDs::SystemSuspend => 76,
-            LEDs::ExternalPowerConnected => 77,
-            LEDs::IndicatorBlue => 78,
-            LEDs::IndicatorOrange => 79,
-            LEDs::GoodStatus => 80,
-            LEDs::WarningStatus => 81,
-            LEDs::RGBLED => 82,
-            LEDs::RedLEDChannel => 83,
-            LEDs::GreedLEDChannel => 84,
-            LEDs::BlueLEDChannel => 85,
-            LEDs::LEDIntensity => 86,
-            LEDs::PlayerIndicator => 96,
-            LEDs::Player1 => 97,
-            LEDs::Player2 => 98,
-            LEDs::Player3 => 99,
-            LEDs::Player4 => 100,
-            LEDs::Player5 => 101,
-            LEDs::Player6 => 102,
-            LEDs::Player7 => 103,
-            LEDs::Player8 => 104,
-        }
-    }
-}
-
-impl From<LEDs> for u16 {
-    fn from(up: LEDs) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&LEDs> for u32 {
-    fn from(usage: &LEDs) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            LEDs::Undefined => 0,
-            LEDs::NumLock => 1,
-            LEDs::CapsLock => 2,
-            LEDs::ScrollLock => 3,
-            LEDs::Compose => 4,
-            LEDs::Kana => 5,
-            LEDs::Power => 6,
-            LEDs::Shift => 7,
-            LEDs::DoNotDisturb => 8,
-            LEDs::Mute => 9,
-            LEDs::ToneEnable => 10,
-            LEDs::HighCutFilter => 11,
-            LEDs::LowCutFilter => 12,
-            LEDs::EqualizerEnable => 13,
-            LEDs::SoundFieldOn => 14,
-            LEDs::SurroundfieldOn => 15,
-            LEDs::Repeat => 16,
-            LEDs::Stereo => 17,
-            LEDs::SamplingRateDetect => 18,
-            LEDs::Spinning => 19,
-            LEDs::CAV => 20,
-            LEDs::CLV => 21,
-            LEDs::RecordingFormatDetect => 22,
-            LEDs::OffHook => 23,
-            LEDs::Ring => 24,
-            LEDs::MessageWaiting => 25,
-            LEDs::DataMode => 26,
-            LEDs::BatteryOperation => 27,
-            LEDs::BatteryOK => 28,
-            LEDs::BatteryLow => 29,
-            LEDs::Speaker => 30,
-            LEDs::HeadSet => 31,
-            LEDs::Hold => 32,
-            LEDs::Microphone => 33,
-            LEDs::Coverage => 34,
-            LEDs::NightMode => 35,
-            LEDs::SendCalls => 36,
-            LEDs::CallPickup => 37,
-            LEDs::Conference => 38,
-            LEDs::Standby => 39,
-            LEDs::CameraOn => 40,
-            LEDs::CameraOff => 41,
-            LEDs::OnLine => 42,
-            LEDs::OffLine => 43,
-            LEDs::Busy => 44,
-            LEDs::Ready => 45,
-            LEDs::PaperOut => 46,
-            LEDs::PaperJam => 47,
-            LEDs::Remote => 48,
-            LEDs::Forward => 49,
-            LEDs::Reverse => 50,
-            LEDs::Stop => 51,
-            LEDs::Rewind => 52,
-            LEDs::FastForward => 53,
-            LEDs::Play => 54,
-            LEDs::Pause => 55,
-            LEDs::Record => 56,
-            LEDs::Error => 57,
-            LEDs::UsageSelectedIndicator => 58,
-            LEDs::UsageInUseIndicator => 59,
-            LEDs::UsageMultiModeIndicator => 60,
-            LEDs::IndicatorOn => 61,
-            LEDs::IndicatorFlash => 62,
-            LEDs::IndicatorSlowBlink => 63,
-            LEDs::IndicatorFastBlink => 64,
-            LEDs::IndicatorOff => 65,
-            LEDs::FlashOnTime => 66,
-            LEDs::SlowBlinkOnTime => 67,
-            LEDs::SlowBlinkOffTime => 68,
-            LEDs::FastBlinkOnTime => 69,
-            LEDs::FastBlinkOffTime => 70,
-            LEDs::UsageIndicatorColor => 71,
-            LEDs::IndicatorRed => 72,
-            LEDs::IndicatorGreen => 73,
-            LEDs::IndicatorAmber => 74,
-            LEDs::GenericIndicator => 75,
-            LEDs::SystemSuspend => 76,
-            LEDs::ExternalPowerConnected => 77,
-            LEDs::IndicatorBlue => 78,
-            LEDs::IndicatorOrange => 79,
-            LEDs::GoodStatus => 80,
-            LEDs::WarningStatus => 81,
-            LEDs::RGBLED => 82,
-            LEDs::RedLEDChannel => 83,
-            LEDs::GreedLEDChannel => 84,
-            LEDs::BlueLEDChannel => 85,
-            LEDs::LEDIntensity => 86,
-            LEDs::PlayerIndicator => 96,
-            LEDs::Player1 => 97,
-            LEDs::Player2 => 98,
-            LEDs::Player3 => 99,
-            LEDs::Player4 => 100,
-            LEDs::Player5 => 101,
-            LEDs::Player6 => 102,
-            LEDs::Player7 => 103,
-            LEDs::Player8 => 104,
-        };
-        up | id
-    }
-}
-
-impl From<&LEDs> for UsagePage {
-    fn from(_up: &LEDs) -> UsagePage {
-        UsagePage::LEDs
-    }
-}
-
-impl From<LEDs> for UsagePage {
-    fn from(up: LEDs) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for LEDs {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -4063,28 +2358,6 @@ pub enum TelephonyDevices {
     DualModePhone,
 }
 
-impl AsUsage for TelephonyDevices {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for TelephonyDevices {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xB` for [TelephonyDevices]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for TelephonyDevices {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -4190,257 +2463,6 @@ impl fmt::Display for TelephonyDevices {
             TelephonyDevices::DualModePhone => "Dual Mode Phone",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&TelephonyDevices> for u16 {
-    fn from(up: &TelephonyDevices) -> u16 {
-        match *up {
-            TelephonyDevices::Unassigned => 0,
-            TelephonyDevices::Phone => 1,
-            TelephonyDevices::AnsweringMachine => 2,
-            TelephonyDevices::MessageControls => 3,
-            TelephonyDevices::Handset => 4,
-            TelephonyDevices::Headset => 5,
-            TelephonyDevices::TelephonyKeyPad => 6,
-            TelephonyDevices::ProgrammableButton => 7,
-            TelephonyDevices::HookSwitch => 32,
-            TelephonyDevices::Flash => 33,
-            TelephonyDevices::Feature => 34,
-            TelephonyDevices::Hold => 35,
-            TelephonyDevices::Redial => 36,
-            TelephonyDevices::Transfer => 37,
-            TelephonyDevices::Drop => 38,
-            TelephonyDevices::Park => 39,
-            TelephonyDevices::ForwardCalls => 40,
-            TelephonyDevices::AlternateFunction => 41,
-            TelephonyDevices::LineOSC => 42,
-            TelephonyDevices::SpeakerPhone => 43,
-            TelephonyDevices::Conference => 44,
-            TelephonyDevices::RingEnable => 45,
-            TelephonyDevices::RingSelect => 46,
-            TelephonyDevices::PhoneMute => 47,
-            TelephonyDevices::CallerID => 48,
-            TelephonyDevices::Send => 49,
-            TelephonyDevices::SpeedDial => 80,
-            TelephonyDevices::StoreNumber => 81,
-            TelephonyDevices::RecallNumber => 82,
-            TelephonyDevices::PhoneDirectory => 83,
-            TelephonyDevices::VoiceMail => 112,
-            TelephonyDevices::ScreenCalls => 113,
-            TelephonyDevices::DoNotDisturb => 114,
-            TelephonyDevices::Message => 115,
-            TelephonyDevices::AnswerOnOff => 116,
-            TelephonyDevices::InsideDialTone => 144,
-            TelephonyDevices::OutsideDialTone => 145,
-            TelephonyDevices::InsideRingTone => 146,
-            TelephonyDevices::OutsideRingTone => 147,
-            TelephonyDevices::PriorityRingTone => 148,
-            TelephonyDevices::InsideRingback => 149,
-            TelephonyDevices::PriorityRingback => 150,
-            TelephonyDevices::LineBusyTone => 151,
-            TelephonyDevices::ReorderTone => 152,
-            TelephonyDevices::CallWaitingTone => 153,
-            TelephonyDevices::ConfirmationTone1 => 154,
-            TelephonyDevices::ConfirmationTone2 => 155,
-            TelephonyDevices::TonesOff => 156,
-            TelephonyDevices::OutsideRingback => 157,
-            TelephonyDevices::Ringer => 158,
-            TelephonyDevices::PhoneKey0 => 176,
-            TelephonyDevices::PhoneKey1 => 177,
-            TelephonyDevices::PhoneKey2 => 178,
-            TelephonyDevices::PhoneKey3 => 179,
-            TelephonyDevices::PhoneKey4 => 180,
-            TelephonyDevices::PhoneKey5 => 181,
-            TelephonyDevices::PhoneKey6 => 182,
-            TelephonyDevices::PhoneKey7 => 183,
-            TelephonyDevices::PhoneKey8 => 184,
-            TelephonyDevices::PhoneKey9 => 185,
-            TelephonyDevices::PhoneKeyStar => 186,
-            TelephonyDevices::PhoneKeyPound => 187,
-            TelephonyDevices::PhoneKeyA => 188,
-            TelephonyDevices::PhoneKeyB => 189,
-            TelephonyDevices::PhoneKeyC => 190,
-            TelephonyDevices::PhoneKeyD => 191,
-            TelephonyDevices::PhoneCallHistoryKey => 192,
-            TelephonyDevices::PhoneCallerIDKey => 193,
-            TelephonyDevices::PhoneSettingsKey => 194,
-            TelephonyDevices::HostControl => 240,
-            TelephonyDevices::HostAvailable => 241,
-            TelephonyDevices::HostCallActive => 242,
-            TelephonyDevices::ActivateHandsetAudio => 243,
-            TelephonyDevices::RingType => 244,
-            TelephonyDevices::RedialablePhoneNumber => 245,
-            TelephonyDevices::StopRingTone => 248,
-            TelephonyDevices::PSTNRingTone => 249,
-            TelephonyDevices::HostRingTone => 250,
-            TelephonyDevices::AlertSoundError => 251,
-            TelephonyDevices::AlertSoundConfirm => 252,
-            TelephonyDevices::AlertSoundNotification => 253,
-            TelephonyDevices::SilentRing => 254,
-            TelephonyDevices::EmailMessageWaiting => 264,
-            TelephonyDevices::oicemailMessageWaiting => 265,
-            TelephonyDevices::ostHold => 266,
-            TelephonyDevices::IncomingCallHistoryCount => 272,
-            TelephonyDevices::OutgoingCallHistoryCount => 273,
-            TelephonyDevices::IncomingCallHistory => 274,
-            TelephonyDevices::OutgoingCallHistory => 275,
-            TelephonyDevices::PhoneLocale => 276,
-            TelephonyDevices::PhoneTimeSecond => 320,
-            TelephonyDevices::PhoneTimeMinute => 321,
-            TelephonyDevices::PhoneTimeHour => 322,
-            TelephonyDevices::PhoneDateDay => 323,
-            TelephonyDevices::PhoneDateMonth => 324,
-            TelephonyDevices::PhoneDateYear => 325,
-            TelephonyDevices::HandsetNickname => 326,
-            TelephonyDevices::AddressBookID => 327,
-            TelephonyDevices::CallDuration => 330,
-            TelephonyDevices::DualModePhone => 331,
-        }
-    }
-}
-
-impl From<TelephonyDevices> for u16 {
-    fn from(up: TelephonyDevices) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&TelephonyDevices> for u32 {
-    fn from(usage: &TelephonyDevices) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            TelephonyDevices::Unassigned => 0,
-            TelephonyDevices::Phone => 1,
-            TelephonyDevices::AnsweringMachine => 2,
-            TelephonyDevices::MessageControls => 3,
-            TelephonyDevices::Handset => 4,
-            TelephonyDevices::Headset => 5,
-            TelephonyDevices::TelephonyKeyPad => 6,
-            TelephonyDevices::ProgrammableButton => 7,
-            TelephonyDevices::HookSwitch => 32,
-            TelephonyDevices::Flash => 33,
-            TelephonyDevices::Feature => 34,
-            TelephonyDevices::Hold => 35,
-            TelephonyDevices::Redial => 36,
-            TelephonyDevices::Transfer => 37,
-            TelephonyDevices::Drop => 38,
-            TelephonyDevices::Park => 39,
-            TelephonyDevices::ForwardCalls => 40,
-            TelephonyDevices::AlternateFunction => 41,
-            TelephonyDevices::LineOSC => 42,
-            TelephonyDevices::SpeakerPhone => 43,
-            TelephonyDevices::Conference => 44,
-            TelephonyDevices::RingEnable => 45,
-            TelephonyDevices::RingSelect => 46,
-            TelephonyDevices::PhoneMute => 47,
-            TelephonyDevices::CallerID => 48,
-            TelephonyDevices::Send => 49,
-            TelephonyDevices::SpeedDial => 80,
-            TelephonyDevices::StoreNumber => 81,
-            TelephonyDevices::RecallNumber => 82,
-            TelephonyDevices::PhoneDirectory => 83,
-            TelephonyDevices::VoiceMail => 112,
-            TelephonyDevices::ScreenCalls => 113,
-            TelephonyDevices::DoNotDisturb => 114,
-            TelephonyDevices::Message => 115,
-            TelephonyDevices::AnswerOnOff => 116,
-            TelephonyDevices::InsideDialTone => 144,
-            TelephonyDevices::OutsideDialTone => 145,
-            TelephonyDevices::InsideRingTone => 146,
-            TelephonyDevices::OutsideRingTone => 147,
-            TelephonyDevices::PriorityRingTone => 148,
-            TelephonyDevices::InsideRingback => 149,
-            TelephonyDevices::PriorityRingback => 150,
-            TelephonyDevices::LineBusyTone => 151,
-            TelephonyDevices::ReorderTone => 152,
-            TelephonyDevices::CallWaitingTone => 153,
-            TelephonyDevices::ConfirmationTone1 => 154,
-            TelephonyDevices::ConfirmationTone2 => 155,
-            TelephonyDevices::TonesOff => 156,
-            TelephonyDevices::OutsideRingback => 157,
-            TelephonyDevices::Ringer => 158,
-            TelephonyDevices::PhoneKey0 => 176,
-            TelephonyDevices::PhoneKey1 => 177,
-            TelephonyDevices::PhoneKey2 => 178,
-            TelephonyDevices::PhoneKey3 => 179,
-            TelephonyDevices::PhoneKey4 => 180,
-            TelephonyDevices::PhoneKey5 => 181,
-            TelephonyDevices::PhoneKey6 => 182,
-            TelephonyDevices::PhoneKey7 => 183,
-            TelephonyDevices::PhoneKey8 => 184,
-            TelephonyDevices::PhoneKey9 => 185,
-            TelephonyDevices::PhoneKeyStar => 186,
-            TelephonyDevices::PhoneKeyPound => 187,
-            TelephonyDevices::PhoneKeyA => 188,
-            TelephonyDevices::PhoneKeyB => 189,
-            TelephonyDevices::PhoneKeyC => 190,
-            TelephonyDevices::PhoneKeyD => 191,
-            TelephonyDevices::PhoneCallHistoryKey => 192,
-            TelephonyDevices::PhoneCallerIDKey => 193,
-            TelephonyDevices::PhoneSettingsKey => 194,
-            TelephonyDevices::HostControl => 240,
-            TelephonyDevices::HostAvailable => 241,
-            TelephonyDevices::HostCallActive => 242,
-            TelephonyDevices::ActivateHandsetAudio => 243,
-            TelephonyDevices::RingType => 244,
-            TelephonyDevices::RedialablePhoneNumber => 245,
-            TelephonyDevices::StopRingTone => 248,
-            TelephonyDevices::PSTNRingTone => 249,
-            TelephonyDevices::HostRingTone => 250,
-            TelephonyDevices::AlertSoundError => 251,
-            TelephonyDevices::AlertSoundConfirm => 252,
-            TelephonyDevices::AlertSoundNotification => 253,
-            TelephonyDevices::SilentRing => 254,
-            TelephonyDevices::EmailMessageWaiting => 264,
-            TelephonyDevices::oicemailMessageWaiting => 265,
-            TelephonyDevices::ostHold => 266,
-            TelephonyDevices::IncomingCallHistoryCount => 272,
-            TelephonyDevices::OutgoingCallHistoryCount => 273,
-            TelephonyDevices::IncomingCallHistory => 274,
-            TelephonyDevices::OutgoingCallHistory => 275,
-            TelephonyDevices::PhoneLocale => 276,
-            TelephonyDevices::PhoneTimeSecond => 320,
-            TelephonyDevices::PhoneTimeMinute => 321,
-            TelephonyDevices::PhoneTimeHour => 322,
-            TelephonyDevices::PhoneDateDay => 323,
-            TelephonyDevices::PhoneDateMonth => 324,
-            TelephonyDevices::PhoneDateYear => 325,
-            TelephonyDevices::HandsetNickname => 326,
-            TelephonyDevices::AddressBookID => 327,
-            TelephonyDevices::CallDuration => 330,
-            TelephonyDevices::DualModePhone => 331,
-        };
-        up | id
-    }
-}
-
-impl From<&TelephonyDevices> for UsagePage {
-    fn from(_up: &TelephonyDevices) -> UsagePage {
-        UsagePage::TelephonyDevices
-    }
-}
-
-impl From<TelephonyDevices> for UsagePage {
-    fn from(up: TelephonyDevices) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for TelephonyDevices {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -4670,28 +2692,6 @@ pub enum Digitizers {
     TransducerSwitches,
 }
 
-impl AsUsage for Digitizers {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Digitizers {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xD` for [Digitizers]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Digitizers {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -4811,263 +2811,6 @@ impl fmt::Display for Digitizers {
     }
 }
 
-impl From<&Digitizers> for u16 {
-    fn from(up: &Digitizers) -> u16 {
-        match *up {
-            Digitizers::Undefined => 0,
-            Digitizers::Digitizer => 1,
-            Digitizers::Pen => 2,
-            Digitizers::LightPen => 3,
-            Digitizers::TouchScreen => 4,
-            Digitizers::TouchPad => 5,
-            Digitizers::WhiteBoard => 6,
-            Digitizers::CoordinateMeasuringMachine => 7,
-            Digitizers::ThreeDDigitizer => 8,
-            Digitizers::StereoPlotter => 9,
-            Digitizers::ArticulatedArm => 10,
-            Digitizers::Armature => 11,
-            Digitizers::MultiplePointDigitizer => 12,
-            Digitizers::FreeSpaceWand => 13,
-            Digitizers::DeviceConfiguration => 14,
-            Digitizers::CapacitiveHeatMapDigitizer => 15,
-            Digitizers::Stylus => 32,
-            Digitizers::Puck => 33,
-            Digitizers::Finger => 34,
-            Digitizers::DeviceSettings => 35,
-            Digitizers::CharacterGesture => 36,
-            Digitizers::TipPressure => 48,
-            Digitizers::BarrelPressure => 49,
-            Digitizers::InRange => 50,
-            Digitizers::Touch => 51,
-            Digitizers::Untouch => 52,
-            Digitizers::Tap => 53,
-            Digitizers::Quality => 54,
-            Digitizers::DataValid => 55,
-            Digitizers::TransducerIndex => 56,
-            Digitizers::TabletFunctionKeys => 57,
-            Digitizers::ProgramChangeKeys => 58,
-            Digitizers::BatteryStrength => 59,
-            Digitizers::Invert => 60,
-            Digitizers::XTilt => 61,
-            Digitizers::YTilt => 62,
-            Digitizers::Azimuth => 63,
-            Digitizers::Altitude => 64,
-            Digitizers::Twist => 65,
-            Digitizers::TipSwitch => 66,
-            Digitizers::SecondaryTipSwitch => 67,
-            Digitizers::BarrelSwitch => 68,
-            Digitizers::Eraser => 69,
-            Digitizers::TabletPick => 70,
-            Digitizers::Confidence => 71,
-            Digitizers::Width => 72,
-            Digitizers::Height => 73,
-            Digitizers::ContactId => 81,
-            Digitizers::Inputmode => 82,
-            Digitizers::DeviceIndex => 83,
-            Digitizers::ContactCount => 84,
-            Digitizers::ContactMax => 85,
-            Digitizers::ScanTime => 86,
-            Digitizers::SurfaceSwitch => 87,
-            Digitizers::ButtonSwitch => 88,
-            Digitizers::ButtonType => 89,
-            Digitizers::SecondaryBarrelSwitch => 90,
-            Digitizers::TransducerSerialNumber => 91,
-            Digitizers::PreferredInkingColor => 92,
-            Digitizers::PreferredColorisLocked => 93,
-            Digitizers::PreferredLineWidth => 94,
-            Digitizers::PreferredLineWidthisLocked => 95,
-            Digitizers::GestureCharacterQuality => 97,
-            Digitizers::CharacterGestureDataLength => 98,
-            Digitizers::CharacterGestureData => 99,
-            Digitizers::GestureCharacterEncoding => 100,
-            Digitizers::UTF8CharacterGestureEncodingSel => 101,
-            Digitizers::UTF16LittleEndianCharacterGestureEncodingSel => 102,
-            Digitizers::UTF16BigEndianCharacterGestureEncodingSel => 103,
-            Digitizers::UTF32LittleEndianCharacterGestureEncoding => 104,
-            Digitizers::UTF32BigEndianCharacterGestureEncoding => 105,
-            Digitizers::GestureCharacterEnable => 106,
-            Digitizers::CapacitiveHeatMapProtocolVersion => 107,
-            Digitizers::CapacitiveHeatMapFrameData => 108,
-            Digitizers::PreferredLineStyle => 112,
-            Digitizers::PreferredLineStyleisLocked => 113,
-            Digitizers::Ink => 114,
-            Digitizers::Pencil => 115,
-            Digitizers::Highlighter => 116,
-            Digitizers::ChiselMarker => 117,
-            Digitizers::Brush => 118,
-            Digitizers::Nopreference => 119,
-            Digitizers::DigitizerDiagnostic => 128,
-            Digitizers::DigitizerError => 129,
-            Digitizers::ErrNormalStatus => 130,
-            Digitizers::ErrTransducersExceeded => 131,
-            Digitizers::ErrFullTransFeaturesUnavail => 132,
-            Digitizers::ErrChargeLow => 133,
-            Digitizers::TransducerSoftwareInfo => 144,
-            Digitizers::TransducerVendorID => 145,
-            Digitizers::TransducerProductID => 146,
-            Digitizers::DeviceSupportedProtocols => 147,
-            Digitizers::TransducerSupportedProtocols => 148,
-            Digitizers::NoProtocol => 149,
-            Digitizers::WacomAESProtocol => 150,
-            Digitizers::USIProtocol => 151,
-            Digitizers::MicrosoftPenProtocol => 152,
-            Digitizers::SupportedReportRates => 160,
-            Digitizers::ReportRate => 161,
-            Digitizers::TransducerConnected => 162,
-            Digitizers::SwitchDisabled => 163,
-            Digitizers::SwitchUnimplemented => 164,
-            Digitizers::TransducerSwitches => 165,
-        }
-    }
-}
-
-impl From<Digitizers> for u16 {
-    fn from(up: Digitizers) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Digitizers> for u32 {
-    fn from(usage: &Digitizers) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Digitizers::Undefined => 0,
-            Digitizers::Digitizer => 1,
-            Digitizers::Pen => 2,
-            Digitizers::LightPen => 3,
-            Digitizers::TouchScreen => 4,
-            Digitizers::TouchPad => 5,
-            Digitizers::WhiteBoard => 6,
-            Digitizers::CoordinateMeasuringMachine => 7,
-            Digitizers::ThreeDDigitizer => 8,
-            Digitizers::StereoPlotter => 9,
-            Digitizers::ArticulatedArm => 10,
-            Digitizers::Armature => 11,
-            Digitizers::MultiplePointDigitizer => 12,
-            Digitizers::FreeSpaceWand => 13,
-            Digitizers::DeviceConfiguration => 14,
-            Digitizers::CapacitiveHeatMapDigitizer => 15,
-            Digitizers::Stylus => 32,
-            Digitizers::Puck => 33,
-            Digitizers::Finger => 34,
-            Digitizers::DeviceSettings => 35,
-            Digitizers::CharacterGesture => 36,
-            Digitizers::TipPressure => 48,
-            Digitizers::BarrelPressure => 49,
-            Digitizers::InRange => 50,
-            Digitizers::Touch => 51,
-            Digitizers::Untouch => 52,
-            Digitizers::Tap => 53,
-            Digitizers::Quality => 54,
-            Digitizers::DataValid => 55,
-            Digitizers::TransducerIndex => 56,
-            Digitizers::TabletFunctionKeys => 57,
-            Digitizers::ProgramChangeKeys => 58,
-            Digitizers::BatteryStrength => 59,
-            Digitizers::Invert => 60,
-            Digitizers::XTilt => 61,
-            Digitizers::YTilt => 62,
-            Digitizers::Azimuth => 63,
-            Digitizers::Altitude => 64,
-            Digitizers::Twist => 65,
-            Digitizers::TipSwitch => 66,
-            Digitizers::SecondaryTipSwitch => 67,
-            Digitizers::BarrelSwitch => 68,
-            Digitizers::Eraser => 69,
-            Digitizers::TabletPick => 70,
-            Digitizers::Confidence => 71,
-            Digitizers::Width => 72,
-            Digitizers::Height => 73,
-            Digitizers::ContactId => 81,
-            Digitizers::Inputmode => 82,
-            Digitizers::DeviceIndex => 83,
-            Digitizers::ContactCount => 84,
-            Digitizers::ContactMax => 85,
-            Digitizers::ScanTime => 86,
-            Digitizers::SurfaceSwitch => 87,
-            Digitizers::ButtonSwitch => 88,
-            Digitizers::ButtonType => 89,
-            Digitizers::SecondaryBarrelSwitch => 90,
-            Digitizers::TransducerSerialNumber => 91,
-            Digitizers::PreferredInkingColor => 92,
-            Digitizers::PreferredColorisLocked => 93,
-            Digitizers::PreferredLineWidth => 94,
-            Digitizers::PreferredLineWidthisLocked => 95,
-            Digitizers::GestureCharacterQuality => 97,
-            Digitizers::CharacterGestureDataLength => 98,
-            Digitizers::CharacterGestureData => 99,
-            Digitizers::GestureCharacterEncoding => 100,
-            Digitizers::UTF8CharacterGestureEncodingSel => 101,
-            Digitizers::UTF16LittleEndianCharacterGestureEncodingSel => 102,
-            Digitizers::UTF16BigEndianCharacterGestureEncodingSel => 103,
-            Digitizers::UTF32LittleEndianCharacterGestureEncoding => 104,
-            Digitizers::UTF32BigEndianCharacterGestureEncoding => 105,
-            Digitizers::GestureCharacterEnable => 106,
-            Digitizers::CapacitiveHeatMapProtocolVersion => 107,
-            Digitizers::CapacitiveHeatMapFrameData => 108,
-            Digitizers::PreferredLineStyle => 112,
-            Digitizers::PreferredLineStyleisLocked => 113,
-            Digitizers::Ink => 114,
-            Digitizers::Pencil => 115,
-            Digitizers::Highlighter => 116,
-            Digitizers::ChiselMarker => 117,
-            Digitizers::Brush => 118,
-            Digitizers::Nopreference => 119,
-            Digitizers::DigitizerDiagnostic => 128,
-            Digitizers::DigitizerError => 129,
-            Digitizers::ErrNormalStatus => 130,
-            Digitizers::ErrTransducersExceeded => 131,
-            Digitizers::ErrFullTransFeaturesUnavail => 132,
-            Digitizers::ErrChargeLow => 133,
-            Digitizers::TransducerSoftwareInfo => 144,
-            Digitizers::TransducerVendorID => 145,
-            Digitizers::TransducerProductID => 146,
-            Digitizers::DeviceSupportedProtocols => 147,
-            Digitizers::TransducerSupportedProtocols => 148,
-            Digitizers::NoProtocol => 149,
-            Digitizers::WacomAESProtocol => 150,
-            Digitizers::USIProtocol => 151,
-            Digitizers::MicrosoftPenProtocol => 152,
-            Digitizers::SupportedReportRates => 160,
-            Digitizers::ReportRate => 161,
-            Digitizers::TransducerConnected => 162,
-            Digitizers::SwitchDisabled => 163,
-            Digitizers::SwitchUnimplemented => 164,
-            Digitizers::TransducerSwitches => 165,
-        };
-        up | id
-    }
-}
-
-impl From<&Digitizers> for UsagePage {
-    fn from(_up: &Digitizers) -> UsagePage {
-        UsagePage::Digitizers
-    }
-}
-
-impl From<Digitizers> for UsagePage {
-    fn from(up: Digitizers) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Digitizers {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0xE`: "Haptic"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -5126,28 +2869,6 @@ pub enum Haptic {
     WAVEFORM_RELEASE,
 }
 
-impl AsUsage for Haptic {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Haptic {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xE` for [Haptic]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Haptic {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -5172,95 +2893,6 @@ impl fmt::Display for Haptic {
             Haptic::WAVEFORM_RELEASE => "WAVEFORM_RELEASE",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&Haptic> for u16 {
-    fn from(up: &Haptic) -> u16 {
-        match *up {
-            Haptic::SimpleHapticController => 1,
-            Haptic::Waveform => 16,
-            Haptic::Duration => 17,
-            Haptic::AutoTrigger => 32,
-            Haptic::ManualTrigger => 33,
-            Haptic::AutoTriggerAssociatedControl => 34,
-            Haptic::Intensity => 35,
-            Haptic::RepeatCount => 36,
-            Haptic::RetriggerPeriod => 37,
-            Haptic::WaveformVendorPage => 38,
-            Haptic::WaveformVendorID => 39,
-            Haptic::WaveformCutoffTime => 40,
-            Haptic::WAVEFORM_NONE => 4097,
-            Haptic::WAVEFORM_STOP => 4098,
-            Haptic::WAVEFORM_CLICK => 4099,
-            Haptic::WAVEFORM_BUZZ_CONTINUOUS => 4100,
-            Haptic::WAVEFORM_RUMBLE_CONTINUOUS => 4101,
-            Haptic::WAVEFORM_PRESS => 4102,
-            Haptic::WAVEFORM_RELEASE => 4103,
-        }
-    }
-}
-
-impl From<Haptic> for u16 {
-    fn from(up: Haptic) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Haptic> for u32 {
-    fn from(usage: &Haptic) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Haptic::SimpleHapticController => 1,
-            Haptic::Waveform => 16,
-            Haptic::Duration => 17,
-            Haptic::AutoTrigger => 32,
-            Haptic::ManualTrigger => 33,
-            Haptic::AutoTriggerAssociatedControl => 34,
-            Haptic::Intensity => 35,
-            Haptic::RepeatCount => 36,
-            Haptic::RetriggerPeriod => 37,
-            Haptic::WaveformVendorPage => 38,
-            Haptic::WaveformVendorID => 39,
-            Haptic::WaveformCutoffTime => 40,
-            Haptic::WAVEFORM_NONE => 4097,
-            Haptic::WAVEFORM_STOP => 4098,
-            Haptic::WAVEFORM_CLICK => 4099,
-            Haptic::WAVEFORM_BUZZ_CONTINUOUS => 4100,
-            Haptic::WAVEFORM_RUMBLE_CONTINUOUS => 4101,
-            Haptic::WAVEFORM_PRESS => 4102,
-            Haptic::WAVEFORM_RELEASE => 4103,
-        };
-        up | id
-    }
-}
-
-impl From<&Haptic> for UsagePage {
-    fn from(_up: &Haptic) -> UsagePage {
-        UsagePage::Haptic
-    }
-}
-
-impl From<Haptic> for UsagePage {
-    fn from(up: Haptic) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Haptic {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -5436,28 +3068,6 @@ pub enum AuxiliaryDisplay {
     RequestReport,
 }
 
-impl AsUsage for AuxiliaryDisplay {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for AuxiliaryDisplay {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x14` for [AuxiliaryDisplay]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for AuxiliaryDisplay {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -5539,209 +3149,6 @@ impl fmt::Display for AuxiliaryDisplay {
             AuxiliaryDisplay::RequestReport => "Request Report",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&AuxiliaryDisplay> for u16 {
-    fn from(up: &AuxiliaryDisplay) -> u16 {
-        match *up {
-            AuxiliaryDisplay::Undefined => 0,
-            AuxiliaryDisplay::AlphanumericDisplay => 1,
-            AuxiliaryDisplay::AuxiliaryDisplay => 2,
-            AuxiliaryDisplay::DisplayAttributesReport => 32,
-            AuxiliaryDisplay::ASCIICharacterSet => 33,
-            AuxiliaryDisplay::DataReadBack => 34,
-            AuxiliaryDisplay::FontReadBack => 35,
-            AuxiliaryDisplay::DisplayControlReport => 36,
-            AuxiliaryDisplay::ClearDisplay => 37,
-            AuxiliaryDisplay::DisplayEnable => 38,
-            AuxiliaryDisplay::ScreenSaverDelay => 39,
-            AuxiliaryDisplay::ScreenSaverEnable => 40,
-            AuxiliaryDisplay::VerticalScroll => 41,
-            AuxiliaryDisplay::HorizontalScroll => 42,
-            AuxiliaryDisplay::CharacterReport => 43,
-            AuxiliaryDisplay::DisplayData => 44,
-            AuxiliaryDisplay::DisplayStatus => 45,
-            AuxiliaryDisplay::StatNotReady => 46,
-            AuxiliaryDisplay::StatReady => 47,
-            AuxiliaryDisplay::ErrNotaloadablecharacter => 48,
-            AuxiliaryDisplay::ErrFontdatacannotberead => 49,
-            AuxiliaryDisplay::CursorPositionReport => 50,
-            AuxiliaryDisplay::Row => 51,
-            AuxiliaryDisplay::Column => 52,
-            AuxiliaryDisplay::Rows => 53,
-            AuxiliaryDisplay::Columns => 54,
-            AuxiliaryDisplay::CursorPixelPositioning => 55,
-            AuxiliaryDisplay::CursorMode => 56,
-            AuxiliaryDisplay::CursorEnable => 57,
-            AuxiliaryDisplay::CursorBlink => 58,
-            AuxiliaryDisplay::FontReport => 59,
-            AuxiliaryDisplay::FontData => 60,
-            AuxiliaryDisplay::CharacterWidth => 61,
-            AuxiliaryDisplay::CharacterHeight => 62,
-            AuxiliaryDisplay::CharacterSpacingHorizontal => 63,
-            AuxiliaryDisplay::CharacterSpacingVertical => 64,
-            AuxiliaryDisplay::UnicodeCharacterSet => 65,
-            AuxiliaryDisplay::Font7Segment => 66,
-            AuxiliaryDisplay::SevenSegmentDirectMap => 67,
-            AuxiliaryDisplay::Font14Segment => 68,
-            AuxiliaryDisplay::One4SegmentDirectMap => 69,
-            AuxiliaryDisplay::DisplayBrightness => 70,
-            AuxiliaryDisplay::DisplayContrast => 71,
-            AuxiliaryDisplay::CharacterAttribute => 72,
-            AuxiliaryDisplay::AttributeReadback => 73,
-            AuxiliaryDisplay::AttributeData => 74,
-            AuxiliaryDisplay::CharAttrEnhance => 75,
-            AuxiliaryDisplay::CharAttrUnderline => 76,
-            AuxiliaryDisplay::CharAttrBlink => 77,
-            AuxiliaryDisplay::BitmapSizeX => 128,
-            AuxiliaryDisplay::BitmapSizeY => 129,
-            AuxiliaryDisplay::MaxBlitSize => 130,
-            AuxiliaryDisplay::BitDepthFormat => 131,
-            AuxiliaryDisplay::DisplayOrientation => 132,
-            AuxiliaryDisplay::PaletteReport => 133,
-            AuxiliaryDisplay::PaletteDataSize => 134,
-            AuxiliaryDisplay::PaletteDataOffset => 135,
-            AuxiliaryDisplay::PaletteData => 136,
-            AuxiliaryDisplay::BlitReport => 138,
-            AuxiliaryDisplay::BlitRectangleX1 => 139,
-            AuxiliaryDisplay::BlitRectangleY1 => 140,
-            AuxiliaryDisplay::BlitRectangleX2 => 141,
-            AuxiliaryDisplay::BlitRectangleY2 => 142,
-            AuxiliaryDisplay::BlitData => 143,
-            AuxiliaryDisplay::SoftButton => 144,
-            AuxiliaryDisplay::SoftButtonID => 145,
-            AuxiliaryDisplay::SoftButtonSide => 146,
-            AuxiliaryDisplay::SoftButtonOffset1 => 147,
-            AuxiliaryDisplay::SoftButtonOffset2 => 148,
-            AuxiliaryDisplay::SoftButtonReport => 149,
-            AuxiliaryDisplay::SoftKeys => 194,
-            AuxiliaryDisplay::DisplayDataExtensions => 204,
-            AuxiliaryDisplay::CharacterMapping => 207,
-            AuxiliaryDisplay::UnicodeEquivalent => 221,
-            AuxiliaryDisplay::CharacterPageMapping => 223,
-            AuxiliaryDisplay::RequestReport => 255,
-        }
-    }
-}
-
-impl From<AuxiliaryDisplay> for u16 {
-    fn from(up: AuxiliaryDisplay) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&AuxiliaryDisplay> for u32 {
-    fn from(usage: &AuxiliaryDisplay) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            AuxiliaryDisplay::Undefined => 0,
-            AuxiliaryDisplay::AlphanumericDisplay => 1,
-            AuxiliaryDisplay::AuxiliaryDisplay => 2,
-            AuxiliaryDisplay::DisplayAttributesReport => 32,
-            AuxiliaryDisplay::ASCIICharacterSet => 33,
-            AuxiliaryDisplay::DataReadBack => 34,
-            AuxiliaryDisplay::FontReadBack => 35,
-            AuxiliaryDisplay::DisplayControlReport => 36,
-            AuxiliaryDisplay::ClearDisplay => 37,
-            AuxiliaryDisplay::DisplayEnable => 38,
-            AuxiliaryDisplay::ScreenSaverDelay => 39,
-            AuxiliaryDisplay::ScreenSaverEnable => 40,
-            AuxiliaryDisplay::VerticalScroll => 41,
-            AuxiliaryDisplay::HorizontalScroll => 42,
-            AuxiliaryDisplay::CharacterReport => 43,
-            AuxiliaryDisplay::DisplayData => 44,
-            AuxiliaryDisplay::DisplayStatus => 45,
-            AuxiliaryDisplay::StatNotReady => 46,
-            AuxiliaryDisplay::StatReady => 47,
-            AuxiliaryDisplay::ErrNotaloadablecharacter => 48,
-            AuxiliaryDisplay::ErrFontdatacannotberead => 49,
-            AuxiliaryDisplay::CursorPositionReport => 50,
-            AuxiliaryDisplay::Row => 51,
-            AuxiliaryDisplay::Column => 52,
-            AuxiliaryDisplay::Rows => 53,
-            AuxiliaryDisplay::Columns => 54,
-            AuxiliaryDisplay::CursorPixelPositioning => 55,
-            AuxiliaryDisplay::CursorMode => 56,
-            AuxiliaryDisplay::CursorEnable => 57,
-            AuxiliaryDisplay::CursorBlink => 58,
-            AuxiliaryDisplay::FontReport => 59,
-            AuxiliaryDisplay::FontData => 60,
-            AuxiliaryDisplay::CharacterWidth => 61,
-            AuxiliaryDisplay::CharacterHeight => 62,
-            AuxiliaryDisplay::CharacterSpacingHorizontal => 63,
-            AuxiliaryDisplay::CharacterSpacingVertical => 64,
-            AuxiliaryDisplay::UnicodeCharacterSet => 65,
-            AuxiliaryDisplay::Font7Segment => 66,
-            AuxiliaryDisplay::SevenSegmentDirectMap => 67,
-            AuxiliaryDisplay::Font14Segment => 68,
-            AuxiliaryDisplay::One4SegmentDirectMap => 69,
-            AuxiliaryDisplay::DisplayBrightness => 70,
-            AuxiliaryDisplay::DisplayContrast => 71,
-            AuxiliaryDisplay::CharacterAttribute => 72,
-            AuxiliaryDisplay::AttributeReadback => 73,
-            AuxiliaryDisplay::AttributeData => 74,
-            AuxiliaryDisplay::CharAttrEnhance => 75,
-            AuxiliaryDisplay::CharAttrUnderline => 76,
-            AuxiliaryDisplay::CharAttrBlink => 77,
-            AuxiliaryDisplay::BitmapSizeX => 128,
-            AuxiliaryDisplay::BitmapSizeY => 129,
-            AuxiliaryDisplay::MaxBlitSize => 130,
-            AuxiliaryDisplay::BitDepthFormat => 131,
-            AuxiliaryDisplay::DisplayOrientation => 132,
-            AuxiliaryDisplay::PaletteReport => 133,
-            AuxiliaryDisplay::PaletteDataSize => 134,
-            AuxiliaryDisplay::PaletteDataOffset => 135,
-            AuxiliaryDisplay::PaletteData => 136,
-            AuxiliaryDisplay::BlitReport => 138,
-            AuxiliaryDisplay::BlitRectangleX1 => 139,
-            AuxiliaryDisplay::BlitRectangleY1 => 140,
-            AuxiliaryDisplay::BlitRectangleX2 => 141,
-            AuxiliaryDisplay::BlitRectangleY2 => 142,
-            AuxiliaryDisplay::BlitData => 143,
-            AuxiliaryDisplay::SoftButton => 144,
-            AuxiliaryDisplay::SoftButtonID => 145,
-            AuxiliaryDisplay::SoftButtonSide => 146,
-            AuxiliaryDisplay::SoftButtonOffset1 => 147,
-            AuxiliaryDisplay::SoftButtonOffset2 => 148,
-            AuxiliaryDisplay::SoftButtonReport => 149,
-            AuxiliaryDisplay::SoftKeys => 194,
-            AuxiliaryDisplay::DisplayDataExtensions => 204,
-            AuxiliaryDisplay::CharacterMapping => 207,
-            AuxiliaryDisplay::UnicodeEquivalent => 221,
-            AuxiliaryDisplay::CharacterPageMapping => 223,
-            AuxiliaryDisplay::RequestReport => 255,
-        };
-        up | id
-    }
-}
-
-impl From<&AuxiliaryDisplay> for UsagePage {
-    fn from(_up: &AuxiliaryDisplay) -> UsagePage {
-        UsagePage::AuxiliaryDisplay
-    }
-}
-
-impl From<AuxiliaryDisplay> for UsagePage {
-    fn from(up: AuxiliaryDisplay) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for AuxiliaryDisplay {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -6931,28 +4338,6 @@ pub enum Sensor {
     DevicePositionStationaryinBag,
 }
 
-impl AsUsage for Sensor {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Sensor {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x20` for [Sensor]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Sensor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -7696,1223 +5081,6 @@ impl fmt::Display for Sensor {
     }
 }
 
-impl From<&Sensor> for u16 {
-    fn from(up: &Sensor) -> u16 {
-        match *up {
-            Sensor::Undefined => 0,
-            Sensor::Sensor => 1,
-            Sensor::Biometric => 16,
-            Sensor::BiometricHumanPresence => 17,
-            Sensor::BiometricHumanProximity => 18,
-            Sensor::BiometricHumanTouch => 19,
-            Sensor::BiometricBloodPressure => 20,
-            Sensor::BiometricBodyTemperature => 21,
-            Sensor::BiometricHeartRate => 22,
-            Sensor::BiometricHeartRateVariability => 23,
-            Sensor::BiometricPeripheralOxygenSaturation => 24,
-            Sensor::BiometricRespiratoryRate => 25,
-            Sensor::Electrical => 32,
-            Sensor::ElectricalCapacitance => 33,
-            Sensor::ElectricalCurrent => 34,
-            Sensor::ElectricalPower => 35,
-            Sensor::ElectricalInductance => 36,
-            Sensor::ElectricalResistance => 37,
-            Sensor::ElectricalVoltage => 38,
-            Sensor::ElectricalPotentiometer => 39,
-            Sensor::ElectricalFrequency => 40,
-            Sensor::ElectricalPeriod => 41,
-            Sensor::Environmental => 48,
-            Sensor::EnvironmentalAtmosphericPressure => 49,
-            Sensor::EnvironmentalHumidity => 50,
-            Sensor::EnvironmentalTemperature => 51,
-            Sensor::EnvironmentalWindDirection => 52,
-            Sensor::EnvironmentalWindSpeed => 53,
-            Sensor::EnvironmentalAirQuality => 54,
-            Sensor::EnvironmentalHeatIndex => 55,
-            Sensor::EnvironmentalSurfaceTemperature => 56,
-            Sensor::EnvironmentalVolatileOrganicCompounds => 57,
-            Sensor::EnvironmentalObjectPresence => 58,
-            Sensor::EnvironmentalObjectProximity => 59,
-            Sensor::Light => 64,
-            Sensor::LightAmbientLight => 65,
-            Sensor::LightConsumerInfrared => 66,
-            Sensor::LightInfraredLight => 67,
-            Sensor::LightVisibleLight => 68,
-            Sensor::LightUltravioletLight => 69,
-            Sensor::Location => 80,
-            Sensor::LocationBroadcast => 81,
-            Sensor::LocationDeadReckoning => 82,
-            Sensor::LocationGPS => 83,
-            Sensor::LocationLookup => 84,
-            Sensor::LocationOther => 85,
-            Sensor::LocationStatic => 86,
-            Sensor::LocationTriangulation => 87,
-            Sensor::Mechanical => 96,
-            Sensor::MechanicalBooleanSwitch => 97,
-            Sensor::MechanicalBooleanSwitchArray => 98,
-            Sensor::MechanicalMultivalueSwitch => 99,
-            Sensor::MechanicalForce => 100,
-            Sensor::MechanicalPressure => 101,
-            Sensor::MechanicalStrain => 102,
-            Sensor::MechanicalWeight => 103,
-            Sensor::MechanicalHapticVibrator => 104,
-            Sensor::MechanicalHallEffectSwitch => 105,
-            Sensor::Motion => 112,
-            Sensor::MotionAccelerometer1D => 113,
-            Sensor::MotionAccelerometer2D => 114,
-            Sensor::MotionAccelerometer3D => 115,
-            Sensor::MotionGyrometer1D => 116,
-            Sensor::MotionGyrometer2D => 117,
-            Sensor::MotionGyrometer3D => 118,
-            Sensor::MotionMotionDetector => 119,
-            Sensor::MotionSpeedometer => 120,
-            Sensor::MotionAccelerometer => 121,
-            Sensor::MotionGyrometer => 122,
-            Sensor::MotionGravityVector => 123,
-            Sensor::MotionLinearAccelerometer => 124,
-            Sensor::Orientation => 128,
-            Sensor::OrientationCompass1D => 129,
-            Sensor::OrientationCompass2D => 130,
-            Sensor::OrientationCompass3D => 131,
-            Sensor::OrientationInclinometer1D => 132,
-            Sensor::OrientationInclinometer2D => 133,
-            Sensor::OrientationInclinometer3D => 134,
-            Sensor::OrientationDistance1D => 135,
-            Sensor::OrientationDistance2D => 136,
-            Sensor::OrientationDistance3D => 137,
-            Sensor::OrientationDeviceOrientation => 138,
-            Sensor::OrientationCompass => 139,
-            Sensor::OrientationInclinometer => 140,
-            Sensor::OrientationDistance => 141,
-            Sensor::OrientationRelativeOrientation => 142,
-            Sensor::OrientationSimpleOrientation => 143,
-            Sensor::Scanner => 144,
-            Sensor::ScannerBarcode => 145,
-            Sensor::ScannerRFID => 146,
-            Sensor::ScannerNFC => 147,
-            Sensor::Time => 160,
-            Sensor::TimeAlarmTimer => 161,
-            Sensor::TimeRealTimeClock => 162,
-            Sensor::PersonalActivity => 176,
-            Sensor::PersonalActivityActivityDetection => 177,
-            Sensor::PersonalActivityDevicePosition => 178,
-            Sensor::PersonalActivityPedometer => 179,
-            Sensor::PersonalActivityStepDetection => 180,
-            Sensor::OrientationExtended => 192,
-            Sensor::OrientationExtendedGeomagneticOrientation => 193,
-            Sensor::OrientationExtendedMagnetometer => 194,
-            Sensor::Other => 224,
-            Sensor::OtherCustom => 225,
-            Sensor::OtherGeneric => 226,
-            Sensor::OtherGenericEnumerator => 227,
-            Sensor::Event => 512,
-            Sensor::EventSensorState => 513,
-            Sensor::EventSensorEvent => 514,
-            Sensor::Property => 768,
-            Sensor::PropertyFriendlyName => 769,
-            Sensor::PropertyPersistentUniqueID => 770,
-            Sensor::PropertySensorStatus => 771,
-            Sensor::PropertyMinimumReportInterval => 772,
-            Sensor::PropertySensorManufacturer => 773,
-            Sensor::PropertySensorModel => 774,
-            Sensor::PropertySensorSerialNumber => 775,
-            Sensor::PropertySensorDescription => 776,
-            Sensor::PropertySensorConnectionType => 777,
-            Sensor::PropertySensorDevicePath => 778,
-            Sensor::PropertyHardwareRevision => 779,
-            Sensor::PropertyFirmwareVersion => 780,
-            Sensor::PropertyReleaseDate => 781,
-            Sensor::PropertyReportInterval => 782,
-            Sensor::PropertyChangeSensitivityAbsolute => 783,
-            Sensor::PropertyChangeSensitivityPercentofRange => 784,
-            Sensor::PropertyChangeSensitivityPercentRelative => 785,
-            Sensor::PropertyAccuracy => 786,
-            Sensor::PropertyResolution => 787,
-            Sensor::PropertyMaximum => 788,
-            Sensor::PropertyMinimum => 789,
-            Sensor::PropertyReportingState => 790,
-            Sensor::PropertyMaximumFIFOEvents => 794,
-            Sensor::PropertyReportLatency => 795,
-            Sensor::PropertyFlushFIFOEvents => 796,
-            Sensor::PropertyMaximumPowerConsumption => 797,
-            Sensor::DataFieldLocation => 1024,
-            Sensor::DataFieldAltitudeAntennaSeaLevel => 1026,
-            Sensor::DataFieldDifferentialReferenceStationID => 1027,
-            Sensor::DataFieldAltitudeEllipsoidError => 1028,
-            Sensor::DataFieldAltitudeEllipsoid => 1029,
-            Sensor::DataFieldAltitudeSeaLevelError => 1030,
-            Sensor::DataFieldAltitudeSeaLevel => 1031,
-            Sensor::DataFieldDifferentialGPSDataAge => 1032,
-            Sensor::DataFieldErrorRadius => 1033,
-            Sensor::DataFieldFixQuality => 1034,
-            Sensor::DataFieldFixType => 1035,
-            Sensor::DataFieldGeoidalSeparation => 1036,
-            Sensor::DataFieldGPSOperationMode => 1037,
-            Sensor::DataFieldGPSSelectionMode => 1038,
-            Sensor::DataFieldGPSStatus => 1039,
-            Sensor::DataFieldPositionDilutionofPrecision => 1040,
-            Sensor::DataFieldHorizontalDilutionofPrecision => 1041,
-            Sensor::DataFieldVerticalDilutionofPrecision => 1042,
-            Sensor::DataFieldLatitude => 1043,
-            Sensor::DataFieldLongitude => 1044,
-            Sensor::DataFieldTrueHeading => 1045,
-            Sensor::DataFieldMagneticHeading => 1046,
-            Sensor::DataFieldMagneticVariation => 1047,
-            Sensor::DataFieldSpeed => 1048,
-            Sensor::DataFieldSatellitesinView => 1049,
-            Sensor::DataFieldSatellitesinViewAzimuth => 1050,
-            Sensor::DataFieldSatellitesinViewElevation => 1051,
-            Sensor::DataFieldSatellitesinViewIDs => 1052,
-            Sensor::DataFieldSatellitesinViewPRNs => 1053,
-            Sensor::DataFieldSatellitesinViewSNRatios => 1054,
-            Sensor::DataFieldSatellitesUsedCount => 1055,
-            Sensor::DataFieldSatellitesUsedPRNs => 1056,
-            Sensor::DataFieldNMEASentence => 1057,
-            Sensor::DataFieldAddressLine1 => 1058,
-            Sensor::DataFieldAddressLine2 => 1059,
-            Sensor::DataFieldCity => 1060,
-            Sensor::DataFieldStateorProvince => 1061,
-            Sensor::DataFieldCountryorRegion => 1062,
-            Sensor::DataFieldPostalCode => 1063,
-            Sensor::PropertyLocation => 1066,
-            Sensor::PropertyLocationDesiredAccuracy => 1067,
-            Sensor::DataFieldEnvironmental => 1072,
-            Sensor::DataFieldAtmosphericPressure => 1073,
-            Sensor::DataFieldRelativeHumidity => 1075,
-            Sensor::DataFieldTemperature => 1076,
-            Sensor::DataFieldWindDirection => 1077,
-            Sensor::DataFieldWindSpeed => 1078,
-            Sensor::DataFieldAirQualityIndex => 1079,
-            Sensor::DataFieldEquivalentCO2 => 1080,
-            Sensor::DataFieldVolatileOrganicCompoundConcentration => 1081,
-            Sensor::DataFieldObjectPresence => 1082,
-            Sensor::DataFieldObjectProximityRange => 1083,
-            Sensor::DataFieldObjectProximityOutofRange => 1084,
-            Sensor::PropertyEnvironmental => 1088,
-            Sensor::PropertyReferencePressure => 1089,
-            Sensor::DataFieldMotion => 1104,
-            Sensor::DataFieldMotionState => 1105,
-            Sensor::DataFieldAcceleration => 1106,
-            Sensor::DataFieldAccelerationAxisX => 1107,
-            Sensor::DataFieldAccelerationAxisY => 1108,
-            Sensor::DataFieldAccelerationAxisZ => 1109,
-            Sensor::DataFieldAngularVelocity => 1110,
-            Sensor::DataFieldAngularVelocityaboutXAxis => 1111,
-            Sensor::DataFieldAngularVelocityaboutYAxis => 1112,
-            Sensor::DataFieldAngularVelocityaboutZAxis => 1113,
-            Sensor::DataFieldAngularPosition => 1114,
-            Sensor::DataFieldAngularPositionaboutXAxis => 1115,
-            Sensor::DataFieldAngularPositionaboutYAxis => 1116,
-            Sensor::DataFieldAngularPositionaboutZAxis => 1117,
-            Sensor::DataFieldMotionSpeed => 1118,
-            Sensor::DataFieldMotionIntensity => 1119,
-            Sensor::DataFieldOrientation => 1136,
-            Sensor::DataFieldHeading => 1137,
-            Sensor::DataFieldHeadingXAxis => 1138,
-            Sensor::DataFieldHeadingYAxis => 16499,
-            Sensor::DataFieldHeadingZAxis => 1140,
-            Sensor::DataFieldHeadingCompensatedMagneticNorth => 1141,
-            Sensor::DataFieldHeadingCompensatedTrueNorth => 1142,
-            Sensor::DataFieldHeadingMagneticNorth => 1143,
-            Sensor::DataFieldHeadingTrueNorth => 1144,
-            Sensor::DataFieldDistance => 1145,
-            Sensor::DataFieldDistanceXAxis => 1146,
-            Sensor::DataFieldDistanceYAxis => 1147,
-            Sensor::DataFieldDistanceZAxis => 1148,
-            Sensor::DataFieldDistanceOutofRange => 1149,
-            Sensor::DataFieldTilt => 1150,
-            Sensor::DataFieldTiltXAxis => 1151,
-            Sensor::DataFieldTiltYAxis => 1152,
-            Sensor::DataFieldTiltZAxis => 1153,
-            Sensor::DataFieldRotationMatrix => 1154,
-            Sensor::DataFieldQuaternion => 1155,
-            Sensor::DataFieldMagneticFlux => 1156,
-            Sensor::DataFieldMagneticFluxXAxis => 1157,
-            Sensor::DataFieldMagneticFluxYAxis => 1158,
-            Sensor::DataFieldMagneticFluxZAxis => 1159,
-            Sensor::DataFieldMagnetometerAccuracy => 1160,
-            Sensor::DataFieldSimpleOrientationDirection => 1161,
-            Sensor::DataFieldMechanical => 1168,
-            Sensor::DataFieldBooleanSwitchState => 1169,
-            Sensor::DataFieldBooleanSwitchArrayStates => 1170,
-            Sensor::DataFieldMultivalueSwitchValue => 1171,
-            Sensor::DataFieldForce => 1172,
-            Sensor::DataFieldAbsolutePressure => 1173,
-            Sensor::DataFieldGaugePressure => 1174,
-            Sensor::DataFieldStrain => 1175,
-            Sensor::DataFieldWeight => 1176,
-            Sensor::PropertyMechanical => 1184,
-            Sensor::PropertyVibrationState => 1185,
-            Sensor::PropertyForwardVibrationSpeed => 1186,
-            Sensor::PropertyBackwardVibrationSpeed => 1187,
-            Sensor::DataFieldBiometric => 1200,
-            Sensor::DataFieldHumanPresence => 1201,
-            Sensor::DataFieldHumanProximityRange => 1202,
-            Sensor::DataFieldHumanProximityOutofRange => 1203,
-            Sensor::DataFieldHumanTouchState => 1204,
-            Sensor::DataFieldBloodPressure => 1205,
-            Sensor::DataFieldBloodPressureDiastolic => 1206,
-            Sensor::DataFieldBloodPressureSystolic => 1207,
-            Sensor::DataFieldHeartRate => 1208,
-            Sensor::DataFieldRestingHeartRate => 1209,
-            Sensor::DataFieldHeartbeatInterval => 1210,
-            Sensor::DataFieldRespiratoryRate => 1211,
-            Sensor::DataFieldSpO2 => 1212,
-            Sensor::DataFieldLight => 1232,
-            Sensor::DataFieldIlluminance => 1233,
-            Sensor::DataFieldColorTemperature => 1234,
-            Sensor::DataFieldChromaticity => 1235,
-            Sensor::DataFieldChromaticityX => 1236,
-            Sensor::DataFieldChromaticityY => 1237,
-            Sensor::DataFieldConsumerIRSentenceReceive => 1238,
-            Sensor::DataFieldInfraredLight => 1239,
-            Sensor::DataFieldRedLight => 1240,
-            Sensor::DataFieldGreenLight => 1241,
-            Sensor::DataFieldBlueLight => 1242,
-            Sensor::DataFieldUltravioletALight => 1243,
-            Sensor::DataFieldUltravioletBLight => 1244,
-            Sensor::DataFieldUltravioletIndex => 1245,
-            Sensor::PropertyLight => 1248,
-            Sensor::PropertyConsumerIRSentenceSend => 1249,
-            Sensor::DataFieldScanner => 1264,
-            Sensor::DataFieldRFIDTag40Bit => 1265,
-            Sensor::DataFieldNFCSentenceReceive => 1266,
-            Sensor::PropertyScanner => 1272,
-            Sensor::PropertyNFCSentenceSend => 1273,
-            Sensor::DataFieldElectrical => 1280,
-            Sensor::DataFieldCapacitance => 1281,
-            Sensor::DataFieldCurrent => 1282,
-            Sensor::DataFieldElectricalPower => 1283,
-            Sensor::DataFieldInductance => 1284,
-            Sensor::DataFieldResistance => 1285,
-            Sensor::DataFieldVoltage => 1286,
-            Sensor::DataFieldFrequency => 1287,
-            Sensor::DataFieldPeriod => 1288,
-            Sensor::DataFieldPercentofRange => 1289,
-            Sensor::DataFieldTime => 1312,
-            Sensor::DataFieldYear => 1313,
-            Sensor::DataFieldMonth => 1314,
-            Sensor::DataFieldDay => 1315,
-            Sensor::DataFieldDayofWeek => 1316,
-            Sensor::DataFieldHour => 1317,
-            Sensor::DataFieldMinute => 1318,
-            Sensor::DataFieldSecond => 1319,
-            Sensor::DataFieldMillisecond => 1320,
-            Sensor::DataFieldTimestamp => 1321,
-            Sensor::DataFieldJulianDayofYear => 1322,
-            Sensor::DataFieldTimeSinceSystemBoot => 1323,
-            Sensor::PropertyTime => 1328,
-            Sensor::PropertyTimeZoneOffsetfromUTC => 1329,
-            Sensor::PropertyTimeZoneName => 1330,
-            Sensor::PropertyDaylightSavingsTimeObserved => 1331,
-            Sensor::PropertyTimeTrimAdjustment => 1332,
-            Sensor::PropertyArmAlarm => 1333,
-            Sensor::DataFieldCustom => 1344,
-            Sensor::DataFieldCustomUsage => 1345,
-            Sensor::DataFieldCustomBooleanArray => 1346,
-            Sensor::DataFieldCustomValue => 1347,
-            Sensor::DataFieldCustomValue1 => 1348,
-            Sensor::DataFieldCustomValue2 => 1349,
-            Sensor::DataFieldCustomValue3 => 1350,
-            Sensor::DataFieldCustomValue4 => 1351,
-            Sensor::DataFieldCustomValue5 => 1352,
-            Sensor::DataFieldCustomValue6 => 1353,
-            Sensor::DataFieldCustomValue7 => 1354,
-            Sensor::DataFieldCustomValue8 => 1355,
-            Sensor::DataFieldCustomValue9 => 1356,
-            Sensor::DataFieldCustomValue10 => 1357,
-            Sensor::DataFieldCustomValue11 => 1358,
-            Sensor::DataFieldCustomValue12 => 1359,
-            Sensor::DataFieldCustomValue13 => 1360,
-            Sensor::DataFieldCustomValue14 => 1361,
-            Sensor::DataFieldCustomValue15 => 1362,
-            Sensor::DataFieldCustomValue16 => 1363,
-            Sensor::DataFieldCustomValue17 => 1364,
-            Sensor::DataFieldCustomValue18 => 1365,
-            Sensor::DataFieldCustomValue19 => 1366,
-            Sensor::DataFieldCustomValue20 => 1367,
-            Sensor::DataFieldCustomValue21 => 1368,
-            Sensor::DataFieldCustomValue22 => 1369,
-            Sensor::DataFieldCustomValue23 => 1370,
-            Sensor::DataFieldCustomValue24 => 1371,
-            Sensor::DataFieldCustomValue25 => 1372,
-            Sensor::DataFieldCustomValue26 => 1373,
-            Sensor::DataFieldCustomValue27 => 1374,
-            Sensor::DataFieldCustomValue28 => 1375,
-            Sensor::DataFieldGeneric => 1376,
-            Sensor::DataFieldGenericGUIDorPROPERTYKEY => 1377,
-            Sensor::DataFieldGenericCategoryGUID => 1378,
-            Sensor::DataFieldGenericTypeGUID => 1379,
-            Sensor::DataFieldGenericEventPROPERTYKEY => 1380,
-            Sensor::DataFieldGenericPropertyPROPERTYKEY => 1381,
-            Sensor::DataFieldGenericDataFieldPROPERTYKEY => 1382,
-            Sensor::DataFieldGenericEvent => 1383,
-            Sensor::DataFieldGenericProperty => 1384,
-            Sensor::DataFieldGenericDataField => 1385,
-            Sensor::DataFieldEnumeratorTableRowIndex => 1386,
-            Sensor::DataFieldEnumeratorTableRowCount => 1387,
-            Sensor::DataFieldGenericGUIDorPROPERTYKEYkind => 1388,
-            Sensor::DataFieldGenericGUID => 1389,
-            Sensor::DataFieldGenericPROPERTYKEY => 1390,
-            Sensor::DataFieldGenericTopLevelCollectionID => 1391,
-            Sensor::DataFieldGenericReportID => 1392,
-            Sensor::DataFieldGenericReportItemPositionIndex => 1393,
-            Sensor::DataFieldGenericFirmwareVARTYPE => 1394,
-            Sensor::DataFieldGenericUnitofMeasure => 1395,
-            Sensor::DataFieldGenericUnitExponent => 1396,
-            Sensor::DataFieldGenericReportSize => 1397,
-            Sensor::DataFieldGenericReportCount => 1398,
-            Sensor::PropertyGeneric => 1408,
-            Sensor::PropertyEnumeratorTableRowIndex => 1409,
-            Sensor::PropertyEnumeratorTableRowCount => 1410,
-            Sensor::DataFieldPersonalActivity => 1424,
-            Sensor::DataFieldActivityType => 1425,
-            Sensor::DataFieldActivityState => 1426,
-            Sensor::DataFieldDevicePosition => 1427,
-            Sensor::DataFieldStepCount => 1428,
-            Sensor::DataFieldStepCountReset => 1429,
-            Sensor::DataFieldStepDuration => 1430,
-            Sensor::DataFieldStepType => 1431,
-            Sensor::PropertyMinimumActivityDetectionInterval => 1440,
-            Sensor::PropertySupportedActivityTypes => 1441,
-            Sensor::PropertySubscribedActivityTypes => 1442,
-            Sensor::PropertySupportedStepTypes => 1443,
-            Sensor::PropertySubscribedStepTypes => 1444,
-            Sensor::PropertyFloorHeight => 1445,
-            Sensor::DataFieldCustomTypeID => 1456,
-            Sensor::SensorStateUndefined => 2048,
-            Sensor::SensorStateReady => 2049,
-            Sensor::SensorStateNotAvailable => 2050,
-            Sensor::SensorStateNoDataSel => 2051,
-            Sensor::SensorStateInitializing => 2052,
-            Sensor::SensorStateAccessDenied => 2053,
-            Sensor::SensorStateError => 2054,
-            Sensor::SensorEventUnknown => 2064,
-            Sensor::SensorEventStateChanged => 2065,
-            Sensor::SensorEventPropertyChanged => 2066,
-            Sensor::SensorEventDataUpdated => 2067,
-            Sensor::SensorEventPollResponse => 2068,
-            Sensor::SensorEventChangeSensitivity => 2069,
-            Sensor::SensorEventRangeMaximumReached => 2070,
-            Sensor::SensorEventRangeMinimumReached => 2071,
-            Sensor::SensorEventHighThresholdCrossUpward => 2072,
-            Sensor::SensorEventHighThresholdCrossDownward => 2073,
-            Sensor::SensorEventLowThresholdCrossUpward => 2074,
-            Sensor::SensorEventLowThresholdCrossDownward => 2075,
-            Sensor::SensorEventZeroThresholdCrossUpward => 2076,
-            Sensor::SensorEventZeroThresholdCrossDownward => 2077,
-            Sensor::SensorEventPeriodExceeded => 2078,
-            Sensor::SensorEventFrequencyExceeded => 2079,
-            Sensor::SensorEventComplexTrigger => 2080,
-            Sensor::ConnectionTypePCIntegrated => 2096,
-            Sensor::ConnectionTypePCAttached => 2097,
-            Sensor::ConnectionTypePCExternal => 2098,
-            Sensor::ReportingStateReportNoEvents => 2112,
-            Sensor::ReportingStateReportAllEvents => 2113,
-            Sensor::ReportingStateReportThresholdEvents => 2114,
-            Sensor::ReportingStateWakeOnNoEvents => 2115,
-            Sensor::ReportingStateWakeOnAllEvents => 2116,
-            Sensor::ReportingStateWakeOnThresholdEvents => 2117,
-            Sensor::PropertySamplingRate => 791,
-            Sensor::PropertyResponseCurve => 792,
-            Sensor::PropertyPowerState => 793,
-            Sensor::PowerStateUndefined => 2128,
-            Sensor::PowerStateD0FullPower => 2129,
-            Sensor::PowerStateD1LowPower => 2130,
-            Sensor::PowerStateD2StandbyPowerwithWakeup => 2131,
-            Sensor::PowerStateD3SleepwithWakeup => 2132,
-            Sensor::PowerStateD4PowerOff => 2133,
-            Sensor::AccuracyDefault => 2144,
-            Sensor::AccuracyHigh => 2145,
-            Sensor::AccuracyMedium => 2146,
-            Sensor::AccuracyLow => 2147,
-            Sensor::FixQualityNoFix => 2160,
-            Sensor::FixQualityGPS => 2161,
-            Sensor::FixQualityDGPS => 2162,
-            Sensor::DataFieldFixTypeNAry110 => 1035,
-            Sensor::FixTypeNoFix => 2176,
-            Sensor::FixTypeGPSSPSModeFixValid => 2177,
-            Sensor::FixTypeDGPSSPSModeFixValid => 2178,
-            Sensor::FixTypeGPSPPSModeFixValid => 2179,
-            Sensor::FixTypeRealTimeKinematic => 2180,
-            Sensor::FixTypeFloatRTK => 2181,
-            Sensor::FixTypeEstimateddeadreckoned => 2182,
-            Sensor::FixTypeManualInputMode => 2183,
-            Sensor::FixTypeSimulatorMode => 2184,
-            Sensor::GPSOperationModeManual => 2192,
-            Sensor::GPSOperationModeAutomatic => 2193,
-            Sensor::GPSSelectionModeAutonomous => 2208,
-            Sensor::GPSSelectionModeDGPS => 2209,
-            Sensor::GPSSelectionModeEstimateddeadreckoned => 2210,
-            Sensor::GPSSelectionModeManualInput => 2211,
-            Sensor::GPSSelectionModeSimulator => 2212,
-            Sensor::GPSSelectionModeDataNotValid => 2213,
-            Sensor::GPSStatusDataValid => 2224,
-            Sensor::GPSStatusDataNotValid => 2225,
-            Sensor::DayofWeekSunday => 2240,
-            Sensor::DayofWeekMonday => 2241,
-            Sensor::DayofWeekTuesday => 2242,
-            Sensor::DayofWeekWednesday => 2243,
-            Sensor::DayofWeekThursday => 2244,
-            Sensor::DayofWeekFriday => 2245,
-            Sensor::DayofWeekSaturday => 2246,
-            Sensor::KindCategory => 2256,
-            Sensor::KindType => 2257,
-            Sensor::KindEvent => 2258,
-            Sensor::KindProperty => 2259,
-            Sensor::KindDataField => 2260,
-            Sensor::MagnetometerAccuracyLow => 2272,
-            Sensor::MagnetometerAccuracyMedium => 2273,
-            Sensor::MagnetometerAccuracyHigh => 2274,
-            Sensor::SimpleOrientationDirectionNotRotated => 2288,
-            Sensor::SimpleOrientationDirectionRotated90Degrees => 2289,
-            Sensor::SimpleOrientationDirectionRotated180Degrees => 2290,
-            Sensor::SimpleOrientationDirectionRotated270Degrees => 2291,
-            Sensor::SimpleOrientationDirectionFaceUp => 2292,
-            Sensor::SimpleOrientationDirectionFaceDown => 2293,
-            Sensor::VT_NULLEmpty => 2304,
-            Sensor::VT_BOOLBoolean => 2305,
-            Sensor::VT_UI1Byte => 2306,
-            Sensor::VT_I1Character => 2307,
-            Sensor::VT_UI2UnsignedShort => 2308,
-            Sensor::VT_I2Short => 2309,
-            Sensor::VT_UI4UnsignedLong => 2310,
-            Sensor::VT_I4Long => 2311,
-            Sensor::VT_UI8UnsignedLongLong => 2312,
-            Sensor::VT_I8LongLong => 2313,
-            Sensor::VT_R4Float => 2314,
-            Sensor::VT_R8Double => 2315,
-            Sensor::VT_WSTRWideString => 2316,
-            Sensor::VT_STRNarrowString => 2317,
-            Sensor::VT_CLSIDGuid => 2318,
-            Sensor::VT_VECTORVT_UI1OpaqueStructure => 2319,
-            Sensor::VT_F16E0HID16bitFloatwithUnitExponent0 => 2320,
-            Sensor::VT_F16E1HID16bitFloatwithUnitExponent1 => 2321,
-            Sensor::VT_F16E2HID16bitFloatwithUnitExponent2 => 2322,
-            Sensor::VT_F16E3HID16bitFloatwithUnitExponent3 => 2323,
-            Sensor::VT_F16E4HID16bitFloatwithUnitExponent4 => 2324,
-            Sensor::VT_F16E5HID16bitFloatwithUnitExponent5 => 2325,
-            Sensor::VT_F16E6HID16bitFloatwithUnitExponent6 => 2326,
-            Sensor::VT_F16E7HID16bitFloatwithUnitExponent7 => 2327,
-            Sensor::VT_F16E8HID16bitFloatwithUnitExponent8 => 2328,
-            Sensor::VT_F16E9HID16bitFloatwithUnitExponent9 => 2329,
-            Sensor::VT_F16EAHID16bitFloatwithUnitExponentA => 2330,
-            Sensor::VT_F16EBHID16bitFloatwithUnitExponentB => 2331,
-            Sensor::VT_F16ECHID16bitFloatwithUnitExponentC => 2332,
-            Sensor::VT_F16EDHID16bitFloatwithUnitExponentD => 2333,
-            Sensor::VT_F16EEHID16bitFloatwithUnitExponentE => 2334,
-            Sensor::VT_F16EFHID16bitFloatwithUnitExponentF => 2335,
-            Sensor::VT_F32E0HID32bitFloatwithUnitExponent0 => 2336,
-            Sensor::VT_F32E1HID32bitFloatwithUnitExponent1 => 2337,
-            Sensor::VT_F32E2HID32bitFloatwithUnitExponent2 => 2338,
-            Sensor::VT_F32E3HID32bitFloatwithUnitExponent3 => 2339,
-            Sensor::VT_F32E4HID32bitFloatwithUnitExponent4 => 2340,
-            Sensor::VT_F32E5HID32bitFloatwithUnitExponent5 => 2341,
-            Sensor::VT_F32E6HID32bitFloatwithUnitExponent6 => 2342,
-            Sensor::VT_F32E7HID32bitFloatwithUnitExponent7 => 2343,
-            Sensor::VT_F32E8HID32bitFloatwithUnitExponent8 => 2344,
-            Sensor::VT_F32E9HID32bitFloatwithUnitExponent9 => 2345,
-            Sensor::VT_F32EAHID32bitFloatwithUnitExponentA => 2346,
-            Sensor::VT_F32EBHID32bitFloatwithUnitExponentB => 2347,
-            Sensor::VT_F32ECHID32bitFloatwithUnitExponentC => 2348,
-            Sensor::VT_F32EDHID32bitFloatwithUnitExponentD => 2349,
-            Sensor::VT_F32EEHID32bitFloatwithUnitExponentE => 2350,
-            Sensor::VT_F32EFHID32bitFloatwithUnitExponentF => 2351,
-            Sensor::ActivityTypeUnknown => 2352,
-            Sensor::ActivityTypeStationary => 2353,
-            Sensor::ActivityTypeFidgeting => 2354,
-            Sensor::ActivityTypeWalking => 2355,
-            Sensor::ActivityTypeRunning => 2356,
-            Sensor::ActivityTypeInVehicle => 2357,
-            Sensor::ActivityTypeBiking => 2358,
-            Sensor::ActivityTypeIdle => 2359,
-            Sensor::UnitNotSpecified => 2368,
-            Sensor::UnitLux => 2369,
-            Sensor::UnitDegreesKelvin => 2370,
-            Sensor::UnitDegreesCelsius => 2371,
-            Sensor::UnitPascal => 2372,
-            Sensor::UnitNewton => 2373,
-            Sensor::UnitMetersSecond => 2374,
-            Sensor::UnitKilogram => 2375,
-            Sensor::UnitMeter => 2376,
-            Sensor::UnitMetersSecondSecond => 2377,
-            Sensor::UnitFarad => 2378,
-            Sensor::UnitAmpere => 2379,
-            Sensor::UnitWatt => 2380,
-            Sensor::UnitHenry => 2381,
-            Sensor::UnitOhm => 2382,
-            Sensor::UnitVolt => 2383,
-            Sensor::UnitHertz => 2384,
-            Sensor::UnitBar => 2385,
-            Sensor::UnitDegreesAnticlockwise => 2386,
-            Sensor::UnitDegreesClockwise => 2387,
-            Sensor::UnitDegrees => 2388,
-            Sensor::UnitDegreesSecond => 2389,
-            Sensor::UnitDegreesSecondSecond => 2390,
-            Sensor::UnitKnot => 2391,
-            Sensor::UnitPercent => 2392,
-            Sensor::UnitSecond => 2393,
-            Sensor::UnitMillisecond => 2394,
-            Sensor::UnitG => 2395,
-            Sensor::UnitBytes => 2396,
-            Sensor::UnitMilligauss => 2397,
-            Sensor::UnitBits => 2398,
-            Sensor::ActivityStateNoStateChange => 2400,
-            Sensor::ActivityStateStartActivity => 2401,
-            Sensor::ActivityStateEndActivity => 2402,
-            Sensor::Exponent01 => 2416,
-            Sensor::Exponent110 => 2417,
-            Sensor::Exponent2100 => 2418,
-            Sensor::Exponent31000 => 2419,
-            Sensor::Exponent410000 => 2420,
-            Sensor::Exponent5100000 => 2421,
-            Sensor::Exponent61000000 => 2422,
-            Sensor::Exponent710000000 => 2423,
-            Sensor::Exponent8000000001 => 2424,
-            Sensor::Exponent900000001 => 2425,
-            Sensor::ExponentA0000001 => 2426,
-            Sensor::ExponentB000001 => 2427,
-            Sensor::ExponentC00001 => 2428,
-            Sensor::ExponentD0001 => 2429,
-            Sensor::ExponentE001 => 2430,
-            Sensor::ExponentF01 => 2431,
-            Sensor::DevicePositionUnknown => 2432,
-            Sensor::DevicePositionUnchanged => 2433,
-            Sensor::DevicePositionOnDesk => 2434,
-            Sensor::DevicePositionInHand => 2435,
-            Sensor::DevicePositionMovinginBag => 2436,
-            Sensor::DevicePositionStationaryinBag => 2437,
-        }
-    }
-}
-
-impl From<Sensor> for u16 {
-    fn from(up: Sensor) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Sensor> for u32 {
-    fn from(usage: &Sensor) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Sensor::Undefined => 0,
-            Sensor::Sensor => 1,
-            Sensor::Biometric => 16,
-            Sensor::BiometricHumanPresence => 17,
-            Sensor::BiometricHumanProximity => 18,
-            Sensor::BiometricHumanTouch => 19,
-            Sensor::BiometricBloodPressure => 20,
-            Sensor::BiometricBodyTemperature => 21,
-            Sensor::BiometricHeartRate => 22,
-            Sensor::BiometricHeartRateVariability => 23,
-            Sensor::BiometricPeripheralOxygenSaturation => 24,
-            Sensor::BiometricRespiratoryRate => 25,
-            Sensor::Electrical => 32,
-            Sensor::ElectricalCapacitance => 33,
-            Sensor::ElectricalCurrent => 34,
-            Sensor::ElectricalPower => 35,
-            Sensor::ElectricalInductance => 36,
-            Sensor::ElectricalResistance => 37,
-            Sensor::ElectricalVoltage => 38,
-            Sensor::ElectricalPotentiometer => 39,
-            Sensor::ElectricalFrequency => 40,
-            Sensor::ElectricalPeriod => 41,
-            Sensor::Environmental => 48,
-            Sensor::EnvironmentalAtmosphericPressure => 49,
-            Sensor::EnvironmentalHumidity => 50,
-            Sensor::EnvironmentalTemperature => 51,
-            Sensor::EnvironmentalWindDirection => 52,
-            Sensor::EnvironmentalWindSpeed => 53,
-            Sensor::EnvironmentalAirQuality => 54,
-            Sensor::EnvironmentalHeatIndex => 55,
-            Sensor::EnvironmentalSurfaceTemperature => 56,
-            Sensor::EnvironmentalVolatileOrganicCompounds => 57,
-            Sensor::EnvironmentalObjectPresence => 58,
-            Sensor::EnvironmentalObjectProximity => 59,
-            Sensor::Light => 64,
-            Sensor::LightAmbientLight => 65,
-            Sensor::LightConsumerInfrared => 66,
-            Sensor::LightInfraredLight => 67,
-            Sensor::LightVisibleLight => 68,
-            Sensor::LightUltravioletLight => 69,
-            Sensor::Location => 80,
-            Sensor::LocationBroadcast => 81,
-            Sensor::LocationDeadReckoning => 82,
-            Sensor::LocationGPS => 83,
-            Sensor::LocationLookup => 84,
-            Sensor::LocationOther => 85,
-            Sensor::LocationStatic => 86,
-            Sensor::LocationTriangulation => 87,
-            Sensor::Mechanical => 96,
-            Sensor::MechanicalBooleanSwitch => 97,
-            Sensor::MechanicalBooleanSwitchArray => 98,
-            Sensor::MechanicalMultivalueSwitch => 99,
-            Sensor::MechanicalForce => 100,
-            Sensor::MechanicalPressure => 101,
-            Sensor::MechanicalStrain => 102,
-            Sensor::MechanicalWeight => 103,
-            Sensor::MechanicalHapticVibrator => 104,
-            Sensor::MechanicalHallEffectSwitch => 105,
-            Sensor::Motion => 112,
-            Sensor::MotionAccelerometer1D => 113,
-            Sensor::MotionAccelerometer2D => 114,
-            Sensor::MotionAccelerometer3D => 115,
-            Sensor::MotionGyrometer1D => 116,
-            Sensor::MotionGyrometer2D => 117,
-            Sensor::MotionGyrometer3D => 118,
-            Sensor::MotionMotionDetector => 119,
-            Sensor::MotionSpeedometer => 120,
-            Sensor::MotionAccelerometer => 121,
-            Sensor::MotionGyrometer => 122,
-            Sensor::MotionGravityVector => 123,
-            Sensor::MotionLinearAccelerometer => 124,
-            Sensor::Orientation => 128,
-            Sensor::OrientationCompass1D => 129,
-            Sensor::OrientationCompass2D => 130,
-            Sensor::OrientationCompass3D => 131,
-            Sensor::OrientationInclinometer1D => 132,
-            Sensor::OrientationInclinometer2D => 133,
-            Sensor::OrientationInclinometer3D => 134,
-            Sensor::OrientationDistance1D => 135,
-            Sensor::OrientationDistance2D => 136,
-            Sensor::OrientationDistance3D => 137,
-            Sensor::OrientationDeviceOrientation => 138,
-            Sensor::OrientationCompass => 139,
-            Sensor::OrientationInclinometer => 140,
-            Sensor::OrientationDistance => 141,
-            Sensor::OrientationRelativeOrientation => 142,
-            Sensor::OrientationSimpleOrientation => 143,
-            Sensor::Scanner => 144,
-            Sensor::ScannerBarcode => 145,
-            Sensor::ScannerRFID => 146,
-            Sensor::ScannerNFC => 147,
-            Sensor::Time => 160,
-            Sensor::TimeAlarmTimer => 161,
-            Sensor::TimeRealTimeClock => 162,
-            Sensor::PersonalActivity => 176,
-            Sensor::PersonalActivityActivityDetection => 177,
-            Sensor::PersonalActivityDevicePosition => 178,
-            Sensor::PersonalActivityPedometer => 179,
-            Sensor::PersonalActivityStepDetection => 180,
-            Sensor::OrientationExtended => 192,
-            Sensor::OrientationExtendedGeomagneticOrientation => 193,
-            Sensor::OrientationExtendedMagnetometer => 194,
-            Sensor::Other => 224,
-            Sensor::OtherCustom => 225,
-            Sensor::OtherGeneric => 226,
-            Sensor::OtherGenericEnumerator => 227,
-            Sensor::Event => 512,
-            Sensor::EventSensorState => 513,
-            Sensor::EventSensorEvent => 514,
-            Sensor::Property => 768,
-            Sensor::PropertyFriendlyName => 769,
-            Sensor::PropertyPersistentUniqueID => 770,
-            Sensor::PropertySensorStatus => 771,
-            Sensor::PropertyMinimumReportInterval => 772,
-            Sensor::PropertySensorManufacturer => 773,
-            Sensor::PropertySensorModel => 774,
-            Sensor::PropertySensorSerialNumber => 775,
-            Sensor::PropertySensorDescription => 776,
-            Sensor::PropertySensorConnectionType => 777,
-            Sensor::PropertySensorDevicePath => 778,
-            Sensor::PropertyHardwareRevision => 779,
-            Sensor::PropertyFirmwareVersion => 780,
-            Sensor::PropertyReleaseDate => 781,
-            Sensor::PropertyReportInterval => 782,
-            Sensor::PropertyChangeSensitivityAbsolute => 783,
-            Sensor::PropertyChangeSensitivityPercentofRange => 784,
-            Sensor::PropertyChangeSensitivityPercentRelative => 785,
-            Sensor::PropertyAccuracy => 786,
-            Sensor::PropertyResolution => 787,
-            Sensor::PropertyMaximum => 788,
-            Sensor::PropertyMinimum => 789,
-            Sensor::PropertyReportingState => 790,
-            Sensor::PropertyMaximumFIFOEvents => 794,
-            Sensor::PropertyReportLatency => 795,
-            Sensor::PropertyFlushFIFOEvents => 796,
-            Sensor::PropertyMaximumPowerConsumption => 797,
-            Sensor::DataFieldLocation => 1024,
-            Sensor::DataFieldAltitudeAntennaSeaLevel => 1026,
-            Sensor::DataFieldDifferentialReferenceStationID => 1027,
-            Sensor::DataFieldAltitudeEllipsoidError => 1028,
-            Sensor::DataFieldAltitudeEllipsoid => 1029,
-            Sensor::DataFieldAltitudeSeaLevelError => 1030,
-            Sensor::DataFieldAltitudeSeaLevel => 1031,
-            Sensor::DataFieldDifferentialGPSDataAge => 1032,
-            Sensor::DataFieldErrorRadius => 1033,
-            Sensor::DataFieldFixQuality => 1034,
-            Sensor::DataFieldFixType => 1035,
-            Sensor::DataFieldGeoidalSeparation => 1036,
-            Sensor::DataFieldGPSOperationMode => 1037,
-            Sensor::DataFieldGPSSelectionMode => 1038,
-            Sensor::DataFieldGPSStatus => 1039,
-            Sensor::DataFieldPositionDilutionofPrecision => 1040,
-            Sensor::DataFieldHorizontalDilutionofPrecision => 1041,
-            Sensor::DataFieldVerticalDilutionofPrecision => 1042,
-            Sensor::DataFieldLatitude => 1043,
-            Sensor::DataFieldLongitude => 1044,
-            Sensor::DataFieldTrueHeading => 1045,
-            Sensor::DataFieldMagneticHeading => 1046,
-            Sensor::DataFieldMagneticVariation => 1047,
-            Sensor::DataFieldSpeed => 1048,
-            Sensor::DataFieldSatellitesinView => 1049,
-            Sensor::DataFieldSatellitesinViewAzimuth => 1050,
-            Sensor::DataFieldSatellitesinViewElevation => 1051,
-            Sensor::DataFieldSatellitesinViewIDs => 1052,
-            Sensor::DataFieldSatellitesinViewPRNs => 1053,
-            Sensor::DataFieldSatellitesinViewSNRatios => 1054,
-            Sensor::DataFieldSatellitesUsedCount => 1055,
-            Sensor::DataFieldSatellitesUsedPRNs => 1056,
-            Sensor::DataFieldNMEASentence => 1057,
-            Sensor::DataFieldAddressLine1 => 1058,
-            Sensor::DataFieldAddressLine2 => 1059,
-            Sensor::DataFieldCity => 1060,
-            Sensor::DataFieldStateorProvince => 1061,
-            Sensor::DataFieldCountryorRegion => 1062,
-            Sensor::DataFieldPostalCode => 1063,
-            Sensor::PropertyLocation => 1066,
-            Sensor::PropertyLocationDesiredAccuracy => 1067,
-            Sensor::DataFieldEnvironmental => 1072,
-            Sensor::DataFieldAtmosphericPressure => 1073,
-            Sensor::DataFieldRelativeHumidity => 1075,
-            Sensor::DataFieldTemperature => 1076,
-            Sensor::DataFieldWindDirection => 1077,
-            Sensor::DataFieldWindSpeed => 1078,
-            Sensor::DataFieldAirQualityIndex => 1079,
-            Sensor::DataFieldEquivalentCO2 => 1080,
-            Sensor::DataFieldVolatileOrganicCompoundConcentration => 1081,
-            Sensor::DataFieldObjectPresence => 1082,
-            Sensor::DataFieldObjectProximityRange => 1083,
-            Sensor::DataFieldObjectProximityOutofRange => 1084,
-            Sensor::PropertyEnvironmental => 1088,
-            Sensor::PropertyReferencePressure => 1089,
-            Sensor::DataFieldMotion => 1104,
-            Sensor::DataFieldMotionState => 1105,
-            Sensor::DataFieldAcceleration => 1106,
-            Sensor::DataFieldAccelerationAxisX => 1107,
-            Sensor::DataFieldAccelerationAxisY => 1108,
-            Sensor::DataFieldAccelerationAxisZ => 1109,
-            Sensor::DataFieldAngularVelocity => 1110,
-            Sensor::DataFieldAngularVelocityaboutXAxis => 1111,
-            Sensor::DataFieldAngularVelocityaboutYAxis => 1112,
-            Sensor::DataFieldAngularVelocityaboutZAxis => 1113,
-            Sensor::DataFieldAngularPosition => 1114,
-            Sensor::DataFieldAngularPositionaboutXAxis => 1115,
-            Sensor::DataFieldAngularPositionaboutYAxis => 1116,
-            Sensor::DataFieldAngularPositionaboutZAxis => 1117,
-            Sensor::DataFieldMotionSpeed => 1118,
-            Sensor::DataFieldMotionIntensity => 1119,
-            Sensor::DataFieldOrientation => 1136,
-            Sensor::DataFieldHeading => 1137,
-            Sensor::DataFieldHeadingXAxis => 1138,
-            Sensor::DataFieldHeadingYAxis => 16499,
-            Sensor::DataFieldHeadingZAxis => 1140,
-            Sensor::DataFieldHeadingCompensatedMagneticNorth => 1141,
-            Sensor::DataFieldHeadingCompensatedTrueNorth => 1142,
-            Sensor::DataFieldHeadingMagneticNorth => 1143,
-            Sensor::DataFieldHeadingTrueNorth => 1144,
-            Sensor::DataFieldDistance => 1145,
-            Sensor::DataFieldDistanceXAxis => 1146,
-            Sensor::DataFieldDistanceYAxis => 1147,
-            Sensor::DataFieldDistanceZAxis => 1148,
-            Sensor::DataFieldDistanceOutofRange => 1149,
-            Sensor::DataFieldTilt => 1150,
-            Sensor::DataFieldTiltXAxis => 1151,
-            Sensor::DataFieldTiltYAxis => 1152,
-            Sensor::DataFieldTiltZAxis => 1153,
-            Sensor::DataFieldRotationMatrix => 1154,
-            Sensor::DataFieldQuaternion => 1155,
-            Sensor::DataFieldMagneticFlux => 1156,
-            Sensor::DataFieldMagneticFluxXAxis => 1157,
-            Sensor::DataFieldMagneticFluxYAxis => 1158,
-            Sensor::DataFieldMagneticFluxZAxis => 1159,
-            Sensor::DataFieldMagnetometerAccuracy => 1160,
-            Sensor::DataFieldSimpleOrientationDirection => 1161,
-            Sensor::DataFieldMechanical => 1168,
-            Sensor::DataFieldBooleanSwitchState => 1169,
-            Sensor::DataFieldBooleanSwitchArrayStates => 1170,
-            Sensor::DataFieldMultivalueSwitchValue => 1171,
-            Sensor::DataFieldForce => 1172,
-            Sensor::DataFieldAbsolutePressure => 1173,
-            Sensor::DataFieldGaugePressure => 1174,
-            Sensor::DataFieldStrain => 1175,
-            Sensor::DataFieldWeight => 1176,
-            Sensor::PropertyMechanical => 1184,
-            Sensor::PropertyVibrationState => 1185,
-            Sensor::PropertyForwardVibrationSpeed => 1186,
-            Sensor::PropertyBackwardVibrationSpeed => 1187,
-            Sensor::DataFieldBiometric => 1200,
-            Sensor::DataFieldHumanPresence => 1201,
-            Sensor::DataFieldHumanProximityRange => 1202,
-            Sensor::DataFieldHumanProximityOutofRange => 1203,
-            Sensor::DataFieldHumanTouchState => 1204,
-            Sensor::DataFieldBloodPressure => 1205,
-            Sensor::DataFieldBloodPressureDiastolic => 1206,
-            Sensor::DataFieldBloodPressureSystolic => 1207,
-            Sensor::DataFieldHeartRate => 1208,
-            Sensor::DataFieldRestingHeartRate => 1209,
-            Sensor::DataFieldHeartbeatInterval => 1210,
-            Sensor::DataFieldRespiratoryRate => 1211,
-            Sensor::DataFieldSpO2 => 1212,
-            Sensor::DataFieldLight => 1232,
-            Sensor::DataFieldIlluminance => 1233,
-            Sensor::DataFieldColorTemperature => 1234,
-            Sensor::DataFieldChromaticity => 1235,
-            Sensor::DataFieldChromaticityX => 1236,
-            Sensor::DataFieldChromaticityY => 1237,
-            Sensor::DataFieldConsumerIRSentenceReceive => 1238,
-            Sensor::DataFieldInfraredLight => 1239,
-            Sensor::DataFieldRedLight => 1240,
-            Sensor::DataFieldGreenLight => 1241,
-            Sensor::DataFieldBlueLight => 1242,
-            Sensor::DataFieldUltravioletALight => 1243,
-            Sensor::DataFieldUltravioletBLight => 1244,
-            Sensor::DataFieldUltravioletIndex => 1245,
-            Sensor::PropertyLight => 1248,
-            Sensor::PropertyConsumerIRSentenceSend => 1249,
-            Sensor::DataFieldScanner => 1264,
-            Sensor::DataFieldRFIDTag40Bit => 1265,
-            Sensor::DataFieldNFCSentenceReceive => 1266,
-            Sensor::PropertyScanner => 1272,
-            Sensor::PropertyNFCSentenceSend => 1273,
-            Sensor::DataFieldElectrical => 1280,
-            Sensor::DataFieldCapacitance => 1281,
-            Sensor::DataFieldCurrent => 1282,
-            Sensor::DataFieldElectricalPower => 1283,
-            Sensor::DataFieldInductance => 1284,
-            Sensor::DataFieldResistance => 1285,
-            Sensor::DataFieldVoltage => 1286,
-            Sensor::DataFieldFrequency => 1287,
-            Sensor::DataFieldPeriod => 1288,
-            Sensor::DataFieldPercentofRange => 1289,
-            Sensor::DataFieldTime => 1312,
-            Sensor::DataFieldYear => 1313,
-            Sensor::DataFieldMonth => 1314,
-            Sensor::DataFieldDay => 1315,
-            Sensor::DataFieldDayofWeek => 1316,
-            Sensor::DataFieldHour => 1317,
-            Sensor::DataFieldMinute => 1318,
-            Sensor::DataFieldSecond => 1319,
-            Sensor::DataFieldMillisecond => 1320,
-            Sensor::DataFieldTimestamp => 1321,
-            Sensor::DataFieldJulianDayofYear => 1322,
-            Sensor::DataFieldTimeSinceSystemBoot => 1323,
-            Sensor::PropertyTime => 1328,
-            Sensor::PropertyTimeZoneOffsetfromUTC => 1329,
-            Sensor::PropertyTimeZoneName => 1330,
-            Sensor::PropertyDaylightSavingsTimeObserved => 1331,
-            Sensor::PropertyTimeTrimAdjustment => 1332,
-            Sensor::PropertyArmAlarm => 1333,
-            Sensor::DataFieldCustom => 1344,
-            Sensor::DataFieldCustomUsage => 1345,
-            Sensor::DataFieldCustomBooleanArray => 1346,
-            Sensor::DataFieldCustomValue => 1347,
-            Sensor::DataFieldCustomValue1 => 1348,
-            Sensor::DataFieldCustomValue2 => 1349,
-            Sensor::DataFieldCustomValue3 => 1350,
-            Sensor::DataFieldCustomValue4 => 1351,
-            Sensor::DataFieldCustomValue5 => 1352,
-            Sensor::DataFieldCustomValue6 => 1353,
-            Sensor::DataFieldCustomValue7 => 1354,
-            Sensor::DataFieldCustomValue8 => 1355,
-            Sensor::DataFieldCustomValue9 => 1356,
-            Sensor::DataFieldCustomValue10 => 1357,
-            Sensor::DataFieldCustomValue11 => 1358,
-            Sensor::DataFieldCustomValue12 => 1359,
-            Sensor::DataFieldCustomValue13 => 1360,
-            Sensor::DataFieldCustomValue14 => 1361,
-            Sensor::DataFieldCustomValue15 => 1362,
-            Sensor::DataFieldCustomValue16 => 1363,
-            Sensor::DataFieldCustomValue17 => 1364,
-            Sensor::DataFieldCustomValue18 => 1365,
-            Sensor::DataFieldCustomValue19 => 1366,
-            Sensor::DataFieldCustomValue20 => 1367,
-            Sensor::DataFieldCustomValue21 => 1368,
-            Sensor::DataFieldCustomValue22 => 1369,
-            Sensor::DataFieldCustomValue23 => 1370,
-            Sensor::DataFieldCustomValue24 => 1371,
-            Sensor::DataFieldCustomValue25 => 1372,
-            Sensor::DataFieldCustomValue26 => 1373,
-            Sensor::DataFieldCustomValue27 => 1374,
-            Sensor::DataFieldCustomValue28 => 1375,
-            Sensor::DataFieldGeneric => 1376,
-            Sensor::DataFieldGenericGUIDorPROPERTYKEY => 1377,
-            Sensor::DataFieldGenericCategoryGUID => 1378,
-            Sensor::DataFieldGenericTypeGUID => 1379,
-            Sensor::DataFieldGenericEventPROPERTYKEY => 1380,
-            Sensor::DataFieldGenericPropertyPROPERTYKEY => 1381,
-            Sensor::DataFieldGenericDataFieldPROPERTYKEY => 1382,
-            Sensor::DataFieldGenericEvent => 1383,
-            Sensor::DataFieldGenericProperty => 1384,
-            Sensor::DataFieldGenericDataField => 1385,
-            Sensor::DataFieldEnumeratorTableRowIndex => 1386,
-            Sensor::DataFieldEnumeratorTableRowCount => 1387,
-            Sensor::DataFieldGenericGUIDorPROPERTYKEYkind => 1388,
-            Sensor::DataFieldGenericGUID => 1389,
-            Sensor::DataFieldGenericPROPERTYKEY => 1390,
-            Sensor::DataFieldGenericTopLevelCollectionID => 1391,
-            Sensor::DataFieldGenericReportID => 1392,
-            Sensor::DataFieldGenericReportItemPositionIndex => 1393,
-            Sensor::DataFieldGenericFirmwareVARTYPE => 1394,
-            Sensor::DataFieldGenericUnitofMeasure => 1395,
-            Sensor::DataFieldGenericUnitExponent => 1396,
-            Sensor::DataFieldGenericReportSize => 1397,
-            Sensor::DataFieldGenericReportCount => 1398,
-            Sensor::PropertyGeneric => 1408,
-            Sensor::PropertyEnumeratorTableRowIndex => 1409,
-            Sensor::PropertyEnumeratorTableRowCount => 1410,
-            Sensor::DataFieldPersonalActivity => 1424,
-            Sensor::DataFieldActivityType => 1425,
-            Sensor::DataFieldActivityState => 1426,
-            Sensor::DataFieldDevicePosition => 1427,
-            Sensor::DataFieldStepCount => 1428,
-            Sensor::DataFieldStepCountReset => 1429,
-            Sensor::DataFieldStepDuration => 1430,
-            Sensor::DataFieldStepType => 1431,
-            Sensor::PropertyMinimumActivityDetectionInterval => 1440,
-            Sensor::PropertySupportedActivityTypes => 1441,
-            Sensor::PropertySubscribedActivityTypes => 1442,
-            Sensor::PropertySupportedStepTypes => 1443,
-            Sensor::PropertySubscribedStepTypes => 1444,
-            Sensor::PropertyFloorHeight => 1445,
-            Sensor::DataFieldCustomTypeID => 1456,
-            Sensor::SensorStateUndefined => 2048,
-            Sensor::SensorStateReady => 2049,
-            Sensor::SensorStateNotAvailable => 2050,
-            Sensor::SensorStateNoDataSel => 2051,
-            Sensor::SensorStateInitializing => 2052,
-            Sensor::SensorStateAccessDenied => 2053,
-            Sensor::SensorStateError => 2054,
-            Sensor::SensorEventUnknown => 2064,
-            Sensor::SensorEventStateChanged => 2065,
-            Sensor::SensorEventPropertyChanged => 2066,
-            Sensor::SensorEventDataUpdated => 2067,
-            Sensor::SensorEventPollResponse => 2068,
-            Sensor::SensorEventChangeSensitivity => 2069,
-            Sensor::SensorEventRangeMaximumReached => 2070,
-            Sensor::SensorEventRangeMinimumReached => 2071,
-            Sensor::SensorEventHighThresholdCrossUpward => 2072,
-            Sensor::SensorEventHighThresholdCrossDownward => 2073,
-            Sensor::SensorEventLowThresholdCrossUpward => 2074,
-            Sensor::SensorEventLowThresholdCrossDownward => 2075,
-            Sensor::SensorEventZeroThresholdCrossUpward => 2076,
-            Sensor::SensorEventZeroThresholdCrossDownward => 2077,
-            Sensor::SensorEventPeriodExceeded => 2078,
-            Sensor::SensorEventFrequencyExceeded => 2079,
-            Sensor::SensorEventComplexTrigger => 2080,
-            Sensor::ConnectionTypePCIntegrated => 2096,
-            Sensor::ConnectionTypePCAttached => 2097,
-            Sensor::ConnectionTypePCExternal => 2098,
-            Sensor::ReportingStateReportNoEvents => 2112,
-            Sensor::ReportingStateReportAllEvents => 2113,
-            Sensor::ReportingStateReportThresholdEvents => 2114,
-            Sensor::ReportingStateWakeOnNoEvents => 2115,
-            Sensor::ReportingStateWakeOnAllEvents => 2116,
-            Sensor::ReportingStateWakeOnThresholdEvents => 2117,
-            Sensor::PropertySamplingRate => 791,
-            Sensor::PropertyResponseCurve => 792,
-            Sensor::PropertyPowerState => 793,
-            Sensor::PowerStateUndefined => 2128,
-            Sensor::PowerStateD0FullPower => 2129,
-            Sensor::PowerStateD1LowPower => 2130,
-            Sensor::PowerStateD2StandbyPowerwithWakeup => 2131,
-            Sensor::PowerStateD3SleepwithWakeup => 2132,
-            Sensor::PowerStateD4PowerOff => 2133,
-            Sensor::AccuracyDefault => 2144,
-            Sensor::AccuracyHigh => 2145,
-            Sensor::AccuracyMedium => 2146,
-            Sensor::AccuracyLow => 2147,
-            Sensor::FixQualityNoFix => 2160,
-            Sensor::FixQualityGPS => 2161,
-            Sensor::FixQualityDGPS => 2162,
-            Sensor::DataFieldFixTypeNAry110 => 1035,
-            Sensor::FixTypeNoFix => 2176,
-            Sensor::FixTypeGPSSPSModeFixValid => 2177,
-            Sensor::FixTypeDGPSSPSModeFixValid => 2178,
-            Sensor::FixTypeGPSPPSModeFixValid => 2179,
-            Sensor::FixTypeRealTimeKinematic => 2180,
-            Sensor::FixTypeFloatRTK => 2181,
-            Sensor::FixTypeEstimateddeadreckoned => 2182,
-            Sensor::FixTypeManualInputMode => 2183,
-            Sensor::FixTypeSimulatorMode => 2184,
-            Sensor::GPSOperationModeManual => 2192,
-            Sensor::GPSOperationModeAutomatic => 2193,
-            Sensor::GPSSelectionModeAutonomous => 2208,
-            Sensor::GPSSelectionModeDGPS => 2209,
-            Sensor::GPSSelectionModeEstimateddeadreckoned => 2210,
-            Sensor::GPSSelectionModeManualInput => 2211,
-            Sensor::GPSSelectionModeSimulator => 2212,
-            Sensor::GPSSelectionModeDataNotValid => 2213,
-            Sensor::GPSStatusDataValid => 2224,
-            Sensor::GPSStatusDataNotValid => 2225,
-            Sensor::DayofWeekSunday => 2240,
-            Sensor::DayofWeekMonday => 2241,
-            Sensor::DayofWeekTuesday => 2242,
-            Sensor::DayofWeekWednesday => 2243,
-            Sensor::DayofWeekThursday => 2244,
-            Sensor::DayofWeekFriday => 2245,
-            Sensor::DayofWeekSaturday => 2246,
-            Sensor::KindCategory => 2256,
-            Sensor::KindType => 2257,
-            Sensor::KindEvent => 2258,
-            Sensor::KindProperty => 2259,
-            Sensor::KindDataField => 2260,
-            Sensor::MagnetometerAccuracyLow => 2272,
-            Sensor::MagnetometerAccuracyMedium => 2273,
-            Sensor::MagnetometerAccuracyHigh => 2274,
-            Sensor::SimpleOrientationDirectionNotRotated => 2288,
-            Sensor::SimpleOrientationDirectionRotated90Degrees => 2289,
-            Sensor::SimpleOrientationDirectionRotated180Degrees => 2290,
-            Sensor::SimpleOrientationDirectionRotated270Degrees => 2291,
-            Sensor::SimpleOrientationDirectionFaceUp => 2292,
-            Sensor::SimpleOrientationDirectionFaceDown => 2293,
-            Sensor::VT_NULLEmpty => 2304,
-            Sensor::VT_BOOLBoolean => 2305,
-            Sensor::VT_UI1Byte => 2306,
-            Sensor::VT_I1Character => 2307,
-            Sensor::VT_UI2UnsignedShort => 2308,
-            Sensor::VT_I2Short => 2309,
-            Sensor::VT_UI4UnsignedLong => 2310,
-            Sensor::VT_I4Long => 2311,
-            Sensor::VT_UI8UnsignedLongLong => 2312,
-            Sensor::VT_I8LongLong => 2313,
-            Sensor::VT_R4Float => 2314,
-            Sensor::VT_R8Double => 2315,
-            Sensor::VT_WSTRWideString => 2316,
-            Sensor::VT_STRNarrowString => 2317,
-            Sensor::VT_CLSIDGuid => 2318,
-            Sensor::VT_VECTORVT_UI1OpaqueStructure => 2319,
-            Sensor::VT_F16E0HID16bitFloatwithUnitExponent0 => 2320,
-            Sensor::VT_F16E1HID16bitFloatwithUnitExponent1 => 2321,
-            Sensor::VT_F16E2HID16bitFloatwithUnitExponent2 => 2322,
-            Sensor::VT_F16E3HID16bitFloatwithUnitExponent3 => 2323,
-            Sensor::VT_F16E4HID16bitFloatwithUnitExponent4 => 2324,
-            Sensor::VT_F16E5HID16bitFloatwithUnitExponent5 => 2325,
-            Sensor::VT_F16E6HID16bitFloatwithUnitExponent6 => 2326,
-            Sensor::VT_F16E7HID16bitFloatwithUnitExponent7 => 2327,
-            Sensor::VT_F16E8HID16bitFloatwithUnitExponent8 => 2328,
-            Sensor::VT_F16E9HID16bitFloatwithUnitExponent9 => 2329,
-            Sensor::VT_F16EAHID16bitFloatwithUnitExponentA => 2330,
-            Sensor::VT_F16EBHID16bitFloatwithUnitExponentB => 2331,
-            Sensor::VT_F16ECHID16bitFloatwithUnitExponentC => 2332,
-            Sensor::VT_F16EDHID16bitFloatwithUnitExponentD => 2333,
-            Sensor::VT_F16EEHID16bitFloatwithUnitExponentE => 2334,
-            Sensor::VT_F16EFHID16bitFloatwithUnitExponentF => 2335,
-            Sensor::VT_F32E0HID32bitFloatwithUnitExponent0 => 2336,
-            Sensor::VT_F32E1HID32bitFloatwithUnitExponent1 => 2337,
-            Sensor::VT_F32E2HID32bitFloatwithUnitExponent2 => 2338,
-            Sensor::VT_F32E3HID32bitFloatwithUnitExponent3 => 2339,
-            Sensor::VT_F32E4HID32bitFloatwithUnitExponent4 => 2340,
-            Sensor::VT_F32E5HID32bitFloatwithUnitExponent5 => 2341,
-            Sensor::VT_F32E6HID32bitFloatwithUnitExponent6 => 2342,
-            Sensor::VT_F32E7HID32bitFloatwithUnitExponent7 => 2343,
-            Sensor::VT_F32E8HID32bitFloatwithUnitExponent8 => 2344,
-            Sensor::VT_F32E9HID32bitFloatwithUnitExponent9 => 2345,
-            Sensor::VT_F32EAHID32bitFloatwithUnitExponentA => 2346,
-            Sensor::VT_F32EBHID32bitFloatwithUnitExponentB => 2347,
-            Sensor::VT_F32ECHID32bitFloatwithUnitExponentC => 2348,
-            Sensor::VT_F32EDHID32bitFloatwithUnitExponentD => 2349,
-            Sensor::VT_F32EEHID32bitFloatwithUnitExponentE => 2350,
-            Sensor::VT_F32EFHID32bitFloatwithUnitExponentF => 2351,
-            Sensor::ActivityTypeUnknown => 2352,
-            Sensor::ActivityTypeStationary => 2353,
-            Sensor::ActivityTypeFidgeting => 2354,
-            Sensor::ActivityTypeWalking => 2355,
-            Sensor::ActivityTypeRunning => 2356,
-            Sensor::ActivityTypeInVehicle => 2357,
-            Sensor::ActivityTypeBiking => 2358,
-            Sensor::ActivityTypeIdle => 2359,
-            Sensor::UnitNotSpecified => 2368,
-            Sensor::UnitLux => 2369,
-            Sensor::UnitDegreesKelvin => 2370,
-            Sensor::UnitDegreesCelsius => 2371,
-            Sensor::UnitPascal => 2372,
-            Sensor::UnitNewton => 2373,
-            Sensor::UnitMetersSecond => 2374,
-            Sensor::UnitKilogram => 2375,
-            Sensor::UnitMeter => 2376,
-            Sensor::UnitMetersSecondSecond => 2377,
-            Sensor::UnitFarad => 2378,
-            Sensor::UnitAmpere => 2379,
-            Sensor::UnitWatt => 2380,
-            Sensor::UnitHenry => 2381,
-            Sensor::UnitOhm => 2382,
-            Sensor::UnitVolt => 2383,
-            Sensor::UnitHertz => 2384,
-            Sensor::UnitBar => 2385,
-            Sensor::UnitDegreesAnticlockwise => 2386,
-            Sensor::UnitDegreesClockwise => 2387,
-            Sensor::UnitDegrees => 2388,
-            Sensor::UnitDegreesSecond => 2389,
-            Sensor::UnitDegreesSecondSecond => 2390,
-            Sensor::UnitKnot => 2391,
-            Sensor::UnitPercent => 2392,
-            Sensor::UnitSecond => 2393,
-            Sensor::UnitMillisecond => 2394,
-            Sensor::UnitG => 2395,
-            Sensor::UnitBytes => 2396,
-            Sensor::UnitMilligauss => 2397,
-            Sensor::UnitBits => 2398,
-            Sensor::ActivityStateNoStateChange => 2400,
-            Sensor::ActivityStateStartActivity => 2401,
-            Sensor::ActivityStateEndActivity => 2402,
-            Sensor::Exponent01 => 2416,
-            Sensor::Exponent110 => 2417,
-            Sensor::Exponent2100 => 2418,
-            Sensor::Exponent31000 => 2419,
-            Sensor::Exponent410000 => 2420,
-            Sensor::Exponent5100000 => 2421,
-            Sensor::Exponent61000000 => 2422,
-            Sensor::Exponent710000000 => 2423,
-            Sensor::Exponent8000000001 => 2424,
-            Sensor::Exponent900000001 => 2425,
-            Sensor::ExponentA0000001 => 2426,
-            Sensor::ExponentB000001 => 2427,
-            Sensor::ExponentC00001 => 2428,
-            Sensor::ExponentD0001 => 2429,
-            Sensor::ExponentE001 => 2430,
-            Sensor::ExponentF01 => 2431,
-            Sensor::DevicePositionUnknown => 2432,
-            Sensor::DevicePositionUnchanged => 2433,
-            Sensor::DevicePositionOnDesk => 2434,
-            Sensor::DevicePositionInHand => 2435,
-            Sensor::DevicePositionMovinginBag => 2436,
-            Sensor::DevicePositionStationaryinBag => 2437,
-        };
-        up | id
-    }
-}
-
-impl From<&Sensor> for UsagePage {
-    fn from(_up: &Sensor) -> UsagePage {
-        UsagePage::Sensor
-    }
-}
-
-impl From<Sensor> for UsagePage {
-    fn from(up: Sensor) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Sensor {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0x40`: "Medical Instruments"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -8993,28 +5161,6 @@ pub enum MedicalInstruments {
     SoftControlAdjust,
 }
 
-impl AsUsage for MedicalInstruments {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for MedicalInstruments {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x40` for [MedicalInstruments]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for MedicalInstruments {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -9050,117 +5196,6 @@ impl fmt::Display for MedicalInstruments {
             MedicalInstruments::SoftControlAdjust => "Soft Control Adjust",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&MedicalInstruments> for u16 {
-    fn from(up: &MedicalInstruments) -> u16 {
-        match *up {
-            MedicalInstruments::Undefined => 0,
-            MedicalInstruments::MedicalUltrasound => 1,
-            MedicalInstruments::VCRAcquisition => 32,
-            MedicalInstruments::FreezeThaw => 33,
-            MedicalInstruments::ClipStore => 34,
-            MedicalInstruments::Update => 35,
-            MedicalInstruments::Next => 36,
-            MedicalInstruments::Save => 37,
-            MedicalInstruments::Print => 38,
-            MedicalInstruments::MicrophoneEnable => 39,
-            MedicalInstruments::Cine => 64,
-            MedicalInstruments::TransmitPower => 65,
-            MedicalInstruments::Volume => 66,
-            MedicalInstruments::Focus => 67,
-            MedicalInstruments::Depth => 68,
-            MedicalInstruments::SoftStepPrimary => 96,
-            MedicalInstruments::SoftStepSecondary => 97,
-            MedicalInstruments::DepthGainCompensation => 112,
-            MedicalInstruments::ZoomSelect => 128,
-            MedicalInstruments::ZoomAdjust => 129,
-            MedicalInstruments::SpectralDopplerModeSelect => 130,
-            MedicalInstruments::SpectralDopplerAdjust => 131,
-            MedicalInstruments::ColorDopplerModeSelect => 132,
-            MedicalInstruments::ColorDopplerAdjust => 133,
-            MedicalInstruments::MotionModeSelect => 134,
-            MedicalInstruments::MotionModeAdjust => 135,
-            MedicalInstruments::TwoDModeSelect => 136,
-            MedicalInstruments::TwoDModeAdjust => 137,
-            MedicalInstruments::SoftControlSelect => 160,
-            MedicalInstruments::SoftControlAdjust => 161,
-        }
-    }
-}
-
-impl From<MedicalInstruments> for u16 {
-    fn from(up: MedicalInstruments) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&MedicalInstruments> for u32 {
-    fn from(usage: &MedicalInstruments) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            MedicalInstruments::Undefined => 0,
-            MedicalInstruments::MedicalUltrasound => 1,
-            MedicalInstruments::VCRAcquisition => 32,
-            MedicalInstruments::FreezeThaw => 33,
-            MedicalInstruments::ClipStore => 34,
-            MedicalInstruments::Update => 35,
-            MedicalInstruments::Next => 36,
-            MedicalInstruments::Save => 37,
-            MedicalInstruments::Print => 38,
-            MedicalInstruments::MicrophoneEnable => 39,
-            MedicalInstruments::Cine => 64,
-            MedicalInstruments::TransmitPower => 65,
-            MedicalInstruments::Volume => 66,
-            MedicalInstruments::Focus => 67,
-            MedicalInstruments::Depth => 68,
-            MedicalInstruments::SoftStepPrimary => 96,
-            MedicalInstruments::SoftStepSecondary => 97,
-            MedicalInstruments::DepthGainCompensation => 112,
-            MedicalInstruments::ZoomSelect => 128,
-            MedicalInstruments::ZoomAdjust => 129,
-            MedicalInstruments::SpectralDopplerModeSelect => 130,
-            MedicalInstruments::SpectralDopplerAdjust => 131,
-            MedicalInstruments::ColorDopplerModeSelect => 132,
-            MedicalInstruments::ColorDopplerAdjust => 133,
-            MedicalInstruments::MotionModeSelect => 134,
-            MedicalInstruments::MotionModeAdjust => 135,
-            MedicalInstruments::TwoDModeSelect => 136,
-            MedicalInstruments::TwoDModeAdjust => 137,
-            MedicalInstruments::SoftControlSelect => 160,
-            MedicalInstruments::SoftControlAdjust => 161,
-        };
-        up | id
-    }
-}
-
-impl From<&MedicalInstruments> for UsagePage {
-    fn from(_up: &MedicalInstruments) -> UsagePage {
-        UsagePage::MedicalInstruments
-    }
-}
-
-impl From<MedicalInstruments> for UsagePage {
-    fn from(up: MedicalInstruments) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for MedicalInstruments {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -9270,28 +5305,6 @@ pub enum BrailleDisplay {
     BrailleRockerPress,
 }
 
-impl AsUsage for BrailleDisplay {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for BrailleDisplay {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x41` for [BrailleDisplay]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for BrailleDisplay {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -9340,143 +5353,6 @@ impl fmt::Display for BrailleDisplay {
             BrailleDisplay::BrailleRockerPress => "Braille Rocker Press",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&BrailleDisplay> for u16 {
-    fn from(up: &BrailleDisplay) -> u16 {
-        match *up {
-            BrailleDisplay::Undefined => 0,
-            BrailleDisplay::BrailleDisplay => 1,
-            BrailleDisplay::BrailleRow => 2,
-            BrailleDisplay::EightDotBrailleCell => 3,
-            BrailleDisplay::SixDotBrailleCell => 4,
-            BrailleDisplay::NumberofBrailleCells => 5,
-            BrailleDisplay::ScreenReaderControl => 6,
-            BrailleDisplay::ScreenReaderIdentifier => 7,
-            BrailleDisplay::RouterSet1 => 250,
-            BrailleDisplay::RouterSet2 => 251,
-            BrailleDisplay::RouterSet3 => 252,
-            BrailleDisplay::RouterButton => 256,
-            BrailleDisplay::BrailleButtons => 512,
-            BrailleDisplay::BrailleKeyboardDot1 => 513,
-            BrailleDisplay::BrailleKeyboardDot2 => 514,
-            BrailleDisplay::BrailleKeyboardDot3 => 515,
-            BrailleDisplay::BrailleKeyboardDot4 => 516,
-            BrailleDisplay::BrailleKeyboardDot5 => 517,
-            BrailleDisplay::BrailleKeyboardDot6 => 518,
-            BrailleDisplay::BrailleKeyboardDot7 => 519,
-            BrailleDisplay::BrailleKeyboardDot8 => 520,
-            BrailleDisplay::BrailleKeyboardSpace => 521,
-            BrailleDisplay::BrailleKeyboardLeftSpace => 522,
-            BrailleDisplay::BrailleKeyboardRightSpace => 523,
-            BrailleDisplay::BrailleFaceControls => 524,
-            BrailleDisplay::BrailleLeftControls => 525,
-            BrailleDisplay::BrailleRightControls => 526,
-            BrailleDisplay::BrailleTopControls => 527,
-            BrailleDisplay::BrailleJoystickCenter => 528,
-            BrailleDisplay::BrailleJoystickUp => 529,
-            BrailleDisplay::BrailleJoystickDown => 530,
-            BrailleDisplay::BrailleJoystickLeft => 531,
-            BrailleDisplay::BrailleJoystickRight => 548,
-            BrailleDisplay::BrailleDPadCenter => 549,
-            BrailleDisplay::BrailleDPadUp => 550,
-            BrailleDisplay::BrailleDPadDown => 535,
-            BrailleDisplay::BrailleDPadLeft => 536,
-            BrailleDisplay::BrailleDPadRight => 537,
-            BrailleDisplay::BraillePanLeft => 538,
-            BrailleDisplay::BraillePanRight => 539,
-            BrailleDisplay::BrailleRockerUp => 540,
-            BrailleDisplay::BrailleRockerDown => 541,
-            BrailleDisplay::BrailleRockerPress => 542,
-        }
-    }
-}
-
-impl From<BrailleDisplay> for u16 {
-    fn from(up: BrailleDisplay) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&BrailleDisplay> for u32 {
-    fn from(usage: &BrailleDisplay) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            BrailleDisplay::Undefined => 0,
-            BrailleDisplay::BrailleDisplay => 1,
-            BrailleDisplay::BrailleRow => 2,
-            BrailleDisplay::EightDotBrailleCell => 3,
-            BrailleDisplay::SixDotBrailleCell => 4,
-            BrailleDisplay::NumberofBrailleCells => 5,
-            BrailleDisplay::ScreenReaderControl => 6,
-            BrailleDisplay::ScreenReaderIdentifier => 7,
-            BrailleDisplay::RouterSet1 => 250,
-            BrailleDisplay::RouterSet2 => 251,
-            BrailleDisplay::RouterSet3 => 252,
-            BrailleDisplay::RouterButton => 256,
-            BrailleDisplay::BrailleButtons => 512,
-            BrailleDisplay::BrailleKeyboardDot1 => 513,
-            BrailleDisplay::BrailleKeyboardDot2 => 514,
-            BrailleDisplay::BrailleKeyboardDot3 => 515,
-            BrailleDisplay::BrailleKeyboardDot4 => 516,
-            BrailleDisplay::BrailleKeyboardDot5 => 517,
-            BrailleDisplay::BrailleKeyboardDot6 => 518,
-            BrailleDisplay::BrailleKeyboardDot7 => 519,
-            BrailleDisplay::BrailleKeyboardDot8 => 520,
-            BrailleDisplay::BrailleKeyboardSpace => 521,
-            BrailleDisplay::BrailleKeyboardLeftSpace => 522,
-            BrailleDisplay::BrailleKeyboardRightSpace => 523,
-            BrailleDisplay::BrailleFaceControls => 524,
-            BrailleDisplay::BrailleLeftControls => 525,
-            BrailleDisplay::BrailleRightControls => 526,
-            BrailleDisplay::BrailleTopControls => 527,
-            BrailleDisplay::BrailleJoystickCenter => 528,
-            BrailleDisplay::BrailleJoystickUp => 529,
-            BrailleDisplay::BrailleJoystickDown => 530,
-            BrailleDisplay::BrailleJoystickLeft => 531,
-            BrailleDisplay::BrailleJoystickRight => 548,
-            BrailleDisplay::BrailleDPadCenter => 549,
-            BrailleDisplay::BrailleDPadUp => 550,
-            BrailleDisplay::BrailleDPadDown => 535,
-            BrailleDisplay::BrailleDPadLeft => 536,
-            BrailleDisplay::BrailleDPadRight => 537,
-            BrailleDisplay::BraillePanLeft => 538,
-            BrailleDisplay::BraillePanRight => 539,
-            BrailleDisplay::BrailleRockerUp => 540,
-            BrailleDisplay::BrailleRockerDown => 541,
-            BrailleDisplay::BrailleRockerPress => 542,
-        };
-        up | id
-    }
-}
-
-impl From<&BrailleDisplay> for UsagePage {
-    fn from(_up: &BrailleDisplay) -> UsagePage {
-        UsagePage::BrailleDisplay
-    }
-}
-
-impl From<BrailleDisplay> for UsagePage {
-    fn from(up: BrailleDisplay) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for BrailleDisplay {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -9568,28 +5444,6 @@ pub enum LightingandIllumination {
     AutonomousMode,
 }
 
-impl AsUsage for LightingandIllumination {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for LightingandIllumination {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x59` for [LightingandIllumination]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for LightingandIllumination {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -9646,125 +5500,6 @@ impl fmt::Display for LightingandIllumination {
     }
 }
 
-impl From<&LightingandIllumination> for u16 {
-    fn from(up: &LightingandIllumination) -> u16 {
-        match *up {
-            LightingandIllumination::Undefined => 0,
-            LightingandIllumination::LampArray => 1,
-            LightingandIllumination::LampArrayAttributesReport => 2,
-            LightingandIllumination::LampCount => 3,
-            LightingandIllumination::BoundingBoxWidthInMicrometers => 4,
-            LightingandIllumination::BoundingBoxHeightInMicrometers => 5,
-            LightingandIllumination::BoundingBoxDepthInMicrometers => 6,
-            LightingandIllumination::LampArrayKind => 7,
-            LightingandIllumination::MinUpdateIntervalInMicroseconds => 8,
-            LightingandIllumination::LampAttributesRequestReport => 32,
-            LightingandIllumination::LampId => 33,
-            LightingandIllumination::LampAttributesResponseReport => 34,
-            LightingandIllumination::PositionXInMicrometers => 35,
-            LightingandIllumination::PositionYInMicrometers => 36,
-            LightingandIllumination::PositionZInMicrometers => 37,
-            LightingandIllumination::LampPurposes => 38,
-            LightingandIllumination::UpdateLatencyInMicroseconds => 39,
-            LightingandIllumination::RedLevelCount => 40,
-            LightingandIllumination::GreenLevelCount => 41,
-            LightingandIllumination::BlueLevelCount => 42,
-            LightingandIllumination::IntensityLevelCount => 43,
-            LightingandIllumination::IsProgrammable => 44,
-            LightingandIllumination::InputBinding => 45,
-            LightingandIllumination::LampMultiUpdateReport => 80,
-            LightingandIllumination::RedUpdateChannel => 81,
-            LightingandIllumination::GreenUpdateChannel => 82,
-            LightingandIllumination::BlueUpdateChannel => 83,
-            LightingandIllumination::IntensityUpdateChannel => 84,
-            LightingandIllumination::LampUpdateFlags => 85,
-            LightingandIllumination::LampRangeUpdateReport => 96,
-            LightingandIllumination::LampIdStart => 97,
-            LightingandIllumination::LampIdEnd => 98,
-            LightingandIllumination::LampArrayControlReport => 112,
-            LightingandIllumination::AutonomousMode => 113,
-        }
-    }
-}
-
-impl From<LightingandIllumination> for u16 {
-    fn from(up: LightingandIllumination) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&LightingandIllumination> for u32 {
-    fn from(usage: &LightingandIllumination) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            LightingandIllumination::Undefined => 0,
-            LightingandIllumination::LampArray => 1,
-            LightingandIllumination::LampArrayAttributesReport => 2,
-            LightingandIllumination::LampCount => 3,
-            LightingandIllumination::BoundingBoxWidthInMicrometers => 4,
-            LightingandIllumination::BoundingBoxHeightInMicrometers => 5,
-            LightingandIllumination::BoundingBoxDepthInMicrometers => 6,
-            LightingandIllumination::LampArrayKind => 7,
-            LightingandIllumination::MinUpdateIntervalInMicroseconds => 8,
-            LightingandIllumination::LampAttributesRequestReport => 32,
-            LightingandIllumination::LampId => 33,
-            LightingandIllumination::LampAttributesResponseReport => 34,
-            LightingandIllumination::PositionXInMicrometers => 35,
-            LightingandIllumination::PositionYInMicrometers => 36,
-            LightingandIllumination::PositionZInMicrometers => 37,
-            LightingandIllumination::LampPurposes => 38,
-            LightingandIllumination::UpdateLatencyInMicroseconds => 39,
-            LightingandIllumination::RedLevelCount => 40,
-            LightingandIllumination::GreenLevelCount => 41,
-            LightingandIllumination::BlueLevelCount => 42,
-            LightingandIllumination::IntensityLevelCount => 43,
-            LightingandIllumination::IsProgrammable => 44,
-            LightingandIllumination::InputBinding => 45,
-            LightingandIllumination::LampMultiUpdateReport => 80,
-            LightingandIllumination::RedUpdateChannel => 81,
-            LightingandIllumination::GreenUpdateChannel => 82,
-            LightingandIllumination::BlueUpdateChannel => 83,
-            LightingandIllumination::IntensityUpdateChannel => 84,
-            LightingandIllumination::LampUpdateFlags => 85,
-            LightingandIllumination::LampRangeUpdateReport => 96,
-            LightingandIllumination::LampIdStart => 97,
-            LightingandIllumination::LampIdEnd => 98,
-            LightingandIllumination::LampArrayControlReport => 112,
-            LightingandIllumination::AutonomousMode => 113,
-        };
-        up | id
-    }
-}
-
-impl From<&LightingandIllumination> for UsagePage {
-    fn from(_up: &LightingandIllumination) -> UsagePage {
-        UsagePage::LightingandIllumination
-    }
-}
-
-impl From<LightingandIllumination> for UsagePage {
-    fn from(up: LightingandIllumination) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for LightingandIllumination {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0x80`: "Monitor"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -9811,28 +5546,6 @@ pub enum Monitor {
     VerticalFrequency,
 }
 
-impl AsUsage for Monitor {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Monitor {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x80` for [Monitor]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Monitor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -9854,83 +5567,6 @@ impl fmt::Display for Monitor {
     }
 }
 
-impl From<&Monitor> for u16 {
-    fn from(up: &Monitor) -> u16 {
-        match *up {
-            Monitor::Undefined => 0,
-            Monitor::MonitorControl => 1,
-            Monitor::EDIDInformation => 2,
-            Monitor::VDIFInformation => 3,
-            Monitor::VESAVersion => 4,
-            Monitor::OnScreenDisplay => 5,
-            Monitor::AutoSizeCenter => 6,
-            Monitor::PolarityHorzSynch => 7,
-            Monitor::PolarityVertSynch => 8,
-            Monitor::SyncType => 9,
-            Monitor::ScreenPosition => 10,
-            Monitor::HorizontalFrequency => 11,
-            Monitor::VerticalFrequency => 12,
-        }
-    }
-}
-
-impl From<Monitor> for u16 {
-    fn from(up: Monitor) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Monitor> for u32 {
-    fn from(usage: &Monitor) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Monitor::Undefined => 0,
-            Monitor::MonitorControl => 1,
-            Monitor::EDIDInformation => 2,
-            Monitor::VDIFInformation => 3,
-            Monitor::VESAVersion => 4,
-            Monitor::OnScreenDisplay => 5,
-            Monitor::AutoSizeCenter => 6,
-            Monitor::PolarityHorzSynch => 7,
-            Monitor::PolarityVertSynch => 8,
-            Monitor::SyncType => 9,
-            Monitor::ScreenPosition => 10,
-            Monitor::HorizontalFrequency => 11,
-            Monitor::VerticalFrequency => 12,
-        };
-        up | id
-    }
-}
-
-impl From<&Monitor> for UsagePage {
-    fn from(_up: &Monitor) -> UsagePage {
-        UsagePage::Monitor
-    }
-}
-
-impl From<Monitor> for UsagePage {
-    fn from(up: Monitor) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Monitor {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0x81`: "Monitor Enumerated Values"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -9943,87 +5579,12 @@ pub enum MonitorEnumeratedValues {
     unassigned,
 }
 
-impl AsUsage for MonitorEnumeratedValues {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for MonitorEnumeratedValues {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x81` for [MonitorEnumeratedValues]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for MonitorEnumeratedValues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             MonitorEnumeratedValues::unassigned => "unassigned",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&MonitorEnumeratedValues> for u16 {
-    fn from(up: &MonitorEnumeratedValues) -> u16 {
-        match *up {
-            MonitorEnumeratedValues::unassigned => 0,
-        }
-    }
-}
-
-impl From<MonitorEnumeratedValues> for u16 {
-    fn from(up: MonitorEnumeratedValues) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&MonitorEnumeratedValues> for u32 {
-    fn from(usage: &MonitorEnumeratedValues) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            MonitorEnumeratedValues::unassigned => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&MonitorEnumeratedValues> for UsagePage {
-    fn from(_up: &MonitorEnumeratedValues) -> UsagePage {
-        UsagePage::MonitorEnumeratedValues
-    }
-}
-
-impl From<MonitorEnumeratedValues> for UsagePage {
-    fn from(up: MonitorEnumeratedValues) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for MonitorEnumeratedValues {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10117,28 +5678,6 @@ pub enum VESAVirtualControls {
     VideoBlackLevelBlue,
 }
 
-impl AsUsage for VESAVirtualControls {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for VESAVirtualControls {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x82` for [VESAVirtualControls]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for VESAVirtualControls {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -10186,127 +5725,6 @@ impl fmt::Display for VESAVirtualControls {
     }
 }
 
-impl From<&VESAVirtualControls> for u16 {
-    fn from(up: &VESAVirtualControls) -> u16 {
-        match *up {
-            VESAVirtualControls::Brightness => 16,
-            VESAVirtualControls::Contrast => 18,
-            VESAVirtualControls::VideoGainRed => 22,
-            VESAVirtualControls::VideoGainGreen => 24,
-            VESAVirtualControls::VideoGainBlue => 26,
-            VESAVirtualControls::Focus => 28,
-            VESAVirtualControls::HorizontalPosition => 32,
-            VESAVirtualControls::HorizontalSize => 34,
-            VESAVirtualControls::HorizontalPincushion => 36,
-            VESAVirtualControls::HorizontalPincushionBalance => 38,
-            VESAVirtualControls::HorizontalMisconvergence => 40,
-            VESAVirtualControls::HorizontalLinearity => 42,
-            VESAVirtualControls::HorizontalLinearityBalance => 44,
-            VESAVirtualControls::VerticalPosition => 48,
-            VESAVirtualControls::VerticalSize => 50,
-            VESAVirtualControls::VerticalPincushion => 52,
-            VESAVirtualControls::VerticalPincushionBalance => 54,
-            VESAVirtualControls::VerticalMisconvergence => 56,
-            VESAVirtualControls::VerticalLinearity => 58,
-            VESAVirtualControls::VerticalLinearityBalance => 60,
-            VESAVirtualControls::ParallelogramDistortion => 64,
-            VESAVirtualControls::TrapezoidalDistortion => 66,
-            VESAVirtualControls::Tilt => 68,
-            VESAVirtualControls::TopCornerDistortionControl => 70,
-            VESAVirtualControls::TopCornerDistortionBalance => 72,
-            VESAVirtualControls::BottomCornerDistortionControl => 74,
-            VESAVirtualControls::BottomCornerDistortionBalance => 76,
-            VESAVirtualControls::MoiréHorizontal => 86,
-            VESAVirtualControls::MoiréVertical => 88,
-            VESAVirtualControls::InputLevelSelect => 94,
-            VESAVirtualControls::InputSourceSelect => 96,
-            VESAVirtualControls::StereoMode => 98,
-            VESAVirtualControls::VideoBlackLevelRed => 108,
-            VESAVirtualControls::VideoBlackLevelGreen => 110,
-            VESAVirtualControls::VideoBlackLevelBlue => 112,
-        }
-    }
-}
-
-impl From<VESAVirtualControls> for u16 {
-    fn from(up: VESAVirtualControls) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&VESAVirtualControls> for u32 {
-    fn from(usage: &VESAVirtualControls) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            VESAVirtualControls::Brightness => 16,
-            VESAVirtualControls::Contrast => 18,
-            VESAVirtualControls::VideoGainRed => 22,
-            VESAVirtualControls::VideoGainGreen => 24,
-            VESAVirtualControls::VideoGainBlue => 26,
-            VESAVirtualControls::Focus => 28,
-            VESAVirtualControls::HorizontalPosition => 32,
-            VESAVirtualControls::HorizontalSize => 34,
-            VESAVirtualControls::HorizontalPincushion => 36,
-            VESAVirtualControls::HorizontalPincushionBalance => 38,
-            VESAVirtualControls::HorizontalMisconvergence => 40,
-            VESAVirtualControls::HorizontalLinearity => 42,
-            VESAVirtualControls::HorizontalLinearityBalance => 44,
-            VESAVirtualControls::VerticalPosition => 48,
-            VESAVirtualControls::VerticalSize => 50,
-            VESAVirtualControls::VerticalPincushion => 52,
-            VESAVirtualControls::VerticalPincushionBalance => 54,
-            VESAVirtualControls::VerticalMisconvergence => 56,
-            VESAVirtualControls::VerticalLinearity => 58,
-            VESAVirtualControls::VerticalLinearityBalance => 60,
-            VESAVirtualControls::ParallelogramDistortion => 64,
-            VESAVirtualControls::TrapezoidalDistortion => 66,
-            VESAVirtualControls::Tilt => 68,
-            VESAVirtualControls::TopCornerDistortionControl => 70,
-            VESAVirtualControls::TopCornerDistortionBalance => 72,
-            VESAVirtualControls::BottomCornerDistortionControl => 74,
-            VESAVirtualControls::BottomCornerDistortionBalance => 76,
-            VESAVirtualControls::MoiréHorizontal => 86,
-            VESAVirtualControls::MoiréVertical => 88,
-            VESAVirtualControls::InputLevelSelect => 94,
-            VESAVirtualControls::InputSourceSelect => 96,
-            VESAVirtualControls::StereoMode => 98,
-            VESAVirtualControls::VideoBlackLevelRed => 108,
-            VESAVirtualControls::VideoBlackLevelGreen => 110,
-            VESAVirtualControls::VideoBlackLevelBlue => 112,
-        };
-        up | id
-    }
-}
-
-impl From<&VESAVirtualControls> for UsagePage {
-    fn from(_up: &VESAVirtualControls) -> UsagePage {
-        UsagePage::VESAVirtualControls
-    }
-}
-
-impl From<VESAVirtualControls> for UsagePage {
-    fn from(up: VESAVirtualControls) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for VESAVirtualControls {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
-    }
-}
-
 /// *Usage Page `0x83`: "VESA Command"*
 ///
 /// **This enum is autogenerated from the HID Usage Tables**.
@@ -10333,28 +5751,6 @@ pub enum VESACommand {
     Degauss,
 }
 
-impl AsUsage for VESACommand {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for VESACommand {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x83` for [VESACommand]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for VESACommand {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -10363,63 +5759,6 @@ impl fmt::Display for VESACommand {
             VESACommand::Degauss => "Degauss",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&VESACommand> for u16 {
-    fn from(up: &VESACommand) -> u16 {
-        match *up {
-            VESACommand::Undefined => 0,
-            VESACommand::Settings => 1,
-            VESACommand::Degauss => 2,
-        }
-    }
-}
-
-impl From<VESACommand> for u16 {
-    fn from(up: VESACommand) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&VESACommand> for u32 {
-    fn from(usage: &VESACommand) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            VESACommand::Undefined => 0,
-            VESACommand::Settings => 1,
-            VESACommand::Degauss => 2,
-        };
-        up | id
-    }
-}
-
-impl From<&VESACommand> for UsagePage {
-    fn from(_up: &VESACommand) -> UsagePage {
-        UsagePage::VESACommand
-    }
-}
-
-impl From<VESACommand> for UsagePage {
-    fn from(up: VESACommand) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for VESACommand {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10435,87 +5774,12 @@ pub enum PowerDevice {
     PeripheralDevice,
 }
 
-impl AsUsage for PowerDevice {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for PowerDevice {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x84` for [PowerDevice]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for PowerDevice {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             PowerDevice::PeripheralDevice => "Peripheral Device",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&PowerDevice> for u16 {
-    fn from(up: &PowerDevice) -> u16 {
-        match *up {
-            PowerDevice::PeripheralDevice => 6,
-        }
-    }
-}
-
-impl From<PowerDevice> for u16 {
-    fn from(up: PowerDevice) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&PowerDevice> for u32 {
-    fn from(usage: &PowerDevice) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            PowerDevice::PeripheralDevice => 6,
-        };
-        up | id
-    }
-}
-
-impl From<&PowerDevice> for UsagePage {
-    fn from(_up: &PowerDevice) -> UsagePage {
-        UsagePage::PowerDevice
-    }
-}
-
-impl From<PowerDevice> for UsagePage {
-    fn from(up: PowerDevice) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for PowerDevice {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10528,86 +5792,12 @@ impl BitOr<u16> for PowerDevice {
 #[non_exhaustive]
 pub enum BatterySystem {}
 
-impl AsUsage for BatterySystem {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for BatterySystem {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x85` for [BatterySystem]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for BatterySystem {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             _ => "",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&BatterySystem> for u16 {
-    fn from(up: &BatterySystem) -> u16 {
-        match *up {}
-    }
-}
-
-impl From<BatterySystem> for u16 {
-    fn from(up: BatterySystem) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&BatterySystem> for u32 {
-    fn from(usage: &BatterySystem) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            // Anything without defined usages comes back as Undefined (0x00)
-            _ => 0x00,
-        };
-        up | id
-    }
-}
-
-impl From<&BatterySystem> for UsagePage {
-    fn from(_up: &BatterySystem) -> UsagePage {
-        UsagePage::BatterySystem
-    }
-}
-
-impl From<BatterySystem> for UsagePage {
-    fn from(up: BatterySystem) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for BatterySystem {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10623,87 +5813,12 @@ pub enum BarCodeScanner {
     Undefined,
 }
 
-impl AsUsage for BarCodeScanner {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for BarCodeScanner {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x8C` for [BarCodeScanner]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for BarCodeScanner {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             BarCodeScanner::Undefined => "Undefined",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&BarCodeScanner> for u16 {
-    fn from(up: &BarCodeScanner) -> u16 {
-        match *up {
-            BarCodeScanner::Undefined => 0,
-        }
-    }
-}
-
-impl From<BarCodeScanner> for u16 {
-    fn from(up: BarCodeScanner) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&BarCodeScanner> for u32 {
-    fn from(usage: &BarCodeScanner) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            BarCodeScanner::Undefined => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&BarCodeScanner> for UsagePage {
-    fn from(_up: &BarCodeScanner) -> UsagePage {
-        UsagePage::BarCodeScanner
-    }
-}
-
-impl From<BarCodeScanner> for UsagePage {
-    fn from(up: BarCodeScanner) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for BarCodeScanner {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10719,87 +5834,12 @@ pub enum Scale {
     Undefined,
 }
 
-impl AsUsage for Scale {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Scale {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x8D` for [Scale]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Scale {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             Scale::Undefined => "Undefined",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&Scale> for u16 {
-    fn from(up: &Scale) -> u16 {
-        match *up {
-            Scale::Undefined => 0,
-        }
-    }
-}
-
-impl From<Scale> for u16 {
-    fn from(up: Scale) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Scale> for u32 {
-    fn from(usage: &Scale) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Scale::Undefined => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&Scale> for UsagePage {
-    fn from(_up: &Scale) -> UsagePage {
-        UsagePage::Scale
-    }
-}
-
-impl From<Scale> for UsagePage {
-    fn from(up: Scale) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Scale {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10815,87 +5855,12 @@ pub enum MagneticStripeReading {
     Undefined,
 }
 
-impl AsUsage for MagneticStripeReading {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for MagneticStripeReading {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x8E` for [MagneticStripeReading]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for MagneticStripeReading {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             MagneticStripeReading::Undefined => "Undefined",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&MagneticStripeReading> for u16 {
-    fn from(up: &MagneticStripeReading) -> u16 {
-        match *up {
-            MagneticStripeReading::Undefined => 0,
-        }
-    }
-}
-
-impl From<MagneticStripeReading> for u16 {
-    fn from(up: MagneticStripeReading) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&MagneticStripeReading> for u32 {
-    fn from(usage: &MagneticStripeReading) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            MagneticStripeReading::Undefined => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&MagneticStripeReading> for UsagePage {
-    fn from(_up: &MagneticStripeReading) -> UsagePage {
-        UsagePage::MagneticStripeReading
-    }
-}
-
-impl From<MagneticStripeReading> for UsagePage {
-    fn from(up: MagneticStripeReading) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for MagneticStripeReading {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -10925,28 +5890,6 @@ pub enum CameraControl {
     CameraShutter,
 }
 
-impl AsUsage for CameraControl {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for CameraControl {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x90` for [CameraControl]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for CameraControl {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -10955,63 +5898,6 @@ impl fmt::Display for CameraControl {
             CameraControl::CameraShutter => "Camera Shutter",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&CameraControl> for u16 {
-    fn from(up: &CameraControl) -> u16 {
-        match *up {
-            CameraControl::Undefined => 0,
-            CameraControl::CameraAutofocus => 32,
-            CameraControl::CameraShutter => 33,
-        }
-    }
-}
-
-impl From<CameraControl> for u16 {
-    fn from(up: CameraControl) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&CameraControl> for u32 {
-    fn from(usage: &CameraControl) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            CameraControl::Undefined => 0,
-            CameraControl::CameraAutofocus => 32,
-            CameraControl::CameraShutter => 33,
-        };
-        up | id
-    }
-}
-
-impl From<&CameraControl> for UsagePage {
-    fn from(_up: &CameraControl) -> UsagePage {
-        UsagePage::CameraControl
-    }
-}
-
-impl From<CameraControl> for UsagePage {
-    fn from(up: CameraControl) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for CameraControl {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -11027,87 +5913,12 @@ pub enum ArcadePageOAAF {
     Undefined,
 }
 
-impl AsUsage for ArcadePageOAAF {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for ArcadePageOAAF {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x91` for [ArcadePageOAAF]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for ArcadePageOAAF {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             ArcadePageOAAF::Undefined => "Undefined",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&ArcadePageOAAF> for u16 {
-    fn from(up: &ArcadePageOAAF) -> u16 {
-        match *up {
-            ArcadePageOAAF::Undefined => 0,
-        }
-    }
-}
-
-impl From<ArcadePageOAAF> for u16 {
-    fn from(up: ArcadePageOAAF) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&ArcadePageOAAF> for u32 {
-    fn from(usage: &ArcadePageOAAF) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            ArcadePageOAAF::Undefined => 0,
-        };
-        up | id
-    }
-}
-
-impl From<&ArcadePageOAAF> for UsagePage {
-    fn from(_up: &ArcadePageOAAF) -> UsagePage {
-        UsagePage::ArcadePageOAAF
-    }
-}
-
-impl From<ArcadePageOAAF> for UsagePage {
-    fn from(up: ArcadePageOAAF) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for ArcadePageOAAF {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -11120,86 +5931,12 @@ impl BitOr<u16> for ArcadePageOAAF {
 #[non_exhaustive]
 pub enum GamingDevice {}
 
-impl AsUsage for GamingDevice {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for GamingDevice {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0x92` for [GamingDevice]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for GamingDevice {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
             _ => "",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&GamingDevice> for u16 {
-    fn from(up: &GamingDevice) -> u16 {
-        match *up {}
-    }
-}
-
-impl From<GamingDevice> for u16 {
-    fn from(up: GamingDevice) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&GamingDevice> for u32 {
-    fn from(usage: &GamingDevice) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            // Anything without defined usages comes back as Undefined (0x00)
-            _ => 0x00,
-        };
-        up | id
-    }
-}
-
-impl From<&GamingDevice> for UsagePage {
-    fn from(_up: &GamingDevice) -> UsagePage {
-        UsagePage::GamingDevice
-    }
-}
-
-impl From<GamingDevice> for UsagePage {
-    fn from(up: GamingDevice) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for GamingDevice {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -11231,28 +5968,6 @@ pub enum FIDOAlliance {
     OutputReportData,
 }
 
-impl AsUsage for FIDOAlliance {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for FIDOAlliance {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xF1D0` for [FIDOAlliance]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for FIDOAlliance {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -11262,65 +5977,6 @@ impl fmt::Display for FIDOAlliance {
             FIDOAlliance::OutputReportData => "Output Report Data",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&FIDOAlliance> for u16 {
-    fn from(up: &FIDOAlliance) -> u16 {
-        match *up {
-            FIDOAlliance::Undefined => 0,
-            FIDOAlliance::U2FAuthenticatorDevice => 1,
-            FIDOAlliance::InputReportData => 32,
-            FIDOAlliance::OutputReportData => 33,
-        }
-    }
-}
-
-impl From<FIDOAlliance> for u16 {
-    fn from(up: FIDOAlliance) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&FIDOAlliance> for u32 {
-    fn from(usage: &FIDOAlliance) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            FIDOAlliance::Undefined => 0,
-            FIDOAlliance::U2FAuthenticatorDevice => 1,
-            FIDOAlliance::InputReportData => 32,
-            FIDOAlliance::OutputReportData => 33,
-        };
-        up | id
-    }
-}
-
-impl From<&FIDOAlliance> for UsagePage {
-    fn from(_up: &FIDOAlliance) -> UsagePage {
-        UsagePage::FIDOAlliance
-    }
-}
-
-impl From<FIDOAlliance> for UsagePage {
-    fn from(up: FIDOAlliance) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for FIDOAlliance {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -11556,28 +6212,6 @@ pub enum Wacom {
     WacomDigitizerInfo,
 }
 
-impl AsUsage for Wacom {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for Wacom {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xFF0D` for [Wacom]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for Wacom {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -11689,269 +6323,6 @@ impl fmt::Display for Wacom {
             Wacom::WacomDigitizerInfo => "Wacom Digitizer Info",
         };
         write!(f, "{name}")
-    }
-}
-
-impl From<&Wacom> for u16 {
-    fn from(up: &Wacom) -> u16 {
-        match *up {
-            Wacom::WacomDigitizer => 1,
-            Wacom::WacomPen => 2,
-            Wacom::LightPen => 3,
-            Wacom::TouchScreen => 4,
-            Wacom::TouchPad => 5,
-            Wacom::WhiteBoard => 6,
-            Wacom::CoordinateMeasuringMachine => 7,
-            Wacom::ThreeDDigitizer => 8,
-            Wacom::StereoPlotter => 9,
-            Wacom::ArticulatedArm => 10,
-            Wacom::Armature => 11,
-            Wacom::MultiplePointDigitizer => 12,
-            Wacom::FreeSpaceWand => 13,
-            Wacom::DeviceConfiguration => 14,
-            Wacom::Stylus => 32,
-            Wacom::Puck => 33,
-            Wacom::Finger => 34,
-            Wacom::DeviceSettings => 35,
-            Wacom::TipPressure => 48,
-            Wacom::BarrelPressure => 49,
-            Wacom::InRange => 50,
-            Wacom::Touch => 51,
-            Wacom::Untouch => 52,
-            Wacom::Tap => 53,
-            Wacom::WacomSense => 54,
-            Wacom::DataValid => 55,
-            Wacom::TransducerIndex => 56,
-            Wacom::WacomDigitizerFnKeys => 57,
-            Wacom::ProgramChangeKeys => 58,
-            Wacom::BatteryStrength => 59,
-            Wacom::Invert => 60,
-            Wacom::XTilt => 61,
-            Wacom::YTilt => 62,
-            Wacom::Azimuth => 63,
-            Wacom::Altitude => 64,
-            Wacom::Twist => 65,
-            Wacom::TipSwitch => 66,
-            Wacom::SecondaryTipSwitch => 67,
-            Wacom::BarrelSwitch => 68,
-            Wacom::Eraser => 69,
-            Wacom::TabletPick => 70,
-            Wacom::Confidence => 71,
-            Wacom::Width => 72,
-            Wacom::Height => 73,
-            Wacom::ContactId => 81,
-            Wacom::Inputmode => 82,
-            Wacom::DeviceIndex => 83,
-            Wacom::ContactCount => 84,
-            Wacom::ContactMax => 85,
-            Wacom::ScanTime => 86,
-            Wacom::SurfaceSwitch => 87,
-            Wacom::ButtonSwitch => 88,
-            Wacom::ButtonType => 89,
-            Wacom::SecondaryBarrelSwitch => 90,
-            Wacom::TransducerSerialNumber => 91,
-            Wacom::WacomSerialHi => 92,
-            Wacom::PreferredColorisLocked => 93,
-            Wacom::PreferredLineWidth => 94,
-            Wacom::PreferredLineWidthisLocked => 95,
-            Wacom::PreferredLineStyle => 112,
-            Wacom::PreferredLineStyleisLocked => 113,
-            Wacom::Ink => 114,
-            Wacom::Pencil => 115,
-            Wacom::Highlighter => 116,
-            Wacom::ChiselMarker => 117,
-            Wacom::Brush => 118,
-            Wacom::WacomToolType => 119,
-            Wacom::DigitizerDiagnostic => 128,
-            Wacom::DigitizerError => 129,
-            Wacom::ErrNormalStatus => 130,
-            Wacom::ErrTransducersExceeded => 131,
-            Wacom::ErrFullTransFeaturesUnavail => 132,
-            Wacom::ErrChargeLow => 133,
-            Wacom::X => 304,
-            Wacom::Y => 305,
-            Wacom::WacomDistance => 306,
-            Wacom::WacomTouchStrip => 310,
-            Wacom::WacomTouchStrip2 => 311,
-            Wacom::WacomTouchRing => 312,
-            Wacom::WacomTouchRingStatus => 313,
-            Wacom::WacomAccelerometerX => 1025,
-            Wacom::WacomAccelerometerY => 1026,
-            Wacom::WacomAccelerometerZ => 1027,
-            Wacom::WacomBatteryCharging => 1028,
-            Wacom::WacomTouchOnOff => 1108,
-            Wacom::WacomBatteryLevel => 1083,
-            Wacom::WacomExpressKey00 => 2320,
-            Wacom::WacomExpressKeyCap00 => 2384,
-            Wacom::WacomModeChange => 2432,
-            Wacom::WacomButtonDesktopCenter => 2433,
-            Wacom::WacomButtonOnScreenKeyboard => 2434,
-            Wacom::WacomButtonDisplaySetting => 2435,
-            Wacom::WacomButtonTouchOnOff => 2438,
-            Wacom::WacomButtonHome => 2448,
-            Wacom::WacomButtonUp => 2449,
-            Wacom::WacomButtonDown => 2450,
-            Wacom::WacomButtonLeft => 2451,
-            Wacom::WacomButtonRight => 2452,
-            Wacom::WacomButtonCenter => 2453,
-            Wacom::WacomFingerWheel => 3331,
-            Wacom::WacomOffsetLeft => 3376,
-            Wacom::WacomOffsetTop => 3377,
-            Wacom::WacomOffsetRight => 3378,
-            Wacom::WacomOffsetBottom => 3379,
-            Wacom::WacomDataMode => 4098,
-            Wacom::WacomDigitizerInfo => 4115,
-        }
-    }
-}
-
-impl From<Wacom> for u16 {
-    fn from(up: Wacom) -> u16 {
-        u16::from(&up)
-    }
-}
-
-impl From<&Wacom> for u32 {
-    fn from(usage: &Wacom) -> u32 {
-        let up = UsagePage::from(usage);
-        let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            Wacom::WacomDigitizer => 1,
-            Wacom::WacomPen => 2,
-            Wacom::LightPen => 3,
-            Wacom::TouchScreen => 4,
-            Wacom::TouchPad => 5,
-            Wacom::WhiteBoard => 6,
-            Wacom::CoordinateMeasuringMachine => 7,
-            Wacom::ThreeDDigitizer => 8,
-            Wacom::StereoPlotter => 9,
-            Wacom::ArticulatedArm => 10,
-            Wacom::Armature => 11,
-            Wacom::MultiplePointDigitizer => 12,
-            Wacom::FreeSpaceWand => 13,
-            Wacom::DeviceConfiguration => 14,
-            Wacom::Stylus => 32,
-            Wacom::Puck => 33,
-            Wacom::Finger => 34,
-            Wacom::DeviceSettings => 35,
-            Wacom::TipPressure => 48,
-            Wacom::BarrelPressure => 49,
-            Wacom::InRange => 50,
-            Wacom::Touch => 51,
-            Wacom::Untouch => 52,
-            Wacom::Tap => 53,
-            Wacom::WacomSense => 54,
-            Wacom::DataValid => 55,
-            Wacom::TransducerIndex => 56,
-            Wacom::WacomDigitizerFnKeys => 57,
-            Wacom::ProgramChangeKeys => 58,
-            Wacom::BatteryStrength => 59,
-            Wacom::Invert => 60,
-            Wacom::XTilt => 61,
-            Wacom::YTilt => 62,
-            Wacom::Azimuth => 63,
-            Wacom::Altitude => 64,
-            Wacom::Twist => 65,
-            Wacom::TipSwitch => 66,
-            Wacom::SecondaryTipSwitch => 67,
-            Wacom::BarrelSwitch => 68,
-            Wacom::Eraser => 69,
-            Wacom::TabletPick => 70,
-            Wacom::Confidence => 71,
-            Wacom::Width => 72,
-            Wacom::Height => 73,
-            Wacom::ContactId => 81,
-            Wacom::Inputmode => 82,
-            Wacom::DeviceIndex => 83,
-            Wacom::ContactCount => 84,
-            Wacom::ContactMax => 85,
-            Wacom::ScanTime => 86,
-            Wacom::SurfaceSwitch => 87,
-            Wacom::ButtonSwitch => 88,
-            Wacom::ButtonType => 89,
-            Wacom::SecondaryBarrelSwitch => 90,
-            Wacom::TransducerSerialNumber => 91,
-            Wacom::WacomSerialHi => 92,
-            Wacom::PreferredColorisLocked => 93,
-            Wacom::PreferredLineWidth => 94,
-            Wacom::PreferredLineWidthisLocked => 95,
-            Wacom::PreferredLineStyle => 112,
-            Wacom::PreferredLineStyleisLocked => 113,
-            Wacom::Ink => 114,
-            Wacom::Pencil => 115,
-            Wacom::Highlighter => 116,
-            Wacom::ChiselMarker => 117,
-            Wacom::Brush => 118,
-            Wacom::WacomToolType => 119,
-            Wacom::DigitizerDiagnostic => 128,
-            Wacom::DigitizerError => 129,
-            Wacom::ErrNormalStatus => 130,
-            Wacom::ErrTransducersExceeded => 131,
-            Wacom::ErrFullTransFeaturesUnavail => 132,
-            Wacom::ErrChargeLow => 133,
-            Wacom::X => 304,
-            Wacom::Y => 305,
-            Wacom::WacomDistance => 306,
-            Wacom::WacomTouchStrip => 310,
-            Wacom::WacomTouchStrip2 => 311,
-            Wacom::WacomTouchRing => 312,
-            Wacom::WacomTouchRingStatus => 313,
-            Wacom::WacomAccelerometerX => 1025,
-            Wacom::WacomAccelerometerY => 1026,
-            Wacom::WacomAccelerometerZ => 1027,
-            Wacom::WacomBatteryCharging => 1028,
-            Wacom::WacomTouchOnOff => 1108,
-            Wacom::WacomBatteryLevel => 1083,
-            Wacom::WacomExpressKey00 => 2320,
-            Wacom::WacomExpressKeyCap00 => 2384,
-            Wacom::WacomModeChange => 2432,
-            Wacom::WacomButtonDesktopCenter => 2433,
-            Wacom::WacomButtonOnScreenKeyboard => 2434,
-            Wacom::WacomButtonDisplaySetting => 2435,
-            Wacom::WacomButtonTouchOnOff => 2438,
-            Wacom::WacomButtonHome => 2448,
-            Wacom::WacomButtonUp => 2449,
-            Wacom::WacomButtonDown => 2450,
-            Wacom::WacomButtonLeft => 2451,
-            Wacom::WacomButtonRight => 2452,
-            Wacom::WacomButtonCenter => 2453,
-            Wacom::WacomFingerWheel => 3331,
-            Wacom::WacomOffsetLeft => 3376,
-            Wacom::WacomOffsetTop => 3377,
-            Wacom::WacomOffsetRight => 3378,
-            Wacom::WacomOffsetBottom => 3379,
-            Wacom::WacomDataMode => 4098,
-            Wacom::WacomDigitizerInfo => 4115,
-        };
-        up | id
-    }
-}
-
-impl From<&Wacom> for UsagePage {
-    fn from(_up: &Wacom) -> UsagePage {
-        UsagePage::Wacom
-    }
-}
-
-impl From<Wacom> for UsagePage {
-    fn from(up: Wacom) -> UsagePage {
-        UsagePage::from(&up)
-    }
-}
-
-impl BitOr<u16> for Wacom {
-    type Output = Usage;
-
-    /// A convenience function to combine a Usage Page with
-    /// a value.
-    ///
-    /// This function panics if the Usage ID value results in
-    /// an unknown Usage. Where error checking is required,
-    /// use [UsagePage::to_usage].
-    fn bitor(self, usage: u16) -> Self::Output {
-        let up = u16::from(self) as u32;
-        let u = usage as u32;
-        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
     }
 }
 
@@ -12855,28 +7226,6 @@ pub enum ConsumerDevices {
     ContactMisc,
 }
 
-impl AsUsage for ConsumerDevices {
-    /// Returns the 32 bit Usage value of this Usage
-    fn usage_value(&self) -> u32 {
-        u32::from(self)
-    }
-
-    /// Returns the 16 bit Usage ID value of this Usage
-    fn usage_id_value(&self) -> u16 {
-        u16::from(self)
-    }
-}
-
-impl AsUsagePage for ConsumerDevices {
-    /// Returns the 16 bit value of this UsagePage
-    ///
-    /// This value is `0xC` for [ConsumerDevices]
-    fn usage_page_value(&self) -> u16 {
-        let up = UsagePage::from(self);
-        u16::from(up)
-    }
-}
-
 impl fmt::Display for ConsumerDevices {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
@@ -13330,6 +7679,4293 @@ impl fmt::Display for ConsumerDevices {
             ConsumerDevices::ContactMisc => "Contact Misc.",
         };
         write!(f, "{name}")
+    }
+}
+
+/// *Usage Page `0x12`: "Eye and Head Trackers"*
+///
+/// **This enum is autogenerated from the HID Usage Tables**.
+/// ```
+/// # use hidreport::hut::*;
+/// let u1 = Usage::EyeandHeadTrackers { usage: EyeandHeadTrackers::TrackingData };
+/// let u2 = Usage::new_from_page_and_id(0x12, 0x10).unwrap();
+/// assert_eq!(u1, u2);
+///
+/// assert_eq!(0x12, u1.usage_page_value());
+/// assert_eq!(0x10, u1.usage_id_value());
+/// assert_eq!((0x12 << 16) | 0x10, u1.usage_value());
+/// ```
+///
+#[allow(non_camel_case_types)]
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum EyeandHeadTrackers {
+    /// Usage ID `0x1`: "Eye Tracker"
+    EyeTracker,
+    /// Usage ID `0x2`: "Head Tracker"
+    HeadTracker,
+    /// Usage ID `0x10`: "Tracking Data"
+    TrackingData,
+    /// Usage ID `0x11`: "Capabilities"
+    Capabilities,
+    /// Usage ID `0x12`: "Configuration"
+    Configuration,
+    /// Usage ID `0x13`: "Status"
+    Status,
+    /// Usage ID `0x14`: "Control"
+    Control,
+    /// Usage ID `0x20`: "Sensor Timestamp"
+    SensorTimestamp,
+    /// Usage ID `0x21`: "Position X"
+    PositionX,
+    /// Usage ID `0x22`: "Position Y"
+    PositionY,
+    /// Usage ID `0x23`: "Position Z"
+    PositionZ,
+    /// Usage ID `0x24`: "Gaze Point"
+    GazePoint,
+    /// Usage ID `0x25`: "Left Eye Position"
+    LeftEyePosition,
+    /// Usage ID `0x26`: "Right Eye Position"
+    RightEyePosition,
+    /// Usage ID `0x27`: "Head Position"
+    HeadPosition,
+    /// Usage ID `0x28`: "Head Direction Point"
+    HeadDirectionPoint,
+    /// Usage ID `0x29`: "Rotation about X axis"
+    RotationaboutXaxis,
+    /// Usage ID `0x2A`: "Rotation about Y axis"
+    RotationaboutYaxis,
+    /// Usage ID `0x2B`: "Rotation about Z axis"
+    RotationaboutZaxis,
+    /// Usage ID `0x100`: "Tracker Quality"
+    TrackerQuality,
+    /// Usage ID `0x101`: "Minimum Tracking Distance"
+    MinimumTrackingDistance,
+    /// Usage ID `0x102`: "Optimum Tracking Distance"
+    OptimumTrackingDistance,
+    /// Usage ID `0x103`: "Maximum Tracking Distance"
+    MaximumTrackingDistance,
+    /// Usage ID `0x104`: "Maximum Screen Plane Width"
+    MaximumScreenPlaneWidth,
+    /// Usage ID `0x105`: "Maximum Screen Plane Height"
+    MaximumScreenPlaneHeight,
+    /// Usage ID `0x200`: "Display Manufacturer ID"
+    DisplayManufacturerID,
+    /// Usage ID `0x201`: "Display Product ID"
+    DisplayProductID,
+    /// Usage ID `0x202`: "Display Serial Number"
+    DisplaySerialNumber,
+    /// Usage ID `0x203`: "Display Manufacturer Date"
+    DisplayManufacturerDate,
+    /// Usage ID `0x204`: "Calibrated Screen Width"
+    CalibratedScreenWidth,
+    /// Usage ID `0x205`: "Calibrated Screen Height"
+    CalibratedScreenHeight,
+    /// Usage ID `0x300`: "Sampling Frequency"
+    SamplingFrequency,
+    /// Usage ID `0x301`: "Configuration Status"
+    ConfigurationStatus,
+    /// Usage ID `0x400`: "Device Mode Request"
+    DeviceModeRequest,
+}
+
+impl fmt::Display for EyeandHeadTrackers {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let name = match self {
+            EyeandHeadTrackers::EyeTracker => "Eye Tracker",
+            EyeandHeadTrackers::HeadTracker => "Head Tracker",
+            EyeandHeadTrackers::TrackingData => "Tracking Data",
+            EyeandHeadTrackers::Capabilities => "Capabilities",
+            EyeandHeadTrackers::Configuration => "Configuration",
+            EyeandHeadTrackers::Status => "Status",
+            EyeandHeadTrackers::Control => "Control",
+            EyeandHeadTrackers::SensorTimestamp => "Sensor Timestamp",
+            EyeandHeadTrackers::PositionX => "Position X",
+            EyeandHeadTrackers::PositionY => "Position Y",
+            EyeandHeadTrackers::PositionZ => "Position Z",
+            EyeandHeadTrackers::GazePoint => "Gaze Point",
+            EyeandHeadTrackers::LeftEyePosition => "Left Eye Position",
+            EyeandHeadTrackers::RightEyePosition => "Right Eye Position",
+            EyeandHeadTrackers::HeadPosition => "Head Position",
+            EyeandHeadTrackers::HeadDirectionPoint => "Head Direction Point",
+            EyeandHeadTrackers::RotationaboutXaxis => "Rotation about X axis",
+            EyeandHeadTrackers::RotationaboutYaxis => "Rotation about Y axis",
+            EyeandHeadTrackers::RotationaboutZaxis => "Rotation about Z axis",
+            EyeandHeadTrackers::TrackerQuality => "Tracker Quality",
+            EyeandHeadTrackers::MinimumTrackingDistance => "Minimum Tracking Distance",
+            EyeandHeadTrackers::OptimumTrackingDistance => "Optimum Tracking Distance",
+            EyeandHeadTrackers::MaximumTrackingDistance => "Maximum Tracking Distance",
+            EyeandHeadTrackers::MaximumScreenPlaneWidth => "Maximum Screen Plane Width",
+            EyeandHeadTrackers::MaximumScreenPlaneHeight => "Maximum Screen Plane Height",
+            EyeandHeadTrackers::DisplayManufacturerID => "Display Manufacturer ID",
+            EyeandHeadTrackers::DisplayProductID => "Display Product ID",
+            EyeandHeadTrackers::DisplaySerialNumber => "Display Serial Number",
+            EyeandHeadTrackers::DisplayManufacturerDate => "Display Manufacturer Date",
+            EyeandHeadTrackers::CalibratedScreenWidth => "Calibrated Screen Width",
+            EyeandHeadTrackers::CalibratedScreenHeight => "Calibrated Screen Height",
+            EyeandHeadTrackers::SamplingFrequency => "Sampling Frequency",
+            EyeandHeadTrackers::ConfigurationStatus => "Configuration Status",
+            EyeandHeadTrackers::DeviceModeRequest => "Device Mode Request",
+        };
+        write!(f, "{name}")
+    }
+}
+
+impl AsUsage for Undefined {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Undefined {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x0` for [Undefined]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Undefined> for u16 {
+    fn from(up: &Undefined) -> u16 {
+        match *up {
+            Undefined::Undefined => 0,
+        }
+    }
+}
+
+impl From<Undefined> for u16 {
+    fn from(up: Undefined) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Undefined> for u32 {
+    fn from(usage: &Undefined) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Undefined> for UsagePage {
+    fn from(_up: &Undefined) -> UsagePage {
+        UsagePage::Undefined
+    }
+}
+
+impl From<Undefined> for UsagePage {
+    fn from(up: Undefined) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Undefined {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for GenericDesktop {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for GenericDesktop {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x1` for [GenericDesktop]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&GenericDesktop> for u16 {
+    fn from(up: &GenericDesktop) -> u16 {
+        match *up {
+            GenericDesktop::Undefined => 0,
+            GenericDesktop::Pointer => 1,
+            GenericDesktop::Mouse => 2,
+            GenericDesktop::Joystick => 4,
+            GenericDesktop::GamePad => 5,
+            GenericDesktop::Keyboard => 6,
+            GenericDesktop::Keypad => 7,
+            GenericDesktop::MultiAxis => 8,
+            GenericDesktop::WaterCoolingDevice => 10,
+            GenericDesktop::ComputerChassisDevice => 11,
+            GenericDesktop::WirelessRadioControls => 12,
+            GenericDesktop::PortableDeviceControl => 13,
+            GenericDesktop::SystemMultiAxisController => 14,
+            GenericDesktop::SpatialController => 15,
+            GenericDesktop::AssistiveControl => 16,
+            GenericDesktop::X => 48,
+            GenericDesktop::Y => 49,
+            GenericDesktop::Z => 50,
+            GenericDesktop::Rx => 51,
+            GenericDesktop::Ry => 52,
+            GenericDesktop::Rz => 53,
+            GenericDesktop::Slider => 54,
+            GenericDesktop::Dial => 55,
+            GenericDesktop::Wheel => 56,
+            GenericDesktop::Hatswitch => 57,
+            GenericDesktop::CountedBuffer => 58,
+            GenericDesktop::ByteCount => 59,
+            GenericDesktop::Motion => 60,
+            GenericDesktop::Start => 61,
+            GenericDesktop::Select => 62,
+            GenericDesktop::Vx => 64,
+            GenericDesktop::Vy => 65,
+            GenericDesktop::Vz => 66,
+            GenericDesktop::Vbrx => 67,
+            GenericDesktop::Vbry => 68,
+            GenericDesktop::Vbrz => 69,
+            GenericDesktop::Vno => 70,
+            GenericDesktop::Feature => 71,
+            GenericDesktop::ResolutionMultiplier => 72,
+            GenericDesktop::Qx => 73,
+            GenericDesktop::Qy => 74,
+            GenericDesktop::Qz => 75,
+            GenericDesktop::Qw => 76,
+            GenericDesktop::SystemControl => 128,
+            GenericDesktop::SystemPowerDown => 129,
+            GenericDesktop::SystemSleep => 130,
+            GenericDesktop::SystemWakeUp => 131,
+            GenericDesktop::SystemContextMenu => 132,
+            GenericDesktop::SystemMainMenu => 133,
+            GenericDesktop::SystemAppMenu => 134,
+            GenericDesktop::SystemHelpMenu => 135,
+            GenericDesktop::SystemMenuExit => 136,
+            GenericDesktop::SystemMenuSelect => 137,
+            GenericDesktop::SystemMenuRight => 138,
+            GenericDesktop::SystemMenuLeft => 139,
+            GenericDesktop::SystemMenuUp => 140,
+            GenericDesktop::SystemMenuDown => 141,
+            GenericDesktop::SystemColdRestart => 142,
+            GenericDesktop::SystemWarmRestart => 143,
+            GenericDesktop::DPadUp => 144,
+            GenericDesktop::DPadDown => 145,
+            GenericDesktop::DPadRight => 146,
+            GenericDesktop::DPadLeft => 147,
+            GenericDesktop::IndexTrigger => 148,
+            GenericDesktop::PalmTrigger => 149,
+            GenericDesktop::Thumbstick => 150,
+            GenericDesktop::SystemFunctionShift => 151,
+            GenericDesktop::SystemFunctionShiftLock => 152,
+            GenericDesktop::SystemFunctionShiftLockIndicator => 153,
+            GenericDesktop::SystemDismissNotification => 154,
+            GenericDesktop::SystemDock => 160,
+            GenericDesktop::SystemUnDock => 161,
+            GenericDesktop::SystemSetup => 162,
+            GenericDesktop::SystemBreak => 163,
+            GenericDesktop::SystemDebuggerBreak => 164,
+            GenericDesktop::ApplicationBreak => 165,
+            GenericDesktop::ApplicationDebuggerBreak => 166,
+            GenericDesktop::SystemSpeakerMute => 167,
+            GenericDesktop::SystemHibernate => 168,
+            GenericDesktop::SystemDisplayInvert => 176,
+            GenericDesktop::SystemDisplayInternal => 177,
+            GenericDesktop::SystemDisplayExternal => 178,
+            GenericDesktop::SystemDisplayBoth => 179,
+            GenericDesktop::SystemDisplayDual => 180,
+            GenericDesktop::SystemDisplayToggleInternalExternal => 181,
+            GenericDesktop::SystemDisplaySwapPrimarySecondary => 182,
+            GenericDesktop::SystemDisplayLCDAutoScale => 183,
+            GenericDesktop::SensorZone => 192,
+            GenericDesktop::RPM => 193,
+            GenericDesktop::CoolantLevel => 194,
+            GenericDesktop::CoolantCriticalLevel => 195,
+            GenericDesktop::CoolantPump => 196,
+            GenericDesktop::ChassisEnclosure => 197,
+            GenericDesktop::WirelessRadioButton => 198,
+            GenericDesktop::WirelessRadioLED => 199,
+            GenericDesktop::WirelessRadioSliderSwitch => 200,
+            GenericDesktop::SystemDisplayRotationLockButton => 201,
+            GenericDesktop::SystemDisplayRotationLockSliderSwitch => 202,
+            GenericDesktop::ControlEnable => 203,
+        }
+    }
+}
+
+impl From<GenericDesktop> for u16 {
+    fn from(up: GenericDesktop) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&GenericDesktop> for u32 {
+    fn from(usage: &GenericDesktop) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&GenericDesktop> for UsagePage {
+    fn from(_up: &GenericDesktop) -> UsagePage {
+        UsagePage::GenericDesktop
+    }
+}
+
+impl From<GenericDesktop> for UsagePage {
+    fn from(up: GenericDesktop) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for GenericDesktop {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for SimulationControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for SimulationControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x2` for [SimulationControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&SimulationControls> for u16 {
+    fn from(up: &SimulationControls) -> u16 {
+        match *up {
+            SimulationControls::Undefined => 0,
+            SimulationControls::FlightSimulationDevice => 1,
+            SimulationControls::AutomobileSimulationDevice => 2,
+            SimulationControls::TankSimulationDevice => 3,
+            SimulationControls::SpaceshipSimulationDevice => 4,
+            SimulationControls::SubmarineSimulationDevice => 5,
+            SimulationControls::SailingSimulationDevice => 6,
+            SimulationControls::MotorcycleSimulationDevice => 7,
+            SimulationControls::SportsSimulationDevice => 8,
+            SimulationControls::AirplaneSimulationDevice => 9,
+            SimulationControls::HelicopterSimulationDevice => 10,
+            SimulationControls::MagicCarpetSimulationDevice => 11,
+            SimulationControls::Bicycle => 12,
+            SimulationControls::FlightControlStick => 32,
+            SimulationControls::FlightStick => 33,
+            SimulationControls::CyclicControl => 34,
+            SimulationControls::CyclicTrim => 35,
+            SimulationControls::FlightYoke => 36,
+            SimulationControls::TrackControl => 37,
+            SimulationControls::DrivingControl => 38,
+            SimulationControls::Aileron => 176,
+            SimulationControls::AileronTrim => 177,
+            SimulationControls::AntiTorqueControl => 178,
+            SimulationControls::Autopilotenable => 179,
+            SimulationControls::ChaffRelease => 180,
+            SimulationControls::CollectiveControl => 181,
+            SimulationControls::DiveBrake => 182,
+            SimulationControls::ElectronicCounterMeasures => 183,
+            SimulationControls::Elevator => 184,
+            SimulationControls::ElevatorTrim => 185,
+            SimulationControls::Rudder => 186,
+            SimulationControls::Throttle => 187,
+            SimulationControls::FlightCommunication => 188,
+            SimulationControls::FlareRelease => 189,
+            SimulationControls::LandingGear => 190,
+            SimulationControls::ToeBrake => 191,
+            SimulationControls::Trigger => 192,
+            SimulationControls::WeaponsArm => 193,
+            SimulationControls::WeaponsSelect => 194,
+            SimulationControls::WingFlaps => 195,
+            SimulationControls::Accelerator => 196,
+            SimulationControls::Brake => 197,
+            SimulationControls::Clutch => 198,
+            SimulationControls::Shifter => 199,
+            SimulationControls::Steering => 200,
+            SimulationControls::TurretDirection => 201,
+            SimulationControls::BarrelElevation => 202,
+            SimulationControls::DivePlane => 203,
+            SimulationControls::Ballast => 204,
+            SimulationControls::BicycleCrank => 205,
+            SimulationControls::HandleBars => 206,
+            SimulationControls::FrontBrake => 207,
+            SimulationControls::RearBrake => 208,
+        }
+    }
+}
+
+impl From<SimulationControls> for u16 {
+    fn from(up: SimulationControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&SimulationControls> for u32 {
+    fn from(usage: &SimulationControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&SimulationControls> for UsagePage {
+    fn from(_up: &SimulationControls) -> UsagePage {
+        UsagePage::SimulationControls
+    }
+}
+
+impl From<SimulationControls> for UsagePage {
+    fn from(up: SimulationControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for SimulationControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for VRControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for VRControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x3` for [VRControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&VRControls> for u16 {
+    fn from(up: &VRControls) -> u16 {
+        match *up {
+            VRControls::Unidentified => 0,
+            VRControls::Belt => 1,
+            VRControls::BodySuit => 2,
+            VRControls::Flexor => 3,
+            VRControls::Glove => 4,
+            VRControls::HeadTracker => 5,
+            VRControls::HeadMountedDisplay => 6,
+            VRControls::HandTracker => 7,
+            VRControls::Oculometer => 8,
+            VRControls::Vest => 9,
+            VRControls::AnimatronicDevice => 10,
+            VRControls::StereoEnable => 32,
+            VRControls::DisplayEnable => 33,
+        }
+    }
+}
+
+impl From<VRControls> for u16 {
+    fn from(up: VRControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&VRControls> for u32 {
+    fn from(usage: &VRControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&VRControls> for UsagePage {
+    fn from(_up: &VRControls) -> UsagePage {
+        UsagePage::VRControls
+    }
+}
+
+impl From<VRControls> for UsagePage {
+    fn from(up: VRControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for VRControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for SportsControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for SportsControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x4` for [SportsControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&SportsControls> for u16 {
+    fn from(up: &SportsControls) -> u16 {
+        match *up {
+            SportsControls::Unidentified => 0,
+            SportsControls::BaseballBat => 1,
+            SportsControls::GolfClub => 2,
+            SportsControls::RowingMachine => 3,
+            SportsControls::Treadmill => 4,
+            SportsControls::Oar => 48,
+            SportsControls::Slope => 49,
+            SportsControls::Rate => 50,
+            SportsControls::StickSpeed => 51,
+            SportsControls::StickFaceAngle => 52,
+            SportsControls::StickHeelToe => 53,
+            SportsControls::StickFollowThrough => 54,
+            SportsControls::StickTempo => 55,
+            SportsControls::StickType => 56,
+            SportsControls::StickHeight => 57,
+            SportsControls::Putter => 80,
+            SportsControls::OneIron => 81,
+            SportsControls::TwoIron => 82,
+            SportsControls::ThreeIron => 83,
+            SportsControls::FourIron => 84,
+            SportsControls::FiveIron => 85,
+            SportsControls::SixIron => 86,
+            SportsControls::SevenIron => 87,
+            SportsControls::EightIron => 88,
+            SportsControls::NineIron => 89,
+            SportsControls::One0Iron => 90,
+            SportsControls::One1Iron => 91,
+            SportsControls::SandWedge => 92,
+            SportsControls::LoftWedge => 93,
+            SportsControls::PowerWedge => 94,
+            SportsControls::OneWood => 95,
+            SportsControls::ThreeWood => 96,
+            SportsControls::FiveWood => 97,
+            SportsControls::SevenWood => 98,
+            SportsControls::NineWood => 99,
+        }
+    }
+}
+
+impl From<SportsControls> for u16 {
+    fn from(up: SportsControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&SportsControls> for u32 {
+    fn from(usage: &SportsControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&SportsControls> for UsagePage {
+    fn from(_up: &SportsControls) -> UsagePage {
+        UsagePage::SportsControls
+    }
+}
+
+impl From<SportsControls> for UsagePage {
+    fn from(up: SportsControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for SportsControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for GamingControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for GamingControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x5` for [GamingControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&GamingControls> for u16 {
+    fn from(up: &GamingControls) -> u16 {
+        match *up {
+            GamingControls::Undefined => 0,
+            GamingControls::ThreeDGameController => 1,
+            GamingControls::PinballDevice => 2,
+            GamingControls::GunDevice => 3,
+            GamingControls::PointofView => 32,
+            GamingControls::TurnRightLeft => 33,
+            GamingControls::PitchForwardBackward => 34,
+            GamingControls::RollRightLeft => 35,
+            GamingControls::MoveRightLeft => 36,
+            GamingControls::MoveForwardBackward => 37,
+            GamingControls::MoveUpDown => 38,
+            GamingControls::LeanRightLeft => 39,
+            GamingControls::LeanForwardBackward => 40,
+            GamingControls::HeightofPOV => 41,
+            GamingControls::Flipper => 42,
+            GamingControls::SecondaryFlipper => 43,
+            GamingControls::Bump => 44,
+            GamingControls::NewGame => 45,
+            GamingControls::ShootBall => 46,
+            GamingControls::Player => 47,
+            GamingControls::GunBolt => 48,
+            GamingControls::GunClip => 49,
+            GamingControls::GunSelector => 50,
+            GamingControls::GunSingleShot => 51,
+            GamingControls::GunBurst => 52,
+            GamingControls::GunAutomatic => 53,
+            GamingControls::GunSafety => 54,
+            GamingControls::GamepadFireJump => 55,
+            GamingControls::GamepadTrigger => 57,
+            GamingControls::Formfittinggamepad => 58,
+        }
+    }
+}
+
+impl From<GamingControls> for u16 {
+    fn from(up: GamingControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&GamingControls> for u32 {
+    fn from(usage: &GamingControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&GamingControls> for UsagePage {
+    fn from(_up: &GamingControls) -> UsagePage {
+        UsagePage::GamingControls
+    }
+}
+
+impl From<GamingControls> for UsagePage {
+    fn from(up: GamingControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for GamingControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for GenericDeviceControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for GenericDeviceControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x6` for [GenericDeviceControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&GenericDeviceControls> for u16 {
+    fn from(up: &GenericDeviceControls) -> u16 {
+        match *up {
+            GenericDeviceControls::Unidentified => 0,
+            GenericDeviceControls::BackgroundControls => 1,
+            GenericDeviceControls::BatteryStrength => 32,
+            GenericDeviceControls::WirelessChannel => 33,
+            GenericDeviceControls::WirelessID => 34,
+            GenericDeviceControls::DiscoverWirelessControl => 35,
+            GenericDeviceControls::SecurityCodeCharacterEntered => 36,
+            GenericDeviceControls::SecurityCodeCharacterErased => 37,
+            GenericDeviceControls::SecurityCodeCleared => 38,
+            GenericDeviceControls::SequenceID => 39,
+            GenericDeviceControls::SequenceIDReset => 40,
+            GenericDeviceControls::RFSignalStrength => 41,
+            GenericDeviceControls::SoftwareVersion => 42,
+            GenericDeviceControls::ProtocolVersion => 43,
+            GenericDeviceControls::HardwareVersion => 44,
+            GenericDeviceControls::Major => 45,
+            GenericDeviceControls::Minor => 46,
+            GenericDeviceControls::Revision => 47,
+            GenericDeviceControls::Handedness => 48,
+            GenericDeviceControls::EitherHand => 49,
+            GenericDeviceControls::LeftHand => 50,
+            GenericDeviceControls::RightHand => 51,
+            GenericDeviceControls::BothHands => 52,
+            GenericDeviceControls::GripPoseOffset => 64,
+            GenericDeviceControls::PointerPoseOffset => 65,
+        }
+    }
+}
+
+impl From<GenericDeviceControls> for u16 {
+    fn from(up: GenericDeviceControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&GenericDeviceControls> for u32 {
+    fn from(usage: &GenericDeviceControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&GenericDeviceControls> for UsagePage {
+    fn from(_up: &GenericDeviceControls) -> UsagePage {
+        UsagePage::GenericDeviceControls
+    }
+}
+
+impl From<GenericDeviceControls> for UsagePage {
+    fn from(up: GenericDeviceControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for GenericDeviceControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Keyboard {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Keyboard {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x7` for [Keyboard]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Keyboard> for u16 {
+    fn from(up: &Keyboard) -> u16 {
+        match *up {
+            Keyboard::ErrorRollOver => 1,
+            Keyboard::POSTFail => 2,
+            Keyboard::ErrorUndefine => 3,
+            Keyboard::aAndA => 4,
+            Keyboard::bAndB => 5,
+            Keyboard::cAndC => 6,
+            Keyboard::dAndD => 7,
+            Keyboard::eAndE => 8,
+            Keyboard::fAndF => 9,
+            Keyboard::gAndG => 10,
+            Keyboard::hAndH => 11,
+            Keyboard::iAndI => 12,
+            Keyboard::jAndJ => 13,
+            Keyboard::kAndK => 14,
+            Keyboard::lAndL => 15,
+            Keyboard::mAndM => 16,
+            Keyboard::nAndN => 17,
+            Keyboard::oAndO => 18,
+            Keyboard::pAndP => 19,
+            Keyboard::qAndQ => 20,
+            Keyboard::rAndR => 21,
+            Keyboard::sAndS => 22,
+            Keyboard::tAndT => 23,
+            Keyboard::uAndU => 24,
+            Keyboard::vAndV => 25,
+            Keyboard::wAndW => 26,
+            Keyboard::xAndX => 27,
+            Keyboard::yAndY => 28,
+            Keyboard::zAndZ => 29,
+            Keyboard::OneAndExclamationMark => 30,
+            Keyboard::TwoAndAt => 31,
+            Keyboard::ThreeAndHash => 32,
+            Keyboard::FourAndDollar => 33,
+            Keyboard::FiveAndPercent => 34,
+            Keyboard::SixAndCaret => 35,
+            Keyboard::SevenAndAmpersand => 36,
+            Keyboard::EightAndStar => 37,
+            Keyboard::NineAndOpenParenthesis => 38,
+            Keyboard::ZeroAndCloseParenthesis => 39,
+            Keyboard::ReturnOpenParenthesisENTERCloseParenthesis => 40,
+            Keyboard::ESCAPE => 41,
+            Keyboard::DELETEOpenParenthesisBackspaceCloseParenthesis => 42,
+            Keyboard::Tab => 43,
+            Keyboard::Spacebar => 44,
+            Keyboard::MinusAndOpenParenthesisunderscoreCloseParenthesis => 45,
+            Keyboard::EqualsAndPlus => 46,
+            Keyboard::OpenBracketAndOpenBrace => 47,
+            Keyboard::CloseBracketAndCloseBrace => 48,
+            Keyboard::BackslashAndPipe => 49,
+            Keyboard::NonMinusUSHashAndTilde => 50,
+            Keyboard::SemicolonAndColon => 51,
+            Keyboard::SingleQuoteAndDoubleQuote => 52,
+            Keyboard::GraveAccentAndTilde => 53,
+            Keyboard::KeyboardCommaAndLessThan => 54,
+            Keyboard::PeriodAndGreaterThan => 55,
+            Keyboard::SlashAndQuestionMark => 56,
+            Keyboard::CapsLock => 57,
+            Keyboard::F1 => 58,
+            Keyboard::F2 => 59,
+            Keyboard::F3 => 60,
+            Keyboard::F4 => 61,
+            Keyboard::F5 => 62,
+            Keyboard::F6 => 63,
+            Keyboard::F7 => 64,
+            Keyboard::F8 => 65,
+            Keyboard::F9 => 66,
+            Keyboard::F10 => 67,
+            Keyboard::F11 => 68,
+            Keyboard::F12 => 69,
+            Keyboard::PrintScreen => 70,
+            Keyboard::ScrollLock => 71,
+            Keyboard::Pause => 72,
+            Keyboard::Insert => 73,
+            Keyboard::Home => 74,
+            Keyboard::PageUp => 75,
+            Keyboard::DeleteForward => 76,
+            Keyboard::End => 77,
+            Keyboard::PageDown => 78,
+            Keyboard::RightArrow => 79,
+            Keyboard::LeftArrow => 80,
+            Keyboard::DownArrow => 81,
+            Keyboard::UpArrow => 82,
+            Keyboard::KeypadNumLockAndClear => 83,
+            Keyboard::KeypadSlash => 84,
+            Keyboard::KeypadStar => 85,
+            Keyboard::KeypadMinus => 86,
+            Keyboard::KeypadPlus => 87,
+            Keyboard::KeypadENTER => 88,
+            Keyboard::Keypad1AndEnd => 89,
+            Keyboard::Keypad2AndDownArrow => 90,
+            Keyboard::Keypad3AndPageDn => 91,
+            Keyboard::Keypad4AndLeftArrow => 92,
+            Keyboard::Keypad5 => 93,
+            Keyboard::Keypad6AndRightArrow => 94,
+            Keyboard::Keypad7AndHome => 95,
+            Keyboard::Keypad8AndUpArrow => 96,
+            Keyboard::Keypad9AndPageUp => 97,
+            Keyboard::Keypad0AndInsert => 98,
+            Keyboard::KeypadPeriodAndDelete => 99,
+            Keyboard::NonMinusUSBackslashAndPipe => 100,
+            Keyboard::Application => 101,
+            Keyboard::Power => 102,
+            Keyboard::KeypadEquals => 103,
+            Keyboard::F13 => 104,
+            Keyboard::F14 => 105,
+            Keyboard::F15 => 106,
+            Keyboard::F16 => 107,
+            Keyboard::F17 => 108,
+            Keyboard::F18 => 109,
+            Keyboard::F19 => 110,
+            Keyboard::F20 => 111,
+            Keyboard::F21 => 112,
+            Keyboard::F22 => 113,
+            Keyboard::F23 => 114,
+            Keyboard::F24 => 115,
+            Keyboard::Execute => 116,
+            Keyboard::Help => 117,
+            Keyboard::Menu => 118,
+            Keyboard::Select => 119,
+            Keyboard::Stop => 120,
+            Keyboard::Again => 121,
+            Keyboard::Undo => 122,
+            Keyboard::Cut => 123,
+            Keyboard::Copy => 124,
+            Keyboard::Paste => 125,
+            Keyboard::Find => 126,
+            Keyboard::Mute => 127,
+            Keyboard::VolumeUp => 128,
+            Keyboard::VolumeDown => 129,
+            Keyboard::LockingCapsLock => 130,
+            Keyboard::LockingNumLock => 131,
+            Keyboard::LockingScrollLock => 132,
+            Keyboard::KeypadComma => 133,
+            Keyboard::KeypadEqualSign => 134,
+            Keyboard::Kanji1 => 135,
+            Keyboard::Kanji2 => 136,
+            Keyboard::Kanji3 => 137,
+            Keyboard::Kanji4 => 138,
+            Keyboard::Kanji5 => 139,
+            Keyboard::Kanji6 => 140,
+            Keyboard::Kanji7 => 141,
+            Keyboard::Kanji8 => 142,
+            Keyboard::Kanji9 => 143,
+            Keyboard::LANG1 => 144,
+            Keyboard::LANG2 => 145,
+            Keyboard::LANG3 => 146,
+            Keyboard::LANG4 => 147,
+            Keyboard::LANG5 => 148,
+            Keyboard::LANG6 => 149,
+            Keyboard::LANG7 => 150,
+            Keyboard::LANG8 => 151,
+            Keyboard::LANG9 => 152,
+            Keyboard::AlternateErase => 153,
+            Keyboard::SysReqSlashAttention => 154,
+            Keyboard::Cancel => 155,
+            Keyboard::Clear => 156,
+            Keyboard::Prior => 157,
+            Keyboard::Return => 158,
+            Keyboard::Separator => 159,
+            Keyboard::Out => 160,
+            Keyboard::Oper => 161,
+            Keyboard::ClearSlashAgain => 162,
+            Keyboard::CrSelSlashProps => 163,
+            Keyboard::ExSel => 164,
+            Keyboard::LeftControl => 224,
+            Keyboard::LeftShift => 225,
+            Keyboard::LeftAlt => 226,
+            Keyboard::LeftGUI => 227,
+            Keyboard::RightControl => 228,
+            Keyboard::RightShift => 229,
+            Keyboard::RightAlt => 230,
+            Keyboard::RightGUI => 231,
+        }
+    }
+}
+
+impl From<Keyboard> for u16 {
+    fn from(up: Keyboard) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Keyboard> for u32 {
+    fn from(usage: &Keyboard) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Keyboard> for UsagePage {
+    fn from(_up: &Keyboard) -> UsagePage {
+        UsagePage::Keyboard
+    }
+}
+
+impl From<Keyboard> for UsagePage {
+    fn from(up: Keyboard) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Keyboard {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for LEDs {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for LEDs {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x8` for [LEDs]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&LEDs> for u16 {
+    fn from(up: &LEDs) -> u16 {
+        match *up {
+            LEDs::Undefined => 0,
+            LEDs::NumLock => 1,
+            LEDs::CapsLock => 2,
+            LEDs::ScrollLock => 3,
+            LEDs::Compose => 4,
+            LEDs::Kana => 5,
+            LEDs::Power => 6,
+            LEDs::Shift => 7,
+            LEDs::DoNotDisturb => 8,
+            LEDs::Mute => 9,
+            LEDs::ToneEnable => 10,
+            LEDs::HighCutFilter => 11,
+            LEDs::LowCutFilter => 12,
+            LEDs::EqualizerEnable => 13,
+            LEDs::SoundFieldOn => 14,
+            LEDs::SurroundfieldOn => 15,
+            LEDs::Repeat => 16,
+            LEDs::Stereo => 17,
+            LEDs::SamplingRateDetect => 18,
+            LEDs::Spinning => 19,
+            LEDs::CAV => 20,
+            LEDs::CLV => 21,
+            LEDs::RecordingFormatDetect => 22,
+            LEDs::OffHook => 23,
+            LEDs::Ring => 24,
+            LEDs::MessageWaiting => 25,
+            LEDs::DataMode => 26,
+            LEDs::BatteryOperation => 27,
+            LEDs::BatteryOK => 28,
+            LEDs::BatteryLow => 29,
+            LEDs::Speaker => 30,
+            LEDs::HeadSet => 31,
+            LEDs::Hold => 32,
+            LEDs::Microphone => 33,
+            LEDs::Coverage => 34,
+            LEDs::NightMode => 35,
+            LEDs::SendCalls => 36,
+            LEDs::CallPickup => 37,
+            LEDs::Conference => 38,
+            LEDs::Standby => 39,
+            LEDs::CameraOn => 40,
+            LEDs::CameraOff => 41,
+            LEDs::OnLine => 42,
+            LEDs::OffLine => 43,
+            LEDs::Busy => 44,
+            LEDs::Ready => 45,
+            LEDs::PaperOut => 46,
+            LEDs::PaperJam => 47,
+            LEDs::Remote => 48,
+            LEDs::Forward => 49,
+            LEDs::Reverse => 50,
+            LEDs::Stop => 51,
+            LEDs::Rewind => 52,
+            LEDs::FastForward => 53,
+            LEDs::Play => 54,
+            LEDs::Pause => 55,
+            LEDs::Record => 56,
+            LEDs::Error => 57,
+            LEDs::UsageSelectedIndicator => 58,
+            LEDs::UsageInUseIndicator => 59,
+            LEDs::UsageMultiModeIndicator => 60,
+            LEDs::IndicatorOn => 61,
+            LEDs::IndicatorFlash => 62,
+            LEDs::IndicatorSlowBlink => 63,
+            LEDs::IndicatorFastBlink => 64,
+            LEDs::IndicatorOff => 65,
+            LEDs::FlashOnTime => 66,
+            LEDs::SlowBlinkOnTime => 67,
+            LEDs::SlowBlinkOffTime => 68,
+            LEDs::FastBlinkOnTime => 69,
+            LEDs::FastBlinkOffTime => 70,
+            LEDs::UsageIndicatorColor => 71,
+            LEDs::IndicatorRed => 72,
+            LEDs::IndicatorGreen => 73,
+            LEDs::IndicatorAmber => 74,
+            LEDs::GenericIndicator => 75,
+            LEDs::SystemSuspend => 76,
+            LEDs::ExternalPowerConnected => 77,
+            LEDs::IndicatorBlue => 78,
+            LEDs::IndicatorOrange => 79,
+            LEDs::GoodStatus => 80,
+            LEDs::WarningStatus => 81,
+            LEDs::RGBLED => 82,
+            LEDs::RedLEDChannel => 83,
+            LEDs::GreedLEDChannel => 84,
+            LEDs::BlueLEDChannel => 85,
+            LEDs::LEDIntensity => 86,
+            LEDs::PlayerIndicator => 96,
+            LEDs::Player1 => 97,
+            LEDs::Player2 => 98,
+            LEDs::Player3 => 99,
+            LEDs::Player4 => 100,
+            LEDs::Player5 => 101,
+            LEDs::Player6 => 102,
+            LEDs::Player7 => 103,
+            LEDs::Player8 => 104,
+        }
+    }
+}
+
+impl From<LEDs> for u16 {
+    fn from(up: LEDs) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&LEDs> for u32 {
+    fn from(usage: &LEDs) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&LEDs> for UsagePage {
+    fn from(_up: &LEDs) -> UsagePage {
+        UsagePage::LEDs
+    }
+}
+
+impl From<LEDs> for UsagePage {
+    fn from(up: LEDs) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for LEDs {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Button {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Button {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x9` for [Button]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Button> for u16 {
+    fn from(up: &Button) -> u16 {
+        match *up {
+            Button::NoButtonsPressed => 0,
+            Button::Button { button } => button,
+        }
+    }
+}
+
+impl From<Button> for u16 {
+    fn from(up: Button) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Button> for u32 {
+    fn from(usage: &Button) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Button> for UsagePage {
+    fn from(_up: &Button) -> UsagePage {
+        UsagePage::Button
+    }
+}
+
+impl From<Button> for UsagePage {
+    fn from(up: Button) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Button {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Ordinals {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Ordinals {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xA` for [Ordinals]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Ordinals> for u16 {
+    fn from(up: &Ordinals) -> u16 {
+        match *up {
+            Ordinals::Unused => 0,
+            Ordinals::Unused => 0,
+            Ordinals::Ordinal { ordinal } => ordinal,
+        }
+    }
+}
+
+impl From<Ordinals> for u16 {
+    fn from(up: Ordinals) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Ordinals> for u32 {
+    fn from(usage: &Ordinals) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Ordinals> for UsagePage {
+    fn from(_up: &Ordinals) -> UsagePage {
+        UsagePage::Ordinals
+    }
+}
+
+impl From<Ordinals> for UsagePage {
+    fn from(up: Ordinals) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Ordinals {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for TelephonyDevices {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for TelephonyDevices {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xB` for [TelephonyDevices]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&TelephonyDevices> for u16 {
+    fn from(up: &TelephonyDevices) -> u16 {
+        match *up {
+            TelephonyDevices::Unassigned => 0,
+            TelephonyDevices::Phone => 1,
+            TelephonyDevices::AnsweringMachine => 2,
+            TelephonyDevices::MessageControls => 3,
+            TelephonyDevices::Handset => 4,
+            TelephonyDevices::Headset => 5,
+            TelephonyDevices::TelephonyKeyPad => 6,
+            TelephonyDevices::ProgrammableButton => 7,
+            TelephonyDevices::HookSwitch => 32,
+            TelephonyDevices::Flash => 33,
+            TelephonyDevices::Feature => 34,
+            TelephonyDevices::Hold => 35,
+            TelephonyDevices::Redial => 36,
+            TelephonyDevices::Transfer => 37,
+            TelephonyDevices::Drop => 38,
+            TelephonyDevices::Park => 39,
+            TelephonyDevices::ForwardCalls => 40,
+            TelephonyDevices::AlternateFunction => 41,
+            TelephonyDevices::LineOSC => 42,
+            TelephonyDevices::SpeakerPhone => 43,
+            TelephonyDevices::Conference => 44,
+            TelephonyDevices::RingEnable => 45,
+            TelephonyDevices::RingSelect => 46,
+            TelephonyDevices::PhoneMute => 47,
+            TelephonyDevices::CallerID => 48,
+            TelephonyDevices::Send => 49,
+            TelephonyDevices::SpeedDial => 80,
+            TelephonyDevices::StoreNumber => 81,
+            TelephonyDevices::RecallNumber => 82,
+            TelephonyDevices::PhoneDirectory => 83,
+            TelephonyDevices::VoiceMail => 112,
+            TelephonyDevices::ScreenCalls => 113,
+            TelephonyDevices::DoNotDisturb => 114,
+            TelephonyDevices::Message => 115,
+            TelephonyDevices::AnswerOnOff => 116,
+            TelephonyDevices::InsideDialTone => 144,
+            TelephonyDevices::OutsideDialTone => 145,
+            TelephonyDevices::InsideRingTone => 146,
+            TelephonyDevices::OutsideRingTone => 147,
+            TelephonyDevices::PriorityRingTone => 148,
+            TelephonyDevices::InsideRingback => 149,
+            TelephonyDevices::PriorityRingback => 150,
+            TelephonyDevices::LineBusyTone => 151,
+            TelephonyDevices::ReorderTone => 152,
+            TelephonyDevices::CallWaitingTone => 153,
+            TelephonyDevices::ConfirmationTone1 => 154,
+            TelephonyDevices::ConfirmationTone2 => 155,
+            TelephonyDevices::TonesOff => 156,
+            TelephonyDevices::OutsideRingback => 157,
+            TelephonyDevices::Ringer => 158,
+            TelephonyDevices::PhoneKey0 => 176,
+            TelephonyDevices::PhoneKey1 => 177,
+            TelephonyDevices::PhoneKey2 => 178,
+            TelephonyDevices::PhoneKey3 => 179,
+            TelephonyDevices::PhoneKey4 => 180,
+            TelephonyDevices::PhoneKey5 => 181,
+            TelephonyDevices::PhoneKey6 => 182,
+            TelephonyDevices::PhoneKey7 => 183,
+            TelephonyDevices::PhoneKey8 => 184,
+            TelephonyDevices::PhoneKey9 => 185,
+            TelephonyDevices::PhoneKeyStar => 186,
+            TelephonyDevices::PhoneKeyPound => 187,
+            TelephonyDevices::PhoneKeyA => 188,
+            TelephonyDevices::PhoneKeyB => 189,
+            TelephonyDevices::PhoneKeyC => 190,
+            TelephonyDevices::PhoneKeyD => 191,
+            TelephonyDevices::PhoneCallHistoryKey => 192,
+            TelephonyDevices::PhoneCallerIDKey => 193,
+            TelephonyDevices::PhoneSettingsKey => 194,
+            TelephonyDevices::HostControl => 240,
+            TelephonyDevices::HostAvailable => 241,
+            TelephonyDevices::HostCallActive => 242,
+            TelephonyDevices::ActivateHandsetAudio => 243,
+            TelephonyDevices::RingType => 244,
+            TelephonyDevices::RedialablePhoneNumber => 245,
+            TelephonyDevices::StopRingTone => 248,
+            TelephonyDevices::PSTNRingTone => 249,
+            TelephonyDevices::HostRingTone => 250,
+            TelephonyDevices::AlertSoundError => 251,
+            TelephonyDevices::AlertSoundConfirm => 252,
+            TelephonyDevices::AlertSoundNotification => 253,
+            TelephonyDevices::SilentRing => 254,
+            TelephonyDevices::EmailMessageWaiting => 264,
+            TelephonyDevices::oicemailMessageWaiting => 265,
+            TelephonyDevices::ostHold => 266,
+            TelephonyDevices::IncomingCallHistoryCount => 272,
+            TelephonyDevices::OutgoingCallHistoryCount => 273,
+            TelephonyDevices::IncomingCallHistory => 274,
+            TelephonyDevices::OutgoingCallHistory => 275,
+            TelephonyDevices::PhoneLocale => 276,
+            TelephonyDevices::PhoneTimeSecond => 320,
+            TelephonyDevices::PhoneTimeMinute => 321,
+            TelephonyDevices::PhoneTimeHour => 322,
+            TelephonyDevices::PhoneDateDay => 323,
+            TelephonyDevices::PhoneDateMonth => 324,
+            TelephonyDevices::PhoneDateYear => 325,
+            TelephonyDevices::HandsetNickname => 326,
+            TelephonyDevices::AddressBookID => 327,
+            TelephonyDevices::CallDuration => 330,
+            TelephonyDevices::DualModePhone => 331,
+        }
+    }
+}
+
+impl From<TelephonyDevices> for u16 {
+    fn from(up: TelephonyDevices) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&TelephonyDevices> for u32 {
+    fn from(usage: &TelephonyDevices) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&TelephonyDevices> for UsagePage {
+    fn from(_up: &TelephonyDevices) -> UsagePage {
+        UsagePage::TelephonyDevices
+    }
+}
+
+impl From<TelephonyDevices> for UsagePage {
+    fn from(up: TelephonyDevices) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for TelephonyDevices {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Digitizers {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Digitizers {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xD` for [Digitizers]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Digitizers> for u16 {
+    fn from(up: &Digitizers) -> u16 {
+        match *up {
+            Digitizers::Undefined => 0,
+            Digitizers::Digitizer => 1,
+            Digitizers::Pen => 2,
+            Digitizers::LightPen => 3,
+            Digitizers::TouchScreen => 4,
+            Digitizers::TouchPad => 5,
+            Digitizers::WhiteBoard => 6,
+            Digitizers::CoordinateMeasuringMachine => 7,
+            Digitizers::ThreeDDigitizer => 8,
+            Digitizers::StereoPlotter => 9,
+            Digitizers::ArticulatedArm => 10,
+            Digitizers::Armature => 11,
+            Digitizers::MultiplePointDigitizer => 12,
+            Digitizers::FreeSpaceWand => 13,
+            Digitizers::DeviceConfiguration => 14,
+            Digitizers::CapacitiveHeatMapDigitizer => 15,
+            Digitizers::Stylus => 32,
+            Digitizers::Puck => 33,
+            Digitizers::Finger => 34,
+            Digitizers::DeviceSettings => 35,
+            Digitizers::CharacterGesture => 36,
+            Digitizers::TipPressure => 48,
+            Digitizers::BarrelPressure => 49,
+            Digitizers::InRange => 50,
+            Digitizers::Touch => 51,
+            Digitizers::Untouch => 52,
+            Digitizers::Tap => 53,
+            Digitizers::Quality => 54,
+            Digitizers::DataValid => 55,
+            Digitizers::TransducerIndex => 56,
+            Digitizers::TabletFunctionKeys => 57,
+            Digitizers::ProgramChangeKeys => 58,
+            Digitizers::BatteryStrength => 59,
+            Digitizers::Invert => 60,
+            Digitizers::XTilt => 61,
+            Digitizers::YTilt => 62,
+            Digitizers::Azimuth => 63,
+            Digitizers::Altitude => 64,
+            Digitizers::Twist => 65,
+            Digitizers::TipSwitch => 66,
+            Digitizers::SecondaryTipSwitch => 67,
+            Digitizers::BarrelSwitch => 68,
+            Digitizers::Eraser => 69,
+            Digitizers::TabletPick => 70,
+            Digitizers::Confidence => 71,
+            Digitizers::Width => 72,
+            Digitizers::Height => 73,
+            Digitizers::ContactId => 81,
+            Digitizers::Inputmode => 82,
+            Digitizers::DeviceIndex => 83,
+            Digitizers::ContactCount => 84,
+            Digitizers::ContactMax => 85,
+            Digitizers::ScanTime => 86,
+            Digitizers::SurfaceSwitch => 87,
+            Digitizers::ButtonSwitch => 88,
+            Digitizers::ButtonType => 89,
+            Digitizers::SecondaryBarrelSwitch => 90,
+            Digitizers::TransducerSerialNumber => 91,
+            Digitizers::PreferredInkingColor => 92,
+            Digitizers::PreferredColorisLocked => 93,
+            Digitizers::PreferredLineWidth => 94,
+            Digitizers::PreferredLineWidthisLocked => 95,
+            Digitizers::GestureCharacterQuality => 97,
+            Digitizers::CharacterGestureDataLength => 98,
+            Digitizers::CharacterGestureData => 99,
+            Digitizers::GestureCharacterEncoding => 100,
+            Digitizers::UTF8CharacterGestureEncodingSel => 101,
+            Digitizers::UTF16LittleEndianCharacterGestureEncodingSel => 102,
+            Digitizers::UTF16BigEndianCharacterGestureEncodingSel => 103,
+            Digitizers::UTF32LittleEndianCharacterGestureEncoding => 104,
+            Digitizers::UTF32BigEndianCharacterGestureEncoding => 105,
+            Digitizers::GestureCharacterEnable => 106,
+            Digitizers::CapacitiveHeatMapProtocolVersion => 107,
+            Digitizers::CapacitiveHeatMapFrameData => 108,
+            Digitizers::PreferredLineStyle => 112,
+            Digitizers::PreferredLineStyleisLocked => 113,
+            Digitizers::Ink => 114,
+            Digitizers::Pencil => 115,
+            Digitizers::Highlighter => 116,
+            Digitizers::ChiselMarker => 117,
+            Digitizers::Brush => 118,
+            Digitizers::Nopreference => 119,
+            Digitizers::DigitizerDiagnostic => 128,
+            Digitizers::DigitizerError => 129,
+            Digitizers::ErrNormalStatus => 130,
+            Digitizers::ErrTransducersExceeded => 131,
+            Digitizers::ErrFullTransFeaturesUnavail => 132,
+            Digitizers::ErrChargeLow => 133,
+            Digitizers::TransducerSoftwareInfo => 144,
+            Digitizers::TransducerVendorID => 145,
+            Digitizers::TransducerProductID => 146,
+            Digitizers::DeviceSupportedProtocols => 147,
+            Digitizers::TransducerSupportedProtocols => 148,
+            Digitizers::NoProtocol => 149,
+            Digitizers::WacomAESProtocol => 150,
+            Digitizers::USIProtocol => 151,
+            Digitizers::MicrosoftPenProtocol => 152,
+            Digitizers::SupportedReportRates => 160,
+            Digitizers::ReportRate => 161,
+            Digitizers::TransducerConnected => 162,
+            Digitizers::SwitchDisabled => 163,
+            Digitizers::SwitchUnimplemented => 164,
+            Digitizers::TransducerSwitches => 165,
+        }
+    }
+}
+
+impl From<Digitizers> for u16 {
+    fn from(up: Digitizers) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Digitizers> for u32 {
+    fn from(usage: &Digitizers) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Digitizers> for UsagePage {
+    fn from(_up: &Digitizers) -> UsagePage {
+        UsagePage::Digitizers
+    }
+}
+
+impl From<Digitizers> for UsagePage {
+    fn from(up: Digitizers) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Digitizers {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Haptic {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Haptic {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xE` for [Haptic]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Haptic> for u16 {
+    fn from(up: &Haptic) -> u16 {
+        match *up {
+            Haptic::SimpleHapticController => 1,
+            Haptic::Waveform => 16,
+            Haptic::Duration => 17,
+            Haptic::AutoTrigger => 32,
+            Haptic::ManualTrigger => 33,
+            Haptic::AutoTriggerAssociatedControl => 34,
+            Haptic::Intensity => 35,
+            Haptic::RepeatCount => 36,
+            Haptic::RetriggerPeriod => 37,
+            Haptic::WaveformVendorPage => 38,
+            Haptic::WaveformVendorID => 39,
+            Haptic::WaveformCutoffTime => 40,
+            Haptic::WAVEFORM_NONE => 4097,
+            Haptic::WAVEFORM_STOP => 4098,
+            Haptic::WAVEFORM_CLICK => 4099,
+            Haptic::WAVEFORM_BUZZ_CONTINUOUS => 4100,
+            Haptic::WAVEFORM_RUMBLE_CONTINUOUS => 4101,
+            Haptic::WAVEFORM_PRESS => 4102,
+            Haptic::WAVEFORM_RELEASE => 4103,
+        }
+    }
+}
+
+impl From<Haptic> for u16 {
+    fn from(up: Haptic) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Haptic> for u32 {
+    fn from(usage: &Haptic) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Haptic> for UsagePage {
+    fn from(_up: &Haptic) -> UsagePage {
+        UsagePage::Haptic
+    }
+}
+
+impl From<Haptic> for UsagePage {
+    fn from(up: Haptic) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Haptic {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Unicode {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Unicode {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x10` for [Unicode]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Unicode> for u16 {
+    fn from(up: &Unicode) -> u16 {
+        match *up {
+            Unicode::Reserved => 0,
+            Unicode::Code { code } => code,
+        }
+    }
+}
+
+impl From<Unicode> for u16 {
+    fn from(up: Unicode) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Unicode> for u32 {
+    fn from(usage: &Unicode) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Unicode> for UsagePage {
+    fn from(_up: &Unicode) -> UsagePage {
+        UsagePage::Unicode
+    }
+}
+
+impl From<Unicode> for UsagePage {
+    fn from(up: Unicode) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Unicode {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for AuxiliaryDisplay {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for AuxiliaryDisplay {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x14` for [AuxiliaryDisplay]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&AuxiliaryDisplay> for u16 {
+    fn from(up: &AuxiliaryDisplay) -> u16 {
+        match *up {
+            AuxiliaryDisplay::Undefined => 0,
+            AuxiliaryDisplay::AlphanumericDisplay => 1,
+            AuxiliaryDisplay::AuxiliaryDisplay => 2,
+            AuxiliaryDisplay::DisplayAttributesReport => 32,
+            AuxiliaryDisplay::ASCIICharacterSet => 33,
+            AuxiliaryDisplay::DataReadBack => 34,
+            AuxiliaryDisplay::FontReadBack => 35,
+            AuxiliaryDisplay::DisplayControlReport => 36,
+            AuxiliaryDisplay::ClearDisplay => 37,
+            AuxiliaryDisplay::DisplayEnable => 38,
+            AuxiliaryDisplay::ScreenSaverDelay => 39,
+            AuxiliaryDisplay::ScreenSaverEnable => 40,
+            AuxiliaryDisplay::VerticalScroll => 41,
+            AuxiliaryDisplay::HorizontalScroll => 42,
+            AuxiliaryDisplay::CharacterReport => 43,
+            AuxiliaryDisplay::DisplayData => 44,
+            AuxiliaryDisplay::DisplayStatus => 45,
+            AuxiliaryDisplay::StatNotReady => 46,
+            AuxiliaryDisplay::StatReady => 47,
+            AuxiliaryDisplay::ErrNotaloadablecharacter => 48,
+            AuxiliaryDisplay::ErrFontdatacannotberead => 49,
+            AuxiliaryDisplay::CursorPositionReport => 50,
+            AuxiliaryDisplay::Row => 51,
+            AuxiliaryDisplay::Column => 52,
+            AuxiliaryDisplay::Rows => 53,
+            AuxiliaryDisplay::Columns => 54,
+            AuxiliaryDisplay::CursorPixelPositioning => 55,
+            AuxiliaryDisplay::CursorMode => 56,
+            AuxiliaryDisplay::CursorEnable => 57,
+            AuxiliaryDisplay::CursorBlink => 58,
+            AuxiliaryDisplay::FontReport => 59,
+            AuxiliaryDisplay::FontData => 60,
+            AuxiliaryDisplay::CharacterWidth => 61,
+            AuxiliaryDisplay::CharacterHeight => 62,
+            AuxiliaryDisplay::CharacterSpacingHorizontal => 63,
+            AuxiliaryDisplay::CharacterSpacingVertical => 64,
+            AuxiliaryDisplay::UnicodeCharacterSet => 65,
+            AuxiliaryDisplay::Font7Segment => 66,
+            AuxiliaryDisplay::SevenSegmentDirectMap => 67,
+            AuxiliaryDisplay::Font14Segment => 68,
+            AuxiliaryDisplay::One4SegmentDirectMap => 69,
+            AuxiliaryDisplay::DisplayBrightness => 70,
+            AuxiliaryDisplay::DisplayContrast => 71,
+            AuxiliaryDisplay::CharacterAttribute => 72,
+            AuxiliaryDisplay::AttributeReadback => 73,
+            AuxiliaryDisplay::AttributeData => 74,
+            AuxiliaryDisplay::CharAttrEnhance => 75,
+            AuxiliaryDisplay::CharAttrUnderline => 76,
+            AuxiliaryDisplay::CharAttrBlink => 77,
+            AuxiliaryDisplay::BitmapSizeX => 128,
+            AuxiliaryDisplay::BitmapSizeY => 129,
+            AuxiliaryDisplay::MaxBlitSize => 130,
+            AuxiliaryDisplay::BitDepthFormat => 131,
+            AuxiliaryDisplay::DisplayOrientation => 132,
+            AuxiliaryDisplay::PaletteReport => 133,
+            AuxiliaryDisplay::PaletteDataSize => 134,
+            AuxiliaryDisplay::PaletteDataOffset => 135,
+            AuxiliaryDisplay::PaletteData => 136,
+            AuxiliaryDisplay::BlitReport => 138,
+            AuxiliaryDisplay::BlitRectangleX1 => 139,
+            AuxiliaryDisplay::BlitRectangleY1 => 140,
+            AuxiliaryDisplay::BlitRectangleX2 => 141,
+            AuxiliaryDisplay::BlitRectangleY2 => 142,
+            AuxiliaryDisplay::BlitData => 143,
+            AuxiliaryDisplay::SoftButton => 144,
+            AuxiliaryDisplay::SoftButtonID => 145,
+            AuxiliaryDisplay::SoftButtonSide => 146,
+            AuxiliaryDisplay::SoftButtonOffset1 => 147,
+            AuxiliaryDisplay::SoftButtonOffset2 => 148,
+            AuxiliaryDisplay::SoftButtonReport => 149,
+            AuxiliaryDisplay::SoftKeys => 194,
+            AuxiliaryDisplay::DisplayDataExtensions => 204,
+            AuxiliaryDisplay::CharacterMapping => 207,
+            AuxiliaryDisplay::UnicodeEquivalent => 221,
+            AuxiliaryDisplay::CharacterPageMapping => 223,
+            AuxiliaryDisplay::RequestReport => 255,
+        }
+    }
+}
+
+impl From<AuxiliaryDisplay> for u16 {
+    fn from(up: AuxiliaryDisplay) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&AuxiliaryDisplay> for u32 {
+    fn from(usage: &AuxiliaryDisplay) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&AuxiliaryDisplay> for UsagePage {
+    fn from(_up: &AuxiliaryDisplay) -> UsagePage {
+        UsagePage::AuxiliaryDisplay
+    }
+}
+
+impl From<AuxiliaryDisplay> for UsagePage {
+    fn from(up: AuxiliaryDisplay) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for AuxiliaryDisplay {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Sensor {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Sensor {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x20` for [Sensor]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Sensor> for u16 {
+    fn from(up: &Sensor) -> u16 {
+        match *up {
+            Sensor::Undefined => 0,
+            Sensor::Sensor => 1,
+            Sensor::Biometric => 16,
+            Sensor::BiometricHumanPresence => 17,
+            Sensor::BiometricHumanProximity => 18,
+            Sensor::BiometricHumanTouch => 19,
+            Sensor::BiometricBloodPressure => 20,
+            Sensor::BiometricBodyTemperature => 21,
+            Sensor::BiometricHeartRate => 22,
+            Sensor::BiometricHeartRateVariability => 23,
+            Sensor::BiometricPeripheralOxygenSaturation => 24,
+            Sensor::BiometricRespiratoryRate => 25,
+            Sensor::Electrical => 32,
+            Sensor::ElectricalCapacitance => 33,
+            Sensor::ElectricalCurrent => 34,
+            Sensor::ElectricalPower => 35,
+            Sensor::ElectricalInductance => 36,
+            Sensor::ElectricalResistance => 37,
+            Sensor::ElectricalVoltage => 38,
+            Sensor::ElectricalPotentiometer => 39,
+            Sensor::ElectricalFrequency => 40,
+            Sensor::ElectricalPeriod => 41,
+            Sensor::Environmental => 48,
+            Sensor::EnvironmentalAtmosphericPressure => 49,
+            Sensor::EnvironmentalHumidity => 50,
+            Sensor::EnvironmentalTemperature => 51,
+            Sensor::EnvironmentalWindDirection => 52,
+            Sensor::EnvironmentalWindSpeed => 53,
+            Sensor::EnvironmentalAirQuality => 54,
+            Sensor::EnvironmentalHeatIndex => 55,
+            Sensor::EnvironmentalSurfaceTemperature => 56,
+            Sensor::EnvironmentalVolatileOrganicCompounds => 57,
+            Sensor::EnvironmentalObjectPresence => 58,
+            Sensor::EnvironmentalObjectProximity => 59,
+            Sensor::Light => 64,
+            Sensor::LightAmbientLight => 65,
+            Sensor::LightConsumerInfrared => 66,
+            Sensor::LightInfraredLight => 67,
+            Sensor::LightVisibleLight => 68,
+            Sensor::LightUltravioletLight => 69,
+            Sensor::Location => 80,
+            Sensor::LocationBroadcast => 81,
+            Sensor::LocationDeadReckoning => 82,
+            Sensor::LocationGPS => 83,
+            Sensor::LocationLookup => 84,
+            Sensor::LocationOther => 85,
+            Sensor::LocationStatic => 86,
+            Sensor::LocationTriangulation => 87,
+            Sensor::Mechanical => 96,
+            Sensor::MechanicalBooleanSwitch => 97,
+            Sensor::MechanicalBooleanSwitchArray => 98,
+            Sensor::MechanicalMultivalueSwitch => 99,
+            Sensor::MechanicalForce => 100,
+            Sensor::MechanicalPressure => 101,
+            Sensor::MechanicalStrain => 102,
+            Sensor::MechanicalWeight => 103,
+            Sensor::MechanicalHapticVibrator => 104,
+            Sensor::MechanicalHallEffectSwitch => 105,
+            Sensor::Motion => 112,
+            Sensor::MotionAccelerometer1D => 113,
+            Sensor::MotionAccelerometer2D => 114,
+            Sensor::MotionAccelerometer3D => 115,
+            Sensor::MotionGyrometer1D => 116,
+            Sensor::MotionGyrometer2D => 117,
+            Sensor::MotionGyrometer3D => 118,
+            Sensor::MotionMotionDetector => 119,
+            Sensor::MotionSpeedometer => 120,
+            Sensor::MotionAccelerometer => 121,
+            Sensor::MotionGyrometer => 122,
+            Sensor::MotionGravityVector => 123,
+            Sensor::MotionLinearAccelerometer => 124,
+            Sensor::Orientation => 128,
+            Sensor::OrientationCompass1D => 129,
+            Sensor::OrientationCompass2D => 130,
+            Sensor::OrientationCompass3D => 131,
+            Sensor::OrientationInclinometer1D => 132,
+            Sensor::OrientationInclinometer2D => 133,
+            Sensor::OrientationInclinometer3D => 134,
+            Sensor::OrientationDistance1D => 135,
+            Sensor::OrientationDistance2D => 136,
+            Sensor::OrientationDistance3D => 137,
+            Sensor::OrientationDeviceOrientation => 138,
+            Sensor::OrientationCompass => 139,
+            Sensor::OrientationInclinometer => 140,
+            Sensor::OrientationDistance => 141,
+            Sensor::OrientationRelativeOrientation => 142,
+            Sensor::OrientationSimpleOrientation => 143,
+            Sensor::Scanner => 144,
+            Sensor::ScannerBarcode => 145,
+            Sensor::ScannerRFID => 146,
+            Sensor::ScannerNFC => 147,
+            Sensor::Time => 160,
+            Sensor::TimeAlarmTimer => 161,
+            Sensor::TimeRealTimeClock => 162,
+            Sensor::PersonalActivity => 176,
+            Sensor::PersonalActivityActivityDetection => 177,
+            Sensor::PersonalActivityDevicePosition => 178,
+            Sensor::PersonalActivityPedometer => 179,
+            Sensor::PersonalActivityStepDetection => 180,
+            Sensor::OrientationExtended => 192,
+            Sensor::OrientationExtendedGeomagneticOrientation => 193,
+            Sensor::OrientationExtendedMagnetometer => 194,
+            Sensor::Other => 224,
+            Sensor::OtherCustom => 225,
+            Sensor::OtherGeneric => 226,
+            Sensor::OtherGenericEnumerator => 227,
+            Sensor::Event => 512,
+            Sensor::EventSensorState => 513,
+            Sensor::EventSensorEvent => 514,
+            Sensor::Property => 768,
+            Sensor::PropertyFriendlyName => 769,
+            Sensor::PropertyPersistentUniqueID => 770,
+            Sensor::PropertySensorStatus => 771,
+            Sensor::PropertyMinimumReportInterval => 772,
+            Sensor::PropertySensorManufacturer => 773,
+            Sensor::PropertySensorModel => 774,
+            Sensor::PropertySensorSerialNumber => 775,
+            Sensor::PropertySensorDescription => 776,
+            Sensor::PropertySensorConnectionType => 777,
+            Sensor::PropertySensorDevicePath => 778,
+            Sensor::PropertyHardwareRevision => 779,
+            Sensor::PropertyFirmwareVersion => 780,
+            Sensor::PropertyReleaseDate => 781,
+            Sensor::PropertyReportInterval => 782,
+            Sensor::PropertyChangeSensitivityAbsolute => 783,
+            Sensor::PropertyChangeSensitivityPercentofRange => 784,
+            Sensor::PropertyChangeSensitivityPercentRelative => 785,
+            Sensor::PropertyAccuracy => 786,
+            Sensor::PropertyResolution => 787,
+            Sensor::PropertyMaximum => 788,
+            Sensor::PropertyMinimum => 789,
+            Sensor::PropertyReportingState => 790,
+            Sensor::PropertyMaximumFIFOEvents => 794,
+            Sensor::PropertyReportLatency => 795,
+            Sensor::PropertyFlushFIFOEvents => 796,
+            Sensor::PropertyMaximumPowerConsumption => 797,
+            Sensor::DataFieldLocation => 1024,
+            Sensor::DataFieldAltitudeAntennaSeaLevel => 1026,
+            Sensor::DataFieldDifferentialReferenceStationID => 1027,
+            Sensor::DataFieldAltitudeEllipsoidError => 1028,
+            Sensor::DataFieldAltitudeEllipsoid => 1029,
+            Sensor::DataFieldAltitudeSeaLevelError => 1030,
+            Sensor::DataFieldAltitudeSeaLevel => 1031,
+            Sensor::DataFieldDifferentialGPSDataAge => 1032,
+            Sensor::DataFieldErrorRadius => 1033,
+            Sensor::DataFieldFixQuality => 1034,
+            Sensor::DataFieldFixType => 1035,
+            Sensor::DataFieldGeoidalSeparation => 1036,
+            Sensor::DataFieldGPSOperationMode => 1037,
+            Sensor::DataFieldGPSSelectionMode => 1038,
+            Sensor::DataFieldGPSStatus => 1039,
+            Sensor::DataFieldPositionDilutionofPrecision => 1040,
+            Sensor::DataFieldHorizontalDilutionofPrecision => 1041,
+            Sensor::DataFieldVerticalDilutionofPrecision => 1042,
+            Sensor::DataFieldLatitude => 1043,
+            Sensor::DataFieldLongitude => 1044,
+            Sensor::DataFieldTrueHeading => 1045,
+            Sensor::DataFieldMagneticHeading => 1046,
+            Sensor::DataFieldMagneticVariation => 1047,
+            Sensor::DataFieldSpeed => 1048,
+            Sensor::DataFieldSatellitesinView => 1049,
+            Sensor::DataFieldSatellitesinViewAzimuth => 1050,
+            Sensor::DataFieldSatellitesinViewElevation => 1051,
+            Sensor::DataFieldSatellitesinViewIDs => 1052,
+            Sensor::DataFieldSatellitesinViewPRNs => 1053,
+            Sensor::DataFieldSatellitesinViewSNRatios => 1054,
+            Sensor::DataFieldSatellitesUsedCount => 1055,
+            Sensor::DataFieldSatellitesUsedPRNs => 1056,
+            Sensor::DataFieldNMEASentence => 1057,
+            Sensor::DataFieldAddressLine1 => 1058,
+            Sensor::DataFieldAddressLine2 => 1059,
+            Sensor::DataFieldCity => 1060,
+            Sensor::DataFieldStateorProvince => 1061,
+            Sensor::DataFieldCountryorRegion => 1062,
+            Sensor::DataFieldPostalCode => 1063,
+            Sensor::PropertyLocation => 1066,
+            Sensor::PropertyLocationDesiredAccuracy => 1067,
+            Sensor::DataFieldEnvironmental => 1072,
+            Sensor::DataFieldAtmosphericPressure => 1073,
+            Sensor::DataFieldRelativeHumidity => 1075,
+            Sensor::DataFieldTemperature => 1076,
+            Sensor::DataFieldWindDirection => 1077,
+            Sensor::DataFieldWindSpeed => 1078,
+            Sensor::DataFieldAirQualityIndex => 1079,
+            Sensor::DataFieldEquivalentCO2 => 1080,
+            Sensor::DataFieldVolatileOrganicCompoundConcentration => 1081,
+            Sensor::DataFieldObjectPresence => 1082,
+            Sensor::DataFieldObjectProximityRange => 1083,
+            Sensor::DataFieldObjectProximityOutofRange => 1084,
+            Sensor::PropertyEnvironmental => 1088,
+            Sensor::PropertyReferencePressure => 1089,
+            Sensor::DataFieldMotion => 1104,
+            Sensor::DataFieldMotionState => 1105,
+            Sensor::DataFieldAcceleration => 1106,
+            Sensor::DataFieldAccelerationAxisX => 1107,
+            Sensor::DataFieldAccelerationAxisY => 1108,
+            Sensor::DataFieldAccelerationAxisZ => 1109,
+            Sensor::DataFieldAngularVelocity => 1110,
+            Sensor::DataFieldAngularVelocityaboutXAxis => 1111,
+            Sensor::DataFieldAngularVelocityaboutYAxis => 1112,
+            Sensor::DataFieldAngularVelocityaboutZAxis => 1113,
+            Sensor::DataFieldAngularPosition => 1114,
+            Sensor::DataFieldAngularPositionaboutXAxis => 1115,
+            Sensor::DataFieldAngularPositionaboutYAxis => 1116,
+            Sensor::DataFieldAngularPositionaboutZAxis => 1117,
+            Sensor::DataFieldMotionSpeed => 1118,
+            Sensor::DataFieldMotionIntensity => 1119,
+            Sensor::DataFieldOrientation => 1136,
+            Sensor::DataFieldHeading => 1137,
+            Sensor::DataFieldHeadingXAxis => 1138,
+            Sensor::DataFieldHeadingYAxis => 16499,
+            Sensor::DataFieldHeadingZAxis => 1140,
+            Sensor::DataFieldHeadingCompensatedMagneticNorth => 1141,
+            Sensor::DataFieldHeadingCompensatedTrueNorth => 1142,
+            Sensor::DataFieldHeadingMagneticNorth => 1143,
+            Sensor::DataFieldHeadingTrueNorth => 1144,
+            Sensor::DataFieldDistance => 1145,
+            Sensor::DataFieldDistanceXAxis => 1146,
+            Sensor::DataFieldDistanceYAxis => 1147,
+            Sensor::DataFieldDistanceZAxis => 1148,
+            Sensor::DataFieldDistanceOutofRange => 1149,
+            Sensor::DataFieldTilt => 1150,
+            Sensor::DataFieldTiltXAxis => 1151,
+            Sensor::DataFieldTiltYAxis => 1152,
+            Sensor::DataFieldTiltZAxis => 1153,
+            Sensor::DataFieldRotationMatrix => 1154,
+            Sensor::DataFieldQuaternion => 1155,
+            Sensor::DataFieldMagneticFlux => 1156,
+            Sensor::DataFieldMagneticFluxXAxis => 1157,
+            Sensor::DataFieldMagneticFluxYAxis => 1158,
+            Sensor::DataFieldMagneticFluxZAxis => 1159,
+            Sensor::DataFieldMagnetometerAccuracy => 1160,
+            Sensor::DataFieldSimpleOrientationDirection => 1161,
+            Sensor::DataFieldMechanical => 1168,
+            Sensor::DataFieldBooleanSwitchState => 1169,
+            Sensor::DataFieldBooleanSwitchArrayStates => 1170,
+            Sensor::DataFieldMultivalueSwitchValue => 1171,
+            Sensor::DataFieldForce => 1172,
+            Sensor::DataFieldAbsolutePressure => 1173,
+            Sensor::DataFieldGaugePressure => 1174,
+            Sensor::DataFieldStrain => 1175,
+            Sensor::DataFieldWeight => 1176,
+            Sensor::PropertyMechanical => 1184,
+            Sensor::PropertyVibrationState => 1185,
+            Sensor::PropertyForwardVibrationSpeed => 1186,
+            Sensor::PropertyBackwardVibrationSpeed => 1187,
+            Sensor::DataFieldBiometric => 1200,
+            Sensor::DataFieldHumanPresence => 1201,
+            Sensor::DataFieldHumanProximityRange => 1202,
+            Sensor::DataFieldHumanProximityOutofRange => 1203,
+            Sensor::DataFieldHumanTouchState => 1204,
+            Sensor::DataFieldBloodPressure => 1205,
+            Sensor::DataFieldBloodPressureDiastolic => 1206,
+            Sensor::DataFieldBloodPressureSystolic => 1207,
+            Sensor::DataFieldHeartRate => 1208,
+            Sensor::DataFieldRestingHeartRate => 1209,
+            Sensor::DataFieldHeartbeatInterval => 1210,
+            Sensor::DataFieldRespiratoryRate => 1211,
+            Sensor::DataFieldSpO2 => 1212,
+            Sensor::DataFieldLight => 1232,
+            Sensor::DataFieldIlluminance => 1233,
+            Sensor::DataFieldColorTemperature => 1234,
+            Sensor::DataFieldChromaticity => 1235,
+            Sensor::DataFieldChromaticityX => 1236,
+            Sensor::DataFieldChromaticityY => 1237,
+            Sensor::DataFieldConsumerIRSentenceReceive => 1238,
+            Sensor::DataFieldInfraredLight => 1239,
+            Sensor::DataFieldRedLight => 1240,
+            Sensor::DataFieldGreenLight => 1241,
+            Sensor::DataFieldBlueLight => 1242,
+            Sensor::DataFieldUltravioletALight => 1243,
+            Sensor::DataFieldUltravioletBLight => 1244,
+            Sensor::DataFieldUltravioletIndex => 1245,
+            Sensor::PropertyLight => 1248,
+            Sensor::PropertyConsumerIRSentenceSend => 1249,
+            Sensor::DataFieldScanner => 1264,
+            Sensor::DataFieldRFIDTag40Bit => 1265,
+            Sensor::DataFieldNFCSentenceReceive => 1266,
+            Sensor::PropertyScanner => 1272,
+            Sensor::PropertyNFCSentenceSend => 1273,
+            Sensor::DataFieldElectrical => 1280,
+            Sensor::DataFieldCapacitance => 1281,
+            Sensor::DataFieldCurrent => 1282,
+            Sensor::DataFieldElectricalPower => 1283,
+            Sensor::DataFieldInductance => 1284,
+            Sensor::DataFieldResistance => 1285,
+            Sensor::DataFieldVoltage => 1286,
+            Sensor::DataFieldFrequency => 1287,
+            Sensor::DataFieldPeriod => 1288,
+            Sensor::DataFieldPercentofRange => 1289,
+            Sensor::DataFieldTime => 1312,
+            Sensor::DataFieldYear => 1313,
+            Sensor::DataFieldMonth => 1314,
+            Sensor::DataFieldDay => 1315,
+            Sensor::DataFieldDayofWeek => 1316,
+            Sensor::DataFieldHour => 1317,
+            Sensor::DataFieldMinute => 1318,
+            Sensor::DataFieldSecond => 1319,
+            Sensor::DataFieldMillisecond => 1320,
+            Sensor::DataFieldTimestamp => 1321,
+            Sensor::DataFieldJulianDayofYear => 1322,
+            Sensor::DataFieldTimeSinceSystemBoot => 1323,
+            Sensor::PropertyTime => 1328,
+            Sensor::PropertyTimeZoneOffsetfromUTC => 1329,
+            Sensor::PropertyTimeZoneName => 1330,
+            Sensor::PropertyDaylightSavingsTimeObserved => 1331,
+            Sensor::PropertyTimeTrimAdjustment => 1332,
+            Sensor::PropertyArmAlarm => 1333,
+            Sensor::DataFieldCustom => 1344,
+            Sensor::DataFieldCustomUsage => 1345,
+            Sensor::DataFieldCustomBooleanArray => 1346,
+            Sensor::DataFieldCustomValue => 1347,
+            Sensor::DataFieldCustomValue1 => 1348,
+            Sensor::DataFieldCustomValue2 => 1349,
+            Sensor::DataFieldCustomValue3 => 1350,
+            Sensor::DataFieldCustomValue4 => 1351,
+            Sensor::DataFieldCustomValue5 => 1352,
+            Sensor::DataFieldCustomValue6 => 1353,
+            Sensor::DataFieldCustomValue7 => 1354,
+            Sensor::DataFieldCustomValue8 => 1355,
+            Sensor::DataFieldCustomValue9 => 1356,
+            Sensor::DataFieldCustomValue10 => 1357,
+            Sensor::DataFieldCustomValue11 => 1358,
+            Sensor::DataFieldCustomValue12 => 1359,
+            Sensor::DataFieldCustomValue13 => 1360,
+            Sensor::DataFieldCustomValue14 => 1361,
+            Sensor::DataFieldCustomValue15 => 1362,
+            Sensor::DataFieldCustomValue16 => 1363,
+            Sensor::DataFieldCustomValue17 => 1364,
+            Sensor::DataFieldCustomValue18 => 1365,
+            Sensor::DataFieldCustomValue19 => 1366,
+            Sensor::DataFieldCustomValue20 => 1367,
+            Sensor::DataFieldCustomValue21 => 1368,
+            Sensor::DataFieldCustomValue22 => 1369,
+            Sensor::DataFieldCustomValue23 => 1370,
+            Sensor::DataFieldCustomValue24 => 1371,
+            Sensor::DataFieldCustomValue25 => 1372,
+            Sensor::DataFieldCustomValue26 => 1373,
+            Sensor::DataFieldCustomValue27 => 1374,
+            Sensor::DataFieldCustomValue28 => 1375,
+            Sensor::DataFieldGeneric => 1376,
+            Sensor::DataFieldGenericGUIDorPROPERTYKEY => 1377,
+            Sensor::DataFieldGenericCategoryGUID => 1378,
+            Sensor::DataFieldGenericTypeGUID => 1379,
+            Sensor::DataFieldGenericEventPROPERTYKEY => 1380,
+            Sensor::DataFieldGenericPropertyPROPERTYKEY => 1381,
+            Sensor::DataFieldGenericDataFieldPROPERTYKEY => 1382,
+            Sensor::DataFieldGenericEvent => 1383,
+            Sensor::DataFieldGenericProperty => 1384,
+            Sensor::DataFieldGenericDataField => 1385,
+            Sensor::DataFieldEnumeratorTableRowIndex => 1386,
+            Sensor::DataFieldEnumeratorTableRowCount => 1387,
+            Sensor::DataFieldGenericGUIDorPROPERTYKEYkind => 1388,
+            Sensor::DataFieldGenericGUID => 1389,
+            Sensor::DataFieldGenericPROPERTYKEY => 1390,
+            Sensor::DataFieldGenericTopLevelCollectionID => 1391,
+            Sensor::DataFieldGenericReportID => 1392,
+            Sensor::DataFieldGenericReportItemPositionIndex => 1393,
+            Sensor::DataFieldGenericFirmwareVARTYPE => 1394,
+            Sensor::DataFieldGenericUnitofMeasure => 1395,
+            Sensor::DataFieldGenericUnitExponent => 1396,
+            Sensor::DataFieldGenericReportSize => 1397,
+            Sensor::DataFieldGenericReportCount => 1398,
+            Sensor::PropertyGeneric => 1408,
+            Sensor::PropertyEnumeratorTableRowIndex => 1409,
+            Sensor::PropertyEnumeratorTableRowCount => 1410,
+            Sensor::DataFieldPersonalActivity => 1424,
+            Sensor::DataFieldActivityType => 1425,
+            Sensor::DataFieldActivityState => 1426,
+            Sensor::DataFieldDevicePosition => 1427,
+            Sensor::DataFieldStepCount => 1428,
+            Sensor::DataFieldStepCountReset => 1429,
+            Sensor::DataFieldStepDuration => 1430,
+            Sensor::DataFieldStepType => 1431,
+            Sensor::PropertyMinimumActivityDetectionInterval => 1440,
+            Sensor::PropertySupportedActivityTypes => 1441,
+            Sensor::PropertySubscribedActivityTypes => 1442,
+            Sensor::PropertySupportedStepTypes => 1443,
+            Sensor::PropertySubscribedStepTypes => 1444,
+            Sensor::PropertyFloorHeight => 1445,
+            Sensor::DataFieldCustomTypeID => 1456,
+            Sensor::SensorStateUndefined => 2048,
+            Sensor::SensorStateReady => 2049,
+            Sensor::SensorStateNotAvailable => 2050,
+            Sensor::SensorStateNoDataSel => 2051,
+            Sensor::SensorStateInitializing => 2052,
+            Sensor::SensorStateAccessDenied => 2053,
+            Sensor::SensorStateError => 2054,
+            Sensor::SensorEventUnknown => 2064,
+            Sensor::SensorEventStateChanged => 2065,
+            Sensor::SensorEventPropertyChanged => 2066,
+            Sensor::SensorEventDataUpdated => 2067,
+            Sensor::SensorEventPollResponse => 2068,
+            Sensor::SensorEventChangeSensitivity => 2069,
+            Sensor::SensorEventRangeMaximumReached => 2070,
+            Sensor::SensorEventRangeMinimumReached => 2071,
+            Sensor::SensorEventHighThresholdCrossUpward => 2072,
+            Sensor::SensorEventHighThresholdCrossDownward => 2073,
+            Sensor::SensorEventLowThresholdCrossUpward => 2074,
+            Sensor::SensorEventLowThresholdCrossDownward => 2075,
+            Sensor::SensorEventZeroThresholdCrossUpward => 2076,
+            Sensor::SensorEventZeroThresholdCrossDownward => 2077,
+            Sensor::SensorEventPeriodExceeded => 2078,
+            Sensor::SensorEventFrequencyExceeded => 2079,
+            Sensor::SensorEventComplexTrigger => 2080,
+            Sensor::ConnectionTypePCIntegrated => 2096,
+            Sensor::ConnectionTypePCAttached => 2097,
+            Sensor::ConnectionTypePCExternal => 2098,
+            Sensor::ReportingStateReportNoEvents => 2112,
+            Sensor::ReportingStateReportAllEvents => 2113,
+            Sensor::ReportingStateReportThresholdEvents => 2114,
+            Sensor::ReportingStateWakeOnNoEvents => 2115,
+            Sensor::ReportingStateWakeOnAllEvents => 2116,
+            Sensor::ReportingStateWakeOnThresholdEvents => 2117,
+            Sensor::PropertySamplingRate => 791,
+            Sensor::PropertyResponseCurve => 792,
+            Sensor::PropertyPowerState => 793,
+            Sensor::PowerStateUndefined => 2128,
+            Sensor::PowerStateD0FullPower => 2129,
+            Sensor::PowerStateD1LowPower => 2130,
+            Sensor::PowerStateD2StandbyPowerwithWakeup => 2131,
+            Sensor::PowerStateD3SleepwithWakeup => 2132,
+            Sensor::PowerStateD4PowerOff => 2133,
+            Sensor::AccuracyDefault => 2144,
+            Sensor::AccuracyHigh => 2145,
+            Sensor::AccuracyMedium => 2146,
+            Sensor::AccuracyLow => 2147,
+            Sensor::FixQualityNoFix => 2160,
+            Sensor::FixQualityGPS => 2161,
+            Sensor::FixQualityDGPS => 2162,
+            Sensor::DataFieldFixTypeNAry110 => 1035,
+            Sensor::FixTypeNoFix => 2176,
+            Sensor::FixTypeGPSSPSModeFixValid => 2177,
+            Sensor::FixTypeDGPSSPSModeFixValid => 2178,
+            Sensor::FixTypeGPSPPSModeFixValid => 2179,
+            Sensor::FixTypeRealTimeKinematic => 2180,
+            Sensor::FixTypeFloatRTK => 2181,
+            Sensor::FixTypeEstimateddeadreckoned => 2182,
+            Sensor::FixTypeManualInputMode => 2183,
+            Sensor::FixTypeSimulatorMode => 2184,
+            Sensor::GPSOperationModeManual => 2192,
+            Sensor::GPSOperationModeAutomatic => 2193,
+            Sensor::GPSSelectionModeAutonomous => 2208,
+            Sensor::GPSSelectionModeDGPS => 2209,
+            Sensor::GPSSelectionModeEstimateddeadreckoned => 2210,
+            Sensor::GPSSelectionModeManualInput => 2211,
+            Sensor::GPSSelectionModeSimulator => 2212,
+            Sensor::GPSSelectionModeDataNotValid => 2213,
+            Sensor::GPSStatusDataValid => 2224,
+            Sensor::GPSStatusDataNotValid => 2225,
+            Sensor::DayofWeekSunday => 2240,
+            Sensor::DayofWeekMonday => 2241,
+            Sensor::DayofWeekTuesday => 2242,
+            Sensor::DayofWeekWednesday => 2243,
+            Sensor::DayofWeekThursday => 2244,
+            Sensor::DayofWeekFriday => 2245,
+            Sensor::DayofWeekSaturday => 2246,
+            Sensor::KindCategory => 2256,
+            Sensor::KindType => 2257,
+            Sensor::KindEvent => 2258,
+            Sensor::KindProperty => 2259,
+            Sensor::KindDataField => 2260,
+            Sensor::MagnetometerAccuracyLow => 2272,
+            Sensor::MagnetometerAccuracyMedium => 2273,
+            Sensor::MagnetometerAccuracyHigh => 2274,
+            Sensor::SimpleOrientationDirectionNotRotated => 2288,
+            Sensor::SimpleOrientationDirectionRotated90Degrees => 2289,
+            Sensor::SimpleOrientationDirectionRotated180Degrees => 2290,
+            Sensor::SimpleOrientationDirectionRotated270Degrees => 2291,
+            Sensor::SimpleOrientationDirectionFaceUp => 2292,
+            Sensor::SimpleOrientationDirectionFaceDown => 2293,
+            Sensor::VT_NULLEmpty => 2304,
+            Sensor::VT_BOOLBoolean => 2305,
+            Sensor::VT_UI1Byte => 2306,
+            Sensor::VT_I1Character => 2307,
+            Sensor::VT_UI2UnsignedShort => 2308,
+            Sensor::VT_I2Short => 2309,
+            Sensor::VT_UI4UnsignedLong => 2310,
+            Sensor::VT_I4Long => 2311,
+            Sensor::VT_UI8UnsignedLongLong => 2312,
+            Sensor::VT_I8LongLong => 2313,
+            Sensor::VT_R4Float => 2314,
+            Sensor::VT_R8Double => 2315,
+            Sensor::VT_WSTRWideString => 2316,
+            Sensor::VT_STRNarrowString => 2317,
+            Sensor::VT_CLSIDGuid => 2318,
+            Sensor::VT_VECTORVT_UI1OpaqueStructure => 2319,
+            Sensor::VT_F16E0HID16bitFloatwithUnitExponent0 => 2320,
+            Sensor::VT_F16E1HID16bitFloatwithUnitExponent1 => 2321,
+            Sensor::VT_F16E2HID16bitFloatwithUnitExponent2 => 2322,
+            Sensor::VT_F16E3HID16bitFloatwithUnitExponent3 => 2323,
+            Sensor::VT_F16E4HID16bitFloatwithUnitExponent4 => 2324,
+            Sensor::VT_F16E5HID16bitFloatwithUnitExponent5 => 2325,
+            Sensor::VT_F16E6HID16bitFloatwithUnitExponent6 => 2326,
+            Sensor::VT_F16E7HID16bitFloatwithUnitExponent7 => 2327,
+            Sensor::VT_F16E8HID16bitFloatwithUnitExponent8 => 2328,
+            Sensor::VT_F16E9HID16bitFloatwithUnitExponent9 => 2329,
+            Sensor::VT_F16EAHID16bitFloatwithUnitExponentA => 2330,
+            Sensor::VT_F16EBHID16bitFloatwithUnitExponentB => 2331,
+            Sensor::VT_F16ECHID16bitFloatwithUnitExponentC => 2332,
+            Sensor::VT_F16EDHID16bitFloatwithUnitExponentD => 2333,
+            Sensor::VT_F16EEHID16bitFloatwithUnitExponentE => 2334,
+            Sensor::VT_F16EFHID16bitFloatwithUnitExponentF => 2335,
+            Sensor::VT_F32E0HID32bitFloatwithUnitExponent0 => 2336,
+            Sensor::VT_F32E1HID32bitFloatwithUnitExponent1 => 2337,
+            Sensor::VT_F32E2HID32bitFloatwithUnitExponent2 => 2338,
+            Sensor::VT_F32E3HID32bitFloatwithUnitExponent3 => 2339,
+            Sensor::VT_F32E4HID32bitFloatwithUnitExponent4 => 2340,
+            Sensor::VT_F32E5HID32bitFloatwithUnitExponent5 => 2341,
+            Sensor::VT_F32E6HID32bitFloatwithUnitExponent6 => 2342,
+            Sensor::VT_F32E7HID32bitFloatwithUnitExponent7 => 2343,
+            Sensor::VT_F32E8HID32bitFloatwithUnitExponent8 => 2344,
+            Sensor::VT_F32E9HID32bitFloatwithUnitExponent9 => 2345,
+            Sensor::VT_F32EAHID32bitFloatwithUnitExponentA => 2346,
+            Sensor::VT_F32EBHID32bitFloatwithUnitExponentB => 2347,
+            Sensor::VT_F32ECHID32bitFloatwithUnitExponentC => 2348,
+            Sensor::VT_F32EDHID32bitFloatwithUnitExponentD => 2349,
+            Sensor::VT_F32EEHID32bitFloatwithUnitExponentE => 2350,
+            Sensor::VT_F32EFHID32bitFloatwithUnitExponentF => 2351,
+            Sensor::ActivityTypeUnknown => 2352,
+            Sensor::ActivityTypeStationary => 2353,
+            Sensor::ActivityTypeFidgeting => 2354,
+            Sensor::ActivityTypeWalking => 2355,
+            Sensor::ActivityTypeRunning => 2356,
+            Sensor::ActivityTypeInVehicle => 2357,
+            Sensor::ActivityTypeBiking => 2358,
+            Sensor::ActivityTypeIdle => 2359,
+            Sensor::UnitNotSpecified => 2368,
+            Sensor::UnitLux => 2369,
+            Sensor::UnitDegreesKelvin => 2370,
+            Sensor::UnitDegreesCelsius => 2371,
+            Sensor::UnitPascal => 2372,
+            Sensor::UnitNewton => 2373,
+            Sensor::UnitMetersSecond => 2374,
+            Sensor::UnitKilogram => 2375,
+            Sensor::UnitMeter => 2376,
+            Sensor::UnitMetersSecondSecond => 2377,
+            Sensor::UnitFarad => 2378,
+            Sensor::UnitAmpere => 2379,
+            Sensor::UnitWatt => 2380,
+            Sensor::UnitHenry => 2381,
+            Sensor::UnitOhm => 2382,
+            Sensor::UnitVolt => 2383,
+            Sensor::UnitHertz => 2384,
+            Sensor::UnitBar => 2385,
+            Sensor::UnitDegreesAnticlockwise => 2386,
+            Sensor::UnitDegreesClockwise => 2387,
+            Sensor::UnitDegrees => 2388,
+            Sensor::UnitDegreesSecond => 2389,
+            Sensor::UnitDegreesSecondSecond => 2390,
+            Sensor::UnitKnot => 2391,
+            Sensor::UnitPercent => 2392,
+            Sensor::UnitSecond => 2393,
+            Sensor::UnitMillisecond => 2394,
+            Sensor::UnitG => 2395,
+            Sensor::UnitBytes => 2396,
+            Sensor::UnitMilligauss => 2397,
+            Sensor::UnitBits => 2398,
+            Sensor::ActivityStateNoStateChange => 2400,
+            Sensor::ActivityStateStartActivity => 2401,
+            Sensor::ActivityStateEndActivity => 2402,
+            Sensor::Exponent01 => 2416,
+            Sensor::Exponent110 => 2417,
+            Sensor::Exponent2100 => 2418,
+            Sensor::Exponent31000 => 2419,
+            Sensor::Exponent410000 => 2420,
+            Sensor::Exponent5100000 => 2421,
+            Sensor::Exponent61000000 => 2422,
+            Sensor::Exponent710000000 => 2423,
+            Sensor::Exponent8000000001 => 2424,
+            Sensor::Exponent900000001 => 2425,
+            Sensor::ExponentA0000001 => 2426,
+            Sensor::ExponentB000001 => 2427,
+            Sensor::ExponentC00001 => 2428,
+            Sensor::ExponentD0001 => 2429,
+            Sensor::ExponentE001 => 2430,
+            Sensor::ExponentF01 => 2431,
+            Sensor::DevicePositionUnknown => 2432,
+            Sensor::DevicePositionUnchanged => 2433,
+            Sensor::DevicePositionOnDesk => 2434,
+            Sensor::DevicePositionInHand => 2435,
+            Sensor::DevicePositionMovinginBag => 2436,
+            Sensor::DevicePositionStationaryinBag => 2437,
+        }
+    }
+}
+
+impl From<Sensor> for u16 {
+    fn from(up: Sensor) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Sensor> for u32 {
+    fn from(usage: &Sensor) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Sensor> for UsagePage {
+    fn from(_up: &Sensor) -> UsagePage {
+        UsagePage::Sensor
+    }
+}
+
+impl From<Sensor> for UsagePage {
+    fn from(up: Sensor) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Sensor {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for MedicalInstruments {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for MedicalInstruments {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x40` for [MedicalInstruments]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&MedicalInstruments> for u16 {
+    fn from(up: &MedicalInstruments) -> u16 {
+        match *up {
+            MedicalInstruments::Undefined => 0,
+            MedicalInstruments::MedicalUltrasound => 1,
+            MedicalInstruments::VCRAcquisition => 32,
+            MedicalInstruments::FreezeThaw => 33,
+            MedicalInstruments::ClipStore => 34,
+            MedicalInstruments::Update => 35,
+            MedicalInstruments::Next => 36,
+            MedicalInstruments::Save => 37,
+            MedicalInstruments::Print => 38,
+            MedicalInstruments::MicrophoneEnable => 39,
+            MedicalInstruments::Cine => 64,
+            MedicalInstruments::TransmitPower => 65,
+            MedicalInstruments::Volume => 66,
+            MedicalInstruments::Focus => 67,
+            MedicalInstruments::Depth => 68,
+            MedicalInstruments::SoftStepPrimary => 96,
+            MedicalInstruments::SoftStepSecondary => 97,
+            MedicalInstruments::DepthGainCompensation => 112,
+            MedicalInstruments::ZoomSelect => 128,
+            MedicalInstruments::ZoomAdjust => 129,
+            MedicalInstruments::SpectralDopplerModeSelect => 130,
+            MedicalInstruments::SpectralDopplerAdjust => 131,
+            MedicalInstruments::ColorDopplerModeSelect => 132,
+            MedicalInstruments::ColorDopplerAdjust => 133,
+            MedicalInstruments::MotionModeSelect => 134,
+            MedicalInstruments::MotionModeAdjust => 135,
+            MedicalInstruments::TwoDModeSelect => 136,
+            MedicalInstruments::TwoDModeAdjust => 137,
+            MedicalInstruments::SoftControlSelect => 160,
+            MedicalInstruments::SoftControlAdjust => 161,
+        }
+    }
+}
+
+impl From<MedicalInstruments> for u16 {
+    fn from(up: MedicalInstruments) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&MedicalInstruments> for u32 {
+    fn from(usage: &MedicalInstruments) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&MedicalInstruments> for UsagePage {
+    fn from(_up: &MedicalInstruments) -> UsagePage {
+        UsagePage::MedicalInstruments
+    }
+}
+
+impl From<MedicalInstruments> for UsagePage {
+    fn from(up: MedicalInstruments) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for MedicalInstruments {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for BrailleDisplay {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for BrailleDisplay {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x41` for [BrailleDisplay]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&BrailleDisplay> for u16 {
+    fn from(up: &BrailleDisplay) -> u16 {
+        match *up {
+            BrailleDisplay::Undefined => 0,
+            BrailleDisplay::BrailleDisplay => 1,
+            BrailleDisplay::BrailleRow => 2,
+            BrailleDisplay::EightDotBrailleCell => 3,
+            BrailleDisplay::SixDotBrailleCell => 4,
+            BrailleDisplay::NumberofBrailleCells => 5,
+            BrailleDisplay::ScreenReaderControl => 6,
+            BrailleDisplay::ScreenReaderIdentifier => 7,
+            BrailleDisplay::RouterSet1 => 250,
+            BrailleDisplay::RouterSet2 => 251,
+            BrailleDisplay::RouterSet3 => 252,
+            BrailleDisplay::RouterButton => 256,
+            BrailleDisplay::BrailleButtons => 512,
+            BrailleDisplay::BrailleKeyboardDot1 => 513,
+            BrailleDisplay::BrailleKeyboardDot2 => 514,
+            BrailleDisplay::BrailleKeyboardDot3 => 515,
+            BrailleDisplay::BrailleKeyboardDot4 => 516,
+            BrailleDisplay::BrailleKeyboardDot5 => 517,
+            BrailleDisplay::BrailleKeyboardDot6 => 518,
+            BrailleDisplay::BrailleKeyboardDot7 => 519,
+            BrailleDisplay::BrailleKeyboardDot8 => 520,
+            BrailleDisplay::BrailleKeyboardSpace => 521,
+            BrailleDisplay::BrailleKeyboardLeftSpace => 522,
+            BrailleDisplay::BrailleKeyboardRightSpace => 523,
+            BrailleDisplay::BrailleFaceControls => 524,
+            BrailleDisplay::BrailleLeftControls => 525,
+            BrailleDisplay::BrailleRightControls => 526,
+            BrailleDisplay::BrailleTopControls => 527,
+            BrailleDisplay::BrailleJoystickCenter => 528,
+            BrailleDisplay::BrailleJoystickUp => 529,
+            BrailleDisplay::BrailleJoystickDown => 530,
+            BrailleDisplay::BrailleJoystickLeft => 531,
+            BrailleDisplay::BrailleJoystickRight => 548,
+            BrailleDisplay::BrailleDPadCenter => 549,
+            BrailleDisplay::BrailleDPadUp => 550,
+            BrailleDisplay::BrailleDPadDown => 535,
+            BrailleDisplay::BrailleDPadLeft => 536,
+            BrailleDisplay::BrailleDPadRight => 537,
+            BrailleDisplay::BraillePanLeft => 538,
+            BrailleDisplay::BraillePanRight => 539,
+            BrailleDisplay::BrailleRockerUp => 540,
+            BrailleDisplay::BrailleRockerDown => 541,
+            BrailleDisplay::BrailleRockerPress => 542,
+        }
+    }
+}
+
+impl From<BrailleDisplay> for u16 {
+    fn from(up: BrailleDisplay) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&BrailleDisplay> for u32 {
+    fn from(usage: &BrailleDisplay) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&BrailleDisplay> for UsagePage {
+    fn from(_up: &BrailleDisplay) -> UsagePage {
+        UsagePage::BrailleDisplay
+    }
+}
+
+impl From<BrailleDisplay> for UsagePage {
+    fn from(up: BrailleDisplay) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for BrailleDisplay {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for LightingandIllumination {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for LightingandIllumination {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x59` for [LightingandIllumination]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&LightingandIllumination> for u16 {
+    fn from(up: &LightingandIllumination) -> u16 {
+        match *up {
+            LightingandIllumination::Undefined => 0,
+            LightingandIllumination::LampArray => 1,
+            LightingandIllumination::LampArrayAttributesReport => 2,
+            LightingandIllumination::LampCount => 3,
+            LightingandIllumination::BoundingBoxWidthInMicrometers => 4,
+            LightingandIllumination::BoundingBoxHeightInMicrometers => 5,
+            LightingandIllumination::BoundingBoxDepthInMicrometers => 6,
+            LightingandIllumination::LampArrayKind => 7,
+            LightingandIllumination::MinUpdateIntervalInMicroseconds => 8,
+            LightingandIllumination::LampAttributesRequestReport => 32,
+            LightingandIllumination::LampId => 33,
+            LightingandIllumination::LampAttributesResponseReport => 34,
+            LightingandIllumination::PositionXInMicrometers => 35,
+            LightingandIllumination::PositionYInMicrometers => 36,
+            LightingandIllumination::PositionZInMicrometers => 37,
+            LightingandIllumination::LampPurposes => 38,
+            LightingandIllumination::UpdateLatencyInMicroseconds => 39,
+            LightingandIllumination::RedLevelCount => 40,
+            LightingandIllumination::GreenLevelCount => 41,
+            LightingandIllumination::BlueLevelCount => 42,
+            LightingandIllumination::IntensityLevelCount => 43,
+            LightingandIllumination::IsProgrammable => 44,
+            LightingandIllumination::InputBinding => 45,
+            LightingandIllumination::LampMultiUpdateReport => 80,
+            LightingandIllumination::RedUpdateChannel => 81,
+            LightingandIllumination::GreenUpdateChannel => 82,
+            LightingandIllumination::BlueUpdateChannel => 83,
+            LightingandIllumination::IntensityUpdateChannel => 84,
+            LightingandIllumination::LampUpdateFlags => 85,
+            LightingandIllumination::LampRangeUpdateReport => 96,
+            LightingandIllumination::LampIdStart => 97,
+            LightingandIllumination::LampIdEnd => 98,
+            LightingandIllumination::LampArrayControlReport => 112,
+            LightingandIllumination::AutonomousMode => 113,
+        }
+    }
+}
+
+impl From<LightingandIllumination> for u16 {
+    fn from(up: LightingandIllumination) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&LightingandIllumination> for u32 {
+    fn from(usage: &LightingandIllumination) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&LightingandIllumination> for UsagePage {
+    fn from(_up: &LightingandIllumination) -> UsagePage {
+        UsagePage::LightingandIllumination
+    }
+}
+
+impl From<LightingandIllumination> for UsagePage {
+    fn from(up: LightingandIllumination) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for LightingandIllumination {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Monitor {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Monitor {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x80` for [Monitor]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Monitor> for u16 {
+    fn from(up: &Monitor) -> u16 {
+        match *up {
+            Monitor::Undefined => 0,
+            Monitor::MonitorControl => 1,
+            Monitor::EDIDInformation => 2,
+            Monitor::VDIFInformation => 3,
+            Monitor::VESAVersion => 4,
+            Monitor::OnScreenDisplay => 5,
+            Monitor::AutoSizeCenter => 6,
+            Monitor::PolarityHorzSynch => 7,
+            Monitor::PolarityVertSynch => 8,
+            Monitor::SyncType => 9,
+            Monitor::ScreenPosition => 10,
+            Monitor::HorizontalFrequency => 11,
+            Monitor::VerticalFrequency => 12,
+        }
+    }
+}
+
+impl From<Monitor> for u16 {
+    fn from(up: Monitor) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Monitor> for u32 {
+    fn from(usage: &Monitor) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Monitor> for UsagePage {
+    fn from(_up: &Monitor) -> UsagePage {
+        UsagePage::Monitor
+    }
+}
+
+impl From<Monitor> for UsagePage {
+    fn from(up: Monitor) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Monitor {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for MonitorEnumeratedValues {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for MonitorEnumeratedValues {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x81` for [MonitorEnumeratedValues]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&MonitorEnumeratedValues> for u16 {
+    fn from(up: &MonitorEnumeratedValues) -> u16 {
+        match *up {
+            MonitorEnumeratedValues::unassigned => 0,
+        }
+    }
+}
+
+impl From<MonitorEnumeratedValues> for u16 {
+    fn from(up: MonitorEnumeratedValues) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&MonitorEnumeratedValues> for u32 {
+    fn from(usage: &MonitorEnumeratedValues) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&MonitorEnumeratedValues> for UsagePage {
+    fn from(_up: &MonitorEnumeratedValues) -> UsagePage {
+        UsagePage::MonitorEnumeratedValues
+    }
+}
+
+impl From<MonitorEnumeratedValues> for UsagePage {
+    fn from(up: MonitorEnumeratedValues) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for MonitorEnumeratedValues {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for VESAVirtualControls {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for VESAVirtualControls {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x82` for [VESAVirtualControls]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&VESAVirtualControls> for u16 {
+    fn from(up: &VESAVirtualControls) -> u16 {
+        match *up {
+            VESAVirtualControls::Brightness => 16,
+            VESAVirtualControls::Contrast => 18,
+            VESAVirtualControls::VideoGainRed => 22,
+            VESAVirtualControls::VideoGainGreen => 24,
+            VESAVirtualControls::VideoGainBlue => 26,
+            VESAVirtualControls::Focus => 28,
+            VESAVirtualControls::HorizontalPosition => 32,
+            VESAVirtualControls::HorizontalSize => 34,
+            VESAVirtualControls::HorizontalPincushion => 36,
+            VESAVirtualControls::HorizontalPincushionBalance => 38,
+            VESAVirtualControls::HorizontalMisconvergence => 40,
+            VESAVirtualControls::HorizontalLinearity => 42,
+            VESAVirtualControls::HorizontalLinearityBalance => 44,
+            VESAVirtualControls::VerticalPosition => 48,
+            VESAVirtualControls::VerticalSize => 50,
+            VESAVirtualControls::VerticalPincushion => 52,
+            VESAVirtualControls::VerticalPincushionBalance => 54,
+            VESAVirtualControls::VerticalMisconvergence => 56,
+            VESAVirtualControls::VerticalLinearity => 58,
+            VESAVirtualControls::VerticalLinearityBalance => 60,
+            VESAVirtualControls::ParallelogramDistortion => 64,
+            VESAVirtualControls::TrapezoidalDistortion => 66,
+            VESAVirtualControls::Tilt => 68,
+            VESAVirtualControls::TopCornerDistortionControl => 70,
+            VESAVirtualControls::TopCornerDistortionBalance => 72,
+            VESAVirtualControls::BottomCornerDistortionControl => 74,
+            VESAVirtualControls::BottomCornerDistortionBalance => 76,
+            VESAVirtualControls::MoiréHorizontal => 86,
+            VESAVirtualControls::MoiréVertical => 88,
+            VESAVirtualControls::InputLevelSelect => 94,
+            VESAVirtualControls::InputSourceSelect => 96,
+            VESAVirtualControls::StereoMode => 98,
+            VESAVirtualControls::VideoBlackLevelRed => 108,
+            VESAVirtualControls::VideoBlackLevelGreen => 110,
+            VESAVirtualControls::VideoBlackLevelBlue => 112,
+        }
+    }
+}
+
+impl From<VESAVirtualControls> for u16 {
+    fn from(up: VESAVirtualControls) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&VESAVirtualControls> for u32 {
+    fn from(usage: &VESAVirtualControls) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&VESAVirtualControls> for UsagePage {
+    fn from(_up: &VESAVirtualControls) -> UsagePage {
+        UsagePage::VESAVirtualControls
+    }
+}
+
+impl From<VESAVirtualControls> for UsagePage {
+    fn from(up: VESAVirtualControls) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for VESAVirtualControls {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for VESACommand {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for VESACommand {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x83` for [VESACommand]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&VESACommand> for u16 {
+    fn from(up: &VESACommand) -> u16 {
+        match *up {
+            VESACommand::Undefined => 0,
+            VESACommand::Settings => 1,
+            VESACommand::Degauss => 2,
+        }
+    }
+}
+
+impl From<VESACommand> for u16 {
+    fn from(up: VESACommand) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&VESACommand> for u32 {
+    fn from(usage: &VESACommand) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&VESACommand> for UsagePage {
+    fn from(_up: &VESACommand) -> UsagePage {
+        UsagePage::VESACommand
+    }
+}
+
+impl From<VESACommand> for UsagePage {
+    fn from(up: VESACommand) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for VESACommand {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for PowerDevice {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for PowerDevice {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x84` for [PowerDevice]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&PowerDevice> for u16 {
+    fn from(up: &PowerDevice) -> u16 {
+        match *up {
+            PowerDevice::PeripheralDevice => 6,
+        }
+    }
+}
+
+impl From<PowerDevice> for u16 {
+    fn from(up: PowerDevice) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&PowerDevice> for u32 {
+    fn from(usage: &PowerDevice) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&PowerDevice> for UsagePage {
+    fn from(_up: &PowerDevice) -> UsagePage {
+        UsagePage::PowerDevice
+    }
+}
+
+impl From<PowerDevice> for UsagePage {
+    fn from(up: PowerDevice) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for PowerDevice {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for BatterySystem {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for BatterySystem {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x85` for [BatterySystem]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&BatterySystem> for u16 {
+    fn from(up: &BatterySystem) -> u16 {
+        match *up {}
+    }
+}
+
+impl From<BatterySystem> for u16 {
+    fn from(up: BatterySystem) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&BatterySystem> for u32 {
+    fn from(usage: &BatterySystem) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&BatterySystem> for UsagePage {
+    fn from(_up: &BatterySystem) -> UsagePage {
+        UsagePage::BatterySystem
+    }
+}
+
+impl From<BatterySystem> for UsagePage {
+    fn from(up: BatterySystem) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for BatterySystem {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for BarCodeScanner {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for BarCodeScanner {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x8C` for [BarCodeScanner]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&BarCodeScanner> for u16 {
+    fn from(up: &BarCodeScanner) -> u16 {
+        match *up {
+            BarCodeScanner::Undefined => 0,
+        }
+    }
+}
+
+impl From<BarCodeScanner> for u16 {
+    fn from(up: BarCodeScanner) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&BarCodeScanner> for u32 {
+    fn from(usage: &BarCodeScanner) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&BarCodeScanner> for UsagePage {
+    fn from(_up: &BarCodeScanner) -> UsagePage {
+        UsagePage::BarCodeScanner
+    }
+}
+
+impl From<BarCodeScanner> for UsagePage {
+    fn from(up: BarCodeScanner) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for BarCodeScanner {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Scale {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Scale {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x8D` for [Scale]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Scale> for u16 {
+    fn from(up: &Scale) -> u16 {
+        match *up {
+            Scale::Undefined => 0,
+        }
+    }
+}
+
+impl From<Scale> for u16 {
+    fn from(up: Scale) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Scale> for u32 {
+    fn from(usage: &Scale) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Scale> for UsagePage {
+    fn from(_up: &Scale) -> UsagePage {
+        UsagePage::Scale
+    }
+}
+
+impl From<Scale> for UsagePage {
+    fn from(up: Scale) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Scale {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for MagneticStripeReading {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for MagneticStripeReading {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x8E` for [MagneticStripeReading]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&MagneticStripeReading> for u16 {
+    fn from(up: &MagneticStripeReading) -> u16 {
+        match *up {
+            MagneticStripeReading::Undefined => 0,
+        }
+    }
+}
+
+impl From<MagneticStripeReading> for u16 {
+    fn from(up: MagneticStripeReading) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&MagneticStripeReading> for u32 {
+    fn from(usage: &MagneticStripeReading) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&MagneticStripeReading> for UsagePage {
+    fn from(_up: &MagneticStripeReading) -> UsagePage {
+        UsagePage::MagneticStripeReading
+    }
+}
+
+impl From<MagneticStripeReading> for UsagePage {
+    fn from(up: MagneticStripeReading) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for MagneticStripeReading {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for CameraControl {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for CameraControl {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x90` for [CameraControl]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&CameraControl> for u16 {
+    fn from(up: &CameraControl) -> u16 {
+        match *up {
+            CameraControl::Undefined => 0,
+            CameraControl::CameraAutofocus => 32,
+            CameraControl::CameraShutter => 33,
+        }
+    }
+}
+
+impl From<CameraControl> for u16 {
+    fn from(up: CameraControl) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&CameraControl> for u32 {
+    fn from(usage: &CameraControl) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&CameraControl> for UsagePage {
+    fn from(_up: &CameraControl) -> UsagePage {
+        UsagePage::CameraControl
+    }
+}
+
+impl From<CameraControl> for UsagePage {
+    fn from(up: CameraControl) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for CameraControl {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for ArcadePageOAAF {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for ArcadePageOAAF {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x91` for [ArcadePageOAAF]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&ArcadePageOAAF> for u16 {
+    fn from(up: &ArcadePageOAAF) -> u16 {
+        match *up {
+            ArcadePageOAAF::Undefined => 0,
+        }
+    }
+}
+
+impl From<ArcadePageOAAF> for u16 {
+    fn from(up: ArcadePageOAAF) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&ArcadePageOAAF> for u32 {
+    fn from(usage: &ArcadePageOAAF) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&ArcadePageOAAF> for UsagePage {
+    fn from(_up: &ArcadePageOAAF) -> UsagePage {
+        UsagePage::ArcadePageOAAF
+    }
+}
+
+impl From<ArcadePageOAAF> for UsagePage {
+    fn from(up: ArcadePageOAAF) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for ArcadePageOAAF {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for GamingDevice {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for GamingDevice {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0x92` for [GamingDevice]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&GamingDevice> for u16 {
+    fn from(up: &GamingDevice) -> u16 {
+        match *up {}
+    }
+}
+
+impl From<GamingDevice> for u16 {
+    fn from(up: GamingDevice) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&GamingDevice> for u32 {
+    fn from(usage: &GamingDevice) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&GamingDevice> for UsagePage {
+    fn from(_up: &GamingDevice) -> UsagePage {
+        UsagePage::GamingDevice
+    }
+}
+
+impl From<GamingDevice> for UsagePage {
+    fn from(up: GamingDevice) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for GamingDevice {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for FIDOAlliance {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for FIDOAlliance {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xF1D0` for [FIDOAlliance]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&FIDOAlliance> for u16 {
+    fn from(up: &FIDOAlliance) -> u16 {
+        match *up {
+            FIDOAlliance::Undefined => 0,
+            FIDOAlliance::U2FAuthenticatorDevice => 1,
+            FIDOAlliance::InputReportData => 32,
+            FIDOAlliance::OutputReportData => 33,
+        }
+    }
+}
+
+impl From<FIDOAlliance> for u16 {
+    fn from(up: FIDOAlliance) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&FIDOAlliance> for u32 {
+    fn from(usage: &FIDOAlliance) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&FIDOAlliance> for UsagePage {
+    fn from(_up: &FIDOAlliance) -> UsagePage {
+        UsagePage::FIDOAlliance
+    }
+}
+
+impl From<FIDOAlliance> for UsagePage {
+    fn from(up: FIDOAlliance) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for FIDOAlliance {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for Wacom {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for Wacom {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xFF0D` for [Wacom]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
+    }
+}
+
+impl From<&Wacom> for u16 {
+    fn from(up: &Wacom) -> u16 {
+        match *up {
+            Wacom::WacomDigitizer => 1,
+            Wacom::WacomPen => 2,
+            Wacom::LightPen => 3,
+            Wacom::TouchScreen => 4,
+            Wacom::TouchPad => 5,
+            Wacom::WhiteBoard => 6,
+            Wacom::CoordinateMeasuringMachine => 7,
+            Wacom::ThreeDDigitizer => 8,
+            Wacom::StereoPlotter => 9,
+            Wacom::ArticulatedArm => 10,
+            Wacom::Armature => 11,
+            Wacom::MultiplePointDigitizer => 12,
+            Wacom::FreeSpaceWand => 13,
+            Wacom::DeviceConfiguration => 14,
+            Wacom::Stylus => 32,
+            Wacom::Puck => 33,
+            Wacom::Finger => 34,
+            Wacom::DeviceSettings => 35,
+            Wacom::TipPressure => 48,
+            Wacom::BarrelPressure => 49,
+            Wacom::InRange => 50,
+            Wacom::Touch => 51,
+            Wacom::Untouch => 52,
+            Wacom::Tap => 53,
+            Wacom::WacomSense => 54,
+            Wacom::DataValid => 55,
+            Wacom::TransducerIndex => 56,
+            Wacom::WacomDigitizerFnKeys => 57,
+            Wacom::ProgramChangeKeys => 58,
+            Wacom::BatteryStrength => 59,
+            Wacom::Invert => 60,
+            Wacom::XTilt => 61,
+            Wacom::YTilt => 62,
+            Wacom::Azimuth => 63,
+            Wacom::Altitude => 64,
+            Wacom::Twist => 65,
+            Wacom::TipSwitch => 66,
+            Wacom::SecondaryTipSwitch => 67,
+            Wacom::BarrelSwitch => 68,
+            Wacom::Eraser => 69,
+            Wacom::TabletPick => 70,
+            Wacom::Confidence => 71,
+            Wacom::Width => 72,
+            Wacom::Height => 73,
+            Wacom::ContactId => 81,
+            Wacom::Inputmode => 82,
+            Wacom::DeviceIndex => 83,
+            Wacom::ContactCount => 84,
+            Wacom::ContactMax => 85,
+            Wacom::ScanTime => 86,
+            Wacom::SurfaceSwitch => 87,
+            Wacom::ButtonSwitch => 88,
+            Wacom::ButtonType => 89,
+            Wacom::SecondaryBarrelSwitch => 90,
+            Wacom::TransducerSerialNumber => 91,
+            Wacom::WacomSerialHi => 92,
+            Wacom::PreferredColorisLocked => 93,
+            Wacom::PreferredLineWidth => 94,
+            Wacom::PreferredLineWidthisLocked => 95,
+            Wacom::PreferredLineStyle => 112,
+            Wacom::PreferredLineStyleisLocked => 113,
+            Wacom::Ink => 114,
+            Wacom::Pencil => 115,
+            Wacom::Highlighter => 116,
+            Wacom::ChiselMarker => 117,
+            Wacom::Brush => 118,
+            Wacom::WacomToolType => 119,
+            Wacom::DigitizerDiagnostic => 128,
+            Wacom::DigitizerError => 129,
+            Wacom::ErrNormalStatus => 130,
+            Wacom::ErrTransducersExceeded => 131,
+            Wacom::ErrFullTransFeaturesUnavail => 132,
+            Wacom::ErrChargeLow => 133,
+            Wacom::X => 304,
+            Wacom::Y => 305,
+            Wacom::WacomDistance => 306,
+            Wacom::WacomTouchStrip => 310,
+            Wacom::WacomTouchStrip2 => 311,
+            Wacom::WacomTouchRing => 312,
+            Wacom::WacomTouchRingStatus => 313,
+            Wacom::WacomAccelerometerX => 1025,
+            Wacom::WacomAccelerometerY => 1026,
+            Wacom::WacomAccelerometerZ => 1027,
+            Wacom::WacomBatteryCharging => 1028,
+            Wacom::WacomTouchOnOff => 1108,
+            Wacom::WacomBatteryLevel => 1083,
+            Wacom::WacomExpressKey00 => 2320,
+            Wacom::WacomExpressKeyCap00 => 2384,
+            Wacom::WacomModeChange => 2432,
+            Wacom::WacomButtonDesktopCenter => 2433,
+            Wacom::WacomButtonOnScreenKeyboard => 2434,
+            Wacom::WacomButtonDisplaySetting => 2435,
+            Wacom::WacomButtonTouchOnOff => 2438,
+            Wacom::WacomButtonHome => 2448,
+            Wacom::WacomButtonUp => 2449,
+            Wacom::WacomButtonDown => 2450,
+            Wacom::WacomButtonLeft => 2451,
+            Wacom::WacomButtonRight => 2452,
+            Wacom::WacomButtonCenter => 2453,
+            Wacom::WacomFingerWheel => 3331,
+            Wacom::WacomOffsetLeft => 3376,
+            Wacom::WacomOffsetTop => 3377,
+            Wacom::WacomOffsetRight => 3378,
+            Wacom::WacomOffsetBottom => 3379,
+            Wacom::WacomDataMode => 4098,
+            Wacom::WacomDigitizerInfo => 4115,
+        }
+    }
+}
+
+impl From<Wacom> for u16 {
+    fn from(up: Wacom) -> u16 {
+        u16::from(&up)
+    }
+}
+
+impl From<&Wacom> for u32 {
+    fn from(usage: &Wacom) -> u32 {
+        let up = UsagePage::from(usage);
+        let up = (u16::from(&up) as u32) << 16;
+        let id = u16::from(usage) as u32;
+        up | id
+    }
+}
+
+impl From<&Wacom> for UsagePage {
+    fn from(_up: &Wacom) -> UsagePage {
+        UsagePage::Wacom
+    }
+}
+
+impl From<Wacom> for UsagePage {
+    fn from(up: Wacom) -> UsagePage {
+        UsagePage::from(&up)
+    }
+}
+
+impl BitOr<u16> for Wacom {
+    type Output = Usage;
+
+    /// A convenience function to combine a Usage Page with
+    /// a value.
+    ///
+    /// This function panics if the Usage ID value results in
+    /// an unknown Usage. Where error checking is required,
+    /// use [UsagePage::to_usage].
+    fn bitor(self, usage: u16) -> Self::Output {
+        let up = u16::from(self) as u32;
+        let u = usage as u32;
+        Usage::try_from(up | u).expect("Invalid Usage ID for this Usage Page")
+    }
+}
+
+impl AsUsage for ConsumerDevices {
+    /// Returns the 32 bit Usage value of this Usage
+    fn usage_value(&self) -> u32 {
+        u32::from(self)
+    }
+
+    /// Returns the 16 bit Usage ID value of this Usage
+    fn usage_id_value(&self) -> u16 {
+        u16::from(self)
+    }
+}
+
+impl AsUsagePage for ConsumerDevices {
+    /// Returns the 16 bit value of this UsagePage
+    ///
+    /// This value is `0xC` for [ConsumerDevices]
+    fn usage_page_value(&self) -> u16 {
+        let up = UsagePage::from(self);
+        u16::from(up)
     }
 }
 
@@ -13790,448 +12426,7 @@ impl From<&ConsumerDevices> for u32 {
     fn from(usage: &ConsumerDevices) -> u32 {
         let up = UsagePage::from(usage);
         let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            ConsumerDevices::ConsumerControl => 1,
-            ConsumerDevices::NumericKeyPad => 2,
-            ConsumerDevices::ProgrammableButtons => 3,
-            ConsumerDevices::Microphone => 4,
-            ConsumerDevices::Headphone => 5,
-            ConsumerDevices::GraphicEqualizer => 6,
-            ConsumerDevices::Plus10 => 32,
-            ConsumerDevices::Plus100 => 33,
-            ConsumerDevices::AMPM => 34,
-            ConsumerDevices::Power => 48,
-            ConsumerDevices::Reset => 49,
-            ConsumerDevices::Sleep => 50,
-            ConsumerDevices::SleepAfter => 51,
-            ConsumerDevices::SleepMode => 52,
-            ConsumerDevices::Illumination => 53,
-            ConsumerDevices::FunctionButtons => 54,
-            ConsumerDevices::Menu => 64,
-            ConsumerDevices::MenuPick => 65,
-            ConsumerDevices::MenuUp => 66,
-            ConsumerDevices::MenuDown => 67,
-            ConsumerDevices::MenuLeft => 68,
-            ConsumerDevices::MenuRight => 69,
-            ConsumerDevices::MenuEscape => 70,
-            ConsumerDevices::MenuValueIncrease => 71,
-            ConsumerDevices::MenuValueDecrease => 72,
-            ConsumerDevices::DataOnScreen => 96,
-            ConsumerDevices::ClosedCaption => 97,
-            ConsumerDevices::ClosedCaptionSelect => 98,
-            ConsumerDevices::VCRTV => 99,
-            ConsumerDevices::BroadcastMode => 100,
-            ConsumerDevices::Snapshot => 101,
-            ConsumerDevices::Still => 102,
-            ConsumerDevices::PictureinPictureToggle => 103,
-            ConsumerDevices::PictureinPictureSwap => 104,
-            ConsumerDevices::RedMenuButton => 105,
-            ConsumerDevices::GreenMenuButton => 106,
-            ConsumerDevices::BlueMenuButton => 107,
-            ConsumerDevices::YellowMenuButton => 108,
-            ConsumerDevices::Aspect => 109,
-            ConsumerDevices::ThreeDModeSelect => 110,
-            ConsumerDevices::DisplayBrightnessIncrement => 111,
-            ConsumerDevices::DisplayBrightnessDecrement => 112,
-            ConsumerDevices::DisplayBrightness => 113,
-            ConsumerDevices::DisplayBacklightToggle => 114,
-            ConsumerDevices::DisplaySetBrightnesstoMinimum => 115,
-            ConsumerDevices::DisplaySetBrightnesstoMaximum => 116,
-            ConsumerDevices::DisplaySetAutoBrightness => 117,
-            ConsumerDevices::CameraAccessEnabled => 118,
-            ConsumerDevices::CameraAccessDisabled => 119,
-            ConsumerDevices::CameraAccessToggle => 120,
-            ConsumerDevices::KeyboardBrightnessIncrement => 121,
-            ConsumerDevices::KeyboardBrightnessDecrement => 122,
-            ConsumerDevices::KeyboardBacklightSetLevel => 123,
-            ConsumerDevices::KeyboardBacklightOOC => 124,
-            ConsumerDevices::KeyboardBacklightSetMinimum => 125,
-            ConsumerDevices::KeyboardBacklightSetMaximum => 126,
-            ConsumerDevices::KeyboardBacklightAuto => 127,
-            ConsumerDevices::Selection => 128,
-            ConsumerDevices::AssignSelection => 129,
-            ConsumerDevices::ModeStep => 130,
-            ConsumerDevices::RecallLast => 131,
-            ConsumerDevices::EnterChannel => 132,
-            ConsumerDevices::OrderMovie => 133,
-            ConsumerDevices::Channel => 134,
-            ConsumerDevices::MediaSelection => 135,
-            ConsumerDevices::MediaSelectComputer => 136,
-            ConsumerDevices::MediaSelectTV => 137,
-            ConsumerDevices::MediaSelectWWW => 138,
-            ConsumerDevices::MediaSelectDVD => 139,
-            ConsumerDevices::MediaSelectTelephone => 140,
-            ConsumerDevices::MediaSelectProgramGuide => 141,
-            ConsumerDevices::MediaSelectVideoPhone => 142,
-            ConsumerDevices::MediaSelectGames => 143,
-            ConsumerDevices::MediaSelectMessages => 144,
-            ConsumerDevices::MediaSelectCD => 145,
-            ConsumerDevices::MediaSelectVCR => 146,
-            ConsumerDevices::MediaSelectTuner => 147,
-            ConsumerDevices::Quit => 148,
-            ConsumerDevices::Help => 149,
-            ConsumerDevices::MediaSelectTape => 150,
-            ConsumerDevices::MediaSelectCable => 151,
-            ConsumerDevices::MediaSelectSatellite => 152,
-            ConsumerDevices::MediaSelectSecurity => 153,
-            ConsumerDevices::MediaSelectHome => 154,
-            ConsumerDevices::MediaSelectCall => 155,
-            ConsumerDevices::ChannelIncrement => 156,
-            ConsumerDevices::ChannelDecrement => 157,
-            ConsumerDevices::MediaSelectSAP => 158,
-            ConsumerDevices::VCRPlus => 160,
-            ConsumerDevices::Once => 161,
-            ConsumerDevices::Daily => 162,
-            ConsumerDevices::Weekly => 163,
-            ConsumerDevices::Monthly => 164,
-            ConsumerDevices::Play => 176,
-            ConsumerDevices::Pause => 177,
-            ConsumerDevices::Record => 178,
-            ConsumerDevices::FastForward => 179,
-            ConsumerDevices::Rewind => 180,
-            ConsumerDevices::ScanNextTrack => 181,
-            ConsumerDevices::ScanPreviousTrack => 182,
-            ConsumerDevices::Stop => 183,
-            ConsumerDevices::Eject => 184,
-            ConsumerDevices::RandomPlay => 185,
-            ConsumerDevices::SelectDisc => 186,
-            ConsumerDevices::EnterDisc => 187,
-            ConsumerDevices::Repeat => 188,
-            ConsumerDevices::Tracking => 189,
-            ConsumerDevices::TrackNormal => 190,
-            ConsumerDevices::SlowTracking => 191,
-            ConsumerDevices::FrameForward => 192,
-            ConsumerDevices::FrameBack => 193,
-            ConsumerDevices::Mark => 194,
-            ConsumerDevices::ClearMark => 195,
-            ConsumerDevices::RepeatFromMark => 196,
-            ConsumerDevices::ReturnToMark => 197,
-            ConsumerDevices::SearchMarkForward => 198,
-            ConsumerDevices::SearchMarkBackwards => 199,
-            ConsumerDevices::CounterReset => 200,
-            ConsumerDevices::ShowCounter => 201,
-            ConsumerDevices::TrackingIncrement => 202,
-            ConsumerDevices::TrackingDecrement => 203,
-            ConsumerDevices::StopEject => 204,
-            ConsumerDevices::PlayPause => 205,
-            ConsumerDevices::PlaySkip => 206,
-            ConsumerDevices::VoiceCommand => 207,
-            ConsumerDevices::InvokeCaptureInterface => 208,
-            ConsumerDevices::StartorStopGameRecording => 209,
-            ConsumerDevices::HistoricalGameCapture => 210,
-            ConsumerDevices::CaptureGameScreenshot => 211,
-            ConsumerDevices::ShoworHideRecordingIndicator => 212,
-            ConsumerDevices::StartorStopMicrophoneCapture => 213,
-            ConsumerDevices::StartorStopCameraCapture => 214,
-            ConsumerDevices::StartorStopGameBroadcast => 215,
-            ConsumerDevices::Volume => 224,
-            ConsumerDevices::Balance => 225,
-            ConsumerDevices::Mute => 226,
-            ConsumerDevices::Bass => 227,
-            ConsumerDevices::Treble => 228,
-            ConsumerDevices::BassBoost => 229,
-            ConsumerDevices::SurroundMode => 230,
-            ConsumerDevices::Loudness => 231,
-            ConsumerDevices::MPX => 232,
-            ConsumerDevices::VolumeUp => 233,
-            ConsumerDevices::VolumeDown => 234,
-            ConsumerDevices::SpeedSelect => 240,
-            ConsumerDevices::PlaybackSpeed => 241,
-            ConsumerDevices::StandardPlay => 242,
-            ConsumerDevices::LongPlay => 243,
-            ConsumerDevices::ExtendedPlay => 244,
-            ConsumerDevices::Slow => 245,
-            ConsumerDevices::FanEnable => 256,
-            ConsumerDevices::FanSpeed => 257,
-            ConsumerDevices::LightEnable => 258,
-            ConsumerDevices::LightIlluminationLevel => 259,
-            ConsumerDevices::ClimateControlEnable => 260,
-            ConsumerDevices::RoomTemperature => 261,
-            ConsumerDevices::SecurityEnable => 262,
-            ConsumerDevices::FireAlarm => 263,
-            ConsumerDevices::PoliceAlarm => 264,
-            ConsumerDevices::Proximity => 265,
-            ConsumerDevices::Motion => 266,
-            ConsumerDevices::DuressAlarm => 267,
-            ConsumerDevices::HoldupAlarm => 268,
-            ConsumerDevices::MedicalAlarm => 269,
-            ConsumerDevices::BalanceRight => 336,
-            ConsumerDevices::BalanceLeft => 337,
-            ConsumerDevices::BassIncrement => 338,
-            ConsumerDevices::BassDecrement => 339,
-            ConsumerDevices::TrebleIncrement => 340,
-            ConsumerDevices::TrebleDecrement => 341,
-            ConsumerDevices::SpeakerSystem => 352,
-            ConsumerDevices::ChannelLeft => 353,
-            ConsumerDevices::ChannelRight => 354,
-            ConsumerDevices::ChannelCenter => 355,
-            ConsumerDevices::ChannelFront => 356,
-            ConsumerDevices::ChannelCenterFront => 357,
-            ConsumerDevices::ChannelSide => 358,
-            ConsumerDevices::ChannelSurround => 359,
-            ConsumerDevices::ChannelLowFreqEnhancement => 360,
-            ConsumerDevices::ChannelTop => 361,
-            ConsumerDevices::ChannelUnknown => 362,
-            ConsumerDevices::Subchannel => 368,
-            ConsumerDevices::SubchannelIncrement => 369,
-            ConsumerDevices::SubchannelDecrement => 370,
-            ConsumerDevices::AlternateAudioIncrement => 371,
-            ConsumerDevices::AlternateAudioDecrement => 372,
-            ConsumerDevices::ApplicationLaunchButtons => 384,
-            ConsumerDevices::ALLaunchButtonConfigTool => 385,
-            ConsumerDevices::ALProgrammableButtonConfig => 386,
-            ConsumerDevices::ALConsumerControlConfig => 387,
-            ConsumerDevices::ALWordProcessor => 388,
-            ConsumerDevices::ALTextEditor => 389,
-            ConsumerDevices::ALSpreadsheet => 390,
-            ConsumerDevices::ALGraphicsEditor => 391,
-            ConsumerDevices::ALPresentationApp => 392,
-            ConsumerDevices::ALDatabaseApp => 393,
-            ConsumerDevices::ALEmailReader => 394,
-            ConsumerDevices::ALNewsreader => 395,
-            ConsumerDevices::ALVoicemail => 396,
-            ConsumerDevices::ALContactsAddressBook => 397,
-            ConsumerDevices::ALCalendarSchedule => 398,
-            ConsumerDevices::ALTaskProjectManager => 399,
-            ConsumerDevices::ALLogJournalTimecard => 400,
-            ConsumerDevices::ALCheckbookFinance => 401,
-            ConsumerDevices::ALCalculator => 402,
-            ConsumerDevices::ALAVCapturePlayback => 403,
-            ConsumerDevices::ALLocalMachineBrowser => 404,
-            ConsumerDevices::ALLANWANBrowser => 405,
-            ConsumerDevices::ALInternetBrowser => 406,
-            ConsumerDevices::ALRemoteNetworkingISPConnect => 407,
-            ConsumerDevices::ALNetworkConference => 408,
-            ConsumerDevices::ALNetworkChat => 409,
-            ConsumerDevices::ALTelephonyDialer => 410,
-            ConsumerDevices::ALLogon => 411,
-            ConsumerDevices::ALLogoff => 412,
-            ConsumerDevices::ALLogonLogoff => 413,
-            ConsumerDevices::ALTerminalLockScreensaver => 414,
-            ConsumerDevices::ALControlPanel => 415,
-            ConsumerDevices::ALCommandLineProcessorRun => 416,
-            ConsumerDevices::ALProcessTaskManager => 417,
-            ConsumerDevices::ALSelectTaskApplication => 418,
-            ConsumerDevices::ALNextTaskApplication => 419,
-            ConsumerDevices::ALPreviousTaskApplication => 420,
-            ConsumerDevices::ALPreemptHaltTaskApplication => 421,
-            ConsumerDevices::ALIntegratedHelpCenter => 422,
-            ConsumerDevices::ALDocuments => 423,
-            ConsumerDevices::ALThesaurus => 424,
-            ConsumerDevices::ALDictionary => 425,
-            ConsumerDevices::ALDesktop => 426,
-            ConsumerDevices::ALSpellCheck => 427,
-            ConsumerDevices::ALGrammarCheck => 428,
-            ConsumerDevices::ALWirelessStatus => 429,
-            ConsumerDevices::ALKeyboardLayout => 430,
-            ConsumerDevices::ALVirusProtection => 431,
-            ConsumerDevices::ALEncryption => 432,
-            ConsumerDevices::ALScreenSaver => 433,
-            ConsumerDevices::ALAlarms => 434,
-            ConsumerDevices::ALClock => 435,
-            ConsumerDevices::ALFileBrowser => 436,
-            ConsumerDevices::ALPowerStatus => 437,
-            ConsumerDevices::ALImageBrowser => 438,
-            ConsumerDevices::ALAudioBrowser => 439,
-            ConsumerDevices::ALMovieBrowser => 440,
-            ConsumerDevices::ALDigitalRightsManager => 441,
-            ConsumerDevices::ALDigitalWallet => 442,
-            ConsumerDevices::ALInstantMessaging => 444,
-            ConsumerDevices::ALOEMFeaturesTipsTutoBrowser => 445,
-            ConsumerDevices::ALOEMHelp => 446,
-            ConsumerDevices::ALOnlineCommunity => 447,
-            ConsumerDevices::ALEntertainmentContentBrowser => 448,
-            ConsumerDevices::ALOnlineShoppingBrowser => 449,
-            ConsumerDevices::ALSmartCardInformationHelp => 450,
-            ConsumerDevices::ALMarketMonitorFinanceBrowser => 451,
-            ConsumerDevices::ALCustomizedCorpNewsBrowser => 452,
-            ConsumerDevices::ALOnlineActivityBrowser => 453,
-            ConsumerDevices::ALResearchSearchBrowser => 454,
-            ConsumerDevices::ALAudioPlayer => 455,
-            ConsumerDevices::ALMessageStatus => 456,
-            ConsumerDevices::ALContactSync => 457,
-            ConsumerDevices::GenericGUIApplicationControls => 512,
-            ConsumerDevices::ACNew => 513,
-            ConsumerDevices::ACOpen => 514,
-            ConsumerDevices::ACClose => 515,
-            ConsumerDevices::ACExit => 516,
-            ConsumerDevices::ACMaximize => 517,
-            ConsumerDevices::ACMinimize => 518,
-            ConsumerDevices::ACSave => 519,
-            ConsumerDevices::ACPrint => 520,
-            ConsumerDevices::ACProperties => 521,
-            ConsumerDevices::ACUndo => 538,
-            ConsumerDevices::ACCopy => 539,
-            ConsumerDevices::ACCut => 540,
-            ConsumerDevices::ACPaste => 541,
-            ConsumerDevices::ACSelectAll => 542,
-            ConsumerDevices::ACFind => 543,
-            ConsumerDevices::ACFindandReplace => 544,
-            ConsumerDevices::ACSearch => 545,
-            ConsumerDevices::ACGoTo => 546,
-            ConsumerDevices::ACHome => 547,
-            ConsumerDevices::ACBack => 548,
-            ConsumerDevices::ACForward => 549,
-            ConsumerDevices::ACStop => 550,
-            ConsumerDevices::ACRefresh => 551,
-            ConsumerDevices::ACPreviousLink => 552,
-            ConsumerDevices::ACNextLink => 553,
-            ConsumerDevices::ACBookmarks => 554,
-            ConsumerDevices::ACHistory => 555,
-            ConsumerDevices::ACSubscriptions => 556,
-            ConsumerDevices::ACZoomIn => 557,
-            ConsumerDevices::ACZoomOut => 558,
-            ConsumerDevices::ACZoom => 559,
-            ConsumerDevices::ACFullScreenView => 560,
-            ConsumerDevices::ACNormalView => 561,
-            ConsumerDevices::ACViewToggle => 562,
-            ConsumerDevices::ACScrollUp => 563,
-            ConsumerDevices::ACScrollDown => 564,
-            ConsumerDevices::ACScroll => 565,
-            ConsumerDevices::ACPanLeft => 566,
-            ConsumerDevices::ACPanRight => 567,
-            ConsumerDevices::ACPan => 568,
-            ConsumerDevices::ACNewWindow => 569,
-            ConsumerDevices::ACTileHorizontally => 570,
-            ConsumerDevices::ACTileVertically => 571,
-            ConsumerDevices::ACFormat => 572,
-            ConsumerDevices::ACEdit => 573,
-            ConsumerDevices::ACBold => 574,
-            ConsumerDevices::ACItalics => 575,
-            ConsumerDevices::ACUnderline => 576,
-            ConsumerDevices::ACStrikethrough => 577,
-            ConsumerDevices::ACSubscript => 578,
-            ConsumerDevices::ACSuperscript => 579,
-            ConsumerDevices::ACAllCaps => 580,
-            ConsumerDevices::ACRotate => 581,
-            ConsumerDevices::ACResize => 582,
-            ConsumerDevices::ACFliphorizontal => 583,
-            ConsumerDevices::ACFlipVertical => 584,
-            ConsumerDevices::ACMirrorHorizontal => 585,
-            ConsumerDevices::ACMirrorVertical => 586,
-            ConsumerDevices::ACFontSelect => 587,
-            ConsumerDevices::ACFontColor => 588,
-            ConsumerDevices::ACFontSize => 589,
-            ConsumerDevices::ACJustifyLeft => 590,
-            ConsumerDevices::ACJustifyCenterH => 591,
-            ConsumerDevices::ACJustifyRight => 592,
-            ConsumerDevices::ACJustifyBlockH => 593,
-            ConsumerDevices::ACJustifyTop => 594,
-            ConsumerDevices::ACJustifyCenterV => 595,
-            ConsumerDevices::ACJustifyBottom => 596,
-            ConsumerDevices::ACJustifyBlockV => 597,
-            ConsumerDevices::ACIndentDecrease => 598,
-            ConsumerDevices::ACIndentIncrease => 599,
-            ConsumerDevices::ACNumberedList => 600,
-            ConsumerDevices::ACRestartNumbering => 601,
-            ConsumerDevices::ACBulletedList => 602,
-            ConsumerDevices::ACPromote => 603,
-            ConsumerDevices::ACDemote => 604,
-            ConsumerDevices::ACYes => 605,
-            ConsumerDevices::ACNo => 606,
-            ConsumerDevices::ACCancel => 607,
-            ConsumerDevices::ACCatalog => 608,
-            ConsumerDevices::ACBuyCheckout => 609,
-            ConsumerDevices::ACAddtoCart => 610,
-            ConsumerDevices::ACExpand => 611,
-            ConsumerDevices::ACExpandAll => 612,
-            ConsumerDevices::ACCollapse => 613,
-            ConsumerDevices::ACCollapseAll => 614,
-            ConsumerDevices::ACPrintPreview => 615,
-            ConsumerDevices::ACPasteSpecial => 616,
-            ConsumerDevices::ACInsertMode => 617,
-            ConsumerDevices::ACDelete => 618,
-            ConsumerDevices::ACLock => 619,
-            ConsumerDevices::ACUnlock => 620,
-            ConsumerDevices::ACProtect => 621,
-            ConsumerDevices::ACUnprotect => 622,
-            ConsumerDevices::ACAttachComment => 623,
-            ConsumerDevices::ACDeleteComment => 624,
-            ConsumerDevices::ACViewComment => 625,
-            ConsumerDevices::ACSelectWord => 626,
-            ConsumerDevices::ACSelectSentence => 627,
-            ConsumerDevices::ACSelectParagraph => 628,
-            ConsumerDevices::ACSelectColumn => 629,
-            ConsumerDevices::ACSelectRow => 630,
-            ConsumerDevices::ACSelectTable => 631,
-            ConsumerDevices::ACSelectObject => 632,
-            ConsumerDevices::ACRedoRepeat => 633,
-            ConsumerDevices::ACSort => 634,
-            ConsumerDevices::ACSortAscending => 635,
-            ConsumerDevices::ACSortDescending => 636,
-            ConsumerDevices::ACFilter => 637,
-            ConsumerDevices::ACSetClock => 638,
-            ConsumerDevices::ACViewClock => 639,
-            ConsumerDevices::ACSelectTimeZone => 640,
-            ConsumerDevices::ACEditTimeZones => 641,
-            ConsumerDevices::ACSetAlarm => 642,
-            ConsumerDevices::ACClearAlarm => 643,
-            ConsumerDevices::ACSnoozeAlarm => 644,
-            ConsumerDevices::ACResetAlarm => 645,
-            ConsumerDevices::ACSynchronize => 646,
-            ConsumerDevices::ACSendReceive => 647,
-            ConsumerDevices::ACSendTo => 648,
-            ConsumerDevices::ACReply => 649,
-            ConsumerDevices::ACReplyAll => 650,
-            ConsumerDevices::ACForwardMsg => 651,
-            ConsumerDevices::ACSend => 652,
-            ConsumerDevices::ACAttachFile => 653,
-            ConsumerDevices::ACUpload => 654,
-            ConsumerDevices::ACDownloadSaveTargetAs => 655,
-            ConsumerDevices::ACSetBorders => 656,
-            ConsumerDevices::ACInsertRow => 657,
-            ConsumerDevices::ACInsertColumn => 658,
-            ConsumerDevices::ACInsertFile => 659,
-            ConsumerDevices::ACInsertPicture => 660,
-            ConsumerDevices::ACInsertObject => 661,
-            ConsumerDevices::ACInsertSymbol => 662,
-            ConsumerDevices::ACSaveandClose => 663,
-            ConsumerDevices::ACRename => 664,
-            ConsumerDevices::ACMerge => 665,
-            ConsumerDevices::ACSplit => 666,
-            ConsumerDevices::ACDisributeHorizontally => 667,
-            ConsumerDevices::ACDistributeVertically => 668,
-            ConsumerDevices::ACNextKeyboardLayoutSelect => 669,
-            ConsumerDevices::ACNavigationGuidance => 670,
-            ConsumerDevices::ACDesktopShowAllWindows => 671,
-            ConsumerDevices::ACSoftKeyLeft => 672,
-            ConsumerDevices::ACSoftKeyRight => 673,
-            ConsumerDevices::ACIdleKeepAlive => 688,
-            ConsumerDevices::ExtendedKeyboardAttributesCollection => 704,
-            ConsumerDevices::KeyboardFormFactor => 705,
-            ConsumerDevices::KeyboardKeyType => 706,
-            ConsumerDevices::KeyboardPhysicalLayout => 707,
-            ConsumerDevices::VendorSpecificKeyboardPhysicalLayout => 708,
-            ConsumerDevices::KeyboardIETFLanguageTagIndex => 709,
-            ConsumerDevices::ImplementedKeyboardInputAssistControls => 710,
-            ConsumerDevices::KeyboardInputAssistPrevious => 711,
-            ConsumerDevices::KeyboardInputAssistNextS => 712,
-            ConsumerDevices::KeyboardInputAssistPreviousGroup => 713,
-            ConsumerDevices::KeyboardInputAssistNextGroup => 714,
-            ConsumerDevices::KeyboardInputAssistAccept => 715,
-            ConsumerDevices::KeyboardInputAssistCancel => 716,
-            ConsumerDevices::ContactEdited => 1280,
-            ConsumerDevices::ContactAdded => 1281,
-            ConsumerDevices::ContactRecordActive => 1282,
-            ConsumerDevices::ContactIndex => 1283,
-            ConsumerDevices::ContactNickname => 1284,
-            ConsumerDevices::ContactFirstName => 1285,
-            ConsumerDevices::ContactLastName => 1286,
-            ConsumerDevices::ContactFullName => 1287,
-            ConsumerDevices::ContactPhoneNumberPersonal => 1288,
-            ConsumerDevices::ContactPhoneNumberBusiness => 1289,
-            ConsumerDevices::ContactPhoneNumberMobile => 1290,
-            ConsumerDevices::ContactPhoneNumberPager => 1291,
-            ConsumerDevices::ContactPhoneNumberFax => 1292,
-            ConsumerDevices::ContactPhoneNumberOther => 1293,
-            ConsumerDevices::ContactEmailPersonal => 1294,
-            ConsumerDevices::ContactEmailBusiness => 1295,
-            ConsumerDevices::ContactEmailOther => 1296,
-            ConsumerDevices::ContactEmailMain => 1297,
-            ConsumerDevices::ContactSpeedDialNumber => 1298,
-            ConsumerDevices::ContactStatusFlag => 1299,
-            ConsumerDevices::ContactMisc => 1300,
-        };
+        let id = u16::from(usage) as u32;
         up | id
     }
 }
@@ -14264,94 +12459,6 @@ impl BitOr<u16> for ConsumerDevices {
     }
 }
 
-/// *Usage Page `0x12`: "Eye and Head Trackers"*
-///
-/// **This enum is autogenerated from the HID Usage Tables**.
-/// ```
-/// # use hidreport::hut::*;
-/// let u1 = Usage::EyeandHeadTrackers { usage: EyeandHeadTrackers::TrackingData };
-/// let u2 = Usage::new_from_page_and_id(0x12, 0x10).unwrap();
-/// assert_eq!(u1, u2);
-///
-/// assert_eq!(0x12, u1.usage_page_value());
-/// assert_eq!(0x10, u1.usage_id_value());
-/// assert_eq!((0x12 << 16) | 0x10, u1.usage_value());
-/// ```
-///
-#[allow(non_camel_case_types)]
-#[derive(Debug)]
-#[non_exhaustive]
-pub enum EyeandHeadTrackers {
-    /// Usage ID `0x1`: "Eye Tracker"
-    EyeTracker,
-    /// Usage ID `0x2`: "Head Tracker"
-    HeadTracker,
-    /// Usage ID `0x10`: "Tracking Data"
-    TrackingData,
-    /// Usage ID `0x11`: "Capabilities"
-    Capabilities,
-    /// Usage ID `0x12`: "Configuration"
-    Configuration,
-    /// Usage ID `0x13`: "Status"
-    Status,
-    /// Usage ID `0x14`: "Control"
-    Control,
-    /// Usage ID `0x20`: "Sensor Timestamp"
-    SensorTimestamp,
-    /// Usage ID `0x21`: "Position X"
-    PositionX,
-    /// Usage ID `0x22`: "Position Y"
-    PositionY,
-    /// Usage ID `0x23`: "Position Z"
-    PositionZ,
-    /// Usage ID `0x24`: "Gaze Point"
-    GazePoint,
-    /// Usage ID `0x25`: "Left Eye Position"
-    LeftEyePosition,
-    /// Usage ID `0x26`: "Right Eye Position"
-    RightEyePosition,
-    /// Usage ID `0x27`: "Head Position"
-    HeadPosition,
-    /// Usage ID `0x28`: "Head Direction Point"
-    HeadDirectionPoint,
-    /// Usage ID `0x29`: "Rotation about X axis"
-    RotationaboutXaxis,
-    /// Usage ID `0x2A`: "Rotation about Y axis"
-    RotationaboutYaxis,
-    /// Usage ID `0x2B`: "Rotation about Z axis"
-    RotationaboutZaxis,
-    /// Usage ID `0x100`: "Tracker Quality"
-    TrackerQuality,
-    /// Usage ID `0x101`: "Minimum Tracking Distance"
-    MinimumTrackingDistance,
-    /// Usage ID `0x102`: "Optimum Tracking Distance"
-    OptimumTrackingDistance,
-    /// Usage ID `0x103`: "Maximum Tracking Distance"
-    MaximumTrackingDistance,
-    /// Usage ID `0x104`: "Maximum Screen Plane Width"
-    MaximumScreenPlaneWidth,
-    /// Usage ID `0x105`: "Maximum Screen Plane Height"
-    MaximumScreenPlaneHeight,
-    /// Usage ID `0x200`: "Display Manufacturer ID"
-    DisplayManufacturerID,
-    /// Usage ID `0x201`: "Display Product ID"
-    DisplayProductID,
-    /// Usage ID `0x202`: "Display Serial Number"
-    DisplaySerialNumber,
-    /// Usage ID `0x203`: "Display Manufacturer Date"
-    DisplayManufacturerDate,
-    /// Usage ID `0x204`: "Calibrated Screen Width"
-    CalibratedScreenWidth,
-    /// Usage ID `0x205`: "Calibrated Screen Height"
-    CalibratedScreenHeight,
-    /// Usage ID `0x300`: "Sampling Frequency"
-    SamplingFrequency,
-    /// Usage ID `0x301`: "Configuration Status"
-    ConfigurationStatus,
-    /// Usage ID `0x400`: "Device Mode Request"
-    DeviceModeRequest,
-}
-
 impl AsUsage for EyeandHeadTrackers {
     /// Returns the 32 bit Usage value of this Usage
     fn usage_value(&self) -> u32 {
@@ -14371,48 +12478,6 @@ impl AsUsagePage for EyeandHeadTrackers {
     fn usage_page_value(&self) -> u16 {
         let up = UsagePage::from(self);
         u16::from(up)
-    }
-}
-
-impl fmt::Display for EyeandHeadTrackers {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let name = match self {
-            EyeandHeadTrackers::EyeTracker => "Eye Tracker",
-            EyeandHeadTrackers::HeadTracker => "Head Tracker",
-            EyeandHeadTrackers::TrackingData => "Tracking Data",
-            EyeandHeadTrackers::Capabilities => "Capabilities",
-            EyeandHeadTrackers::Configuration => "Configuration",
-            EyeandHeadTrackers::Status => "Status",
-            EyeandHeadTrackers::Control => "Control",
-            EyeandHeadTrackers::SensorTimestamp => "Sensor Timestamp",
-            EyeandHeadTrackers::PositionX => "Position X",
-            EyeandHeadTrackers::PositionY => "Position Y",
-            EyeandHeadTrackers::PositionZ => "Position Z",
-            EyeandHeadTrackers::GazePoint => "Gaze Point",
-            EyeandHeadTrackers::LeftEyePosition => "Left Eye Position",
-            EyeandHeadTrackers::RightEyePosition => "Right Eye Position",
-            EyeandHeadTrackers::HeadPosition => "Head Position",
-            EyeandHeadTrackers::HeadDirectionPoint => "Head Direction Point",
-            EyeandHeadTrackers::RotationaboutXaxis => "Rotation about X axis",
-            EyeandHeadTrackers::RotationaboutYaxis => "Rotation about Y axis",
-            EyeandHeadTrackers::RotationaboutZaxis => "Rotation about Z axis",
-            EyeandHeadTrackers::TrackerQuality => "Tracker Quality",
-            EyeandHeadTrackers::MinimumTrackingDistance => "Minimum Tracking Distance",
-            EyeandHeadTrackers::OptimumTrackingDistance => "Optimum Tracking Distance",
-            EyeandHeadTrackers::MaximumTrackingDistance => "Maximum Tracking Distance",
-            EyeandHeadTrackers::MaximumScreenPlaneWidth => "Maximum Screen Plane Width",
-            EyeandHeadTrackers::MaximumScreenPlaneHeight => "Maximum Screen Plane Height",
-            EyeandHeadTrackers::DisplayManufacturerID => "Display Manufacturer ID",
-            EyeandHeadTrackers::DisplayProductID => "Display Product ID",
-            EyeandHeadTrackers::DisplaySerialNumber => "Display Serial Number",
-            EyeandHeadTrackers::DisplayManufacturerDate => "Display Manufacturer Date",
-            EyeandHeadTrackers::CalibratedScreenWidth => "Calibrated Screen Width",
-            EyeandHeadTrackers::CalibratedScreenHeight => "Calibrated Screen Height",
-            EyeandHeadTrackers::SamplingFrequency => "Sampling Frequency",
-            EyeandHeadTrackers::ConfigurationStatus => "Configuration Status",
-            EyeandHeadTrackers::DeviceModeRequest => "Device Mode Request",
-        };
-        write!(f, "{name}")
     }
 }
 
@@ -14467,42 +12532,7 @@ impl From<&EyeandHeadTrackers> for u32 {
     fn from(usage: &EyeandHeadTrackers) -> u32 {
         let up = UsagePage::from(usage);
         let up = (u16::from(&up) as u32) << 16;
-        let id: u32 = match usage {
-            EyeandHeadTrackers::EyeTracker => 1,
-            EyeandHeadTrackers::HeadTracker => 2,
-            EyeandHeadTrackers::TrackingData => 16,
-            EyeandHeadTrackers::Capabilities => 17,
-            EyeandHeadTrackers::Configuration => 18,
-            EyeandHeadTrackers::Status => 19,
-            EyeandHeadTrackers::Control => 20,
-            EyeandHeadTrackers::SensorTimestamp => 32,
-            EyeandHeadTrackers::PositionX => 33,
-            EyeandHeadTrackers::PositionY => 34,
-            EyeandHeadTrackers::PositionZ => 35,
-            EyeandHeadTrackers::GazePoint => 36,
-            EyeandHeadTrackers::LeftEyePosition => 37,
-            EyeandHeadTrackers::RightEyePosition => 38,
-            EyeandHeadTrackers::HeadPosition => 39,
-            EyeandHeadTrackers::HeadDirectionPoint => 40,
-            EyeandHeadTrackers::RotationaboutXaxis => 41,
-            EyeandHeadTrackers::RotationaboutYaxis => 42,
-            EyeandHeadTrackers::RotationaboutZaxis => 43,
-            EyeandHeadTrackers::TrackerQuality => 256,
-            EyeandHeadTrackers::MinimumTrackingDistance => 257,
-            EyeandHeadTrackers::OptimumTrackingDistance => 258,
-            EyeandHeadTrackers::MaximumTrackingDistance => 259,
-            EyeandHeadTrackers::MaximumScreenPlaneWidth => 260,
-            EyeandHeadTrackers::MaximumScreenPlaneHeight => 261,
-            EyeandHeadTrackers::DisplayManufacturerID => 512,
-            EyeandHeadTrackers::DisplayProductID => 513,
-            EyeandHeadTrackers::DisplaySerialNumber => 514,
-            EyeandHeadTrackers::DisplayManufacturerDate => 515,
-            EyeandHeadTrackers::CalibratedScreenWidth => 516,
-            EyeandHeadTrackers::CalibratedScreenHeight => 517,
-            EyeandHeadTrackers::SamplingFrequency => 768,
-            EyeandHeadTrackers::ConfigurationStatus => 769,
-            EyeandHeadTrackers::DeviceModeRequest => 1024,
-        };
+        let id = u16::from(usage) as u32;
         up | id
     }
 }
@@ -14591,7 +12621,7 @@ impl fmt::Display for Ordinals {
 #[non_exhaustive]
 pub enum Unicode {
     /// Usage ID `0x0`: "Reserved"
-    Unused,
+    Reserved,
     Code {
         code: u16,
     },
@@ -14600,7 +12630,7 @@ pub enum Unicode {
 impl fmt::Display for Unicode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = match self {
-            Unicode::Unused => "Unused".to_string(),
+            Unicode::Reserved => "Reserved".to_string(),
             Unicode::Code { code } => format!("Code {code}"),
         };
         write!(f, "{name}")
@@ -28035,6 +26065,68 @@ mod tests {
 
         // Usage to UsagePage
         assert!(matches!(UsagePage::from(&u), UsagePage::GenericDesktop));
+
+        // UsagePage to u16
+        let up = UsagePage::from(&u);
+        assert_eq!(hid_usage_page, u16::from(&up));
+
+        // UsagePage to u16 via AsUsagePage trait
+        assert_eq!(hid_usage_page, up.usage_page_value());
+    }
+
+    #[test]
+    fn buttons() {
+        let hid_usage_page: u16 = 0x9;
+        let hid_usage_id: u16 = 0x5;
+        let hid_usage: u32 = (hid_usage_page as u32) << 16 | hid_usage_id as u32;
+
+        let u = Button::Button { button: 5 };
+        assert!(matches!(
+            Usage::try_from(hid_usage).unwrap(),
+            Usage::Button { usage: _ }
+        ));
+
+        // Usage to u32
+        assert_eq!(u32::from(&u), hid_usage);
+        assert_eq!(u.usage_value(), hid_usage);
+
+        // Usage to u16 usage_id
+        assert_eq!(hid_usage_id, u16::from(&u));
+        assert_eq!(hid_usage_id, u.usage_id_value());
+
+        // Usage to UsagePage
+        assert!(matches!(UsagePage::from(&u), UsagePage::Button));
+
+        // UsagePage to u16
+        let up = UsagePage::from(&u);
+        assert_eq!(hid_usage_page, u16::from(&up));
+
+        // UsagePage to u16 via AsUsagePage trait
+        assert_eq!(hid_usage_page, up.usage_page_value());
+    }
+
+    #[test]
+    fn ordinals() {
+        let hid_usage_page: u16 = 0xA;
+        let hid_usage_id: u16 = 0x8;
+        let hid_usage: u32 = (hid_usage_page as u32) << 16 | hid_usage_id as u32;
+
+        let u = Ordinals::Ordinal { ordinal: 8 };
+        assert!(matches!(
+            Usage::try_from(hid_usage).unwrap(),
+            Usage::Ordinals { usage: _ }
+        ));
+
+        // Usage to u32
+        assert_eq!(u32::from(&u), hid_usage);
+        assert_eq!(u.usage_value(), hid_usage);
+
+        // Usage to u16 usage_id
+        assert_eq!(hid_usage_id, u16::from(&u));
+        assert_eq!(hid_usage_id, u.usage_id_value());
+
+        // Usage to UsagePage
+        assert!(matches!(UsagePage::from(&u), UsagePage::Ordinals));
 
         // UsagePage to u16
         let up = UsagePage::from(&u);
