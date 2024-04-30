@@ -834,7 +834,7 @@ impl ArrayField {
         let bits_per_report = self.bits.len() / count;
 
         let offset = self.bits.start() + bits_per_report * idx;
-        let bits = offset..=offset + bits_per_report + 1;
+        let bits = offset..=offset + bits_per_report - 1;
         let v = match bits.len() {
             1..=8 => extract_u8(bytes, &bits) as u32,
             9..=16 => extract_u16(bytes, &bits) as u32,
@@ -862,7 +862,7 @@ impl ArrayField {
         let bits_per_report = self.bits.len() / count;
 
         let offset = self.bits.start() + bits_per_report * idx;
-        let bits = offset..=offset + bits_per_report + 1;
+        let bits = offset..=offset + bits_per_report - 1;
         let v = match bits.len() {
             1..=8 => extract_i8(bytes, &bits) as i32,
             9..=16 => extract_i16(bytes, &bits) as i32,
