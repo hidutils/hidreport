@@ -1058,7 +1058,8 @@ impl Stack {
     }
 
     fn reset_locals(&mut self) {
-        self.locals = vec![Locals::default()];
+        self.locals.pop();
+        self.locals.push(Locals::default());
     }
 
     fn globals(&mut self) -> &mut Globals {
