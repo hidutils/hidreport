@@ -1047,6 +1047,13 @@ impl Stack {
         );
         self.globals.pop();
         self.locals.pop();
+        ensure!(
+            !self.globals.is_empty() && !self.locals.is_empty(),
+            ParserError::InvalidData {
+                offset: 0,
+                message: "Too many Pops, not enough Pushes".into(),
+            }
+        );
         Ok(())
     }
 
