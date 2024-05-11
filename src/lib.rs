@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 //
 //! This crate provides parsing of HID Report Descriptors, including the [hid] module to inspect
-//! a report descriptor in more detail and the [hut] module for known HID Usages.
+//! a report descriptor in more detail. Check out the `hut` crate for known HID Usages to make
+//! sense of the various HID fields.
 //!
 //! Entry point is usually [`ReportDescriptor::try_from(bytes)`](ReportDescriptor::try_from):
 //!
@@ -44,7 +45,6 @@ use std::ops::{Range, RangeInclusive};
 use thiserror::Error;
 
 pub mod hid;
-pub mod hut;
 pub mod types;
 
 pub use hid::CollectionItem as CollectionType;
@@ -456,7 +456,7 @@ impl Report for RDescReport {
 }
 
 /// The usage of a [Field] defines the interpretation of a
-/// data value. See the [hut] module for a list of known Usages.
+/// data value. See the `hut` crate for a list of known Usages.
 ///
 /// A Usage comprises of a 16 bit [UsagePage] and a 16 bit [UsageId].
 ///
@@ -466,7 +466,7 @@ impl Report for RDescReport {
 /// let uid = UsageId::from(0x02); // Mouse
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
-/// For known named usages see [hut::Usage].
+/// For known named usages see the `hut` crate.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Usage {
     pub usage_page: UsagePage,

@@ -51,7 +51,7 @@ macro_rules! impl_fmt {
 /// let uid = UsageId::from(0x02); // Mouse
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
-/// For known named usages see [hut::Usage](crate::hut::Usage).
+/// For known named usages see the `hut` crate.
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsagePage(pub(crate) u16);
 
@@ -278,7 +278,7 @@ impl_fmt!(ReportCount, usize);
 /// let uid = UsageId::from(0x02); // Mouse
 /// let usage = Usage::from_page_and_id(up, uid);
 /// ```
-/// For known named usages see [hut::Usage](crate::hut::Usage).
+/// For known named usages see the `hut` crate.
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsageId(pub(crate) u16);
 

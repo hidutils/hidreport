@@ -28,7 +28,6 @@
 //! In this document and unless stated otherwise, a reference to "Section a.b.c" refers to the
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
 
-use crate::hut;
 use crate::types::*;
 use crate::{ensure, ParserError};
 
@@ -451,20 +450,6 @@ pub enum CollectionItem {
     UsageModifier,
     Reserved { value: u8 },
     VendorDefined { value: u8 },
-}
-
-impl From<&hut::UsagePage> for UsagePage {
-    fn from(hut_usage_page: &hut::UsagePage) -> UsagePage {
-        let up: u16 = hut_usage_page.usage_page();
-        UsagePage(up)
-    }
-}
-
-impl From<&hut::Usage> for UsagePage {
-    fn from(hut_usage: &hut::Usage) -> UsagePage {
-        let up = hut::UsagePage::from(hut_usage);
-        UsagePage(u16::from(up))
-    }
 }
 
 /// See Section 6.2.2.7, a global item applies to all subsequently identified items.
