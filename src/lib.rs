@@ -1183,10 +1183,14 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         return Ok(vec![Field::Constant(field)]);
     }
 
-    ensure!(globals.logical_minimum.is_some(), "Missing LogicalMinimum");
-    ensure!(globals.logical_maximum.is_some(), "Missing LogicalMaximum");
-    let logical_minimum = globals.logical_minimum.unwrap();
-    let logical_maximum = globals.logical_maximum.unwrap();
+    let logical_minimum = match globals.logical_minimum {
+        Some(min) => min,
+        None => LogicalMinimum(0),
+    };
+    let logical_maximum = match globals.logical_maximum {
+        Some(min) => min,
+        None => LogicalMaximum(0),
+    };
 
     ensure!(
         globals.physical_minimum.is_some() == globals.physical_maximum.is_some(),
