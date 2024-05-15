@@ -2,6 +2,10 @@
 name = "hidreport"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+homepage = "https://github.com/hidutils"
+repository = "https://github.com/hidutils/hut"
+description = "HID Report Descriptor and HID Report parser"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
