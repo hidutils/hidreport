@@ -656,7 +656,9 @@ impl TryFrom<&[u8]> for CollectionItem {
     type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<CollectionItem> {
-        ensure!(bytes.len() >= 2, HidError::InsufficientData);
+        if bytes.len() == 1 {
+            return Ok(CollectionItem::Physical);
+        }
         match bytes[1] {
             0x00 => Ok(CollectionItem::Physical),
             0x01 => Ok(CollectionItem::Application),
