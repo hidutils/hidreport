@@ -370,6 +370,15 @@ impl TryFrom<&[u8]> for ReportDescriptor {
     }
 }
 
+impl TryFrom<&Vec<u8>> for ReportDescriptor {
+    type Error = ParserError;
+
+    /// Try to parse the given byte array as a report descriptor.
+    fn try_from(bytes: &Vec<u8>) -> Result<ReportDescriptor> {
+        parse_report_descriptor(bytes)
+    }
+}
+
 #[derive(Copy, Clone, Debug)]
 enum Direction {
     Input,
