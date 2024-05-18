@@ -1279,6 +1279,7 @@ macro_rules! update_stack {
 }
 
 fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
+    ensure!(!bytes.is_empty(), "Empty report descriptor");
     let items = hid::ReportDescriptorItems::try_from(bytes)?;
 
     let mut stack = Stack::new();
