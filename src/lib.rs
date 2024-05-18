@@ -1201,12 +1201,17 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         None => LogicalMaximum(0),
     };
 
-    ensure!(
-        globals.physical_minimum.is_some() == globals.physical_maximum.is_some(),
-        "Missing PhysicalMinimum or PhysicalMaximum"
-    );
-    let physical_minimum = globals.physical_minimum;
-    let physical_maximum = globals.physical_maximum;
+    // Some report descriptors are missing either phys min or max, assume zero
+    // where one of them is not None
+    let physical_maximum: Option<PhysicalMaximum>;
+    let physical_minimum: Option<PhysicalMinimum>;
+    if globals.physical_minimum.is_some() != globals.physical_maximum.is_some() {
+        physical_maximum = globals.physical_maximum.or(Some(PhysicalMaximum(0)));
+        physical_minimum = globals.physical_minimum.or(Some(PhysicalMinimum(0)));
+    } else {
+        physical_maximum = globals.physical_maximum;
+        physical_minimum = globals.physical_minimum;
+    }
 
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
