@@ -1168,16 +1168,16 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
     };
 
     let bit_offset = 0;
-    ensure!(
-        globals.report_size.is_some(),
-        "Missing report size in globals"
-    );
-    ensure!(
-        globals.report_count.is_some(),
-        "Missing report count in globals"
-    );
-    let report_size = globals.report_size.unwrap();
-    let report_count = globals.report_count.unwrap();
+    // We have HID report descriptors in the wild that do not set a report size/count/whatever.
+    // Since the most important implementations so far have been in C-like languages, they
+    // will likely default to zero for unset values (unlike our None).
+    // Let's do this here to be as compatible as possible.
+    let report_size = globals.report_size.unwrap_or(ReportSize(0));
+    let report_count = globals.report_count.unwrap_or(ReportCount(0));
+
+    if report_count == ReportCount(0) || report_size == ReportSize(0) {
+        return Ok(vec![]);
+    }
 
     if is_constant {
         let nbits = usize::from(report_size) * usize::from(report_count);
@@ -1331,58 +1331,55 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                         }
                         Err(e) => return Err(e),
                     };
-                ensure!(
-                    !fields.is_empty(),
-                    ParserError::InvalidData {
-                        offset: rdesc_item.offset(),
-                        message: "Empty fields on MainItem".into(),
-                    }
-                );
                 stack.reset_locals();
 
-                // Now update the returned field(s) and push them into the right report
-                let direction = match item {
-                    MainItem::Input(_) => Direction::Input,
-                    MainItem::Output(_) => Direction::Output,
-                    MainItem::Feature(_) => Direction::Feature,
-                    _ => panic!("Invalid item for handle_main_item()"),
-                };
+                // Report descriptors with a ReportCount or ReportSize of 0 (or those missing)
+                // will have an empty fields list. These exist in the wild.
+                if !fields.is_empty() {
+                    // Now update the returned field(s) and push them into the right report
+                    let direction = match item {
+                        MainItem::Input(_) => Direction::Input,
+                        MainItem::Output(_) => Direction::Output,
+                        MainItem::Feature(_) => Direction::Feature,
+                        _ => panic!("Invalid item for handle_main_item()"),
+                    };
 
-                let reports: &mut Vec<RDescReport> = match direction {
-                    Direction::Input => &mut rdesc.input_reports,
-                    Direction::Output => &mut rdesc.output_reports,
-                    Direction::Feature => &mut rdesc.feature_reports,
-                };
+                    let reports: &mut Vec<RDescReport> = match direction {
+                        Direction::Input => &mut rdesc.input_reports,
+                        Direction::Output => &mut rdesc.output_reports,
+                        Direction::Feature => &mut rdesc.feature_reports,
+                    };
 
-                let report_id = fields.first().unwrap().report_id();
-                let report = match report_id {
-                    None => reports.first_mut(),
-                    Some(id) => reports
-                        .iter_mut()
-                        .find(|r| r.id.is_some() && &r.id.unwrap() == id),
-                };
+                    let report_id = fields.first().unwrap().report_id();
+                    let report = match report_id {
+                        None => reports.first_mut(),
+                        Some(id) => reports
+                            .iter_mut()
+                            .find(|r| r.id.is_some() && &r.id.unwrap() == id),
+                    };
 
-                let report = match report {
-                    None => {
-                        let initial_size = if report_id.is_some() { 8 } else { 0 };
-                        reports.push(RDescReport {
-                            id: *report_id,
-                            size: initial_size,
-                            fields: vec![],
-                        });
-                        reports.last_mut().unwrap()
-                    }
-                    Some(r) => r,
-                };
+                    let report = match report {
+                        None => {
+                            let initial_size = if report_id.is_some() { 8 } else { 0 };
+                            reports.push(RDescReport {
+                                id: *report_id,
+                                size: initial_size,
+                                fields: vec![],
+                            });
+                            reports.last_mut().unwrap()
+                        }
+                        Some(r) => r,
+                    };
 
-                // We know which report the fields belong to, let's update the offsets and field id
-                let offset = report.size;
-                fields.iter_mut().for_each(|f| {
-                    f.update_bit_offset(offset);
-                    report.size += f.len();
-                });
+                    // We know which report the fields belong to, let's update the offsets and field id
+                    let offset = report.size;
+                    fields.iter_mut().for_each(|f| {
+                        f.update_bit_offset(offset);
+                        report.size += f.len();
+                    });
 
-                report.fields.append(&mut fields);
+                    report.fields.append(&mut fields);
+                }
             }
             ItemType::Long => {}
             ItemType::Reserved => {}

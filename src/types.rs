@@ -243,7 +243,7 @@ impl UnitExponent {
 impl_from!(UnitExponent, UnitExponent, u32);
 impl_fmt!(UnitExponent, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ReportSize(pub(crate) usize);
 
 impl_from!(ReportSize, ReportSize, usize);
