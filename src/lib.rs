@@ -1192,14 +1192,8 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         return Ok(vec![Field::Constant(field)]);
     }
 
-    let logical_minimum = match globals.logical_minimum {
-        Some(min) => min,
-        None => LogicalMinimum(0),
-    };
-    let logical_maximum = match globals.logical_maximum {
-        Some(min) => min,
-        None => LogicalMaximum(0),
-    };
+    let logical_minimum = globals.logical_minimum.unwrap_or(LogicalMinimum(0));
+    let logical_maximum = globals.logical_maximum.unwrap_or(LogicalMaximum(0));
 
     // Some report descriptors are missing either phys min or max, assume zero
     // where one of them is not None
