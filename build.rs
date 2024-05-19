@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .flatten()
         .for_each(|rdesc| {
             let filename = rdesc.file_name().into_string().unwrap();
-            let funcname = filename.replace([':', '.'], "_");
+            let funcname = filename.replace([':', '.', '-'], "_");
             let path = rdesc.path();
             writeln!(file, "
 #[test]
