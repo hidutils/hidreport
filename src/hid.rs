@@ -683,41 +683,27 @@ impl TryFrom<&[u8]> for GlobalItem {
             (Some(0), Some(0))
         };
         let item = match bytes[0] & 0b11111100 {
-            0b00000100 => {
-                GlobalItem::UsagePage {
-                    usage_page: UsagePage(data.unwrap() as u16),
-                }
-            }
-            0b00010100 => {
-                GlobalItem::LogicalMinimum {
-                    minimum: LogicalMinimum(data_signed.unwrap()),
-                }
-            }
-            0b00100100 => {
-                GlobalItem::LogicalMaximum {
-                    maximum: LogicalMaximum(data_signed.unwrap()),
-                }
-            }
-            0b00110100 => {
-                GlobalItem::PhysicalMinimum {
-                    minimum: PhysicalMinimum(data.unwrap() as i32),
-                }
-            }
-            0b01000100 => {
-                GlobalItem::PhysicalMaximum {
-                    maximum: PhysicalMaximum(data.unwrap() as i32),
-                }
-            }
-            0b01010100 => {
-                GlobalItem::UnitExponent {
-                    exponent: UnitExponent(data.unwrap()),
-                }
-            }
-            0b01100100 => {
-                GlobalItem::Unit {
-                    unit: Unit(data.unwrap()),
-                }
-            }
+            0b00000100 => GlobalItem::UsagePage {
+                usage_page: UsagePage(data.unwrap() as u16),
+            },
+            0b00010100 => GlobalItem::LogicalMinimum {
+                minimum: LogicalMinimum(data_signed.unwrap()),
+            },
+            0b00100100 => GlobalItem::LogicalMaximum {
+                maximum: LogicalMaximum(data_signed.unwrap()),
+            },
+            0b00110100 => GlobalItem::PhysicalMinimum {
+                minimum: PhysicalMinimum(data.unwrap() as i32),
+            },
+            0b01000100 => GlobalItem::PhysicalMaximum {
+                maximum: PhysicalMaximum(data.unwrap() as i32),
+            },
+            0b01010100 => GlobalItem::UnitExponent {
+                exponent: UnitExponent(data.unwrap()),
+            },
+            0b01100100 => GlobalItem::Unit {
+                unit: Unit(data.unwrap()),
+            },
             0b01110100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
                 GlobalItem::ReportSize {
