@@ -40,7 +40,7 @@ fn bit(bits: u32, bit: u8) -> bool {
 }
 
 /// Convenience function to extract the bytes into a u32
-fn hiddata(bytes: &[u8]) -> Option<u32> {
+pub(crate) fn hiddata(bytes: &[u8]) -> Option<u32> {
     match bytes.len() {
         0 => None,
         1 => Some(bytes[0] as u32),
@@ -51,7 +51,7 @@ fn hiddata(bytes: &[u8]) -> Option<u32> {
 }
 
 /// Convenience function to extract the bytes into a i32
-fn hiddata_signed(bytes: &[u8]) -> Option<i32> {
+pub(crate) fn hiddata_signed(bytes: &[u8]) -> Option<i32> {
     match bytes.len() {
         0 => None,
         1 => Some((bytes[0] as i8) as i32),

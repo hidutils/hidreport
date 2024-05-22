@@ -1390,12 +1390,45 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 update_stack!(stack, globals, logical_minimum, minimum);
             }
             ItemType::Global(GlobalItem::LogicalMaximum { maximum }) => {
+                // We don't know if the maximum is signed or unsigned unless we
+                // look at the minimum value and check if that is signed or unsigned.
+                // We default to signed but if the minimum is unsigned, we might have
+                // to re-interpret.
+                let minimum = stack
+                    .globals_const()
+                    .logical_minimum
+                    .unwrap_or(LogicalMinimum(0));
+                let mut maximum = maximum;
+                if minimum < LogicalMinimum(0) {
+                    if let Some(data) = item.data() {
+                        if data.len() > 0 {
+                            maximum = LogicalMaximum(hid::hiddata_signed(&data).unwrap());
+                        }
+                    }
+                };
+                println!("setting to {maximum}");
                 update_stack!(stack, globals, logical_maximum, maximum);
             }
             ItemType::Global(GlobalItem::PhysicalMinimum { minimum }) => {
                 update_stack!(stack, globals, physical_minimum, minimum);
             }
             ItemType::Global(GlobalItem::PhysicalMaximum { maximum }) => {
+                // We don't know if the maximum is signed or unsigned unless we
+                // look at the minimum value and check if that is signed or unsigned.
+                // We default to signed but if the minimum is unsigned, we might have
+                // to re-interpret.
+                let minimum = stack
+                    .globals_const()
+                    .physical_minimum
+                    .unwrap_or(PhysicalMinimum(0));
+                let mut maximum = maximum;
+                if minimum < PhysicalMinimum(0) {
+                    if let Some(data) = item.data() {
+                        if data.len() > 0 {
+                            maximum = PhysicalMaximum(hid::hiddata_signed(&data).unwrap())
+                        }
+                    }
+                };
                 update_stack!(stack, globals, physical_maximum, maximum);
             }
             ItemType::Global(GlobalItem::UnitExponent { exponent }) => {
