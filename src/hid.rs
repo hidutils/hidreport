@@ -689,12 +689,24 @@ impl TryFrom<&[u8]> for GlobalItem {
             0b00010100 => GlobalItem::LogicalMinimum {
                 minimum: LogicalMinimum(data_signed.unwrap()),
             },
+            // Cheating here: we don't know if the data is signed or unsigned
+            // unless we look at the LogicalMinimum - but we don't have
+            // that here because we're just itemizing, not interpreting.
+            // So let's cheat and treat the minimum as signed and the maximum
+            // as unsigned which is good enough for anything that doesn't
+            // have a LogicalMaximum < 0.
             0b00100100 => GlobalItem::LogicalMaximum {
-                maximum: LogicalMaximum(data_signed.unwrap()),
+                maximum: LogicalMaximum(data.unwrap() as i32),
             },
             0b00110100 => GlobalItem::PhysicalMinimum {
-                minimum: PhysicalMinimum(data.unwrap() as i32),
+                minimum: PhysicalMinimum(data_signed.unwrap()),
             },
+            // Cheating here: we don't know if the data is signed or unsigned
+            // unless we look at the PhysicalMinimum - but we don't have
+            // that here because we're just itemizing, not interpreting.
+            // So let's cheat and treat the minimum as signed and the maximum
+            // as unsigned which is good enough for anything that doesn't
+            // have a PhysicalMaximum < 0.
             0b01000100 => GlobalItem::PhysicalMaximum {
                 maximum: PhysicalMaximum(data.unwrap() as i32),
             },
