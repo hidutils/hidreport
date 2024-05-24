@@ -1406,7 +1406,6 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                         }
                     }
                 };
-                println!("setting to {maximum}");
                 update_stack!(stack, globals, logical_maximum, maximum);
             }
             ItemType::Global(GlobalItem::PhysicalMinimum { minimum }) => {
