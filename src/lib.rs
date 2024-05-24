@@ -529,6 +529,14 @@ impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
 #[derive(Clone, Copy, Debug, PartialEq, Hash, PartialOrd)]
 pub struct FieldId(u32);
 
+impl From<&FieldId> for u32 {
+    fn from(f: &FieldId) -> u32 {
+        f.0
+    }
+}
+
+impl_from_without_ref!(FieldId, u32, u32);
+
 /// A single field inside a [Report].
 ///
 /// Fields may be [Field::Variable] and represent a
