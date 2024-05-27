@@ -87,13 +87,7 @@ fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
     let nbits = bits.len();
     assert_ne!(nbits, 0);
     assert!(nbits <= 32);
-    // If we start at a bit 0 we only need 1 byte (for u8)
-    // if we start at anything else, we need the next byte(s) too
-    let bytecount = if bits.start() % 8 == 0 {
-        (nbits + 7) / 8
-    } else {
-        (nbits + 7) / 8 + 1
-    };
+    let bytecount = bits.end() / 8 - bits.start() / 8 + 1;
     let base_index = bits.start() / 8;
     let bytes = &bytes[base_index..base_index + bytecount];
     let value: u64 = Range {
