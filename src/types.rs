@@ -382,10 +382,16 @@ pub struct UnitExponent(pub(crate) u32);
 
 impl UnitExponent {
     pub fn exponent(&self) -> i8 {
-        match self.0 & 0xf {
+        // Section 6.2.2.7 lists an example implying that
+        // the unit exponent must be a nibble. Real devices
+        // can send either a nibble or a normal value, let's
+        // handle either.
+        match self.0 {
+            // nibble
             n @ 0..=7 => n as i8,
             n @ 8..=15 => -16 + n as i8,
-            n => panic!("invalid size {n} for a nibble"),
+            // normal value
+            n => n as i8,
         }
     }
 }
@@ -622,6 +628,25 @@ mod tests {
                         .fold(0, |acc, u| acc | u32::from(*u));
                 assert_eq!(uval, v);
             }
+        }
+    }
+
+    #[test]
+    fn unit_exponent() {
+        let testvals = vec![
+            (0xf, -1),  // nibble test
+            (0xe, -2),  // nibble test
+            (0x8, -8),  // nibble test
+            (0x7, 7),   // normal or nibble
+            (0x1, 1),   // normal or nibble
+            (0xff, -1), // normal value
+            (0xfd, -3), // normal value
+            (0x10, 16), // normal value
+        ];
+
+        for (v, expected) in testvals {
+            let exponent = UnitExponent::from(v);
+            assert_eq!(exponent.exponent(), expected);
         }
     }
 }
