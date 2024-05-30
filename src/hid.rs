@@ -874,7 +874,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u32 {
 
     /// Converts the (little endian) data bytes into a u32.
     fn try_from(data: &ItemData) -> Result<u32> {
-        ensure!(data.len() >= 2, HidError::InsufficientData);
+        ensure!(!data.is_empty(), HidError::InsufficientData);
         match data.len() {
             0 => panic!("Item data with zero bytes must not happen"),
             1 => Ok(data.bytes[0] as u32),
@@ -1166,5 +1166,16 @@ mod tests {
             },
             _ => panic!("Wrong item type"),
         }
+    }
+
+    #[test]
+    fn item_data() {
+        let bytes = [1, 2, 3, 4, 5];
+        let item_data = ItemData { bytes: &bytes[..1] };
+        assert_eq!(u32::try_from(&item_data).unwrap(), 1);
+        let item_data = ItemData { bytes: &bytes[..2] };
+        assert_eq!(u32::try_from(&item_data).unwrap(), 0x0201);
+        let item_data = ItemData { bytes: &bytes[..4] };
+        assert_eq!(u32::try_from(&item_data).unwrap(), 0x04030201);
     }
 }
