@@ -41,7 +41,7 @@
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
 
 use std::hash::{Hash, Hasher};
-use std::ops::{Range, RangeInclusive};
+use std::ops::Range;
 use thiserror::Error;
 
 pub mod hid;
@@ -83,12 +83,12 @@ macro_rules! impl_from_without_ref {
 /// result into a [u32].
 ///
 /// The number of bits in the range must be less or equal to 32.
-fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
+fn extract_u32(bytes: &[u8], bits: &Range<usize>) -> u32 {
     let nbits = bits.len();
     assert_ne!(nbits, 0);
     assert!(nbits <= 32);
-    let bytecount = bits.end() / 8 - bits.start() / 8 + 1;
-    let base_index = bits.start() / 8;
+    let bytecount = bits.end / 8 - bits.start / 8 + 1;
+    let base_index = bits.start / 8;
     let bytes = &bytes[base_index..base_index + bytecount];
     let value: u64 = Range {
         start: 0u64,
@@ -99,7 +99,7 @@ fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
         acc | (bytes[idx as usize] as u64) << (8 * idx)
     });
 
-    let base_shift = bits.start() % 8;
+    let base_shift = bits.start % 8;
     let mask_shift = 32 - nbits;
     let mask = (!0) >> mask_shift;
     let value = (value >> base_shift) as u32;
@@ -113,31 +113,31 @@ fn extract_u32(bytes: &[u8], bits: &RangeInclusive<usize>) -> u32 {
 /// to 1 will result in a negative number, up-casted to [i32].
 ///
 /// The number of bits in the range must be less or equal to 32.
-fn extract_i32(bytes: &[u8], bits: &RangeInclusive<usize>) -> i32 {
+fn extract_i32(bytes: &[u8], bits: &Range<usize>) -> i32 {
     let nbits = bits.len();
     let v = extract_u32(bytes, bits);
     v.twos_comp(nbits)
 }
 
-fn extract_u16(bytes: &[u8], bits: &RangeInclusive<usize>) -> u16 {
+fn extract_u16(bytes: &[u8], bits: &Range<usize>) -> u16 {
     assert!(bits.len() <= 16);
     let v: u32 = extract_u32(bytes, bits);
     v as u16
 }
 
-fn extract_i16(bytes: &[u8], bits: &RangeInclusive<usize>) -> i16 {
+fn extract_i16(bytes: &[u8], bits: &Range<usize>) -> i16 {
     let nbits = bits.len();
     let v = extract_u16(bytes, bits);
     v.twos_comp(nbits)
 }
 
-fn extract_u8(bytes: &[u8], bits: &RangeInclusive<usize>) -> u8 {
+fn extract_u8(bytes: &[u8], bits: &Range<usize>) -> u8 {
     assert!(bits.len() <= 8);
     let v: u32 = extract_u32(bytes, bits);
     v as u8
 }
 
-fn extract_i8(bytes: &[u8], bits: &RangeInclusive<usize>) -> i8 {
+fn extract_i8(bytes: &[u8], bits: &Range<usize>) -> i8 {
     let nbits = bits.len();
     let v = extract_u8(bytes, bits);
     v.twos_comp(nbits)
@@ -149,21 +149,6 @@ trait TwosComplement<To> {
     /// Returns the two's complement for a value
     /// with a given number of bits.
     fn twos_comp(self, nbits: usize) -> To;
-}
-
-// RangeInclusive doesn't implement ExactSizeIterator for usize and that
-// trait is outside our crate, so let's add our own trait so we can
-// implement RangeInclusive::len().
-trait Length {
-    fn len(self) -> usize;
-}
-
-// RangeInclusive doesn't implement ExactSizeIterator for usize and that
-// trait is outside our crate, so...
-impl Length for &RangeInclusive<usize> {
-    fn len(self) -> usize {
-        self.end() - self.start() + 1
-    }
 }
 
 impl TwosComplement<i8> for u8 {
@@ -556,7 +541,7 @@ impl Field {
         }
     }
     /// Returns the bit range that make up this field.
-    pub fn bits(&self) -> &RangeInclusive<usize> {
+    pub fn bits(&self) -> &Range<usize> {
         match self {
             Field::Variable(f) => &f.bits,
             Field::Array(f) => &f.bits,
@@ -575,7 +560,7 @@ impl Field {
 
     fn update_bit_offset(&mut self, offset: usize) {
         let r = self.bits();
-        let r = RangeInclusive::new(offset + r.start(), offset + r.end());
+        let r = (offset + r.start)..(offset + r.end);
         match self {
             Field::Variable(f) => f.bits = r,
             Field::Array(f) => f.bits = r,
@@ -602,7 +587,7 @@ impl Field {
 pub struct VariableField {
     id: FieldId,
     report_id: Option<ReportId>,
-    pub bits: RangeInclusive<usize>,
+    pub bits: Range<usize>,
     pub usage: Usage,
     pub logical_minimum: LogicalMinimum,
     pub logical_maximum: LogicalMaximum,
@@ -733,7 +718,7 @@ impl UsageRange {
 pub struct ArrayField {
     id: FieldId,
     report_id: Option<ReportId>,
-    pub bits: RangeInclusive<usize>,
+    pub bits: Range<usize>,
     usages: Vec<Usage>,
     pub report_count: ReportCount,
     pub logical_minimum: LogicalMinimum,
@@ -844,8 +829,8 @@ impl ArrayField {
         let count = usize::from(self.report_count);
         let bits_per_report = self.bits.len() / count;
 
-        let offset = self.bits.start() + bits_per_report * idx;
-        let bits = offset..=offset + bits_per_report - 1;
+        let offset = self.bits.start + bits_per_report * idx;
+        let bits = offset..offset + bits_per_report;
         let v = match bits.len() {
             1..=8 => extract_u8(bytes, &bits) as u32,
             9..=16 => extract_u16(bytes, &bits) as u32,
@@ -872,8 +857,8 @@ impl ArrayField {
         let count = usize::from(self.report_count);
         let bits_per_report = self.bits.len() / count;
 
-        let offset = self.bits.start() + bits_per_report * idx;
-        let bits = offset..=offset + bits_per_report - 1;
+        let offset = self.bits.start + bits_per_report * idx;
+        let bits = offset..offset + bits_per_report;
         let v = match bits.len() {
             1..=8 => extract_i8(bytes, &bits) as i32,
             9..=16 => extract_i16(bytes, &bits) as i32,
@@ -899,7 +884,7 @@ impl ArrayField {
 pub struct ConstantField {
     id: FieldId,
     report_id: Option<ReportId>,
-    pub bits: RangeInclusive<usize>,
+    pub bits: Range<usize>,
     usages: Vec<Usage>,
 }
 
@@ -1117,7 +1102,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
             let min: u32 = min.into();
             let max: u32 = max.into();
 
-            let usages = RangeInclusive::new(min, max)
+            let usages = (min..=max)
                 .map(|u| Usage {
                     usage_page: UsagePage(usage_page.into()),
                     usage_id: UsageId(u as u16),
@@ -1183,7 +1168,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
 
     if is_constant {
         let nbits = usize::from(report_size) * usize::from(report_count);
-        let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
+        let bits = bit_offset..(bit_offset + nbits);
 
         let field = ConstantField {
             id: FieldId(base_id + bit_offset as u32),
@@ -1225,7 +1210,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         }
         .map(|c| {
             let nbits = usize::from(report_size);
-            let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
+            let bits = bit_offset..(bit_offset + nbits);
             bit_offset += nbits;
 
             let usage = usages.get(c).or_else(|| usages.last()).unwrap();
@@ -1248,7 +1233,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
     } else {
         let bit_offset = 0;
         let nbits = usize::from(report_size) * usize::from(report_count);
-        let bits = RangeInclusive::new(bit_offset, bit_offset + nbits - 1);
+        let bits = bit_offset..(bit_offset + nbits);
 
         let field = ArrayField {
             id: FieldId(base_id + bit_offset as u32),
@@ -1525,67 +1510,45 @@ mod tests {
     }
 
     #[test]
-    fn test_range_length() {
-        assert_eq!(1, RangeInclusive::new(0usize, 0usize).len());
-        assert_eq!(2, RangeInclusive::new(0usize, 1usize).len());
-        assert_eq!(10, RangeInclusive::new(0usize, 9usize).len());
-    }
-
-    #[test]
     fn extract() {
         let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
 
-        assert_eq!(0, extract_u8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, extract_u8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, extract_u8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, extract_u8(&bytes, &(0..1)));
+        assert_eq!(2, extract_u8(&bytes, &(0..2)));
+        assert_eq!(10, extract_u8(&bytes, &(0..4)));
 
-        assert_eq!(0, extract_i8(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, extract_i8(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, extract_i8(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, extract_i8(&bytes, &(0..1)));
+        assert_eq!(-2, extract_i8(&bytes, &(0..2)));
+        assert_eq!(-6, extract_i8(&bytes, &(0..4)));
 
-        assert_eq!(0b1001_1100, extract_u8(&bytes, &RangeInclusive::new(4, 11)));
-        assert_eq!(
-            0b1001_1100u8 as i8,
-            extract_i8(&bytes, &RangeInclusive::new(4, 11))
-        );
+        assert_eq!(0b1001_1100, extract_u8(&bytes, &(4..12)));
+        assert_eq!(0b1001_1100u8 as i8, extract_i8(&bytes, &(4..12)));
 
-        assert_eq!(0, extract_u16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(2, extract_u16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(10, extract_u16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, extract_u16(&bytes, &(0..1)));
+        assert_eq!(2, extract_u16(&bytes, &(0..2)));
+        assert_eq!(10, extract_u16(&bytes, &(0..4)));
 
-        assert_eq!(0, extract_i16(&bytes, &RangeInclusive::new(0, 0)));
-        assert_eq!(-2, extract_i16(&bytes, &RangeInclusive::new(0, 1)));
-        assert_eq!(-6, extract_i16(&bytes, &RangeInclusive::new(0, 3)));
+        assert_eq!(0, extract_i16(&bytes, &(0..1)));
+        assert_eq!(-2, extract_i16(&bytes, &(0..2)));
+        assert_eq!(-6, extract_i16(&bytes, &(0..4)));
 
-        assert_eq!(
-            0b0110_1011_1001_1100,
-            extract_u16(&bytes, &RangeInclusive::new(4, 19))
-        );
-        assert_eq!(
-            0b0110_1011_1001_1100,
-            extract_i16(&bytes, &RangeInclusive::new(4, 19))
-        );
+        assert_eq!(0b0110_1011_1001_1100, extract_u16(&bytes, &(4..20)));
+        assert_eq!(0b0110_1011_1001_1100, extract_i16(&bytes, &(4..20)));
         assert_eq!(
             0b1_0110_1011_1001_110u16 as i16,
-            extract_i16(&bytes, &RangeInclusive::new(5, 20))
+            extract_i16(&bytes, &(5..21))
         );
 
-        assert_eq!(
-            0b0110_1011_1001_1100,
-            extract_u32(&bytes, &RangeInclusive::new(4, 19))
-        );
-        assert_eq!(
-            0b0110_1011_1001_1100,
-            extract_i32(&bytes, &RangeInclusive::new(4, 19))
-        );
+        assert_eq!(0b0110_1011_1001_1100, extract_u32(&bytes, &(4..20)));
+        assert_eq!(0b0110_1011_1001_1100, extract_i32(&bytes, &(4..20)));
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            extract_i32(&bytes, &(5..21))
         );
 
         assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            extract_i32(&bytes, &RangeInclusive::new(5, 20))
+            extract_i32(&bytes, &(5..21))
         );
     }
 }
