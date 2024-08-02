@@ -1511,7 +1511,7 @@ mod tests {
 
     #[test]
     fn extract() {
-        let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b10010110, 0b00010101];
+        let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b1001_0110, 0b0001_0101];
 
         assert_eq!(0, extract_u8(&bytes, &(0..1)));
         assert_eq!(2, extract_u8(&bytes, &(0..2)));
