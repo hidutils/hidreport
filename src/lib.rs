@@ -87,9 +87,9 @@ fn extract_u32(bytes: &[u8], bits: &Range<usize>) -> u32 {
     let nbits = bits.len();
     assert_ne!(nbits, 0);
     assert!(nbits <= 32);
-    let bytecount = bits.end / 8 - bits.start / 8 + 1;
-    let base_index = bits.start / 8;
-    let bytes = &bytes[base_index..base_index + bytecount];
+    let start_index = bits.start / 8;
+    let end_index = (bits.end - 1) / 8;
+    let bytes = &bytes[start_index..=end_index];
     let value: u64 = Range {
         start: 0u64,
         end: bytes.len() as u64,
@@ -1550,5 +1550,40 @@ mod tests {
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
             extract_i32(&bytes, &(5..21))
         );
+
+        let bytes: [u8; 1] = [0x0f];
+        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
+        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
+        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
+        assert_eq!(0x0f, extract_u32(&bytes, &(0..8)));
+
+        let bytes: [u8; 2] = [0x0f, 0x5e];
+        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
+        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
+        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
+        assert_eq!(0xe0f, extract_u32(&bytes, &(0..12)));
+        assert_eq!(0x5e0f, extract_u32(&bytes, &(0..16)));
+        assert_eq!(0xe, extract_u32(&bytes, &(8..12)));
+        assert_eq!(0x5, extract_u32(&bytes, &(12..16)));
+        assert_eq!(0x5e, extract_u32(&bytes, &(8..16)));
+
+        let bytes: [u8; 4] = [0x0f, 0x5e, 0xab, 0x78];
+        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
+        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
+        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
+        assert_eq!(0xe0f, extract_u32(&bytes, &(0..12)));
+        assert_eq!(0x5e0f, extract_u32(&bytes, &(0..16)));
+        assert_eq!(0xe, extract_u32(&bytes, &(8..12)));
+        assert_eq!(0x5, extract_u32(&bytes, &(12..16)));
+        assert_eq!(0x5e, extract_u32(&bytes, &(8..16)));
+        assert_eq!(0xb5e0f, extract_u32(&bytes, &(0..20)));
+        assert_eq!(0xab5e0f, extract_u32(&bytes, &(0..24)));
+        assert_eq!(0xb5e0, extract_u32(&bytes, &(4..20)));
+        assert_eq!(0xab5e, extract_u32(&bytes, &(8..24)));
+        assert_eq!(0xb, extract_u32(&bytes, &(16..20)));
+        assert_eq!(0xab, extract_u32(&bytes, &(16..24)));
+        assert_eq!(0x78ab5e0f, extract_u32(&bytes, &(0..32)));
+        assert_eq!(0x7, extract_u32(&bytes, &(28..32)));
+        assert_eq!(0x78, extract_u32(&bytes, &(24..32)));
     }
 }
