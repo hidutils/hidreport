@@ -107,7 +107,7 @@ pub enum MainItem {
 /// A data item is a [MainItem] that "create a field within a report and include Input,
 /// Output, and Feature.". These have shared properties provided by this trait.
 ///
-/// These properties come in paris (bit set or unset in the HID report descriptor item),
+/// These properties come in pairs (bit set or unset in the HID report descriptor item),
 /// for readability in the caller, a function is provided for each state.
 pub trait MainDataItem {
     /// True if the data is constant and never changes. This typically means the data
