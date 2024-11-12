@@ -1446,12 +1446,16 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 Err(e) => return Err(e),
             },
             ItemType::Global(GlobalItem::Reserved) => {}
-            ItemType::Local(LocalItem::Usage {
-                usage_page,
-                usage_id,
-            }) => {
+            ItemType::Local(LocalItem::Usage(usage_page, usage_id)) => {
                 let usage = LocalUsage {
-                    usage_page,
+                    usage_page: Some(usage_page),
+                    usage_id,
+                };
+                stack.locals().usage.push(usage);
+            }
+            ItemType::Local(LocalItem::UsageId(usage_id)) => {
+                let usage = LocalUsage {
+                    usage_page: None,
                     usage_id,
                 };
                 stack.locals().usage.push(usage);
