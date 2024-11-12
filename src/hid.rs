@@ -184,11 +184,13 @@ impl From<ReportCount> for ItemType {
 
 impl From<UsageId> for ItemType {
     fn from(usage_id: UsageId) -> ItemType {
-        LocalItem::Usage {
-            usage_page: None,
-            usage_id,
-        }
-        .into()
+        LocalItem::UsageId(usage_id).into()
+    }
+}
+
+impl From<(UsagePage, UsageId)> for ItemType {
+    fn from(usage: (UsagePage, UsageId)) -> ItemType {
+        LocalItem::Usage(usage.0, usage.1).into()
     }
 }
 
@@ -645,12 +647,18 @@ pub enum GlobalItem {
 /// > preceded by several similar Local item tags. For example, an Input item may
 /// > have several Usage tags associated with it, one for each control.
 ///
+/// Note that the [LocalItem::UsageId] item does not existin the the specification,
+/// it is a simplification in this crate. A HID Usage included in a LocalItem
+/// may or may not include a Usage Page. Where it does not, this crate uses
+/// the [LocalItem::UsageId] instead.
 #[derive(Debug, Clone, Copy)]
 pub enum LocalItem {
-    Usage {
-        usage_page: Option<UsagePage>,
-        usage_id: UsageId,
-    },
+    /// A Usage LocalItem that **does** include a Usage Page, i.e. the
+    /// MSB 16 bit component is the Usage Page, the LSB 16 bit component
+    /// is the Usage ID.
+    Usage(UsagePage, UsageId),
+    /// A Usage LocalItem that does **not** include a Usage Page
+    UsageId(UsageId),
     UsageMinimum(UsageMinimum),
     UsageMaximum(UsageMaximum),
     DesignatorIndex(DesignatorIndex),
@@ -872,20 +880,14 @@ impl TryFrom<&[u8]> for LocalItem {
         ensure!(bytes.len() >= 2, HidError::InsufficientData);
         let data = hiddata(&bytes[1..]);
         let item = match bytes[0] & 0b11111100 {
-            0b00001000 => {
-                let (usage_page, usage_id) = match bytes[1..].len() {
-                    1 | 2 => (None, UsageId(data.unwrap() as u16)),
-                    4 => (
-                        Some(UsagePage((data.unwrap() >> 16) as u16)),
-                        UsageId((data.unwrap() & 0xFFFF) as u16),
-                    ),
-                    n => panic!("Invalid data length {n}"),
-                };
-                LocalItem::Usage {
-                    usage_page,
-                    usage_id,
-                }
-            }
+            0b00001000 => match bytes[1..].len() {
+                1 | 2 => LocalItem::UsageId(UsageId(data.unwrap() as u16)),
+                4 => LocalItem::Usage(
+                    UsagePage((data.unwrap() >> 16) as u16),
+                    UsageId((data.unwrap() & 0xFFFF) as u16),
+                ),
+                n => panic!("Invalid data length {n}"),
+            },
             0b00011000 => LocalItem::UsageMinimum(UsageMinimum(data.unwrap())),
             0b00101000 => LocalItem::UsageMaximum(UsageMaximum(data.unwrap())),
             0b00111000 => LocalItem::DesignatorIndex(DesignatorIndex(data.unwrap())),
