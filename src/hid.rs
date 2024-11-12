@@ -86,6 +86,166 @@ pub enum ItemType {
     Reserved,
 }
 
+impl From<MainItem> for ItemType {
+    fn from(item: MainItem) -> ItemType {
+        ItemType::Main(item)
+    }
+}
+
+impl From<GlobalItem> for ItemType {
+    fn from(item: GlobalItem) -> ItemType {
+        ItemType::Global(item)
+    }
+}
+
+impl From<LocalItem> for ItemType {
+    fn from(item: LocalItem) -> ItemType {
+        ItemType::Local(item)
+    }
+}
+
+impl From<InputItem> for ItemType {
+    fn from(item: InputItem) -> ItemType {
+        MainItem::Input(item).into()
+    }
+}
+
+impl From<OutputItem> for ItemType {
+    fn from(item: OutputItem) -> ItemType {
+        MainItem::Output(item).into()
+    }
+}
+
+impl From<FeatureItem> for ItemType {
+    fn from(item: FeatureItem) -> ItemType {
+        MainItem::Feature(item).into()
+    }
+}
+
+impl From<CollectionItem> for ItemType {
+    fn from(item: CollectionItem) -> ItemType {
+        MainItem::Collection(item).into()
+    }
+}
+
+impl From<UsagePage> for ItemType {
+    fn from(usage_page: UsagePage) -> ItemType {
+        GlobalItem::UsagePage { usage_page }.into()
+    }
+}
+
+impl From<LogicalMinimum> for ItemType {
+    fn from(minimum: LogicalMinimum) -> ItemType {
+        GlobalItem::LogicalMinimum { minimum }.into()
+    }
+}
+
+impl From<LogicalMaximum> for ItemType {
+    fn from(maximum: LogicalMaximum) -> ItemType {
+        GlobalItem::LogicalMaximum { maximum }.into()
+    }
+}
+
+impl From<PhysicalMinimum> for ItemType {
+    fn from(minimum: PhysicalMinimum) -> ItemType {
+        GlobalItem::PhysicalMinimum { minimum }.into()
+    }
+}
+
+impl From<PhysicalMaximum> for ItemType {
+    fn from(maximum: PhysicalMaximum) -> ItemType {
+        GlobalItem::PhysicalMaximum { maximum }.into()
+    }
+}
+
+impl From<UnitExponent> for ItemType {
+    fn from(exponent: UnitExponent) -> ItemType {
+        GlobalItem::UnitExponent { exponent }.into()
+    }
+}
+
+impl From<ReportSize> for ItemType {
+    fn from(size: ReportSize) -> ItemType {
+        GlobalItem::ReportSize { size }.into()
+    }
+}
+
+impl From<ReportId> for ItemType {
+    fn from(id: ReportId) -> ItemType {
+        GlobalItem::ReportId { id }.into()
+    }
+}
+
+impl From<ReportCount> for ItemType {
+    fn from(count: ReportCount) -> ItemType {
+        GlobalItem::ReportCount { count }.into()
+    }
+}
+
+impl From<UsageId> for ItemType {
+    fn from(usage_id: UsageId) -> ItemType {
+        LocalItem::Usage {
+            usage_page: None,
+            usage_id,
+        }
+        .into()
+    }
+}
+
+impl From<UsageMinimum> for ItemType {
+    fn from(minimum: UsageMinimum) -> ItemType {
+        LocalItem::UsageMinimum { minimum }.into()
+    }
+}
+
+impl From<UsageMaximum> for ItemType {
+    fn from(maximum: UsageMaximum) -> ItemType {
+        LocalItem::UsageMaximum { maximum }.into()
+    }
+}
+
+impl From<DesignatorMinimum> for ItemType {
+    fn from(minimum: DesignatorMinimum) -> ItemType {
+        LocalItem::DesignatorMinimum { minimum }.into()
+    }
+}
+
+impl From<DesignatorMaximum> for ItemType {
+    fn from(maximum: DesignatorMaximum) -> ItemType {
+        LocalItem::DesignatorMaximum { maximum }.into()
+    }
+}
+
+impl From<DesignatorIndex> for ItemType {
+    fn from(index: DesignatorIndex) -> ItemType {
+        LocalItem::DesignatorIndex { index }.into()
+    }
+}
+
+impl From<StringMinimum> for ItemType {
+    fn from(pm: StringMinimum) -> ItemType {
+        LocalItem::StringMinimum { minimum: pm }.into()
+    }
+}
+
+impl From<StringMaximum> for ItemType {
+    fn from(pm: StringMaximum) -> ItemType {
+        LocalItem::StringMaximum { maximum: pm }.into()
+    }
+}
+
+impl From<StringIndex> for ItemType {
+    fn from(index: StringIndex) -> ItemType {
+        LocalItem::StringIndex { index }.into()
+    }
+}
+
+impl From<Delimiter> for ItemType {
+    fn from(delimiter: Delimiter) -> ItemType {
+        LocalItem::Delimiter { delimiter }.into()
+    }
+}
+
 /// Main Items, see Section 6.2.2.4
 ///
 /// > Main items are used to either define or group certain types of data fields within a
