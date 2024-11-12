@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 //
-//! This crate provides parsing of HID Report Descriptors, including the [hid] module to inspect
-//! a report descriptor in more detail. Check out the `hut` crate for known HID Usages to make
-//! sense of the various HID fields.
+//! This crate provides parsing and building of HID Report Descriptors, including the [hid] module
+//! to inspect or build a report descriptor in more detail. Check out the `hut` crate for known HID
+//! Usages to make sense of the various HID fields.
+//!
+//! # Parsing HID Report Descriptors
 //!
 //! Entry point is usually [`ReportDescriptor::try_from(bytes)`](ReportDescriptor::try_from):
 //!
@@ -39,6 +41,40 @@
 //!
 //! In this document and unless stated otherwise, a reference to "Section a.b.c" refers to the
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
+//!
+//! # Building HID Report Descriptors programmatically
+//!
+//! This module can be used to build a HID Report Descriptor from scratch via the [hid] module:
+//!
+//! ```
+//! # use crate::hidreport::hid::*;
+//! # use crate::hidreport::types::*;
+//! # fn build() {
+//! use hut::{self, AsUsagePage, AsUsage};
+//! let builder = ReportDescriptorBuilder::new();
+//! let rdesc: Vec<u8> = builder
+//!        .append(hut::UsagePage::GenericDesktop.into())
+//!        .append(hut::GenericDesktop::Mouse.usage().into())
+//!        .open_collection(CollectionItem::Application)
+//!        .open_collection(CollectionItem::Physical)
+//!        .push()
+//!        .append(LogicalMinimum::from(0).into())
+//!        .append(LogicalMaximum::from(128).into())
+//!        .pop()
+//!        .append(ReportCount::from(2).into())
+//!        .append(ReportSize::from(8).into())
+//!        .append(hut::GenericDesktop::X.usage().into())
+//!        .append(hut::GenericDesktop::Y.usage().into())
+//!        .input(ItemBuilder::new()
+//!               .variable()
+//!               .absolute()
+//!               .input())
+//!        .close_collection()
+//!        .close_collection()
+//!        .build();
+//! # }
+//! ```
+//! See the [ReportDescriptorBuilder] documentation for more details.
 
 use std::hash::{Hash, Hasher};
 use std::ops::Range;
