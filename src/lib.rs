@@ -1370,13 +1370,13 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
             }
             ItemType::Long => {}
             ItemType::Reserved => {}
-            ItemType::Global(GlobalItem::UsagePage { usage_page }) => {
+            ItemType::Global(GlobalItem::UsagePage(usage_page)) => {
                 update_stack!(stack, globals, usage_page, usage_page);
             }
-            ItemType::Global(GlobalItem::LogicalMinimum { minimum }) => {
+            ItemType::Global(GlobalItem::LogicalMinimum(minimum)) => {
                 update_stack!(stack, globals, logical_minimum, minimum);
             }
-            ItemType::Global(GlobalItem::LogicalMaximum { maximum }) => {
+            ItemType::Global(GlobalItem::LogicalMaximum(maximum)) => {
                 // We don't know if the maximum is signed or unsigned unless we
                 // look at the minimum value and check if that is signed or unsigned.
                 // We default to signed but if the minimum is unsigned, we might have
@@ -1395,10 +1395,10 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 };
                 update_stack!(stack, globals, logical_maximum, maximum);
             }
-            ItemType::Global(GlobalItem::PhysicalMinimum { minimum }) => {
+            ItemType::Global(GlobalItem::PhysicalMinimum(minimum)) => {
                 update_stack!(stack, globals, physical_minimum, minimum);
             }
-            ItemType::Global(GlobalItem::PhysicalMaximum { maximum }) => {
+            ItemType::Global(GlobalItem::PhysicalMaximum(maximum)) => {
                 // We don't know if the maximum is signed or unsigned unless we
                 // look at the minimum value and check if that is signed or unsigned.
                 // We default to signed but if the minimum is unsigned, we might have
@@ -1417,19 +1417,19 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 };
                 update_stack!(stack, globals, physical_maximum, maximum);
             }
-            ItemType::Global(GlobalItem::UnitExponent { exponent }) => {
+            ItemType::Global(GlobalItem::UnitExponent(exponent)) => {
                 update_stack!(stack, globals, unit_exponent, exponent);
             }
-            ItemType::Global(GlobalItem::Unit { unit }) => {
+            ItemType::Global(GlobalItem::Unit(unit)) => {
                 update_stack!(stack, globals, unit, unit);
             }
-            ItemType::Global(GlobalItem::ReportSize { size }) => {
+            ItemType::Global(GlobalItem::ReportSize(size)) => {
                 update_stack!(stack, globals, report_size, size);
             }
-            ItemType::Global(GlobalItem::ReportId { id }) => {
+            ItemType::Global(GlobalItem::ReportId(id)) => {
                 update_stack!(stack, globals, report_id, id);
             }
-            ItemType::Global(GlobalItem::ReportCount { count }) => {
+            ItemType::Global(GlobalItem::ReportCount(count)) => {
                 update_stack!(stack, globals, report_count, count);
             }
             ItemType::Global(GlobalItem::Push) => {
@@ -1456,31 +1456,31 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 };
                 stack.locals().usage.push(usage);
             }
-            ItemType::Local(LocalItem::UsageMinimum { minimum }) => {
+            ItemType::Local(LocalItem::UsageMinimum(minimum)) => {
                 update_stack!(stack, locals, usage_minimum, minimum);
             }
-            ItemType::Local(LocalItem::UsageMaximum { maximum }) => {
+            ItemType::Local(LocalItem::UsageMaximum(maximum)) => {
                 update_stack!(stack, locals, usage_maximum, maximum);
             }
-            ItemType::Local(LocalItem::DesignatorIndex { index }) => {
+            ItemType::Local(LocalItem::DesignatorIndex(index)) => {
                 update_stack!(stack, locals, designator_index, index);
             }
-            ItemType::Local(LocalItem::DesignatorMinimum { minimum }) => {
+            ItemType::Local(LocalItem::DesignatorMinimum(minimum)) => {
                 update_stack!(stack, locals, designator_minimum, minimum);
             }
-            ItemType::Local(LocalItem::DesignatorMaximum { maximum }) => {
+            ItemType::Local(LocalItem::DesignatorMaximum(maximum)) => {
                 update_stack!(stack, locals, designator_maximum, maximum);
             }
-            ItemType::Local(LocalItem::StringIndex { index }) => {
+            ItemType::Local(LocalItem::StringIndex(index)) => {
                 update_stack!(stack, locals, string_index, index);
             }
-            ItemType::Local(LocalItem::StringMinimum { minimum }) => {
+            ItemType::Local(LocalItem::StringMinimum(minimum)) => {
                 update_stack!(stack, locals, string_minimum, minimum);
             }
-            ItemType::Local(LocalItem::StringMaximum { maximum }) => {
+            ItemType::Local(LocalItem::StringMaximum(maximum)) => {
                 update_stack!(stack, locals, string_maximum, maximum);
             }
-            ItemType::Local(LocalItem::Delimiter { delimiter }) => {
+            ItemType::Local(LocalItem::Delimiter(delimiter)) => {
                 update_stack!(stack, locals, delimiter, delimiter);
             }
             ItemType::Local(LocalItem::Reserved { value: _ }) => {}

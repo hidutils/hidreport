@@ -130,55 +130,55 @@ impl From<CollectionItem> for ItemType {
 
 impl From<UsagePage> for ItemType {
     fn from(usage_page: UsagePage) -> ItemType {
-        GlobalItem::UsagePage { usage_page }.into()
+        GlobalItem::UsagePage(usage_page).into()
     }
 }
 
 impl From<LogicalMinimum> for ItemType {
     fn from(minimum: LogicalMinimum) -> ItemType {
-        GlobalItem::LogicalMinimum { minimum }.into()
+        GlobalItem::LogicalMinimum(minimum).into()
     }
 }
 
 impl From<LogicalMaximum> for ItemType {
     fn from(maximum: LogicalMaximum) -> ItemType {
-        GlobalItem::LogicalMaximum { maximum }.into()
+        GlobalItem::LogicalMaximum(maximum).into()
     }
 }
 
 impl From<PhysicalMinimum> for ItemType {
     fn from(minimum: PhysicalMinimum) -> ItemType {
-        GlobalItem::PhysicalMinimum { minimum }.into()
+        GlobalItem::PhysicalMinimum(minimum).into()
     }
 }
 
 impl From<PhysicalMaximum> for ItemType {
     fn from(maximum: PhysicalMaximum) -> ItemType {
-        GlobalItem::PhysicalMaximum { maximum }.into()
+        GlobalItem::PhysicalMaximum(maximum).into()
     }
 }
 
 impl From<UnitExponent> for ItemType {
     fn from(exponent: UnitExponent) -> ItemType {
-        GlobalItem::UnitExponent { exponent }.into()
+        GlobalItem::UnitExponent(exponent).into()
     }
 }
 
 impl From<ReportSize> for ItemType {
     fn from(size: ReportSize) -> ItemType {
-        GlobalItem::ReportSize { size }.into()
+        GlobalItem::ReportSize(size).into()
     }
 }
 
 impl From<ReportId> for ItemType {
     fn from(id: ReportId) -> ItemType {
-        GlobalItem::ReportId { id }.into()
+        GlobalItem::ReportId(id).into()
     }
 }
 
 impl From<ReportCount> for ItemType {
     fn from(count: ReportCount) -> ItemType {
-        GlobalItem::ReportCount { count }.into()
+        GlobalItem::ReportCount(count).into()
     }
 }
 
@@ -194,55 +194,55 @@ impl From<UsageId> for ItemType {
 
 impl From<UsageMinimum> for ItemType {
     fn from(minimum: UsageMinimum) -> ItemType {
-        LocalItem::UsageMinimum { minimum }.into()
+        LocalItem::UsageMinimum(minimum).into()
     }
 }
 
 impl From<UsageMaximum> for ItemType {
     fn from(maximum: UsageMaximum) -> ItemType {
-        LocalItem::UsageMaximum { maximum }.into()
+        LocalItem::UsageMaximum(maximum).into()
     }
 }
 
 impl From<DesignatorMinimum> for ItemType {
     fn from(minimum: DesignatorMinimum) -> ItemType {
-        LocalItem::DesignatorMinimum { minimum }.into()
+        LocalItem::DesignatorMinimum(minimum).into()
     }
 }
 
 impl From<DesignatorMaximum> for ItemType {
     fn from(maximum: DesignatorMaximum) -> ItemType {
-        LocalItem::DesignatorMaximum { maximum }.into()
+        LocalItem::DesignatorMaximum(maximum).into()
     }
 }
 
 impl From<DesignatorIndex> for ItemType {
     fn from(index: DesignatorIndex) -> ItemType {
-        LocalItem::DesignatorIndex { index }.into()
+        LocalItem::DesignatorIndex(index).into()
     }
 }
 
 impl From<StringMinimum> for ItemType {
-    fn from(pm: StringMinimum) -> ItemType {
-        LocalItem::StringMinimum { minimum: pm }.into()
+    fn from(minimum: StringMinimum) -> ItemType {
+        LocalItem::StringMinimum(minimum).into()
     }
 }
 
 impl From<StringMaximum> for ItemType {
-    fn from(pm: StringMaximum) -> ItemType {
-        LocalItem::StringMaximum { maximum: pm }.into()
+    fn from(maximum: StringMaximum) -> ItemType {
+        LocalItem::StringMaximum(maximum).into()
     }
 }
 
 impl From<StringIndex> for ItemType {
     fn from(index: StringIndex) -> ItemType {
-        LocalItem::StringIndex { index }.into()
+        LocalItem::StringIndex(index).into()
     }
 }
 
 impl From<Delimiter> for ItemType {
     fn from(delimiter: Delimiter) -> ItemType {
-        LocalItem::Delimiter { delimiter }.into()
+        LocalItem::Delimiter(delimiter).into()
     }
 }
 
@@ -623,16 +623,16 @@ pub enum CollectionItem {
 /// they were found in (where they may be represented as `u8`, `u16` or `u32`).
 #[derive(Debug, Clone, Copy)]
 pub enum GlobalItem {
-    UsagePage { usage_page: UsagePage },
-    LogicalMinimum { minimum: LogicalMinimum },
-    LogicalMaximum { maximum: LogicalMaximum },
-    PhysicalMinimum { minimum: PhysicalMinimum },
-    PhysicalMaximum { maximum: PhysicalMaximum },
-    UnitExponent { exponent: UnitExponent },
-    Unit { unit: Unit },
-    ReportSize { size: ReportSize },
-    ReportId { id: ReportId },
-    ReportCount { count: ReportCount },
+    UsagePage(UsagePage),
+    LogicalMinimum(LogicalMinimum),
+    LogicalMaximum(LogicalMaximum),
+    PhysicalMinimum(PhysicalMinimum),
+    PhysicalMaximum(PhysicalMaximum),
+    UnitExponent(UnitExponent),
+    Unit(Unit),
+    ReportSize(ReportSize),
+    ReportId(ReportId),
+    ReportCount(ReportCount),
     Push,
     Pop,
     Reserved,
@@ -651,33 +651,15 @@ pub enum LocalItem {
         usage_page: Option<UsagePage>,
         usage_id: UsageId,
     },
-    UsageMinimum {
-        minimum: UsageMinimum,
-    },
-    UsageMaximum {
-        maximum: UsageMaximum,
-    },
-    DesignatorIndex {
-        index: DesignatorIndex,
-    },
-    DesignatorMinimum {
-        minimum: DesignatorMinimum,
-    },
-    DesignatorMaximum {
-        maximum: DesignatorMaximum,
-    },
-    StringIndex {
-        index: StringIndex,
-    },
-    StringMinimum {
-        minimum: StringMinimum,
-    },
-    StringMaximum {
-        maximum: StringMaximum,
-    },
-    Delimiter {
-        delimiter: Delimiter,
-    },
+    UsageMinimum(UsageMinimum),
+    UsageMaximum(UsageMaximum),
+    DesignatorIndex(DesignatorIndex),
+    DesignatorMinimum(DesignatorMinimum),
+    DesignatorMaximum(DesignatorMaximum),
+    StringIndex(StringIndex),
+    StringMinimum(StringMinimum),
+    StringMaximum(StringMaximum),
+    Delimiter(Delimiter),
     // The value is the value of the upper 6 bits of the first byte,
     // excluding the two lowest size bits (`byte[0] & 0xFC`).
     Reserved {
@@ -843,56 +825,36 @@ impl TryFrom<&[u8]> for GlobalItem {
             (Some(0), Some(0))
         };
         let item = match bytes[0] & 0b11111100 {
-            0b00000100 => GlobalItem::UsagePage {
-                usage_page: UsagePage(data.unwrap() as u16),
-            },
-            0b00010100 => GlobalItem::LogicalMinimum {
-                minimum: LogicalMinimum(data_signed.unwrap()),
-            },
+            0b00000100 => GlobalItem::UsagePage(UsagePage(data.unwrap() as u16)),
+            0b00010100 => GlobalItem::LogicalMinimum(LogicalMinimum(data_signed.unwrap())),
             // Cheating here: we don't know if the data is signed or unsigned
             // unless we look at the LogicalMinimum - but we don't have
             // that here because we're just itemizing, not interpreting.
             // So let's cheat and treat the minimum as signed and the maximum
             // as unsigned which is good enough for anything that doesn't
             // have a LogicalMaximum < 0.
-            0b00100100 => GlobalItem::LogicalMaximum {
-                maximum: LogicalMaximum(data.unwrap() as i32),
-            },
-            0b00110100 => GlobalItem::PhysicalMinimum {
-                minimum: PhysicalMinimum(data_signed.unwrap()),
-            },
+            0b00100100 => GlobalItem::LogicalMaximum(LogicalMaximum(data.unwrap() as i32)),
+            0b00110100 => GlobalItem::PhysicalMinimum(PhysicalMinimum(data_signed.unwrap())),
             // Cheating here: we don't know if the data is signed or unsigned
             // unless we look at the PhysicalMinimum - but we don't have
             // that here because we're just itemizing, not interpreting.
             // So let's cheat and treat the minimum as signed and the maximum
             // as unsigned which is good enough for anything that doesn't
             // have a PhysicalMaximum < 0.
-            0b01000100 => GlobalItem::PhysicalMaximum {
-                maximum: PhysicalMaximum(data.unwrap() as i32),
-            },
-            0b01010100 => GlobalItem::UnitExponent {
-                exponent: UnitExponent(data.unwrap()),
-            },
-            0b01100100 => GlobalItem::Unit {
-                unit: Unit(data.unwrap()),
-            },
+            0b01000100 => GlobalItem::PhysicalMaximum(PhysicalMaximum(data.unwrap() as i32)),
+            0b01010100 => GlobalItem::UnitExponent(UnitExponent(data.unwrap())),
+            0b01100100 => GlobalItem::Unit(Unit(data.unwrap())),
             0b01110100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportSize {
-                    size: ReportSize(data.unwrap() as usize),
-                }
+                GlobalItem::ReportSize(ReportSize(data.unwrap() as usize))
             }
             0b10000100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportId {
-                    id: ReportId(data.unwrap() as u8),
-                }
+                GlobalItem::ReportId(ReportId(data.unwrap() as u8))
             }
             0b10010100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportCount {
-                    count: ReportCount(data.unwrap() as usize),
-                }
+                GlobalItem::ReportCount(ReportCount(data.unwrap() as usize))
             }
             0b10100100 => GlobalItem::Push,
             0b10110100 => GlobalItem::Pop,
@@ -924,33 +886,15 @@ impl TryFrom<&[u8]> for LocalItem {
                     usage_id,
                 }
             }
-            0b00011000 => LocalItem::UsageMinimum {
-                minimum: UsageMinimum(data.unwrap()),
-            },
-            0b00101000 => LocalItem::UsageMaximum {
-                maximum: UsageMaximum(data.unwrap()),
-            },
-            0b00111000 => LocalItem::DesignatorIndex {
-                index: DesignatorIndex(data.unwrap()),
-            },
-            0b01001000 => LocalItem::DesignatorMinimum {
-                minimum: DesignatorMinimum(data.unwrap()),
-            },
-            0b01011000 => LocalItem::DesignatorMaximum {
-                maximum: DesignatorMaximum(data.unwrap()),
-            },
-            0b01111000 => LocalItem::StringIndex {
-                index: StringIndex(data.unwrap()),
-            },
-            0b10001000 => LocalItem::StringMinimum {
-                minimum: StringMinimum(data.unwrap()),
-            },
-            0b10011000 => LocalItem::StringMaximum {
-                maximum: StringMaximum(data.unwrap()),
-            },
-            0b10101000 => LocalItem::Delimiter {
-                delimiter: Delimiter(data.unwrap()),
-            },
+            0b00011000 => LocalItem::UsageMinimum(UsageMinimum(data.unwrap())),
+            0b00101000 => LocalItem::UsageMaximum(UsageMaximum(data.unwrap())),
+            0b00111000 => LocalItem::DesignatorIndex(DesignatorIndex(data.unwrap())),
+            0b01001000 => LocalItem::DesignatorMinimum(DesignatorMinimum(data.unwrap())),
+            0b01011000 => LocalItem::DesignatorMaximum(DesignatorMaximum(data.unwrap())),
+            0b01111000 => LocalItem::StringIndex(StringIndex(data.unwrap())),
+            0b10001000 => LocalItem::StringMinimum(StringMinimum(data.unwrap())),
+            0b10011000 => LocalItem::StringMaximum(StringMaximum(data.unwrap())),
+            0b10101000 => LocalItem::Delimiter(Delimiter(data.unwrap())),
             n => LocalItem::Reserved { value: n },
         };
         Ok(item)
