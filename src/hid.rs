@@ -42,6 +42,98 @@ fn bit(bits: u32, bit: u8) -> bool {
     bits & (1 << bit) != 0
 }
 
+/// The data bytes of a HID item, guaranteed to
+/// be of length 1, 2, or 4 bytes depending on the
+/// input and in LE byte order.
+///
+/// This struct only exists for conversion from numbers to
+/// a hid-compatible byte array.
+struct HidBytes(Vec<u8>);
+
+impl HidBytes {
+    fn take(self) -> Vec<u8> {
+        self.0
+    }
+}
+
+impl std::ops::Deref for HidBytes {
+    type Target = Vec<u8>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl From<u32> for HidBytes {
+    fn from(value: u32) -> HidBytes {
+        let bytes = value.to_le_bytes();
+        let cutoff = match value {
+            0..=255 => 1,
+            256..=0xffff => 2,
+            _ => 4,
+        };
+        HidBytes(bytes[0..cutoff].to_vec())
+    }
+}
+
+impl From<u16> for HidBytes {
+    fn from(value: u16) -> HidBytes {
+        let bytes = value.to_le_bytes();
+        let cutoff = match value {
+            0..=255 => 1,
+            _ => 2,
+        };
+        HidBytes(bytes[0..cutoff].to_vec())
+    }
+}
+
+impl From<u8> for HidBytes {
+    fn from(value: u8) -> HidBytes {
+        HidBytes(vec![value])
+    }
+}
+
+impl From<usize> for HidBytes {
+    fn from(value: usize) -> HidBytes {
+        let bytes = value.to_le_bytes();
+        let cutoff = match value {
+            0..=255 => 1,
+            256..=0xffff => 2,
+            _ => 4,
+        };
+        HidBytes(bytes[0..cutoff].to_vec())
+    }
+}
+
+impl From<i32> for HidBytes {
+    fn from(value: i32) -> HidBytes {
+        const MIN16: i32 = i16::MIN as i32;
+        const MAX16: i32 = i16::MAX as i32;
+        let bytes = match value {
+            -128..=127 => (value as i8).to_le_bytes().to_vec(),
+            MIN16..=MAX16 => (value as i16).to_le_bytes().to_vec(),
+            _ => value.to_le_bytes().to_vec(),
+        };
+        HidBytes(bytes)
+    }
+}
+
+impl From<i16> for HidBytes {
+    fn from(value: i16) -> HidBytes {
+        let bytes = match value {
+            -128..=127 => (value as i8).to_le_bytes().to_vec(),
+            _ => value.to_le_bytes().to_vec(),
+        };
+        HidBytes(bytes)
+    }
+}
+
+impl From<i8> for HidBytes {
+    fn from(value: i8) -> HidBytes {
+        HidBytes(vec![value as u8])
+    }
+}
+
 /// Convenience function to extract the bytes into a u32
 pub(crate) fn hiddata(bytes: &[u8]) -> Option<u32> {
     match bytes.len() {
@@ -1314,5 +1406,59 @@ mod tests {
         assert_eq!(u32::try_from(&item_data).unwrap(), 0x0201);
         let item_data = ItemData { bytes: &bytes[..4] };
         assert_eq!(u32::try_from(&item_data).unwrap(), 0x04030201);
+    }
+
+    #[test]
+    fn hidbytes() {
+        let bytes = HidBytes::from(1u8).take();
+        assert_eq!(bytes, [0x1]);
+        let bytes = HidBytes::from(1u16).take();
+        assert_eq!(bytes, [0x1]);
+        let bytes = HidBytes::from(1u32).take();
+        assert_eq!(bytes, [0x1]);
+
+        let bytes = HidBytes::from(255u8).take();
+        assert_eq!(bytes, [0xff]);
+        let bytes = HidBytes::from(255u16).take();
+        assert_eq!(bytes, [0xff]);
+        let bytes = HidBytes::from(255u32).take();
+        assert_eq!(bytes, [0xff]);
+
+        // >=128 signed is encoded over two bytes. That's not
+        // always necessary but whether a value is signed or
+        // unsigned (e.g. LogicalMaximum) is only known after
+        // parsing the minmimum.
+        let bytes = HidBytes::from(128i16).take();
+        assert_eq!(bytes, [0x80, 0x0]);
+        let bytes = HidBytes::from(128i32).take();
+        assert_eq!(bytes, [0x80, 0x0]);
+        let bytes = HidBytes::from(255i16).take();
+        assert_eq!(bytes, [0xff, 0x0]);
+        let bytes = HidBytes::from(255i32).take();
+        assert_eq!(bytes, [0xff, 0x0]);
+
+        let bytes = HidBytes::from(256u16).take();
+        assert_eq!(bytes, [0x0, 0x1]);
+        let bytes = HidBytes::from(256u32).take();
+        assert_eq!(bytes, [0x0, 0x1]);
+
+        let bytes = HidBytes::from(0x10000u32).take();
+        assert_eq!(bytes, [0x0, 0x0, 0x1, 0x0]);
+        let bytes = HidBytes::from(0x1000000u32).take();
+        assert_eq!(bytes, [0x0, 0x0, 0x0, 0x1]);
+        let bytes = HidBytes::from(u32::MAX).take();
+        assert_eq!(bytes, [0xff, 0xff, 0xff, 0xff]);
+
+        let bytes = HidBytes::from(-1i8).take();
+        assert_eq!(bytes, [0xff]);
+        let bytes = HidBytes::from(-1i16).take();
+        assert_eq!(bytes, [0xff]);
+        let bytes = HidBytes::from(-1i32).take();
+        assert_eq!(bytes, [0xff]);
+
+        let bytes = HidBytes::from(i16::MAX - 1).take();
+        assert_eq!(bytes, [0xfe, 0x7f]);
+        let bytes = HidBytes::from(i32::MAX - 1).take();
+        assert_eq!(bytes, [0xfe, 0xff, 0xff, 0x7f]);
     }
 }
