@@ -850,7 +850,7 @@ impl TryFrom<&[u8]> for GlobalItem {
             // as unsigned which is good enough for anything that doesn't
             // have a PhysicalMaximum < 0.
             0b01000100 => GlobalItem::PhysicalMaximum(PhysicalMaximum(data.unwrap() as i32)),
-            0b01010100 => GlobalItem::UnitExponent(UnitExponent(data.unwrap())),
+            0b01010100 => GlobalItem::UnitExponent(UnitExponent(data.unwrap() as i32)),
             0b01100100 => GlobalItem::Unit(Unit(data.unwrap())),
             0b01110100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
