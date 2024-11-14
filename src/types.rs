@@ -378,7 +378,7 @@ impl std::fmt::Display for Unit {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct UnitExponent(pub(crate) u32);
+pub struct UnitExponent(pub(crate) i32);
 
 impl UnitExponent {
     pub fn exponent(&self) -> i8 {
@@ -396,8 +396,8 @@ impl UnitExponent {
     }
 }
 
-impl_from!(UnitExponent, UnitExponent, u32);
-impl_fmt!(UnitExponent, u32);
+impl_from!(UnitExponent, UnitExponent, i32);
+impl_fmt!(UnitExponent, i32);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ReportSize(pub(crate) usize);
