@@ -704,7 +704,7 @@ impl TryFrom<&[u8]> for MainItem {
             0b10100000 => Ok(MainItem::Collection(CollectionItem::try_from(bytes)?)),
             0b11000000 => Ok(MainItem::EndCollection),
             _ => Err(HidError::InvalidData {
-                message: format!("Invalid item tag {tag}"),
+                message: format!("Invalid item tag {tag:#08b}"),
             }),
         }
     }
