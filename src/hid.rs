@@ -33,6 +33,9 @@ use crate::{ensure, ParserError};
 
 use thiserror::Error;
 
+#[cfg(feature = "hut")]
+use hut;
+
 /// Convenience function to be extract a single bit as bool from a value
 fn bit(bits: u32, bit: u8) -> bool {
     assert!(bit < 32);
@@ -84,6 +87,34 @@ pub enum ItemType {
     Local(LocalItem),
     Long,
     Reserved,
+}
+
+#[cfg(feature = "hut")]
+impl From<&hut::UsagePage> for ItemType {
+    fn from(hut: &hut::UsagePage) -> ItemType {
+        GlobalItem::UsagePage(UsagePage::from(hut)).into()
+    }
+}
+
+#[cfg(feature = "hut")]
+impl From<hut::UsagePage> for ItemType {
+    fn from(hut: hut::UsagePage) -> ItemType {
+        ItemType::from(&hut)
+    }
+}
+
+#[cfg(feature = "hut")]
+impl From<&hut::Usage> for ItemType {
+    fn from(hut: &hut::Usage) -> ItemType {
+        LocalItem::Usage(UsagePage::from(hut), UsageId::from(hut)).into()
+    }
+}
+
+#[cfg(feature = "hut")]
+impl From<hut::Usage> for ItemType {
+    fn from(hut: hut::Usage) -> ItemType {
+        ItemType::from(&hut)
+    }
 }
 
 impl From<MainItem> for ItemType {
