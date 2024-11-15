@@ -210,7 +210,7 @@ impl From<Units> for u32 {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Unit(pub(crate) u32);
 
 impl_from!(Unit, Unit, u32);
@@ -377,7 +377,7 @@ impl std::fmt::Display for Unit {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct UnitExponent(pub(crate) i32);
 
 impl UnitExponent {
@@ -473,43 +473,43 @@ impl UsageMaximum {
 impl_from!(UsageMaximum, UsageMaximum, u32);
 impl_fmt!(UsageMaximum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StringIndex(pub(crate) u32);
 
 impl_from!(StringIndex, StringIndex, u32);
 impl_fmt!(StringIndex, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StringMinimum(pub(crate) u32);
 
 impl_from!(StringMinimum, StringMinimum, u32);
 impl_fmt!(StringMinimum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct StringMaximum(pub(crate) u32);
 
 impl_from!(StringMaximum, StringMaximum, u32);
 impl_fmt!(StringMaximum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DesignatorIndex(pub(crate) u32);
 
 impl_from!(DesignatorIndex, DesignatorIndex, u32);
 impl_fmt!(DesignatorIndex, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DesignatorMinimum(pub(crate) u32);
 
 impl_from!(DesignatorMinimum, DesignatorMinimum, u32);
 impl_fmt!(DesignatorMinimum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DesignatorMaximum(pub(crate) u32);
 
 impl_from!(DesignatorMaximum, DesignatorMaximum, u32);
 impl_fmt!(DesignatorMaximum, u32);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Delimiter(pub(crate) u32);
 
 impl_from!(Delimiter, Delimiter, u32);
