@@ -505,6 +505,10 @@ impl From<&Usage> for UsageMaximum {
 impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
 
 /// A unique (within this report descriptor) identifier for a [Field].
+///
+/// The [FieldId] does not exist in the actual ReportDescriptor, it is
+/// a unique ID assigned by this crate to later identify a given field
+/// for data extraction and/or further parsing.
 #[derive(Clone, Copy, Debug, PartialEq, Hash, PartialOrd)]
 pub struct FieldId(u32);
 
@@ -518,21 +522,29 @@ impl_from_without_ref!(FieldId, u32, u32);
 
 /// A single field inside a [Report].
 ///
-/// Fields may be [Field::Variable] and represent a
+/// Fields may be [Variable](Field::Variable) and represent a
 /// single element of data or they may be
-/// a [Field::Array] that represent
+/// a [Array](Field::Array) that represent
 /// multiple elements.
 ///
-/// Fields of type [Field::Constant] should be ignored by
+/// Fields of type [Constant](Field::Constant) should be ignored by
 /// the caller.
 #[derive(Clone, Debug)]
 pub enum Field {
+    /// A single element of data
     Variable(VariableField),
+    /// A set of multiple fields
     Array(ArrayField),
+    /// Padding
     Constant(ConstantField),
 }
 
 impl Field {
+    /// Return the unique (within this report descriptor) ID for this field.
+    ///
+    /// The [FieldId] does not exist in the actual ReportDescriptor, it is
+    /// a unique ID assigned by this crate to later identify a given field
+    /// for data extraction and/or further parsing.
     pub fn id(&self) -> FieldId {
         match self {
             Field::Variable(f) => f.id,
@@ -573,6 +585,8 @@ impl Field {
         return self.bits().len();
     }
 
+    /// Return the set of collections this [Field] belongs to
+    /// or the empty slice.
     pub fn collections(&self) -> &[Collection] {
         match self {
             Field::Variable(f) => &f.collections,
