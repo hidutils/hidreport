@@ -1423,7 +1423,8 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 if minimum < LogicalMinimum(0) {
                     if let Some(data) = item.data() {
                         if data.len() > 0 {
-                            maximum = LogicalMaximum(hid::hiddata_signed(&data).unwrap());
+                            let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
+                            maximum = LogicalMaximum(v.into());
                         }
                     }
                 };
@@ -1445,7 +1446,8 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 if minimum < PhysicalMinimum(0) {
                     if let Some(data) = item.data() {
                         if data.len() > 0 {
-                            maximum = PhysicalMaximum(hid::hiddata_signed(&data).unwrap())
+                            let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
+                            maximum = PhysicalMaximum(v.into())
                         }
                     }
                 };

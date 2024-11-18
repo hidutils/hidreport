@@ -134,25 +134,83 @@ impl From<i8> for HidBytes {
     }
 }
 
-/// Convenience function to extract the bytes into a u32
-pub(crate) fn hiddata(bytes: &[u8]) -> Option<u32> {
-    match bytes.len() {
-        0 => None,
-        1 => Some(bytes[0] as u32),
-        2 => Some(u16::from_le_bytes(bytes[0..2].try_into().unwrap()) as u32),
-        4 => Some(u32::from_le_bytes(bytes[0..4].try_into().unwrap())),
-        _ => panic!("Size {} cannot happen", bytes.len()),
+/// Represents one value extracted from a set of (LE) bytes.
+pub(crate) struct HidValue {
+    value: u32,
+}
+
+impl TryFrom<&[u8]> for HidValue {
+    type Error = HidError;
+
+    fn try_from(bytes: &[u8]) -> Result<HidValue> {
+        ensure!(!bytes.is_empty(), HidError::InsufficientData);
+        let value = match bytes.len() {
+            1 => bytes[0] as u32,
+            2 => u16::from_le_bytes(bytes[0..2].try_into().unwrap()) as u32,
+            4 => u32::from_le_bytes(bytes[0..4].try_into().unwrap()),
+            _ => panic!("Size {} cannot happen", bytes.len()),
+        };
+        Ok(HidValue { value })
     }
 }
 
-/// Convenience function to extract the bytes into a i32
-pub(crate) fn hiddata_signed(bytes: &[u8]) -> Option<i32> {
-    match bytes.len() {
-        0 => None,
-        1 => Some((bytes[0] as i8) as i32),
-        2 => Some(i16::from_le_bytes(bytes[0..2].try_into().unwrap()) as i32),
-        4 => Some(i32::from_le_bytes(bytes[0..4].try_into().unwrap())),
-        _ => panic!("Size {} cannot happen", bytes.len()),
+impl From<&HidValue> for usize {
+    fn from(v: &HidValue) -> usize {
+        v.value as usize
+    }
+}
+
+impl From<HidValue> for usize {
+    fn from(v: HidValue) -> usize {
+        usize::from(&v)
+    }
+}
+
+impl From<&HidValue> for u32 {
+    fn from(v: &HidValue) -> u32 {
+        v.value
+    }
+}
+
+impl From<HidValue> for u32 {
+    fn from(v: HidValue) -> u32 {
+        u32::from(&v)
+    }
+}
+
+impl From<&HidValue> for u16 {
+    fn from(v: &HidValue) -> u16 {
+        (v.value & 0xFFFF) as u16
+    }
+}
+
+impl From<HidValue> for u16 {
+    fn from(v: HidValue) -> u16 {
+        u16::from(&v)
+    }
+}
+
+impl From<&HidValue> for u8 {
+    fn from(v: &HidValue) -> u8 {
+        (v.value & 0xFF) as u8
+    }
+}
+
+impl From<HidValue> for u8 {
+    fn from(v: HidValue) -> u8 {
+        u8::from(&v)
+    }
+}
+
+impl From<&HidValue> for i32 {
+    fn from(v: &HidValue) -> i32 {
+        v.value as i32
+    }
+}
+
+impl From<HidValue> for i32 {
+    fn from(v: HidValue) -> i32 {
+        i32::from(&v)
     }
 }
 
@@ -838,7 +896,7 @@ impl TryFrom<&[u8]> for InputItem {
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
         ensure!(bytes.len() >= 2, HidError::InsufficientData);
-        let data = hiddata(&bytes[1..]).unwrap();
+        let data: u32 = HidValue::try_from(&bytes[1..]).unwrap().into();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -858,7 +916,7 @@ impl TryFrom<&[u8]> for OutputItem {
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
         ensure!(bytes.len() >= 2, HidError::InsufficientData);
-        let data = hiddata(&bytes[1..]).unwrap();
+        let data: u32 = HidValue::try_from(&bytes[1..]).unwrap().into();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -878,7 +936,7 @@ impl TryFrom<&[u8]> for FeatureItem {
 
     fn try_from(bytes: &[u8]) -> Result<Self> {
         ensure!(bytes.len() >= 2, HidError::InsufficientData);
-        let data = hiddata(&bytes[1..]).unwrap();
+        let data: u32 = HidValue::try_from(&bytes[1..]).unwrap().into();
         Ok(Self {
             is_constant: bit(data, 0),
             is_variable: bit(data, 1),
@@ -950,42 +1008,43 @@ impl TryFrom<&[u8]> for GlobalItem {
     type Error = HidError;
 
     fn try_from(bytes: &[u8]) -> Result<GlobalItem> {
-        let (data, data_signed) = if bytes.len() >= 2 {
-            (hiddata(&bytes[1..]), hiddata_signed(&bytes[1..]))
+        let value = if bytes.len() >= 2 {
+            HidValue::try_from(&bytes[1..]).unwrap()
         } else {
-            (Some(0), Some(0))
+            let v = vec![0u8];
+            HidValue::try_from(v.as_slice()).unwrap()
         };
         let item = match bytes[0] & 0b11111100 {
-            0b00000100 => GlobalItem::UsagePage(UsagePage(data.unwrap() as u16)),
-            0b00010100 => GlobalItem::LogicalMinimum(LogicalMinimum(data_signed.unwrap())),
+            0b00000100 => GlobalItem::UsagePage(UsagePage(value.into())),
+            0b00010100 => GlobalItem::LogicalMinimum(LogicalMinimum(value.into())),
             // Cheating here: we don't know if the data is signed or unsigned
             // unless we look at the LogicalMinimum - but we don't have
             // that here because we're just itemizing, not interpreting.
             // So let's cheat and treat the minimum as signed and the maximum
             // as unsigned which is good enough for anything that doesn't
             // have a LogicalMaximum < 0.
-            0b00100100 => GlobalItem::LogicalMaximum(LogicalMaximum(data.unwrap() as i32)),
-            0b00110100 => GlobalItem::PhysicalMinimum(PhysicalMinimum(data_signed.unwrap())),
+            0b00100100 => GlobalItem::LogicalMaximum(LogicalMaximum(value.into())),
+            0b00110100 => GlobalItem::PhysicalMinimum(PhysicalMinimum(value.into())),
             // Cheating here: we don't know if the data is signed or unsigned
             // unless we look at the PhysicalMinimum - but we don't have
             // that here because we're just itemizing, not interpreting.
             // So let's cheat and treat the minimum as signed and the maximum
             // as unsigned which is good enough for anything that doesn't
             // have a PhysicalMaximum < 0.
-            0b01000100 => GlobalItem::PhysicalMaximum(PhysicalMaximum(data.unwrap() as i32)),
-            0b01010100 => GlobalItem::UnitExponent(UnitExponent(data.unwrap() as i32)),
-            0b01100100 => GlobalItem::Unit(Unit(data.unwrap())),
+            0b01000100 => GlobalItem::PhysicalMaximum(PhysicalMaximum(value.into())),
+            0b01010100 => GlobalItem::UnitExponent(UnitExponent(value.into())),
+            0b01100100 => GlobalItem::Unit(Unit(value.into())),
             0b01110100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportSize(ReportSize(data.unwrap() as usize))
+                GlobalItem::ReportSize(ReportSize(value.into()))
             }
             0b10000100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportId(ReportId(data.unwrap() as u8))
+                GlobalItem::ReportId(ReportId(value.into()))
             }
             0b10010100 => {
                 ensure!(bytes.len() >= 2, HidError::InsufficientData);
-                GlobalItem::ReportCount(ReportCount(data.unwrap() as usize))
+                GlobalItem::ReportCount(ReportCount(value.into()))
             }
             0b10100100 => GlobalItem::Push,
             0b10110100 => GlobalItem::Pop,
@@ -1001,25 +1060,25 @@ impl TryFrom<&[u8]> for LocalItem {
 
     fn try_from(bytes: &[u8]) -> Result<LocalItem> {
         ensure!(bytes.len() >= 2, HidError::InsufficientData);
-        let data = hiddata(&bytes[1..]);
+        let value = HidValue::try_from(&bytes[1..]).unwrap();
         let item = match bytes[0] & 0b11111100 {
             0b00001000 => match bytes[1..].len() {
-                1 | 2 => LocalItem::UsageId(UsageId(data.unwrap() as u16)),
+                1 | 2 => LocalItem::UsageId(UsageId(value.into())),
                 4 => LocalItem::Usage(
-                    UsagePage((data.unwrap() >> 16) as u16),
-                    UsageId((data.unwrap() & 0xFFFF) as u16),
+                    UsagePage((u32::from(&value) >> 16) as u16),
+                    UsageId(value.into()),
                 ),
                 n => panic!("Invalid data length {n}"),
             },
-            0b00011000 => LocalItem::UsageMinimum(UsageMinimum(data.unwrap())),
-            0b00101000 => LocalItem::UsageMaximum(UsageMaximum(data.unwrap())),
-            0b00111000 => LocalItem::DesignatorIndex(DesignatorIndex(data.unwrap())),
-            0b01001000 => LocalItem::DesignatorMinimum(DesignatorMinimum(data.unwrap())),
-            0b01011000 => LocalItem::DesignatorMaximum(DesignatorMaximum(data.unwrap())),
-            0b01111000 => LocalItem::StringIndex(StringIndex(data.unwrap())),
-            0b10001000 => LocalItem::StringMinimum(StringMinimum(data.unwrap())),
-            0b10011000 => LocalItem::StringMaximum(StringMaximum(data.unwrap())),
-            0b10101000 => LocalItem::Delimiter(Delimiter(data.unwrap())),
+            0b00011000 => LocalItem::UsageMinimum(UsageMinimum(value.into())),
+            0b00101000 => LocalItem::UsageMaximum(UsageMaximum(value.into())),
+            0b00111000 => LocalItem::DesignatorIndex(DesignatorIndex(value.into())),
+            0b01001000 => LocalItem::DesignatorMinimum(DesignatorMinimum(value.into())),
+            0b01011000 => LocalItem::DesignatorMaximum(DesignatorMaximum(value.into())),
+            0b01111000 => LocalItem::StringIndex(StringIndex(value.into())),
+            0b10001000 => LocalItem::StringMinimum(StringMinimum(value.into())),
+            0b10011000 => LocalItem::StringMaximum(StringMaximum(value.into())),
+            0b10101000 => LocalItem::Delimiter(Delimiter(value.into())),
             n => LocalItem::Reserved { value: n },
         };
         Ok(item)
@@ -1406,6 +1465,19 @@ mod tests {
         assert_eq!(u32::try_from(&item_data).unwrap(), 0x0201);
         let item_data = ItemData { bytes: &bytes[..4] };
         assert_eq!(u32::try_from(&item_data).unwrap(), 0x04030201);
+    }
+
+    #[test]
+    fn hid_value() {
+        let bytes = [0x1, 0x2, 0x3, 0x4];
+
+        let v = HidValue::try_from(bytes.as_slice()).unwrap();
+        assert_eq!(usize::from(&v), 0x04030201);
+        assert_eq!(u32::from(&v), 0x04030201);
+        assert_eq!(u16::from(&v), 0x0201);
+        assert_eq!(u8::from(&v), 0x01);
+
+        assert_eq!(i32::from(&v), 0x04030201);
     }
 
     #[test]
