@@ -24,11 +24,11 @@
 //! let field = report.fields().first().unwrap();
 //! match field {
 //!     Field::Variable(var) => {
-//!         let val: u32 = var.extract_u32(&input_report_bytes).unwrap();
+//!         let val: u32 = var.extract(&input_report_bytes).unwrap().into();
 //!         println!("Field {:?} is of value {}", field, val);
 //!     }
 //!     Field::Array(arr) => {
-//!         let vals: Vec<u32> = arr.extract_u32(&input_report_bytes).unwrap();
+//!         let vals: Vec<u32> = arr.extract(&input_report_bytes).unwrap().iter().map(u32::from).collect();
 //!         println!("Field {:?} has values {:?}", field, vals);
 //!     }
 //!     Field::Constant(_) => {
@@ -83,7 +83,7 @@ macro_rules! impl_from_without_ref {
 /// result into a [u32].
 ///
 /// The number of bits in the range must be less or equal to 32.
-fn extract_u32(bytes: &[u8], bits: &Range<usize>) -> u32 {
+fn extract_bits(bytes: &[u8], bits: &Range<usize>) -> u32 {
     let nbits = bits.len();
     assert_ne!(nbits, 0);
     assert!(nbits <= 32);
@@ -105,42 +105,6 @@ fn extract_u32(bytes: &[u8], bits: &Range<usize>) -> u32 {
     let value = (value >> base_shift) as u32;
 
     value & mask
-}
-
-/// Extract the bit range from the given byte array, converting the
-/// result into a [i32]. The sign of the number matches that
-/// of the given bit range, e.g. a bit range of length 4 with the MSB set
-/// to 1 will result in a negative number, up-casted to [i32].
-///
-/// The number of bits in the range must be less or equal to 32.
-fn extract_i32(bytes: &[u8], bits: &Range<usize>) -> i32 {
-    let nbits = bits.len();
-    let v = extract_u32(bytes, bits);
-    v.twos_comp(nbits)
-}
-
-fn extract_u16(bytes: &[u8], bits: &Range<usize>) -> u16 {
-    assert!(bits.len() <= 16);
-    let v: u32 = extract_u32(bytes, bits);
-    v as u16
-}
-
-fn extract_i16(bytes: &[u8], bits: &Range<usize>) -> i16 {
-    let nbits = bits.len();
-    let v = extract_u16(bytes, bits);
-    v.twos_comp(nbits)
-}
-
-fn extract_u8(bytes: &[u8], bits: &Range<usize>) -> u8 {
-    assert!(bits.len() <= 8);
-    let v: u32 = extract_u32(bytes, bits);
-    v as u8
-}
-
-fn extract_i8(bytes: &[u8], bits: &Range<usize>) -> i8 {
-    let nbits = bits.len();
-    let v = extract_u8(bytes, bits);
-    v.twos_comp(nbits)
 }
 
 /// Calculates the two's complement for a value with
@@ -213,8 +177,8 @@ impl TwosComplement<i32> for u32 {
 /// println!("This is an input report for report ID: {:?}", report.report_id());
 /// let field = report.fields().first().unwrap();
 /// match field {
-///     Field::Variable(var) => println!("Field {:?} is of value {}", field, var.extract_u32(&input_report_bytes).unwrap()),
-///     Field::Array(arr) => println!("Field {:?} has values {:?}", field, arr.extract_u32(&input_report_bytes).unwrap()),
+///     Field::Variable(var) => println!("Field {:?} is of value {}", field, u32::from(var.extract(&input_report_bytes).unwrap())),
+///     Field::Array(arr) => println!("Field {:?} has values {:?}", field, arr.extract(&input_report_bytes).unwrap().iter().map(u32::from)),
 ///     Field::Constant(_) => println!("Field {:?} is <padding data>", field),
 /// }
 /// ```
@@ -520,6 +484,90 @@ impl From<&FieldId> for u32 {
 
 impl_from_without_ref!(FieldId, u32, u32);
 
+/// A wrapper around the value of a [Field] inside
+/// a HID Report's byte array. This value may
+/// be signed, depending on the [Field].
+///
+/// ```
+/// # use hidreport::VariableField;
+/// # fn read_from_device() -> Vec<u8> {
+/// #     vec![0x1a, 0x00, 0xff, 0xff, 0xfe, 0xff, 00, 00, 00, 0x00]
+/// # }
+/// #
+/// # fn func(field: &VariableField, bytes: &[u8]) {
+/// let bytes: Vec<u8> = read_from_device();
+/// let val = field.extract(bytes.as_slice()).unwrap();
+/// if val.is_signed() {
+///   let unsigned: u32 = val.into();
+/// } else {
+///   let signed: i32 = val.into();
+/// }
+/// # }
+/// ```
+///
+/// The value is always of size [u32] or [i32], regardless of the
+/// number of bits in the HID Report. Cast to [u16], [u8], etc. as needed.
+#[derive(Clone, Copy, Debug)]
+pub struct FieldValue {
+    is_signed: bool,
+    value: u32,
+}
+
+impl FieldValue {
+    /// Returns `true` if the contained value is signed, `false` otherwise.
+    pub fn is_signed(&self) -> bool {
+        self.is_signed
+    }
+}
+
+impl From<&FieldValue> for u32 {
+    fn from(v: &FieldValue) -> u32 {
+        v.value
+    }
+}
+
+impl_from_without_ref!(FieldValue, u32, u32);
+
+impl From<&FieldValue> for u16 {
+    fn from(v: &FieldValue) -> u16 {
+        v.value as u16
+    }
+}
+
+impl_from_without_ref!(FieldValue, u16, u16);
+
+impl From<&FieldValue> for u8 {
+    fn from(v: &FieldValue) -> u8 {
+        v.value as u8
+    }
+}
+
+impl_from_without_ref!(FieldValue, u8, u8);
+
+impl From<&FieldValue> for i32 {
+    fn from(v: &FieldValue) -> i32 {
+        v.value as i32
+    }
+}
+
+impl_from_without_ref!(FieldValue, i32, i32);
+
+impl From<&FieldValue> for i16 {
+    fn from(v: &FieldValue) -> i16 {
+        v.value as i16
+    }
+}
+
+impl_from_without_ref!(FieldValue, i16, i16);
+
+impl From<&FieldValue> for i8 {
+    fn from(v: &FieldValue) -> i8 {
+        v.value as i8
+    }
+}
+
+impl_from_without_ref!(FieldValue, i8, i8);
+
 /// A single field inside a [Report].
 ///
 /// Fields may be [Variable](Field::Variable) and represent a
@@ -529,6 +577,20 @@ impl_from_without_ref!(FieldId, u32, u32);
 ///
 /// Fields of type [Constant](Field::Constant) should be ignored by
 /// the caller.
+///
+/// Given a set of bytes that is a HID Report use [VariableField::extract()] or
+/// [ArrayField::extract()] to extract the value for this field, for example:
+/// ```
+/// # use hidreport::VariableField;
+/// # fn func(field: &VariableField, bytes: &[u8]) {
+///   let val = field.extract(bytes).unwrap();
+///   if val.is_signed() {
+///     let unsigned: u32 = val.into();
+///   } else {
+///     let signed: i32 = val.into();
+///   }
+/// # }
+/// ```
 #[derive(Clone, Debug)]
 pub enum Field {
     /// A single element of data
@@ -619,52 +681,38 @@ impl VariableField {
         self.logical_minimum < LogicalMinimum(0)
     }
 
-    /// Extract this field's value as [u32] from a report's bytes.
-    /// The value is extracted as its correct bit size but upcasted
-    /// if need be into a [u32]. IOW it is safe to call this function
-    /// on e.g. an 8 bit unsigned field in the report.
-    ///
-    /// Check [VariableField::is_signed] first to see if you should be
-    /// using [VariableField::extract_i32] instead.
-    pub fn extract_u32(&self, bytes: &[u8]) -> Result<u32> {
+    /// Extract this field's value as [FieldValue] from a report's bytes.
+    /// The value is extracted as its correct bit size, the returned [FieldValue]
+    /// can then be casted in to a [u32], [i32], etc. via the [From] trait.
+    /// ```
+    /// # use hidreport::VariableField;
+    /// # fn func(field: &VariableField, bytes: &[u8]) {
+    ///   let val = field.extract(bytes).unwrap();
+    ///   if val.is_signed() {
+    ///     let unsigned: u32 = val.into();
+    ///   } else {
+    ///     let signed: i32 = val.into();
+    ///   }
+    /// # }
+    /// ```
+    pub fn extract(&self, bytes: &[u8]) -> Result<FieldValue> {
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
                 return Err(ParserError::MismatchingReportId);
             }
         }
 
-        let v = match self.bits.len() {
-            1..=8 => extract_u8(bytes, &self.bits) as u32,
-            9..=16 => extract_u16(bytes, &self.bits) as u32,
-            17..=32 => extract_u32(bytes, &self.bits),
-            n => panic!("invalid data length {n}"),
+        let v = extract_bits(bytes, &self.bits);
+        let v = if self.is_signed() {
+            v.twos_comp(self.bits.len()) as u32
+        } else {
+            v
         };
 
-        Ok(v)
-    }
-
-    /// Extract this field's value as [i32] from a report's bytes.
-    /// The value is extracted as its correct bit size but upcasted
-    /// if need be into a [i32]. IOW it is safe to call this function
-    /// on e.g. an 8 bit signed field in the report.
-    ///
-    /// Check [VariableField::is_signed] first to see if you should be
-    /// using [VariableField::extract_u32] instead.
-    pub fn extract_i32(&self, bytes: &[u8]) -> Result<i32> {
-        if let Some(report_id) = self.report_id {
-            if ReportId(bytes[0]) != report_id {
-                return Err(ParserError::MismatchingReportId);
-            }
-        }
-
-        let v = match self.bits.len() {
-            1..=8 => extract_i8(bytes, &self.bits) as i32,
-            9..=16 => extract_i16(bytes, &self.bits) as i32,
-            17..=32 => extract_i32(bytes, &self.bits),
-            n => panic!("invalid data length {n}"),
-        };
-
-        Ok(v)
+        Ok(FieldValue {
+            is_signed: self.is_signed(),
+            value: v,
+        })
     }
 }
 
@@ -769,50 +817,36 @@ impl ArrayField {
 
     /// Returns true if this field contains signed values,.
     /// i.e. the LogicalMinimum is less than zero.
-    /// ```
-    /// # use hidreport::ArrayField;
-    /// # fn func(field: &ArrayField, bytes: &[u8]) {
-    /// if field.is_signed() {
-    ///     println!("Signed values: {:?}", field.extract_i32(bytes).unwrap());
-    /// } else {
-    ///     println!("Unsigned values: {:?}", field.extract_u32(bytes).unwrap());
-    /// }
-    ///
-    /// # }
-    /// ```
     pub fn is_signed(&self) -> bool {
         self.logical_minimum < LogicalMinimum(0)
     }
 
-    /// Extract this field's values as [u32]s from a report's bytes.
-    /// The values are extracted at their correct bit size but upcasted
-    /// if need be into a [u32]. IOW it is safe to call this function
-    /// on e.g. an 8 bit unsigned field in the report.
+    /// Extract this field's value as [FieldValue] from a report's bytes.
+    /// The value is extracted as its correct bit size, the returned [FieldValue]
+    /// can then be casted in to a [u32], [i32], etc. via the [From] trait.
     ///
-    /// Check [ArrayField::is_signed] first to see if you should be
-    /// using [ArrayField::extract_i32] instead.
-    pub fn extract_u32(&self, bytes: &[u8]) -> Result<Vec<u32>> {
-        if let Some(report_id) = self.report_id {
-            if ReportId(bytes[0]) != report_id {
-                return Err(ParserError::MismatchingReportId);
-            }
-        }
-        let count = usize::from(self.report_count);
-        let values: Result<Vec<u32>> = (0..count)
-            .map(|idx| self.extract_one_u32(bytes, idx))
-            .collect();
-
-        values
-    }
-
-    /// Extract this field's values as [i32]s from a report's bytes.
-    /// The values are extracted at their correct bit size but upcasted
-    /// if need be into a [i32]. IOW it is safe to call this function
-    /// on e.g. an 8 bit signed field in the report.
+    /// ```
+    /// # use hidreport::ArrayField;
+    /// # fn func(field: &ArrayField, bytes: &[u8]) {
+    /// if field.is_signed() {
+    ///     println!("Signed values: {:?}", field
+    ///         .extract(bytes)
+    ///         .unwrap()
+    ///         .iter()
+    ///         .map(i32::from)
+    ///         .collect::<Vec<i32>>());
+    /// } else {
+    ///     println!("Unsigned values: {:?}", field
+    ///         .extract(bytes)
+    ///         .unwrap()
+    ///         .iter()
+    ///         .map(u32::from)
+    ///         .collect::<Vec<u32>>());
+    /// }
     ///
-    /// Check [ArrayField::is_signed] first to see if you should be
-    /// using [ArrayField::extract_u32] instead.
-    pub fn extract_i32(&self, bytes: &[u8]) -> Result<Vec<i32>> {
+    /// # }
+    /// ```
+    pub fn extract(&self, bytes: &[u8]) -> Result<Vec<FieldValue>> {
         if let Some(report_id) = self.report_id {
             if ReportId(bytes[0]) != report_id {
                 return Err(ParserError::MismatchingReportId);
@@ -820,17 +854,16 @@ impl ArrayField {
         }
 
         let count = usize::from(self.report_count);
-        let values: Result<Vec<i32>> = (0..count)
-            .map(|idx| self.extract_one_i32(bytes, idx))
-            .collect();
+        let values: Result<Vec<FieldValue>> =
+            (0..count).map(|idx| self.extract_one(bytes, idx)).collect();
 
         values
     }
 
-    /// Extract a single value from this array. See [ArrayField::extract_u32].
+    /// Extract a single value from this array. See [ArrayField::extract].
     ///
     /// The index must be less than [Self::report_count].
-    pub fn extract_one_u32(&self, bytes: &[u8], idx: usize) -> Result<u32> {
+    pub fn extract_one(&self, bytes: &[u8], idx: usize) -> Result<FieldValue> {
         if idx >= usize::from(self.report_count) {
             return Err(ParserError::OutOfBounds);
         }
@@ -845,42 +878,17 @@ impl ArrayField {
 
         let offset = self.bits.start + bits_per_report * idx;
         let bits = offset..offset + bits_per_report;
-        let v = match bits.len() {
-            1..=8 => extract_u8(bytes, &bits) as u32,
-            9..=16 => extract_u16(bytes, &bits) as u32,
-            17..=32 => extract_u32(bytes, &bits),
-            n => panic!("invalid data length {n}"),
+        let v = extract_bits(bytes, &bits);
+        let v = if self.is_signed() {
+            v.twos_comp(self.bits.len()) as u32
+        } else {
+            v
         };
 
-        Ok(v)
-    }
-
-    /// Extract a single value from this array. See [ArrayField::extract_i32].
-    ///
-    /// The index must be less than [Self::report_count].
-    pub fn extract_one_i32(&self, bytes: &[u8], idx: usize) -> Result<i32> {
-        if idx >= usize::from(self.report_count) {
-            return Err(ParserError::OutOfBounds);
-        }
-        if let Some(report_id) = self.report_id {
-            if ReportId(bytes[0]) != report_id {
-                return Err(ParserError::MismatchingReportId);
-            }
-        }
-
-        let count = usize::from(self.report_count);
-        let bits_per_report = self.bits.len() / count;
-
-        let offset = self.bits.start + bits_per_report * idx;
-        let bits = offset..offset + bits_per_report;
-        let v = match bits.len() {
-            1..=8 => extract_i8(bytes, &bits) as i32,
-            9..=16 => extract_i16(bytes, &bits) as i32,
-            17..=32 => extract_i32(bytes, &bits),
-            n => panic!("invalid data length {n}"),
-        };
-
-        Ok(v)
+        Ok(FieldValue {
+            is_signed: self.is_signed(),
+            value: v,
+        })
     }
 }
 
@@ -1531,77 +1539,189 @@ mod tests {
     fn extract() {
         let bytes: [u8; 4] = [0b1100_1010, 0b1011_1001, 0b1001_0110, 0b0001_0101];
 
-        assert_eq!(0, extract_u8(&bytes, &(0..1)));
-        assert_eq!(2, extract_u8(&bytes, &(0..2)));
-        assert_eq!(10, extract_u8(&bytes, &(0..4)));
+        let test_field = |bits: Range<usize>, signed: bool| -> VariableField {
+            VariableField {
+                id: FieldId(0),
+                report_id: None,
+                bits,
+                usage: Usage::from(0),
+                logical_minimum: LogicalMinimum(if signed { -1 } else { 0 }),
+                logical_maximum: LogicalMaximum(0),
+                physical_minimum: None,
+                physical_maximum: None,
+                unit: None,
+                unit_exponent: None,
+                collections: vec![],
+            }
+        };
 
-        assert_eq!(0, extract_i8(&bytes, &(0..1)));
-        assert_eq!(-2, extract_i8(&bytes, &(0..2)));
-        assert_eq!(-6, extract_i8(&bytes, &(0..4)));
+        assert_eq!(0u8, test_field(0..1, false).extract(&bytes).unwrap().into());
+        assert_eq!(2u8, test_field(0..2, false).extract(&bytes).unwrap().into());
+        assert_eq!(
+            10u8,
+            test_field(0..4, false).extract(&bytes).unwrap().into()
+        );
 
-        assert_eq!(0b1001_1100, extract_u8(&bytes, &(4..12)));
-        assert_eq!(0b1001_1100u8 as i8, extract_i8(&bytes, &(4..12)));
+        assert_eq!(0i8, test_field(0..1, true).extract(&bytes).unwrap().into());
+        assert_eq!(-2i8, test_field(0..2, true).extract(&bytes).unwrap().into());
+        assert_eq!(-6i8, test_field(0..4, true).extract(&bytes).unwrap().into());
 
-        assert_eq!(0, extract_u16(&bytes, &(0..1)));
-        assert_eq!(2, extract_u16(&bytes, &(0..2)));
-        assert_eq!(10, extract_u16(&bytes, &(0..4)));
+        assert_eq!(
+            0b1001_1100u8,
+            test_field(4..12, true).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0b1001_1100u8 as i8,
+            test_field(4..12, true).extract(&bytes).unwrap().into()
+        );
 
-        assert_eq!(0, extract_i16(&bytes, &(0..1)));
-        assert_eq!(-2, extract_i16(&bytes, &(0..2)));
-        assert_eq!(-6, extract_i16(&bytes, &(0..4)));
+        assert_eq!(
+            0u16,
+            test_field(0..1, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            2u16,
+            test_field(0..2, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            10u16,
+            test_field(0..4, false).extract(&bytes).unwrap().into()
+        );
 
-        assert_eq!(0b0110_1011_1001_1100, extract_u16(&bytes, &(4..20)));
-        assert_eq!(0b0110_1011_1001_1100, extract_i16(&bytes, &(4..20)));
+        assert_eq!(0i16, test_field(0..1, true).extract(&bytes).unwrap().into());
+        assert_eq!(
+            -2i16,
+            test_field(0..2, true).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            -6i16,
+            test_field(0..4, true).extract(&bytes).unwrap().into()
+        );
+
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            test_field(4..20, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            test_field(4..20, true).extract(&bytes).unwrap().into()
+        );
         assert_eq!(
             0b1_0110_1011_1001_110u16 as i16,
-            extract_i16(&bytes, &(5..21))
-        );
-
-        assert_eq!(0b0110_1011_1001_1100, extract_u32(&bytes, &(4..20)));
-        assert_eq!(0b0110_1011_1001_1100, extract_i32(&bytes, &(4..20)));
-        assert_eq!(
-            ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            extract_i32(&bytes, &(5..21))
+            test_field(5..21, true).extract(&bytes).unwrap().into()
         );
 
         assert_eq!(
+            0b0110_1011_1001_1100,
+            test_field(4..20, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0b0110_1011_1001_1100,
+            test_field(4..20, true).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
             ((0b1_0110_1011_1001_110u16 as i16) as i32),
-            extract_i32(&bytes, &(5..21))
+            test_field(5..21, true).extract(&bytes).unwrap().into()
+        );
+
+        assert_eq!(
+            ((0b1_0110_1011_1001_110u16 as i16) as i32),
+            test_field(5..21, true).extract(&bytes).unwrap().into()
         );
 
         let bytes: [u8; 1] = [0x0f];
-        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
-        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
-        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
-        assert_eq!(0x0f, extract_u32(&bytes, &(0..8)));
+        assert_eq!(0x3, test_field(0..2, false).extract(&bytes).unwrap().into());
+        assert_eq!(0xf, test_field(0..4, false).extract(&bytes).unwrap().into());
+        assert_eq!(0x0, test_field(4..8, false).extract(&bytes).unwrap().into());
+        assert_eq!(
+            0x0f,
+            test_field(0..8, false).extract(&bytes).unwrap().into()
+        );
 
         let bytes: [u8; 2] = [0x0f, 0x5e];
-        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
-        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
-        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
-        assert_eq!(0xe0f, extract_u32(&bytes, &(0..12)));
-        assert_eq!(0x5e0f, extract_u32(&bytes, &(0..16)));
-        assert_eq!(0xe, extract_u32(&bytes, &(8..12)));
-        assert_eq!(0x5, extract_u32(&bytes, &(12..16)));
-        assert_eq!(0x5e, extract_u32(&bytes, &(8..16)));
+        assert_eq!(0x3, test_field(0..2, false).extract(&bytes).unwrap().into());
+        assert_eq!(0xf, test_field(0..4, false).extract(&bytes).unwrap().into());
+        assert_eq!(0x0, test_field(4..8, false).extract(&bytes).unwrap().into());
+        assert_eq!(
+            0xe0f,
+            test_field(0..12, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5e0f,
+            test_field(0..16, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xe,
+            test_field(8..12, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5,
+            test_field(12..16, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5e,
+            test_field(8..16, false).extract(&bytes).unwrap().into()
+        );
 
         let bytes: [u8; 4] = [0x0f, 0x5e, 0xab, 0x78];
-        assert_eq!(0x3, extract_u32(&bytes, &(0..2)));
-        assert_eq!(0xf, extract_u32(&bytes, &(0..4)));
-        assert_eq!(0x0, extract_u32(&bytes, &(4..8)));
-        assert_eq!(0xe0f, extract_u32(&bytes, &(0..12)));
-        assert_eq!(0x5e0f, extract_u32(&bytes, &(0..16)));
-        assert_eq!(0xe, extract_u32(&bytes, &(8..12)));
-        assert_eq!(0x5, extract_u32(&bytes, &(12..16)));
-        assert_eq!(0x5e, extract_u32(&bytes, &(8..16)));
-        assert_eq!(0xb5e0f, extract_u32(&bytes, &(0..20)));
-        assert_eq!(0xab5e0f, extract_u32(&bytes, &(0..24)));
-        assert_eq!(0xb5e0, extract_u32(&bytes, &(4..20)));
-        assert_eq!(0xab5e, extract_u32(&bytes, &(8..24)));
-        assert_eq!(0xb, extract_u32(&bytes, &(16..20)));
-        assert_eq!(0xab, extract_u32(&bytes, &(16..24)));
-        assert_eq!(0x78ab5e0f, extract_u32(&bytes, &(0..32)));
-        assert_eq!(0x7, extract_u32(&bytes, &(28..32)));
-        assert_eq!(0x78, extract_u32(&bytes, &(24..32)));
+        assert_eq!(0x3, test_field(0..2, false).extract(&bytes).unwrap().into());
+        assert_eq!(0xf, test_field(0..4, false).extract(&bytes).unwrap().into());
+        assert_eq!(0x0, test_field(4..8, false).extract(&bytes).unwrap().into());
+        assert_eq!(
+            0xe0f,
+            test_field(0..12, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5e0f,
+            test_field(0..16, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xe,
+            test_field(8..12, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5,
+            test_field(12..16, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x5e,
+            test_field(8..16, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xb5e0f,
+            test_field(0..20, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xab5e0f,
+            test_field(0..24, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xb5e0,
+            test_field(4..20, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xab5e,
+            test_field(8..24, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xb,
+            test_field(16..20, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0xab,
+            test_field(16..24, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x78ab5e0f,
+            test_field(0..32, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x7,
+            test_field(28..32, false).extract(&bytes).unwrap().into()
+        );
+        assert_eq!(
+            0x78,
+            test_field(24..32, false).extract(&bytes).unwrap().into()
+        );
     }
 }
