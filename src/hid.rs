@@ -512,7 +512,7 @@ impl OutputItem {
         self.is_volatile
     }
 
-    pub fn is_non_volatile(&self) -> bool {
+    pub fn is_nonvolatile(&self) -> bool {
         !self.is_volatile()
     }
 }
@@ -586,7 +586,7 @@ impl FeatureItem {
     }
 
     /// False if the control value should not be changed by the host
-    pub fn is_non_volatile(&self) -> bool {
+    pub fn is_nonvolatile(&self) -> bool {
         !self.is_volatile()
     }
 }
