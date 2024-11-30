@@ -684,6 +684,7 @@ pub struct VariableField {
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
+    pub is_relative: bool,
 }
 
 impl VariableField {
@@ -1181,10 +1182,10 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
 
     let report_id = globals.report_id;
 
-    let (is_constant, is_variable) = match item {
-        MainItem::Input(i) => (i.is_constant(), i.is_variable()),
-        MainItem::Output(i) => (i.is_constant(), i.is_variable()),
-        MainItem::Feature(i) => (i.is_constant(), i.is_variable()),
+    let (is_constant, is_variable, is_relative) = match item {
+        MainItem::Input(i) => (i.is_constant(), i.is_variable(), i.is_relative()),
+        MainItem::Output(i) => (i.is_constant(), i.is_variable(), i.is_relative()),
+        MainItem::Feature(i) => (i.is_constant(), i.is_variable(), i.is_relative()),
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
@@ -1260,6 +1261,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
                 unit_exponent,
                 collections: collections.clone(),
                 report_id,
+                is_relative,
             };
             Field::Variable(field)
         })
