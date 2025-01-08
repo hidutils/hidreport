@@ -239,7 +239,7 @@ impl<'a> ReportDescriptor {
         &self.feature_reports
     }
 
-    fn find_report(&'a self, list: &'a [RDescReport], prefix: u8) -> Option<&impl Report> {
+    fn find_report(&'a self, list: &'a [RDescReport], prefix: u8) -> Option<&'a impl Report> {
         let first = list.first()?;
         let rid = Some(ReportId(prefix));
         // Do we have report IDs? If not, the first report is what we want.
@@ -656,7 +656,7 @@ impl Field {
 
     /// The length of the field in bits
     fn len(&self) -> usize {
-        return self.bits().len();
+        self.bits().len()
     }
 
     /// Return the set of collections this [Field] belongs to
