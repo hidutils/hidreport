@@ -998,7 +998,7 @@ pub struct ItemData<'a> {
     bytes: &'a [u8],
 }
 
-impl<'a> std::ops::Deref for ItemData<'a> {
+impl std::ops::Deref for ItemData<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -1006,7 +1006,7 @@ impl<'a> std::ops::Deref for ItemData<'a> {
     }
 }
 
-impl<'a> TryFrom<&ItemData<'a>> for u32 {
+impl TryFrom<&ItemData<'_>> for u32 {
     type Error = HidError;
 
     /// Converts the (little endian) data bytes into a u32.
@@ -1022,7 +1022,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u32 {
     }
 }
 
-impl<'a> TryFrom<&ItemData<'a>> for u8 {
+impl TryFrom<&ItemData<'_>> for u8 {
     type Error = HidError;
 
     /// Converts the data bytes into a [u8]. This function throws an error if the data length
@@ -1040,7 +1040,7 @@ impl<'a> TryFrom<&ItemData<'a>> for u8 {
     }
 }
 
-impl<'a> TryFrom<&ItemData<'a>> for Vec<u8> {
+impl TryFrom<&ItemData<'_>> for Vec<u8> {
     type Error = HidError;
 
     /// Converts the data bytes into a `Vec<u8>`, copying the data.
