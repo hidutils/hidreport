@@ -320,7 +320,7 @@ impl<'a> ReportDescriptor {
     /// ReportDescriptors with multiple reports require a report
     /// to have a single byte prefix specifying the [ReportId].
     pub fn find_output_report(&self, bytes: &[u8]) -> Option<&impl Report> {
-        self.find_report(&self.input_reports, bytes[0])
+        self.find_report(&self.output_reports, bytes[0])
     }
 
     /// Find the feature report that matches this byte sequence.
@@ -339,7 +339,7 @@ impl<'a> ReportDescriptor {
     /// ReportDescriptors with multiple reports require a report
     /// to have a single byte prefix specifying the [ReportId].
     pub fn find_feature_report(&self, bytes: &[u8]) -> Option<&impl Report> {
-        self.find_report(&self.input_reports, bytes[0])
+        self.find_report(&self.feature_reports, bytes[0])
     }
 }
 
