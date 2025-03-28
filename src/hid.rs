@@ -1751,7 +1751,7 @@ impl LocalItem {
             LocalItem::Usage(page, id) => {
                 let up: u32 = u16::from(page) as u32;
                 let uid: u32 = u16::from(id) as u32;
-                let usage = up << 16 | uid;
+                let usage = (up << 16) | uid;
                 HidBytes::from(usage)
             }
             LocalItem::UsageId(id) => HidBytes::from(u16::from(id)),
