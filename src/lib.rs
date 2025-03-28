@@ -135,7 +135,7 @@ fn extract_bits(bytes: &[u8], bits: &Range<usize>) -> u32 {
     }
     //.inspect(|idx| println!("Accessing index {idx}: {:x?}", bytes[*idx as usize]))
     .fold(0u64, |acc: u64, idx| {
-        acc | (bytes[idx as usize] as u64) << (8 * idx)
+        acc | ((bytes[idx as usize] as u64) << (8 * idx))
     });
 
     let base_shift = bits.start % 8;
@@ -485,7 +485,7 @@ impl From<u32> for Usage {
 
 impl From<&Usage> for u32 {
     fn from(u: &Usage) -> u32 {
-        (u16::from(u.usage_page) as u32) << 16 | u16::from(u.usage_id) as u32
+        ((u16::from(u.usage_page) as u32) << 16) | u16::from(u.usage_id) as u32
     }
 }
 
