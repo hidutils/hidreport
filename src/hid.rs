@@ -1495,7 +1495,7 @@ where
 
     /// Set the item data to be stream of buffered bytes.
     pub fn buffered_bytes(mut self) -> ItemBuilder<A, B, C, D, E, F, G, IBBuffered, I> {
-        self.item.is_buffered_bytes = false;
+        self.item.is_buffered_bytes = true;
         ItemBuilder {
             item: self.item,
             m1: std::marker::PhantomData,
