@@ -404,7 +404,7 @@ pub trait Report {
     /// not a multiple of 8, the [`size_in_bytes()`](Report::size_in_bytes) rounds up
     /// fit all bits.
     fn size_in_bytes(&self) -> usize {
-        (self.size_in_bits() + 7) / 8
+        self.size_in_bits().div_ceil(8)
     }
 }
 
@@ -1458,7 +1458,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let mut maximum = maximum;
                 if minimum < LogicalMinimum(0) {
                     if let Some(data) = item.data() {
-                        if data.len() > 0 {
+                        if !data.is_empty() {
                             let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
                             maximum = LogicalMaximum(v.into());
                         }
@@ -1481,7 +1481,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let mut maximum = maximum;
                 if minimum < PhysicalMinimum(0) {
                     if let Some(data) = item.data() {
-                        if data.len() > 0 {
+                        if !data.is_empty() {
                             let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
                             maximum = PhysicalMaximum(v.into())
                         }

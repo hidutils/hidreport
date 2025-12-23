@@ -2066,7 +2066,7 @@ pub trait Item {
     fn bytes(&self) -> &[u8];
 
     /// Return the item's data bytes, if any.
-    fn data(&self) -> Option<ItemData>;
+    fn data(&self) -> Option<ItemData<'_>>;
 }
 
 /// Wraps the data bytes of a single [Item].
@@ -2222,7 +2222,7 @@ impl Item for ShortItem {
         &self.bytes
     }
 
-    fn data(&self) -> Option<ItemData> {
+    fn data(&self) -> Option<ItemData<'_>> {
         match self.item_size {
             1 => None,
             2 | 3 | 5 => Some(ItemData {
@@ -2266,6 +2266,7 @@ impl TryFrom<&[u8]> for ShortItem {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 struct LongItem {
     size: usize,
     bytes: Vec<u8>,
@@ -2292,7 +2293,7 @@ impl Item for LongItem {
         self.bytes[0]
     }
 
-    fn data(&self) -> Option<ItemData> {
+    fn data(&self) -> Option<ItemData<'_>> {
         Some(ItemData {
             bytes: &self.bytes[3..],
         })
