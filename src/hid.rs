@@ -1632,6 +1632,22 @@ impl CollectionItem {
     }
 }
 
+impl From<CollectionItem> for u8 {
+    fn from(c: CollectionItem) -> u8 {
+        match c {
+            CollectionItem::Physical => 0x00,
+            CollectionItem::Application => 0x01,
+            CollectionItem::Logical => 0x02,
+            CollectionItem::Report => 0x03,
+            CollectionItem::NamedArray => 0x04,
+            CollectionItem::UsageSwitch => 0x05,
+            CollectionItem::UsageModifier => 0x06,
+            CollectionItem::Reserved { value } => value,
+            CollectionItem::VendorDefined { value } => value,
+        }
+    }
+}
+
 /// See Section 6.2.2.7, a global item applies to all subsequently identified items.
 ///
 /// > Global items describe rather than define data from a control. A new Main item
