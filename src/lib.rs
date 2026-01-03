@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 //
+#![no_std]
 //! This crate provides parsing and building of HID Report Descriptors, including the [hid] module
 //! to inspect or build a report descriptor in more detail. Check out the `hut` crate for known HID
 //! Usages to make sense of the various HID fields.
@@ -76,9 +77,16 @@
 //! ```
 //! See the [ReportDescriptorBuilder] documentation for more details.
 
+extern crate alloc;
+#[cfg(feature = "std")]
+extern crate std; // We can do this regardless of `no_std`
+
+use core::ops::Range;
+#[cfg(feature = "std")]
 use std::hash::{Hash, Hasher};
-use std::ops::Range;
 use thiserror::Error;
+
+use alloc::{string::String, vec, vec::Vec};
 
 #[cfg(feature = "hut")]
 use hut::{AsUsage, AsUsagePage};
@@ -1021,6 +1029,7 @@ impl PartialEq for Collection {
 
 impl Eq for Collection {}
 
+#[cfg(feature = "std")]
 impl Hash for Collection {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.id.hash(state);
@@ -1037,7 +1046,7 @@ pub enum ParserError {
     MismatchingReportId,
 }
 
-type Result<T> = std::result::Result<T, ParserError>;
+type Result<T> = core::result::Result<T, ParserError>;
 
 #[derive(Clone, Copy, Debug, Default)]
 struct Globals {
