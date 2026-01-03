@@ -12,8 +12,9 @@ exclude = [
 ]
 
 [features]
-default = ["hut"]
+default = ["hut", "std"]
 hut = [ "dep:hut" ]
+std = [ "hut/std", "thiserror/std" ]
 
 [dependencies]
 thiserror = { version = "2.0", default-features = false }
