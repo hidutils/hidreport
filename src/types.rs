@@ -10,6 +10,8 @@ use crate::TwosComplement;
 #[cfg(feature = "hut")]
 use hut::{self, AsUsage, AsUsagePage};
 
+use alloc::{string::String, vec, vec::Vec};
+
 /// Creates a `From<Foo> for u32` and `From<u32> for Foo` implementation for the given `Foo` type.
 /// Use like this: `impl_from(Foo, Foo, u32)`.
 macro_rules! impl_from {
@@ -36,8 +38,8 @@ macro_rules! impl_from {
 /// Use like this: `impl_fmt(Foo, u32)`.
 macro_rules! impl_fmt {
     ($tipo:ty, $to:ty) => {
-        impl std::fmt::Display for $tipo {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        impl core::fmt::Display for $tipo {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 let v: $to = self.into();
                 write!(f, "{v}")
             }
@@ -151,8 +153,8 @@ pub enum Units {
     Candela { exponent: i8 },
 }
 
-impl std::fmt::Display for Units {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Units {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let (unit, exp) = match self {
             Units::None => ("", &0i8),
             Units::Centimeter { exponent } => ("cm", exponent),
@@ -247,7 +249,7 @@ impl_from!(Unit, Unit, u32);
 
 impl Unit {
     fn nibbles(&self) -> Vec<u8> {
-        std::ops::Range { start: 0, end: 32 }
+        core::ops::Range { start: 0, end: 32 }
             .step_by(4)
             .map(|shift| ((self.0 & (0b1111 << shift)) >> shift) as u8)
             .collect()
@@ -394,13 +396,13 @@ impl Unit {
     }
 }
 
-impl std::fmt::Display for Unit {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Unit {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let units = self
             .units()
             .unwrap_or_default()
             .iter()
-            .map(|u| format!("{u}"))
+            .map(|u| alloc::format!("{u}"))
             .collect::<Vec<String>>()
             .join("");
         write!(f, "{units}")
@@ -562,6 +564,7 @@ impl_fmt!(Delimiter, u32);
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::format;
 
     #[test]
     fn test_units() {

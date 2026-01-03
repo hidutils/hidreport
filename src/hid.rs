@@ -72,6 +72,8 @@ use thiserror::Error;
 #[cfg(feature = "hut")]
 use hut;
 
+use alloc::{borrow::ToOwned, format, string::String, vec, vec::Vec};
+
 /// Convenience function to be extract a single bit as bool from a value
 fn bit(bits: u32, bit: u8) -> bool {
     assert!(bit < 32);
@@ -92,7 +94,7 @@ impl HidBytes {
     }
 }
 
-impl std::ops::Deref for HidBytes {
+impl core::ops::Deref for HidBytes {
     type Target = Vec<u8>;
 
     fn deref(&self) -> &Self::Target {
@@ -275,7 +277,7 @@ pub enum HidError {
     InsufficientData,
 }
 
-type Result<T> = std::result::Result<T, HidError>;
+type Result<T> = core::result::Result<T, HidError>;
 
 /// The type of a HID item may be one of [MainItem], [GlobalItem], or [LocalItem].
 /// These items comprise the report descriptor and how the report descriptor should
@@ -1015,15 +1017,15 @@ where
 {
     // Use an OutputItem here because it has volatile
     item: OutputItem,
-    m1: std::marker::PhantomData<A>,
-    m2: std::marker::PhantomData<B>,
-    m3: std::marker::PhantomData<C>,
-    m4: std::marker::PhantomData<D>,
-    m5: std::marker::PhantomData<E>,
-    m6: std::marker::PhantomData<F>,
-    m7: std::marker::PhantomData<G>,
-    m8: std::marker::PhantomData<H>,
-    m9: std::marker::PhantomData<I>,
+    m1: core::marker::PhantomData<A>,
+    m2: core::marker::PhantomData<B>,
+    m3: core::marker::PhantomData<C>,
+    m4: core::marker::PhantomData<D>,
+    m5: core::marker::PhantomData<E>,
+    m6: core::marker::PhantomData<F>,
+    m7: core::marker::PhantomData<G>,
+    m8: core::marker::PhantomData<H>,
+    m9: core::marker::PhantomData<I>,
 }
 
 impl
@@ -1067,15 +1069,15 @@ impl
     > {
         ItemBuilder {
             item: OutputItem::default(),
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1176,15 +1178,15 @@ where
         self.item.is_constant = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1193,15 +1195,15 @@ where
         self.item.is_constant = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1222,15 +1224,15 @@ where
         self.item.is_variable = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1239,15 +1241,15 @@ where
         self.item.is_variable = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1268,15 +1270,15 @@ where
         self.item.is_relative = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1285,15 +1287,15 @@ where
         self.item.is_relative = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1314,15 +1316,15 @@ where
         self.item.wraps = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1331,15 +1333,15 @@ where
         self.item.wraps = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1360,15 +1362,15 @@ where
         self.item.is_nonlinear = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1377,15 +1379,15 @@ where
         self.item.is_nonlinear = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1406,15 +1408,15 @@ where
         self.item.has_no_preferred_state = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1423,15 +1425,15 @@ where
         self.item.has_no_preferred_state = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1452,15 +1454,15 @@ where
         self.item.has_null_state = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1469,15 +1471,15 @@ where
         self.item.has_null_state = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1498,15 +1500,15 @@ where
         self.item.is_buffered_bytes = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1515,15 +1517,15 @@ where
         self.item.is_buffered_bytes = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -1546,15 +1548,15 @@ where
         self.item.is_volatile = true;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 
@@ -1565,15 +1567,15 @@ where
         self.item.is_volatile = false;
         ItemBuilder {
             item: self.item,
-            m1: std::marker::PhantomData,
-            m2: std::marker::PhantomData,
-            m3: std::marker::PhantomData,
-            m4: std::marker::PhantomData,
-            m5: std::marker::PhantomData,
-            m6: std::marker::PhantomData,
-            m7: std::marker::PhantomData,
-            m8: std::marker::PhantomData,
-            m9: std::marker::PhantomData,
+            m1: core::marker::PhantomData,
+            m2: core::marker::PhantomData,
+            m3: core::marker::PhantomData,
+            m4: core::marker::PhantomData,
+            m5: core::marker::PhantomData,
+            m6: core::marker::PhantomData,
+            m7: core::marker::PhantomData,
+            m8: core::marker::PhantomData,
+            m9: core::marker::PhantomData,
         }
     }
 }
@@ -2120,7 +2122,7 @@ pub struct ItemData<'a> {
     bytes: &'a [u8],
 }
 
-impl std::ops::Deref for ItemData<'_> {
+impl core::ops::Deref for ItemData<'_> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -2204,7 +2206,7 @@ pub struct ReportDescriptorItems {
     items: Vec<ReportDescriptorItem>,
 }
 
-impl std::ops::Deref for ReportDescriptorItems {
+impl core::ops::Deref for ReportDescriptorItems {
     type Target = [ReportDescriptorItem];
 
     fn deref(&self) -> &Self::Target {
@@ -2446,7 +2448,7 @@ impl_builder_state!(ReportDescriptorBuilderC8Push);
 pub struct ReportDescriptorBuilder<S: ReportDescriptorBuilderState> {
     items: Vec<ItemType>,
     // Reassure the compiler that S is used
-    marker: std::marker::PhantomData<S>,
+    marker: core::marker::PhantomData<S>,
 }
 
 impl<S: ReportDescriptorBuilderState> ReportDescriptorBuilder<S> {
@@ -2589,7 +2591,7 @@ impl ReportDescriptorBuilder<ReportDescriptorBuilderToplevel> {
     pub fn new() -> ReportDescriptorBuilder<ReportDescriptorBuilderToplevel> {
         ReportDescriptorBuilder {
             items: Vec::new(),
-            marker: std::marker::PhantomData,
+            marker: core::marker::PhantomData,
         }
     }
 
@@ -2607,7 +2609,7 @@ impl ReportDescriptorBuilder<ReportDescriptorBuilderToplevel> {
         let tmp = self.append(item.into());
         ReportDescriptorBuilder {
             items: tmp.items,
-            marker: std::marker::PhantomData,
+            marker: core::marker::PhantomData,
         }
     }
 
@@ -2626,7 +2628,7 @@ impl ReportDescriptorBuilder<ReportDescriptorBuilderToplevel> {
     pub fn push(self) -> ReportDescriptorBuilder<ReportDescriptorBuilderToplevelPush> {
         ReportDescriptorBuilder {
             items: self.items,
-            marker: std::marker::PhantomData,
+            marker: core::marker::PhantomData,
         }
     }
 
@@ -2669,7 +2671,7 @@ impl ReportDescriptorBuilder<ReportDescriptorBuilderToplevelPush> {
     pub fn pop(self) -> ReportDescriptorBuilder<ReportDescriptorBuilderToplevel> {
         ReportDescriptorBuilder {
             items: self.items,
-            marker: std::marker::PhantomData,
+            marker: core::marker::PhantomData,
         }
     }
 }
@@ -2682,7 +2684,7 @@ impl ReportDescriptorBuilder<ReportDescriptorBuilderC1> {
         let tmp = self.append(MainItem::EndCollection.into());
         ReportDescriptorBuilder {
             items: tmp.items,
-            marker: std::marker::PhantomData,
+            marker: core::marker::PhantomData,
         }
     }
 }
@@ -2695,7 +2697,7 @@ macro_rules! impl_open_collection {
                 let tmp = self.append(item.into());
                 ReportDescriptorBuilder {
                     items: tmp.items,
-                    marker: std::marker::PhantomData,
+                    marker: core::marker::PhantomData,
                 }
             }
         }
@@ -2710,7 +2712,7 @@ macro_rules! impl_close_collection {
                 let tmp = self.append(MainItem::EndCollection.into());
                 ReportDescriptorBuilder {
                     items: tmp.items,
-                    marker: std::marker::PhantomData,
+                    marker: core::marker::PhantomData,
                 }
             }
         }
@@ -2739,7 +2741,7 @@ macro_rules! impl_builder_for_push {
                 let tmp = self.append(GlobalItem::Push.into());
                 ReportDescriptorBuilder {
                     items: tmp.items,
-                    marker: std::marker::PhantomData,
+                    marker: core::marker::PhantomData,
                 }
             }
         }
@@ -2749,7 +2751,7 @@ macro_rules! impl_builder_for_push {
                 let tmp = self.append(GlobalItem::Pop.into());
                 ReportDescriptorBuilder {
                     items: tmp.items,
-                    marker: std::marker::PhantomData,
+                    marker: core::marker::PhantomData,
                 }
             }
         }
