@@ -16,8 +16,8 @@ default = ["hut"]
 hut = [ "dep:hut" ]
 
 [dependencies]
-thiserror = "1.0.58"
-hut = { version = "0.3.0", optional = true }
+thiserror = { version = "2.0", default-features = false }
+hut = { version = "0.4", optional = true, default-features = false }
 
 [dev-dependencies]
-hut = "0.3.0"
+hut = "0.4"
