@@ -706,6 +706,94 @@ impl Field {
     }
 }
 
+/// Field attributes, see Main Data Item in Section 6.2.5.
+///
+/// These properties come in pairs (bit set or unset in the HID report descriptor item),
+/// for readability in the caller, a function is provided for each state.
+pub trait FieldAttributes {
+    /// True if the data is relative compared to a previous report
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_absolute].
+    fn is_relative(&self) -> bool;
+
+    /// True if the data is absolute
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_relative].
+    fn is_absolute(&self) -> bool {
+        !self.is_relative()
+    }
+
+    /// True if the data wraps around at the logical
+    /// minimum/maximum (e.g. a dial that can spin at 360 degrees).
+    ///
+    /// Mutually exclusive with [FieldAttributes::does_not_wrap].
+    fn wraps(&self) -> bool;
+
+    /// True if the data does not wrap at the logical
+    /// minimum/maximum.
+    ///
+    /// Mutually exclusive with [FieldAttributes::wraps].
+    fn does_not_wrap(&self) -> bool {
+        !self.wraps()
+    }
+
+    /// True if the data was pre-processed on the device
+    /// and the logical range is not linear.
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_linear].
+    fn is_nonlinear(&self) -> bool;
+
+    /// True if the data was not pre-processed on the device
+    /// and the logical range is linear.
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_nonlinear].
+    fn is_linear(&self) -> bool {
+        !self.is_nonlinear()
+    }
+
+    /// True if the control does not have a preferred state it
+    /// returns to when the user stops interacting (e.g. a joystick
+    /// may return to a neutral position)
+    ///
+    /// Mutually exclusive with [FieldAttributes::has_preferred_state].
+    fn has_no_preferred_state(&self) -> bool;
+
+    /// True if the control has a preferred state it
+    /// returns to when the user stops interacting (e.g. a joystick
+    /// may return to a neutral position)
+    ///
+    /// Mutually exclusive with [FieldAttributes::has_no_preferred_state].
+    fn has_preferred_state(&self) -> bool {
+        !self.has_no_preferred_state()
+    }
+
+    /// True if the control has a null state where it does not send
+    /// data (e.g. a joystick in neutral state)
+    ///
+    /// Mutually exclusive with [FieldAttributes::has_no_null_state].
+    fn has_null_state(&self) -> bool;
+
+    /// True if the control does not have a null state where it does not send
+    /// data.
+    ///
+    /// Mutually exclusive with [FieldAttributes::has_null_state].
+    fn has_no_null_state(&self) -> bool {
+        !self.has_null_state()
+    }
+
+    /// True if the control emits a fixed size stream of bytes.
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_bitfield].
+    fn is_buffered_bytes(&self) -> bool;
+
+    /// True if the control is a single bit field (value).
+    ///
+    /// Mutually exclusive with [FieldAttributes::is_buffered_bytes].
+    fn is_bitfield(&self) -> bool {
+        !self.is_buffered_bytes()
+    }
+}
+
 /// A [VariableField] represents a single physical control.
 #[derive(Clone, Debug)]
 pub struct VariableField {
@@ -720,6 +808,13 @@ pub struct VariableField {
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
+
+    is_relative: bool,
+    wraps: bool,
+    is_nonlinear: bool,
+    has_no_preferred_state: bool,
+    has_null_state: bool,
+    is_buffered_bytes: bool,
 }
 
 impl VariableField {
@@ -761,6 +856,32 @@ impl VariableField {
             is_signed: self.is_signed(),
             value: v,
         })
+    }
+}
+
+impl FieldAttributes for VariableField {
+    fn is_relative(&self) -> bool {
+        self.is_relative
+    }
+
+    fn wraps(&self) -> bool {
+        self.wraps
+    }
+
+    fn is_nonlinear(&self) -> bool {
+        self.is_nonlinear
+    }
+
+    fn has_no_preferred_state(&self) -> bool {
+        self.has_no_preferred_state
+    }
+
+    fn has_null_state(&self) -> bool {
+        self.has_null_state
+    }
+
+    fn is_buffered_bytes(&self) -> bool {
+        self.is_buffered_bytes
     }
 }
 
@@ -838,6 +959,13 @@ pub struct ArrayField {
     pub unit: Option<Unit>,
     pub unit_exponent: Option<UnitExponent>,
     pub collections: Vec<Collection>,
+
+    is_relative: bool,
+    wraps: bool,
+    is_nonlinear: bool,
+    has_no_preferred_state: bool,
+    has_null_state: bool,
+    is_buffered_bytes: bool,
 }
 
 impl ArrayField {
@@ -937,6 +1065,32 @@ impl ArrayField {
             is_signed: self.is_signed(),
             value: v,
         })
+    }
+}
+
+impl FieldAttributes for ArrayField {
+    fn is_relative(&self) -> bool {
+        self.is_relative
+    }
+
+    fn wraps(&self) -> bool {
+        self.wraps
+    }
+
+    fn is_nonlinear(&self) -> bool {
+        self.is_nonlinear
+    }
+
+    fn has_no_preferred_state(&self) -> bool {
+        self.has_no_preferred_state
+    }
+
+    fn has_null_state(&self) -> bool {
+        self.has_null_state
+    }
+
+    fn is_buffered_bytes(&self) -> bool {
+        self.is_buffered_bytes
     }
 }
 
@@ -1217,10 +1371,46 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
 
     let report_id = globals.report_id;
 
-    let (is_constant, is_variable) = match item {
-        MainItem::Input(i) => (i.is_constant(), i.is_variable()),
-        MainItem::Output(i) => (i.is_constant(), i.is_variable()),
-        MainItem::Feature(i) => (i.is_constant(), i.is_variable()),
+    let (
+        is_constant,
+        is_variable,
+        is_relative,
+        wraps,
+        is_nonlinear,
+        has_no_preferred_state,
+        has_null_state,
+        is_buffered_bytes,
+    ) = match item {
+        MainItem::Input(i) => (
+            i.is_constant(),
+            i.is_variable(),
+            i.is_relative(),
+            i.wraps(),
+            i.is_nonlinear(),
+            i.has_no_preferred_state(),
+            i.has_null_state(),
+            i.is_buffered_bytes(),
+        ),
+        MainItem::Output(i) => (
+            i.is_constant(),
+            i.is_variable(),
+            i.is_relative(),
+            i.wraps(),
+            i.is_nonlinear(),
+            i.has_no_preferred_state(),
+            i.has_null_state(),
+            i.is_buffered_bytes(),
+        ),
+        MainItem::Feature(i) => (
+            i.is_constant(),
+            i.is_variable(),
+            i.is_relative(),
+            i.wraps(),
+            i.is_nonlinear(),
+            i.has_no_preferred_state(),
+            i.has_null_state(),
+            i.is_buffered_bytes(),
+        ),
         _ => panic!("Invalid item for handle_main_item()"),
     };
 
@@ -1296,6 +1486,12 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
                 unit_exponent,
                 collections: collections.clone(),
                 report_id,
+                is_relative,
+                wraps,
+                is_nonlinear,
+                has_no_preferred_state,
+                has_null_state,
+                is_buffered_bytes,
             };
             Field::Variable(field)
         })
@@ -1318,6 +1514,12 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
             collections,
             report_id,
             report_count,
+            is_relative,
+            wraps,
+            is_nonlinear,
+            has_no_preferred_state,
+            has_null_state,
+            is_buffered_bytes,
         };
 
         vec![Field::Array(field)]
@@ -1602,6 +1804,12 @@ mod tests {
                 unit: None,
                 unit_exponent: None,
                 collections: vec![],
+                is_relative: false,
+                wraps: false,
+                is_nonlinear: false,
+                has_no_preferred_state: false,
+                has_null_state: false,
+                is_buffered_bytes: false,
             }
         };
 
