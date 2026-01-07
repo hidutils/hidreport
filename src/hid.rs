@@ -173,6 +173,15 @@ impl From<i8> for HidBytes {
 /// Represents one value extracted from a set of (LE) bytes.
 pub(crate) struct HidValue {
     value: u32,
+    nbytes: usize,
+}
+
+impl HidValue {
+    /// The length of the value in bytes, required to
+    /// determine if the actual value may be signed
+    pub(crate) fn len(&self) -> usize {
+        self.nbytes
+    }
 }
 
 impl TryFrom<&[u8]> for HidValue {
@@ -186,7 +195,10 @@ impl TryFrom<&[u8]> for HidValue {
             4 => u32::from_le_bytes(bytes[0..4].try_into().unwrap()),
             _ => panic!("Size {} cannot happen", bytes.len()),
         };
-        Ok(HidValue { value })
+        Ok(HidValue {
+            value,
+            nbytes: bytes.len(),
+        })
     }
 }
 
@@ -240,7 +252,12 @@ impl From<HidValue> for u8 {
 
 impl From<&HidValue> for i32 {
     fn from(v: &HidValue) -> i32 {
-        v.value as i32
+        match v.len() {
+            1 => ((v.value & 0xFF) as i8) as i32,
+            2 => ((v.value & 0xFFFF) as i16) as i32,
+            4 => v.value as i32,
+            _ => panic!("Size {} cannot happen", v.len()),
+        }
     }
 }
 
@@ -2812,17 +2829,48 @@ mod tests {
         assert_eq!(u32::try_from(&item_data).unwrap(), 0x04030201);
     }
 
+    macro_rules! test_hid_value {
+        ($bytes:expr, $unsigned:expr, $signed:expr) => {
+            let v = HidValue::try_from($bytes.as_slice()).unwrap();
+            assert_eq!(u32::from(&v), $unsigned);
+            if ($bytes.len() <= 2) {
+                assert!($unsigned as u32 <= 0xFFFFu32);
+                assert_eq!(u16::from(&v), $unsigned as u16);
+            }
+            if ($bytes.len() <= 1) {
+                assert!($unsigned as u32 <= 0xFFu32);
+                assert_eq!(u8::from(&v), $unsigned as u8);
+            }
+            assert_eq!(i32::from(&v), $signed);
+        };
+    }
+
     #[test]
     fn hid_value() {
-        let bytes = [0x1, 0x2, 0x3, 0x4];
+        test_hid_value!([0x1, 0x2, 0x3, 0x4], 0x04030201u32, 0x04030201);
 
-        let v = HidValue::try_from(bytes.as_slice()).unwrap();
-        assert_eq!(usize::from(&v), 0x04030201);
-        assert_eq!(u32::from(&v), 0x04030201);
-        assert_eq!(u16::from(&v), 0x0201);
-        assert_eq!(u8::from(&v), 0x01);
+        test_hid_value!([0x7F], 0x7F, 127);
+        test_hid_value!([0x80], 0x80, -128);
+        test_hid_value!([0xFF], 0xFF, -1);
+        test_hid_value!([0x0], 0x0, 0);
+        test_hid_value!([0x1], 0x1, 1);
 
-        assert_eq!(i32::from(&v), 0x04030201);
+        test_hid_value!([0xFF, 0x7F], 0x7FFFu32, 32767); // max positive i16
+        test_hid_value!([0x00, 0x80], 0x8000u32, -32768); // min i16
+        test_hid_value!([0xFF, 0xFF], 0xFFFFu32, -1); // -1
+        test_hid_value!([0x01, 0x00], 0x0001u32, 1); // small positive
+        test_hid_value!([0x34, 0x12], 0x1234u32, 4660); // mid-range positive
+        test_hid_value!([0xCC, 0xED], 0xEDCCu32, -4660); // mid-range negative
+        test_hid_value!([0x00, 0x00], 0x0000u32, 0); // zero
+
+        // 4-byte signed values
+        test_hid_value!([0xFF, 0xFF, 0xFF, 0x7F], 0x7FFFFFFFu32, 2147483647); // max positive i32
+        test_hid_value!([0x00, 0x00, 0x00, 0x80], 0x80000000u32, -2147483648); // min i32
+        test_hid_value!([0xFF, 0xFF, 0xFF, 0xFF], 0xFFFFFFFFu32, -1); // -1
+        test_hid_value!([0x01, 0x00, 0x00, 0x00], 0x00000001u32, 1); // small positive
+        test_hid_value!([0x78, 0x56, 0x34, 0x12], 0x12345678u32, 305419896); // mid-range positive
+        test_hid_value!([0x88, 0xA9, 0xCB, 0xED], 0xEDCBA988u32, -305419896); // mid-range negative
+        test_hid_value!([0x00, 0x00, 0x00, 0x00], 0x00000000u32, 0); // zero
     }
 
     #[test]
