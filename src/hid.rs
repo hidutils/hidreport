@@ -605,7 +605,7 @@ pub trait MainDataItem {
     /// Mutually exclusive with [MainDataItem::has_preferred_state].
     fn has_no_preferred_state(&self) -> bool;
 
-    /// True if the control does not ave a preferred state.
+    /// True if the control does not have a preferred state.
     ///
     /// Mutually exclusive with [MainDataItem::has_no_preferred_state].
     fn has_preferred_state(&self) -> bool {
