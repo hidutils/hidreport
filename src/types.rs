@@ -568,7 +568,7 @@ impl_fmt!(Delimiter, u32);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::format;
+    use alloc::format;
 
     #[test]
     fn test_units() {
