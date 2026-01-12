@@ -77,21 +77,16 @@
 //! ```
 //! See the [ReportDescriptorBuilder] documentation for more details.
 
+extern crate alloc;
 #[cfg(feature = "std")]
-extern crate std;
-extern crate alloc; // We can do this regardless of `no_std`
+extern crate std; // We can do this regardless of `no_std`
 
-
+use core::ops::Range;
 #[cfg(feature = "std")]
 use std::hash::{Hash, Hasher};
-use core::ops::Range;
 use thiserror::Error;
 
-use alloc::{
-    vec::Vec,
-    vec,
-    string::String,
-};
+use alloc::{string::String, vec, vec::Vec};
 
 #[cfg(feature = "hut")]
 use hut::{AsUsage, AsUsagePage};

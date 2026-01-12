@@ -10,11 +10,7 @@ use crate::TwosComplement;
 #[cfg(feature = "hut")]
 use hut::{self, AsUsage, AsUsagePage};
 
-use alloc::{
-    string::String,
-    vec::Vec,
-    vec,
-};
+use alloc::{string::String, vec, vec::Vec};
 
 /// Creates a `From<Foo> for u32` and `From<u32> for Foo` implementation for the given `Foo` type.
 /// Use like this: `impl_from(Foo, Foo, u32)`.

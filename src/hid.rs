@@ -72,13 +72,7 @@ use thiserror::Error;
 #[cfg(feature = "hut")]
 use hut;
 
-use alloc::{
-    borrow::ToOwned,
-    string::String,
-    vec::Vec,
-    format,
-    vec,
-};
+use alloc::{borrow::ToOwned, format, string::String, vec, vec::Vec};
 
 /// Convenience function to be extract a single bit as bool from a value
 fn bit(bits: u32, bit: u8) -> bool {
