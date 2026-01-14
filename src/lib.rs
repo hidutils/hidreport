@@ -990,27 +990,22 @@ impl ArrayField {
         &self.usages
     }
 
-    /// Returns the [UsageRange] for this field.
+    /// Returns the [UsageRange] for this field, if any.
     ///
-    /// This function should not be used if [is_usage_range()](Self::is_usage_range) returns false
-    /// as it may overspecify the range. For example the following report descriptor
-    /// ```
-    ///     Usage (Tip Switch)
-    ///     Usage (Barrel Switch)
-    ///     Usage (Secondary Barrel Switch)
-    ///     Input (Array)
-    /// ```
-    /// The value for `Tip Switch` is 0x42, the value for `Secondary Barrel Switch` is 0x5a.
-    /// The returned [UsageRange] would thus be `0x42:=0x5a`, a vastly greater range than
-    /// the actual three usages given in the report descriptor.
-    pub fn usage_range(&self) -> UsageRange {
-        let min = self.usages.first().unwrap();
-        let max = self.usages.last().unwrap();
+    /// If the report descriptor did not specify the usages via
+    /// [UsageMinimum] and [UsageMaximum], this function returns [None].
+    pub fn usage_range(&self) -> Option<UsageRange> {
+        if self.is_usage_range {
+            let min = self.usages.first().unwrap();
+            let max = self.usages.last().unwrap();
 
-        UsageRange {
-            usage_page: min.usage_page,
-            minimum: UsageMinimum::from(min),
-            maximum: UsageMaximum::from(max),
+            Some(UsageRange {
+                usage_page: min.usage_page,
+                minimum: UsageMinimum::from(min),
+                maximum: UsageMaximum::from(max),
+            })
+        } else {
+            None
         }
     }
 
