@@ -980,6 +980,7 @@ pub struct ArrayField {
     report_id: Option<ReportId>,
     pub bits: Range<usize>,
     usages: Vec<Usage>,
+    is_usage_range: bool,
     pub report_count: ReportCount,
     pub logical_minimum: LogicalMinimum,
     pub logical_maximum: LogicalMaximum,
@@ -1003,13 +1004,27 @@ impl ArrayField {
     /// inclusive range of [UsageMinimum]`..=`[UsageMaximum]
     /// as defined for this field.
     ///
-    /// In most cases it's better to use [usage_range()](Self::usage_range)
-    /// instead.
+    /// In most cases it's better to use [usage_range()](Self::usage_range),
+    /// most [ArrayField]s seen in the wild use a usage minimum and maximum
+    /// rather than individual usages. Use [is_usage_range()](Self::is_usage_range)
+    /// to be sure.
     pub fn usages(&self) -> &[Usage] {
         &self.usages
     }
 
     /// Returns the [UsageRange] for this field.
+    ///
+    /// This function should not be used if [is_usage_range()](Self::is_usage_range) returns false
+    /// as it may overspecify the range. For example the following report descriptor
+    /// ```
+    ///     Usage (Tip Switch)
+    ///     Usage (Barrel Switch)
+    ///     Usage (Secondary Barrel Switch)
+    ///     Input (Array)
+    /// ```
+    /// The value for `Tip Switch` is 0x42, the value for `Secondary Barrel Switch` is 0x5a.
+    /// The returned [UsageRange] would thus be `0x42:=0x5a`, a vastly greater range than
+    /// the actual three usages given in the report descriptor.
     pub fn usage_range(&self) -> UsageRange {
         let min = self.usages.first().unwrap();
         let max = self.usages.last().unwrap();
@@ -1019,6 +1034,26 @@ impl ArrayField {
             minimum: UsageMinimum::from(min),
             maximum: UsageMaximum::from(max),
         }
+    }
+
+    /// Returns true if the usages were defined via
+    /// a [UsageMinimum]`..=`[UsageMaximum] in the report
+    /// descriptor, false if the usages were given individually.
+    ///
+    /// For example, the following pseudo-report descriptor
+    /// defines an ArrayField with a usage range first,
+    /// then one with individual usages.
+    /// ```text
+    ///     UsageMinimum (0)
+    ///     UsageMaximum (255)
+    ///     Input (Array)
+    ///     Usage (Tip Switch)
+    ///     Usage (Barrel Switch)
+    ///     Usage (Secondary Barrel Switch)
+    ///     Input (Array)
+    /// ```
+    pub fn is_usage_range(&self) -> bool {
+        self.is_usage_range
     }
 
     /// Returns true if this field contains signed values,.
@@ -1336,7 +1371,13 @@ impl Stack {
     }
 }
 
-fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
+#[derive(PartialEq)]
+enum UsageRangeType {
+    IndividualUsages,
+    UsageMinimumMaximum,
+}
+
+fn compile_usages(globals: &Globals, locals: &Locals) -> Result<(UsageRangeType, Vec<Usage>)> {
     // Prefer UsageMinimum/Maximum over Usage because the latter may be set from an earlier call
     match locals.usage_minimum {
         Some(_) => {
@@ -1367,7 +1408,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
                     usage_id: UsageId(u as u16),
                 })
                 .collect();
-            Ok(usages)
+            Ok((UsageRangeType::UsageMinimumMaximum, usages))
         }
         None => {
             let usages = locals
@@ -1395,7 +1436,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
                     }
                 })
                 .collect();
-            Ok(usages)
+            Ok((UsageRangeType::IndividualUsages, usages))
         }
     }
 }
@@ -1496,7 +1537,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
 
-    let usages = compile_usages(globals, locals)?;
+    let (usage_range_type, usages) = compile_usages(globals, locals)?;
     ensure!(!usages.is_empty(), "Missing Usages for main item");
 
     // This may be an empty vec
@@ -1544,6 +1585,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         let field = ArrayField {
             id: FieldId(base_id + bit_offset as u32),
             usages,
+            is_usage_range: (usage_range_type == UsageRangeType::UsageMinimumMaximum),
             bits,
             logical_minimum,
             logical_maximum,
@@ -1592,7 +1634,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let globals = stack.globals_const();
                 let locals = stack.locals_const();
                 // This may be an empty vec
-                let usages = match compile_usages(globals, locals) {
+                let (_usage_range_type, usages) = match compile_usages(globals, locals) {
                     Ok(usages) => usages,
                     Err(ParserError::InvalidData { message, .. }) => {
                         return Err(ParserError::InvalidData {
