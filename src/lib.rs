@@ -2028,4 +2028,226 @@ mod tests {
             test_field(24..32, false).extract(&bytes).unwrap().into()
         );
     }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_usage_range() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::GenericDesktop)
+            .usage_id(hut::GenericDesktop::Mouse)
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(3).into())
+            // Use UsageMinimum and UsageMaximum for the array field
+            .append(UsageMinimum::from(0x00010001).into())
+            .append(UsageMaximum::from(0x000100ff).into())
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            array_field.is_usage_range(),
+            "ArrayField created with UsageMinimum/UsageMaximum should have is_usage_range() == true"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(
+            usage_range.is_some(),
+            "ArrayField created with UsageMinimum/UsageMaximum should return Some from usage_range()"
+        );
+
+        let range = usage_range.unwrap();
+        assert_eq!(range.minimum(), UsageMinimum::from(0x00010001));
+        assert_eq!(range.maximum(), UsageMaximum::from(0x000100ff));
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 255); // 0x01 to 0xff inclusive
+        assert_eq!(u32::from(&usages[0]), 0x00010001);
+        assert_eq!(u32::from(&usages[254]), 0x000100ff);
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_individual_usages() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Digitizers)
+            .usage_id(hut::Digitizers::Digitizer)
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(3).into())
+            // Use individual Usage items instead of UsageMinimum/UsageMaximum
+            .usage_id(hut::Digitizers::TipSwitch) // 0x42
+            .usage_id(hut::Digitizers::BarrelSwitch) // 0x44
+            .usage_id(hut::Digitizers::SecondaryBarrelSwitch) // 0x5a
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            !array_field.is_usage_range(),
+            "ArrayField created with individual Usages should have is_usage_range() == false"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(
+            usage_range.is_none(),
+            "ArrayField created with individual Usages should return None from usage_range()"
+        );
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 3, "Should have exactly 3 usages, not a range");
+
+        assert_eq!(u16::from(usages[0].usage_id), 0x42); // TipSwitch
+        assert_eq!(u16::from(usages[1].usage_id), 0x44); // BarrelSwitch
+        assert_eq!(u16::from(usages[2].usage_id), 0x5a); // SecondaryBarrelSwitch
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_single_usage_as_range() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Button)
+            .usage_id(hut::Button::Button(1))
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(1).into())
+            .append(ReportSize::from(1).into())
+            .append(ReportCount::from(1).into())
+            // Edge case: UsageMinimum == UsageMaximum (single usage as a range)
+            .append(UsageMinimum::from(0x00090001).into())
+            .append(UsageMaximum::from(0x00090001).into())
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            array_field.is_usage_range(),
+            "ArrayField with UsageMinimum==UsageMaximum should still have is_usage_range() == true"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(usage_range.is_some());
+
+        let range = usage_range.unwrap();
+        assert_eq!(range.minimum(), UsageMinimum::from(0x00090001));
+        assert_eq!(range.maximum(), UsageMaximum::from(0x00090001));
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 1);
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_single_individual_usage() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Button)
+            .usage_id(hut::Button::Button(1))
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(1).into())
+            .append(ReportSize::from(1).into())
+            .append(ReportCount::from(1).into())
+            // Single individual usage
+            .usage_id(hut::Button::Button(1))
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            !array_field.is_usage_range(),
+            "ArrayField with single individual Usage should have is_usage_range() == false"
+        );
+
+        assert!(
+            array_field.usage_range().is_none(),
+            "ArrayField with single individual Usage should return None from usage_range()"
+        );
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 1);
+    }
 }
