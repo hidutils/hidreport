@@ -959,6 +959,7 @@ pub struct ArrayField {
     report_id: Option<ReportId>,
     pub bits: Range<usize>,
     usages: Vec<Usage>,
+    is_usage_range: bool,
     pub report_count: ReportCount,
     pub logical_minimum: LogicalMinimum,
     pub logical_maximum: LogicalMaximum,
@@ -981,22 +982,51 @@ impl ArrayField {
     /// inclusive range of [UsageMinimum]`..=`[UsageMaximum]
     /// as defined for this field.
     ///
-    /// In most cases it's better to use [usage_range()](Self::usage_range)
-    /// instead.
+    /// In most cases it's better to use [usage_range()](Self::usage_range),
+    /// most [ArrayField]s seen in the wild use a usage minimum and maximum
+    /// rather than individual usages. Use [is_usage_range()](Self::is_usage_range)
+    /// to be sure.
     pub fn usages(&self) -> &[Usage] {
         &self.usages
     }
 
-    /// Returns the [UsageRange] for this field.
-    pub fn usage_range(&self) -> UsageRange {
-        let min = self.usages.first().unwrap();
-        let max = self.usages.last().unwrap();
+    /// Returns the [UsageRange] for this field, if any.
+    ///
+    /// If the report descriptor did not specify the usages via
+    /// [UsageMinimum] and [UsageMaximum], this function returns [None].
+    pub fn usage_range(&self) -> Option<UsageRange> {
+        if self.is_usage_range {
+            let min = self.usages.first().unwrap();
+            let max = self.usages.last().unwrap();
 
-        UsageRange {
-            usage_page: min.usage_page,
-            minimum: UsageMinimum::from(min),
-            maximum: UsageMaximum::from(max),
+            Some(UsageRange {
+                usage_page: min.usage_page,
+                minimum: UsageMinimum::from(min),
+                maximum: UsageMaximum::from(max),
+            })
+        } else {
+            None
         }
+    }
+
+    /// Returns true if the usages were defined via
+    /// a [UsageMinimum]`..=`[UsageMaximum] in the report
+    /// descriptor, false if the usages were given individually.
+    ///
+    /// For example, the following pseudo-report descriptor
+    /// defines an ArrayField with a usage range first,
+    /// then one with individual usages.
+    /// ```text
+    ///     UsageMinimum (0)
+    ///     UsageMaximum (255)
+    ///     Input (Array)
+    ///     Usage (Tip Switch)
+    ///     Usage (Barrel Switch)
+    ///     Usage (Secondary Barrel Switch)
+    ///     Input (Array)
+    /// ```
+    pub fn is_usage_range(&self) -> bool {
+        self.is_usage_range
     }
 
     /// Returns true if this field contains signed values,.
@@ -1310,7 +1340,13 @@ impl Stack {
     }
 }
 
-fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
+#[derive(PartialEq)]
+enum UsageRangeType {
+    IndividualUsages,
+    UsageMinimumMaximum,
+}
+
+fn compile_usages(globals: &Globals, locals: &Locals) -> Result<(UsageRangeType, Vec<Usage>)> {
     // Prefer UsageMinimum/Maximum over Usage because the latter may be set from an earlier call
     match locals.usage_minimum {
         Some(_) => {
@@ -1341,7 +1377,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
                     usage_id: UsageId(u as u16),
                 })
                 .collect();
-            Ok(usages)
+            Ok((UsageRangeType::UsageMinimumMaximum, usages))
         }
         None => {
             let usages = locals
@@ -1369,7 +1405,7 @@ fn compile_usages(globals: &Globals, locals: &Locals) -> Result<Vec<Usage>> {
                     }
                 })
                 .collect();
-            Ok(usages)
+            Ok((UsageRangeType::IndividualUsages, usages))
         }
     }
 }
@@ -1466,7 +1502,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
     let unit = globals.unit;
     let unit_exponent = globals.unit_exponent;
 
-    let usages = compile_usages(globals, locals)?;
+    let (usage_range_type, usages) = compile_usages(globals, locals)?;
     ensure!(!usages.is_empty(), "Missing Usages for main item");
 
     // This may be an empty vec
@@ -1513,6 +1549,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         let field = ArrayField {
             id: FieldId(base_id + bit_offset as u32),
             usages,
+            is_usage_range: (usage_range_type == UsageRangeType::UsageMinimumMaximum),
             bits,
             logical_minimum,
             logical_maximum,
@@ -1560,7 +1597,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                 let globals = stack.globals_const();
                 let locals = stack.locals_const();
                 // This may be an empty vec
-                let usages = match compile_usages(globals, locals) {
+                let (_usage_range_type, usages) = match compile_usages(globals, locals) {
                     Ok(usages) => usages,
                     Err(ParserError::InvalidData { message, .. }) => {
                         return Err(ParserError::InvalidData {
@@ -1990,5 +2027,227 @@ mod tests {
             0x78,
             test_field(24..32, false).extract(&bytes).unwrap().into()
         );
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_usage_range() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::GenericDesktop)
+            .usage_id(hut::GenericDesktop::Mouse)
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(3).into())
+            // Use UsageMinimum and UsageMaximum for the array field
+            .append(UsageMinimum::from(0x00010001).into())
+            .append(UsageMaximum::from(0x000100ff).into())
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            array_field.is_usage_range(),
+            "ArrayField created with UsageMinimum/UsageMaximum should have is_usage_range() == true"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(
+            usage_range.is_some(),
+            "ArrayField created with UsageMinimum/UsageMaximum should return Some from usage_range()"
+        );
+
+        let range = usage_range.unwrap();
+        assert_eq!(range.minimum(), UsageMinimum::from(0x00010001));
+        assert_eq!(range.maximum(), UsageMaximum::from(0x000100ff));
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 255); // 0x01 to 0xff inclusive
+        assert_eq!(u32::from(&usages[0]), 0x00010001);
+        assert_eq!(u32::from(&usages[254]), 0x000100ff);
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_individual_usages() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Digitizers)
+            .usage_id(hut::Digitizers::Digitizer)
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(3).into())
+            // Use individual Usage items instead of UsageMinimum/UsageMaximum
+            .usage_id(hut::Digitizers::TipSwitch) // 0x42
+            .usage_id(hut::Digitizers::BarrelSwitch) // 0x44
+            .usage_id(hut::Digitizers::SecondaryBarrelSwitch) // 0x5a
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            !array_field.is_usage_range(),
+            "ArrayField created with individual Usages should have is_usage_range() == false"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(
+            usage_range.is_none(),
+            "ArrayField created with individual Usages should return None from usage_range()"
+        );
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 3, "Should have exactly 3 usages, not a range");
+
+        assert_eq!(u16::from(usages[0].usage_id), 0x42); // TipSwitch
+        assert_eq!(u16::from(usages[1].usage_id), 0x44); // BarrelSwitch
+        assert_eq!(u16::from(usages[2].usage_id), 0x5a); // SecondaryBarrelSwitch
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_single_usage_as_range() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Button)
+            .usage_id(hut::Button::Button(1))
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(1).into())
+            .append(ReportSize::from(1).into())
+            .append(ReportCount::from(1).into())
+            // Edge case: UsageMinimum == UsageMaximum (single usage as a range)
+            .append(UsageMinimum::from(0x00090001).into())
+            .append(UsageMaximum::from(0x00090001).into())
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            array_field.is_usage_range(),
+            "ArrayField with UsageMinimum==UsageMaximum should still have is_usage_range() == true"
+        );
+
+        let usage_range = array_field.usage_range();
+        assert!(usage_range.is_some());
+
+        let range = usage_range.unwrap();
+        assert_eq!(range.minimum(), UsageMinimum::from(0x00090001));
+        assert_eq!(range.maximum(), UsageMaximum::from(0x00090001));
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 1);
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_array_field_with_single_individual_usage() {
+        use crate::hid::*;
+        use hut;
+
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::Button)
+            .usage_id(hut::Button::Button(1))
+            .open_collection(CollectionItem::Application)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(1).into())
+            .append(ReportSize::from(1).into())
+            .append(ReportCount::from(1).into())
+            // Single individual usage
+            .usage_id(hut::Button::Button(1))
+            .input(ItemBuilder::new().array().input())
+            .close_collection()
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&ArrayField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Array(a) => Some(a),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 1);
+        let array_field = fields[0];
+
+        assert!(
+            !array_field.is_usage_range(),
+            "ArrayField with single individual Usage should have is_usage_range() == false"
+        );
+
+        assert!(
+            array_field.usage_range().is_none(),
+            "ArrayField with single individual Usage should return None from usage_range()"
+        );
+
+        let usages = array_field.usages();
+        assert_eq!(usages.len(), 1);
     }
 }
