@@ -800,6 +800,22 @@ pub trait FieldAttributes {
     fn is_bitfield(&self) -> bool {
         !self.is_buffered_bytes()
     }
+
+    /// Indiciates whether control should be changed by the host.
+    /// Volatile fields can change without host interactions.
+    ///
+    /// This attribute is only available on a [Field] in an OutputReport
+    /// or an FeatureReport. It is always [None] for fields in an InputReport.
+    fn is_volatile(&self) -> Option<bool>;
+
+    /// Indiciates whether control should be changed by the host.
+    /// Volatile fields can change without host interactions.
+    ///
+    /// This attribute is only available on a [Field] in an OutputReport
+    /// or an FeatureReport. It is always [None] for fields in an InputReport.
+    fn is_nonvolatile(&self) -> Option<bool> {
+        self.is_volatile().map(|v| !v)
+    }
 }
 
 /// A [VariableField] represents a single physical control.
@@ -823,6 +839,7 @@ pub struct VariableField {
     has_no_preferred_state: bool,
     has_null_state: bool,
     is_buffered_bytes: bool,
+    is_volatile: Option<bool>,
 }
 
 impl VariableField {
@@ -890,6 +907,10 @@ impl FieldAttributes for VariableField {
 
     fn is_buffered_bytes(&self) -> bool {
         self.is_buffered_bytes
+    }
+
+    fn is_volatile(&self) -> Option<bool> {
+        self.is_volatile
     }
 }
 
@@ -974,6 +995,7 @@ pub struct ArrayField {
     has_no_preferred_state: bool,
     has_null_state: bool,
     is_buffered_bytes: bool,
+    is_volatile: Option<bool>,
 }
 
 impl ArrayField {
@@ -1099,6 +1121,10 @@ impl FieldAttributes for ArrayField {
 
     fn is_buffered_bytes(&self) -> bool {
         self.is_buffered_bytes
+    }
+
+    fn is_volatile(&self) -> Option<bool> {
+        self.is_volatile
     }
 }
 
@@ -1389,6 +1415,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
         has_no_preferred_state,
         has_null_state,
         is_buffered_bytes,
+        is_volatile,
     ) = match item {
         MainItem::Input(i) => (
             i.is_constant(),
@@ -1399,6 +1426,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
             i.has_no_preferred_state(),
             i.has_null_state(),
             i.is_buffered_bytes(),
+            None,
         ),
         MainItem::Output(i) => (
             i.is_constant(),
@@ -1409,6 +1437,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
             i.has_no_preferred_state(),
             i.has_null_state(),
             i.is_buffered_bytes(),
+            Some(i.is_volatile()),
         ),
         MainItem::Feature(i) => (
             i.is_constant(),
@@ -1419,6 +1448,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
             i.has_no_preferred_state(),
             i.has_null_state(),
             i.is_buffered_bytes(),
+            Some(i.is_volatile()),
         ),
         _ => panic!("Invalid item for handle_main_item()"),
     };
@@ -1501,6 +1531,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
                 has_no_preferred_state,
                 has_null_state,
                 is_buffered_bytes,
+                is_volatile,
             };
             Field::Variable(field)
         })
@@ -1529,6 +1560,7 @@ fn handle_main_item(item: &MainItem, stack: &mut Stack, base_id: u32) -> Result<
             has_no_preferred_state,
             has_null_state,
             is_buffered_bytes,
+            is_volatile,
         };
 
         vec![Field::Array(field)]
@@ -1819,6 +1851,7 @@ mod tests {
                 has_no_preferred_state: false,
                 has_null_state: false,
                 is_buffered_bytes: false,
+                is_volatile: None,
             }
         };
 
