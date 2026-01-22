@@ -18,7 +18,7 @@ std = [ "hut/std", "thiserror/std" ]
 
 [dependencies]
 thiserror = { version = "2.0", default-features = false }
-hut = { version = "0.4", optional = true, default-features = false }
+hut = { version = "0.5", optional = true, default-features = false }
 
 [dev-dependencies]
-hut = "0.4"
+hut = "0.5"
