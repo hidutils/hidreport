@@ -1213,6 +1213,7 @@ pub struct Collection {
     id: CollectionId,
     collection_type: CollectionType,
     usages: Vec<Usage>,
+    level: usize,
 }
 
 impl Collection {
@@ -1228,6 +1229,12 @@ impl Collection {
     /// Returns the usages assigned to this collection
     pub fn usages(&self) -> &[Usage] {
         &self.usages
+    }
+
+    /// Returns the nesting level of this collection,
+    /// starting at 0 for top-level collections.
+    pub fn level(&self) -> usize {
+        self.level
     }
 }
 
@@ -1643,6 +1650,7 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     id: CollectionId(rdesc_item.offset() as u32),
                     collection_type: i,
                     usages,
+                    level: stack.collections.len(),
                 };
                 stack.collections.push(c);
                 stack.reset_locals();
@@ -2282,5 +2290,131 @@ mod tests {
 
         let usages = array_field.usages();
         assert_eq!(usages.len(), 1);
+    }
+
+    #[test]
+    #[cfg(feature = "hut")]
+    fn test_collection_level() {
+        use crate::hid::*;
+        use hut;
+
+        // Level 0: Application
+        //   Level 1: Physical
+        //     Field A
+        //   Level 1: Logical
+        //     Level 2: Physical
+        //       Field B
+        //   Field C
+        let rdesc_bytes = ReportDescriptorBuilder::new()
+            .usage_page(hut::UsagePage::GenericDesktop)
+            .usage_id(hut::GenericDesktop::Mouse)
+            .open_collection(CollectionItem::Application) // Level 0
+            .usage_id(hut::GenericDesktop::Pointer)
+            .open_collection(CollectionItem::Physical) // Level 1 (first)
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(1).into())
+            .usage_id(hut::GenericDesktop::X)
+            .input(ItemBuilder::new().variable().input()) // Field A
+            .close_collection() // Close level 1 (first)
+            .usage_id(hut::GenericDesktop::Pointer)
+            .open_collection(CollectionItem::Logical) // Level 1 (second)
+            .usage_id(hut::GenericDesktop::Pointer)
+            .open_collection(CollectionItem::Physical) // Level 2
+            .append(LogicalMinimum::from(0).into())
+            .append(LogicalMaximum::from(255).into())
+            .append(ReportSize::from(8).into())
+            .append(ReportCount::from(1).into())
+            .usage_id(hut::GenericDesktop::Y)
+            .input(ItemBuilder::new().variable().input()) // Field B
+            .close_collection() // Close level 2
+            .close_collection() // Close level 1 (second)
+            .usage_id(hut::GenericDesktop::Z)
+            .input(ItemBuilder::new().variable().input()) // Field C
+            .close_collection() // Close level 0
+            .build();
+
+        let rdesc = ReportDescriptor::try_from(rdesc_bytes.as_slice()).unwrap();
+        let input_reports = rdesc.input_reports();
+        assert_eq!(input_reports.len(), 1);
+
+        let report = &input_reports[0];
+        let fields: Vec<&VariableField> = report
+            .fields()
+            .iter()
+            .filter_map(|f| match f {
+                Field::Variable(v) => Some(v),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fields.len(), 3, "Expected 3 fields");
+
+        // Field A is in 2 collections: Application (level 0) and Physical (level 1)
+        let field_a_collections = &fields[0].collections;
+        assert_eq!(
+            field_a_collections.len(),
+            2,
+            "Field A should be in 2 collections"
+        );
+        assert_eq!(field_a_collections[0].level(), 0);
+        assert_eq!(
+            field_a_collections[0].collection_type(),
+            CollectionType::Application
+        );
+        assert_eq!(field_a_collections[1].level(), 1);
+        assert_eq!(
+            field_a_collections[1].collection_type(),
+            CollectionType::Physical
+        );
+
+        // Field B is in 3 collections: Application (level 0), Logical (level 1), Physical (level 2)
+        let field_b_collections = &fields[1].collections;
+        assert_eq!(
+            field_b_collections.len(),
+            3,
+            "Field B should be in 3 collections"
+        );
+        assert_eq!(field_b_collections[0].level(), 0);
+        assert_eq!(
+            field_b_collections[0].collection_type(),
+            CollectionType::Application
+        );
+        assert_eq!(field_b_collections[1].level(), 1);
+        assert_eq!(
+            field_b_collections[1].collection_type(),
+            CollectionType::Logical
+        );
+        assert_eq!(field_b_collections[2].level(), 2);
+        assert_eq!(
+            field_b_collections[2].collection_type(),
+            CollectionType::Physical
+        );
+
+        // Field C is in 1 collection: Application (level 0)
+        let field_c_collections = &fields[2].collections;
+        assert_eq!(
+            field_c_collections.len(),
+            1,
+            "Field C should be in 1 collection"
+        );
+        assert_eq!(field_c_collections[0].level(), 0);
+        assert_eq!(
+            field_c_collections[0].collection_type(),
+            CollectionType::Application
+        );
+
+        // Verify field A and field B share the same level 0 collection
+        assert_eq!(
+            field_a_collections[0].id(),
+            field_b_collections[0].id(),
+            "Both fields should share the same Application collection"
+        );
+        assert_eq!(
+            field_a_collections[0].id(),
+            field_c_collections[0].id(),
+            "Both fields should share the same Application collection"
+        );
     }
 }
