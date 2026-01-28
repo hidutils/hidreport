@@ -1106,7 +1106,7 @@ where
     /// assert!(item.is_variable() && !item.is_array());
     /// assert!(item.is_absolute() && !item.is_relative());
     /// ```
-    pub fn input(self) -> InputItem {
+    pub fn input(&self) -> InputItem {
         InputItem {
             is_constant: self.item.is_constant,
             is_variable: self.item.is_variable,
@@ -1131,8 +1131,8 @@ where
     /// assert!(item.is_variable() && !item.is_array());
     /// assert!(item.is_absolute() && !item.is_relative());
     /// ```
-    pub fn output(self) -> OutputItem {
-        self.item
+    pub fn output(&self) -> OutputItem {
+        self.item.clone()
     }
 
     /// Convert the current builder to a [FeatureItem].
@@ -1147,7 +1147,7 @@ where
     /// assert!(item.is_variable() && !item.is_array());
     /// assert!(item.is_absolute() && !item.is_relative());
     /// ```
-    pub fn feature(self) -> FeatureItem {
+    pub fn feature(&self) -> FeatureItem {
         FeatureItem {
             is_constant: self.item.is_constant,
             is_variable: self.item.is_variable,
