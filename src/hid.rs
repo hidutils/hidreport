@@ -39,6 +39,8 @@
 //! # use crate::hidreport::types::*;
 //! use hut::{self, AsUsage};
 //!
+//! #[cfg(feature = "hut")]
+//! # fn build(bytes: &[u8]) {
 //! let mut builder = ReportDescriptorBuilder::new();
 //! let rdesc: Vec<u8> = builder
 //!        .usage_page(hut::UsagePage::GenericDesktop)
@@ -60,6 +62,7 @@
 //!        .close_collection()
 //!        .close_collection()
 //!        .build();
+//! # }
 //! ```
 //!
 //! Note that the [ReportDescriptorBuilder] does **not** validate the items.
@@ -2423,6 +2426,8 @@ impl_builder_state!(ReportDescriptorBuilderC8Push);
 /// # use crate::hidreport::types::*;
 /// use hut::{self, AsUsage};
 ///
+/// #[cfg(feature = "hut")]
+/// # fn create(bytes: &[u8]) {
 /// let mut builder = ReportDescriptorBuilder::new();
 /// let rdesc: Vec<u8> = builder
 ///        .usage_page(hut::UsagePage::GenericDesktop)
@@ -2444,6 +2449,7 @@ impl_builder_state!(ReportDescriptorBuilderC8Push);
 ///        .close_collection()
 ///        .close_collection()
 ///        .build();
+/// # }
 /// ```
 pub struct ReportDescriptorBuilder<S: ReportDescriptorBuilderState> {
     items: Vec<ItemType>,
@@ -2768,7 +2774,9 @@ impl_builder_for_push!(ReportDescriptorBuilderC6, ReportDescriptorBuilderC6Push)
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "hut")]
     use crate::{Field, Report, ReportDescriptor, Usage, VariableField};
+    #[cfg(feature = "hut")]
     use hut::{self, AsUsage};
 
     #[test]
@@ -2930,6 +2938,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "hut")]
     fn builder_example() {
         let builder = ReportDescriptorBuilder::new();
         let rdesc: Vec<u8> = builder
@@ -2972,6 +2981,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "hut")]
     fn builder_buggy_usages() {
         let rdesc = ReportDescriptorBuilder::new()
             .usage_page(hut::GenericDesktop::X) // sets Usage Page to GenericDesktop
@@ -2996,6 +3006,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "hut")]
     fn builder() {
         // recorded from a Microsoft Microsoft® 2.4GHz Transceiver v9.0
         // This device uses 2-bytes for UsageMinimum/maximu even if <256 so those entries are

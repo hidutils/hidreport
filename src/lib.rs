@@ -50,6 +50,7 @@
 //! ```
 //! # use crate::hidreport::hid::*;
 //! # use crate::hidreport::types::*;
+//! #[cfg(feature = "hut")]
 //! # fn build() {
 //! use hut::{self, AsUsagePage, AsUsage};
 //! let builder = ReportDescriptorBuilder::new();
