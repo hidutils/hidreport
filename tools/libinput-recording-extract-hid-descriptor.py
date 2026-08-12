@@ -3,11 +3,11 @@
 # Extracts the 'hid': [1, 2, ...] array from a libinput record output and saves it
 # as a file in $PWD, optionally with a prefix.
 
-from pathlib import Path
 import argparse
-import yaml
 import sys
+from pathlib import Path
 
+import yaml
 
 parser = argparse.ArgumentParser(
     description="Script to convert a libinput recording into a binary HID report descriptor"
@@ -18,7 +18,8 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-yml = yaml.safe_load(open(args.recording))
+with open(args.recording) as f:
+    yml = yaml.safe_load(f)
 try:
     for idx, device in enumerate(yml["devices"]):
         hid = device["hid"]
@@ -32,4 +33,3 @@ try:
         print(f"{filename}")
 except KeyError:
     print(f"Skipping recording {args.recording} with no hid rdesc", file=sys.stderr)
-    pass
