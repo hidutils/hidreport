@@ -1745,11 +1745,11 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     .logical_minimum
                     .unwrap_or(LogicalMinimum(0));
                 let mut maximum = maximum;
-                if minimum < LogicalMinimum(0) {
+                if minimum >= LogicalMinimum(0) {
                     if let Some(data) = item.data() {
                         if !data.is_empty() {
                             let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
-                            maximum = LogicalMaximum(v.into());
+                            maximum = LogicalMaximum(u32::from(v) as i32);
                         }
                     }
                 };
@@ -1768,11 +1768,11 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
                     .physical_minimum
                     .unwrap_or(PhysicalMinimum(0));
                 let mut maximum = maximum;
-                if minimum < PhysicalMinimum(0) {
+                if minimum >= PhysicalMinimum(0) {
                     if let Some(data) = item.data() {
                         if !data.is_empty() {
                             let v = hid::HidValue::try_from(&data as &[u8]).unwrap();
-                            maximum = PhysicalMaximum(v.into())
+                            maximum = PhysicalMaximum(u32::from(v) as i32)
                         }
                     }
                 };
@@ -1858,6 +1858,53 @@ fn parse_report_descriptor(bytes: &[u8]) -> Result<ReportDescriptor> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn maximum_signedness_follows_the_corresponding_minimum() {
+        for (width, minimum, maximum) in [
+            (1usize, 0i32, 255i32),
+            (2, 0, 65535),
+            (1, 1, 200),
+            (2, 100, 60000),
+            (1, -127, 127),
+            (2, -500, 500),
+            (1, -127, -1),
+            (2, -500, -1),
+        ] {
+            let mut bytes = vec![0x05, 0x01, 0x09, 0x30];
+            for (tag, value) in [
+                (0x14, minimum),
+                (0x24, maximum),
+                (0x34, minimum),
+                (0x44, maximum),
+            ] {
+                bytes.push(tag | width as u8);
+                bytes.extend_from_slice(&value.to_le_bytes()[..width]);
+            }
+            bytes.extend_from_slice(&[0x75, 16, 0x95, 1, 0x81, 2]);
+            let descriptor = ReportDescriptor::try_from(bytes.as_slice()).unwrap();
+            let Field::Variable(field) = &descriptor.input_reports()[0].fields()[0] else {
+                panic!("expected a variable field")
+            };
+            assert_eq!(i32::from(field.logical_minimum), minimum);
+            assert_eq!(i32::from(field.logical_maximum), maximum);
+            assert_eq!(field.physical_minimum.map(i32::from), Some(minimum));
+            assert_eq!(field.physical_maximum.map(i32::from), Some(maximum));
+        }
+    }
+
+    #[test]
+    fn omitted_minima_default_to_unsigned_maxima() {
+        let bytes: &[u8] = &[
+            0x05, 1, 0x09, 0x30, 0x26, 0xff, 0xff, 0x46, 0xff, 0xff, 0x75, 16, 0x95, 1, 0x81, 2,
+        ];
+        let descriptor = ReportDescriptor::try_from(bytes).unwrap();
+        let Field::Variable(field) = &descriptor.input_reports()[0].fields()[0] else {
+            panic!("expected a variable field")
+        };
+        assert_eq!(i32::from(field.logical_maximum), 65535);
+        assert_eq!(field.physical_maximum.map(i32::from), Some(65535));
+    }
 
     #[test]
     fn test_twos_comp() {
